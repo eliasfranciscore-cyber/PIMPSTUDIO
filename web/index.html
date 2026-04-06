@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PIMP STUDIO | Barbería</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar" id="top">
+      <div class="topbar-main">
+        <a class="brand-logo-wrap" href="#top" aria-label="PIMP STUDIO inicio">
+          <img src="assets/pimp-studio-logo.jpg" alt="Logo PIMP STUDIO" class="brand-logo" />
+        </a>
+        <div class="brand-center">
+          <p class="brand-kicker">Barbería</p>
+          <h1 class="brand">PIMP STUDIO</h1>
+        </div>
+        <a class="top-cta" href="#reservas">Reservar</a>
+      </div>
+      <nav class="module-row" aria-label="Módulos">
+        <a class="module-chip" href="#servicios">Servicios</a>
+        <a class="module-chip" href="#barberos">Barberos</a>
+        <a class="module-chip" href="#reservas">Reservas</a>
+        <a class="module-chip" href="#clientes">Clientes</a>
+        <a class="module-chip" href="#gestion">Gestión</a>
+        <a class="module-chip" href="#cursos">Cursos</a>
+        <a class="module-chip" href="#contacto">Contacto</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy panel-3d">
+          <p class="eyebrow">Diseño base premium</p>
+          <h2>Experiencia simple para reservar, operar y crecer</h2>
+          <p>
+            Maqueta limpia en escala de negros y grises para validar arquitectura visual antes del refinamiento final.
+          </p>
+          <div class="hero-actions">
+            <a class="cta" href="#reservas">Agendar hora</a>
+            <a class="ghost" href="#clientes">Ver módulo clientes</a>
+          </div>
+        </div>
+        <aside class="hero-card panel-3d">
+          <h3>Disponibilidad de hoy</h3>
+          <ul id="today-availability" class="list"></ul>
+        </aside>
+      </section>
+
+      <section class="section module-showcase">
+        <article class="mini-module panel-3d">
+          <h3>Servicios</h3>
+          <p>Precios y duración.</p>
+        </article>
+        <article class="mini-module panel-3d">
+          <h3>Reservas</h3>
+          <p>Bloques por barbero.</p>
+        </article>
+        <article class="mini-module panel-3d">
+          <h3>Clientes</h3>
+          <p>Registro y agenda.</p>
+        </article>
+        <article class="mini-module panel-3d">
+          <h3>Gestión</h3>
+          <p>Control interno.</p>
+        </article>
+      </section>
+
+      <section id="servicios" class="section">
+        <div class="section-head">
+          <h2>Servicios</h2>
+        </div>
+        <div id="services-grid" class="card-grid"></div>
+      </section>
+
+      <section id="barberos" class="section">
+        <div class="section-head">
+          <h2>Barberos</h2>
+        </div>
+        <div id="barbers-grid" class="card-grid"></div>
+      </section>
+
+      <section id="reservas" class="section split">
+        <div class="stack-col">
+          <div class="section-head">
+            <h2>Reservas</h2>
+          </div>
+          <form id="booking-form" class="panel panel-3d">
+            <label>Servicio
+              <select id="service-select" required></select>
+            </label>
+            <label>Barbero
+              <select id="barber-select" required></select>
+            </label>
+            <label>Fecha
+              <input id="date-input" type="date" required />
+            </label>
+            <label>Bloque horario
+              <select id="slot-select" required></select>
+            </label>
+            <p id="service-summary" class="hint"></p>
+            <button type="submit">Confirmar reserva</button>
+          </form>
+        </div>
+
+        <div class="stack-col">
+          <div class="section-head">
+            <h2>Usuarios y Cliente</h2>
+          </div>
+          <form id="auth-form" class="panel panel-3d">
+            <label>Nombre
+              <input id="user-name" type="text" placeholder="Tu nombre" required />
+            </label>
+            <label>Email
+              <input id="user-email" type="email" placeholder="tu@email.com" required />
+            </label>
+            <label>Clave
+              <input id="user-password" type="password" placeholder="******" required />
+            </label>
+            <button type="submit">Ingresar / Crear cuenta</button>
+          </form>
+
+          <form id="client-profile-form" class="panel panel-3d">
+            <h3>Registro básico de cliente</h3>
+            <label>Teléfono
+              <input id="client-phone" type="tel" placeholder="+56 9 ..." required />
+            </label>
+            <label>Nota
+              <textarea id="client-note" rows="3" placeholder="Preferencias, observaciones, etc."></textarea>
+            </label>
+            <button type="submit">Guardar perfil</button>
+            <p id="client-profile-result" class="hint"></p>
+          </form>
+
+          <div class="panel panel-3d">
+            <h3>Mis reservas</h3>
+            <ul id="user-bookings" class="list"></ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="clientes" class="section split">
+        <div class="stack-col">
+          <div class="section-head">
+            <h2>Agenda por Usuario</h2>
+          </div>
+          <form id="user-agenda-form" class="panel panel-3d">
+            <label>Clave admin
+              <input id="agenda-admin-key" type="password" placeholder="Clave interna" required />
+            </label>
+            <label>Email del usuario
+              <input id="agenda-user-email" type="email" placeholder="cliente@email.com" required />
+            </label>
+            <button type="submit">Ver agenda del usuario</button>
+          </form>
+          <div class="panel panel-3d">
+            <h3>Resultado</h3>
+            <ul id="user-agenda-results" class="list"></ul>
+          </div>
+        </div>
+
+        <div class="stack-col">
+          <div class="section-head">
+            <h2>Registro de Clientes</h2>
+          </div>
+          <form id="clients-list-form" class="panel panel-3d">
+            <label>Clave admin
+              <input id="clients-admin-key" type="password" placeholder="Clave interna" required />
+            </label>
+            <button type="submit">Cargar clientes</button>
+          </form>
+          <div class="panel panel-3d">
+            <h3>Clientes</h3>
+            <ul id="clients-list" class="list"></ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="gestion" class="section split">
+        <div class="stack-col">
+          <div class="section-head">
+            <h2>Gestión Interna</h2>
+          </div>
+          <form id="block-form" class="panel panel-3d">
+            <label>Clave admin
+              <input id="admin-key" type="password" placeholder="Clave interna" required />
+            </label>
+            <label>Barbero
+              <select id="block-barber" required></select>
+            </label>
+            <label>Fecha
+              <input id="block-date" type="date" required />
+            </label>
+            <label>Bloque
+              <select id="block-slot" required></select>
+            </label>
+            <button type="submit">Bloquear horario</button>
+          </form>
+        </div>
+        <div class="stack-col">
+          <div class="panel panel-3d">
+            <h3>Bloqueos activos</h3>
+            <ul id="blocked-slots" class="list"></ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="cursos" class="section">
+        <div class="section-head">
+          <h2>Cursos</h2>
+          <p class="hint">Contenido gratuito en YouTube.</p>
+        </div>
+        <div id="courses-grid" class="card-grid"></div>
+      </section>
+
+      <section id="newsletter" class="section split">
+        <div class="stack-col">
+          <div class="section-head">
+            <h2>Newsletter</h2>
+          </div>
+          <form id="newsletter-form" class="panel panel-3d inline-form">
+            <input id="newsletter-email" type="email" placeholder="correo@ejemplo.com" required />
+            <button type="submit">Suscribirme</button>
+          </form>
+          <p id="newsletter-result" class="hint"></p>
+        </div>
+        <div class="stack-col" id="contacto">
+          <div class="section-head">
+            <h2>Contacto</h2>
+          </div>
+          <form id="contact-form" class="panel panel-3d">
+            <label>Nombre
+              <input type="text" id="contact-name" required />
+            </label>
+            <label>Teléfono
+              <input type="tel" id="contact-phone" required />
+            </label>
+            <label>Mensaje
+              <textarea id="contact-message" rows="4" required></textarea>
+            </label>
+            <button type="submit">Enviar mensaje</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Ubicación</h2>
+        </div>
+        <div class="map-wrap panel-3d">
+          <iframe
+            title="Mapa Barberia"
+            src="https://www.openstreetmap.org/export/embed.html?bbox=-70.655%2C-33.445%2C-70.647%2C-33.438&layer=mapnik&marker=-33.4416%2C-70.6510"
+            loading="lazy"
+          ></iframe>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>PIMP STUDIO · Horario de referencia: Lun a Sab 10:00 - 21:00</p>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
