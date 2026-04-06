@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PIMP STUDIO | Reserva Cliente</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar" id="top">
+      <div class="topbar-main">
+        <a class="brand-logo-wrap" href="index.html"><img src="assets/pimp-studio-logo.jpg" alt="Logo PIMP STUDIO" class="brand-logo" /></a>
+        <div class="brand-center"><p class="brand-kicker">Barbería</p><h1 class="brand">PIMP STUDIO</h1></div>
+        <div class="top-actions">
+          <a class="top-cta" href="cliente.html" target="_blank" rel="noopener">Reserva Aquí</a>
+          <a class="top-cta" href="ingreso.html" target="_blank" rel="noopener">Ingreso</a>
+        </div>
+      </div>
+      <nav class="module-row" aria-label="Módulos">
+        <a class="module-chip" href="servicios.html">Servicios</a>
+        <a class="module-chip" href="barberos.html">Barberos</a>
+        <a class="module-chip" href="reservas.html">Reservas</a>
+        <a class="module-chip" href="cursos.html">Cursos</a>
+        <a class="module-chip" href="contacto.html">Contacto</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="section split">
+        <div class="stack-col">
+          <form id="auth-form" class="panel panel-3d">
+            <h3>Registro / Ingreso Cliente</h3>
+            <label>Nombre<input id="user-name" type="text" required /></label>
+            <label>Correo<input id="user-email" type="email" required /></label>
+            <label>Celular (ID cliente)<input id="user-phone" type="tel" placeholder="+569 9999 9999" required /></label>
+            <button type="submit">Entrar a mi cuenta</button>
+          </form>
+
+          <form id="booking-form" class="panel panel-3d">
+            <h3>Agendar Hora</h3>
+            <label>Servicio<select id="service-select" required></select></label>
+            <label>Barbero<select id="barber-select" required></select></label>
+            <label>Fecha<input id="date-input" type="date" required /></label>
+            <label>Bloque horario<select id="slot-select" required></select></label>
+            <p id="service-summary" class="hint"></p>
+            <button type="submit">Confirmar reserva</button>
+          </form>
+        </div>
+
+        <div class="stack-col">
+          <form id="client-profile-form" class="panel panel-3d">
+            <h3>Perfil Cliente</h3>
+            <label>Celular<input id="client-phone" type="tel" placeholder="+569 9999 9999" required /></label>
+            <label>Nota<textarea id="client-note" rows="3"></textarea></label>
+            <button type="submit">Guardar perfil</button>
+            <p id="client-profile-result" class="hint"></p>
+          </form>
+
+          <div class="panel panel-3d">
+            <h3>Historial de Reservas</h3>
+            <ul id="user-bookings" class="list"></ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer><p id="footer-location">PIMP STUDIO · Monumento 1750 Local C, Maipú · Instagram: @pimpstudiochile · Atención: Lunes a Sábado de 10:00 a 20:00</p></footer>
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PIMP STUDIO | Gestión</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar" id="top">
+      <div class="topbar-main">
+        <a class="brand-logo-wrap" href="index.html"><img src="assets/pimp-studio-logo.jpg" alt="Logo PIMP STUDIO" class="brand-logo" /></a>
+        <div class="brand-center"><p class="brand-kicker">Barbería</p><h1 class="brand">PIMP STUDIO</h1></div>
+        <a class="top-cta" href="reservas.html">Reservar</a>
+      </div>
+      <nav class="module-row" aria-label="Módulos">
+        <a class="module-chip" href="servicios.html">Servicios</a>
+        <a class="module-chip" href="barberos.html">Barberos</a>
+        <a class="module-chip" href="reservas.html">Reservas</a>
+        <a class="module-chip" href="usuarios.html">Usuarios</a>
+        <a class="module-chip" href="clientes.html">Clientes</a>
+        <a class="module-chip is-active" href="gestion.html">Gestión</a>
+        <a class="module-chip" href="cursos.html">Cursos</a>
+        <a class="module-chip" href="contacto.html">Contacto</a>
+      </nav>
+    </header>
+    <main>
+      <section class="section split">
+        <div class="stack-col">
+          <form id="admin-create-barber-user-form" class="panel panel-3d">
+            <h3>Admin: crear usuario barbero</h3>
+            <label>Clave admin
+              <input id="admin-create-key" type="password" placeholder="Clave interna" required />
+            </label>
+            <label>Barbero
+              <select id="admin-create-barber" required></select>
+            </label>
+            <label>Usuario
+              <input id="admin-create-username" type="text" placeholder="usuario.barbero" required />
+            </label>
+            <label>Contraseña
+              <input id="admin-create-password" type="password" placeholder="******" required />
+            </label>
+            <button type="submit">Crear / actualizar usuario</button>
+            <p id="admin-create-result" class="hint"></p>
+          </form>
+
+          <form id="block-form" class="panel panel-3d">
+            <h3>Bloqueo manual de horarios</h3>
+            <label>Clave admin
+              <input id="admin-key" type="password" placeholder="Clave interna" required />
+            </label>
+            <label>Barbero
+              <select id="block-barber" required></select>
+            </label>
+            <label>Fecha
+              <input id="block-date" type="date" required />
+            </label>
+            <label>Bloque
+              <select id="block-slot" required></select>
+            </label>
+            <button type="submit">Bloquear horario</button>
+          </form>
+        </div>
+
+        <div class="stack-col">
+          <form id="barber-login-form" class="panel panel-3d">
+            <h3>Barbero: definir disponibilidad</h3>
+            <label>Usuario
+              <input id="barber-login-username" type="text" placeholder="usuario.barbero" required />
+            </label>
+            <label>Contraseña
+              <input id="barber-login-password" type="password" placeholder="******" required />
+            </label>
+            <button type="submit">Ingresar como barbero</button>
+            <p id="barber-login-result" class="hint"></p>
+          </form>
+
+          <form id="barber-availability-form" class="panel panel-3d">
+            <label>Fecha
+              <input id="barber-availability-date" type="date" required />
+            </label>
+            <label>Bloques disponibles
+              <select id="barber-availability-slots" multiple size="10"></select>
+            </label>
+            <button type="submit">Guardar disponibilidad del día</button>
+            <p id="barber-availability-result" class="hint"></p>
+          </form>
+
+          <div class="panel panel-3d">
+            <h3>Bloqueos activos</h3>
+            <ul id="blocked-slots" class="list"></ul>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer><p id="footer-location">PIMP STUDIO · Monumento 1750 Local C, Maipú · Horario de referencia: Lun a Sab 10:00 - 21:00</p></footer>
+    <script src="app.js"></script>
+  </body>
+</html>
