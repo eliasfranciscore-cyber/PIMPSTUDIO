@@ -21,24 +21,35 @@ async function putClientRecord(pathname, body) {
     contentType: "application/json; charset=utf-8",
   };
 
+  const toMessage = (error) =>
+    String(error && error.message ? error.message : error);
+
   try {
     return await put(pathname, body, {
       ...commonOptions,
       access: "private",
     });
   } catch (privateError) {
-    const detail = String(
-      privateError && privateError.message ? privateError.message : privateError
-    );
+    try {
+      return await put(pathname, body, commonOptions);
+    } catch (defaultError) {
+      const privateDetail = toMessage(privateError);
+      const defaultDetail = toMessage(defaultError);
 
-    if (!/must be "public"/i.test(detail)) {
-      throw privateError;
+      if (
+        /must be "public"/i.test(privateDetail) ||
+        /must be "public"/i.test(defaultDetail)
+      ) {
+        return put(pathname, body, {
+          ...commonOptions,
+          access: "public",
+        });
+      }
+
+      throw new Error(
+        `Blob write failed (private/default): ${privateDetail} | ${defaultDetail}`
+      );
     }
-
-    return put(pathname, body, {
-      ...commonOptions,
-      access: "public",
-    });
   }
 }
 
