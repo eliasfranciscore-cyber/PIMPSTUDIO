@@ -270,6 +270,27 @@ button {
 .barber-name {
   margin: 0;
   font-size: 1.05rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.barber-icon {
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.barber-icon svg {
+  width: 1rem;
+  height: 1rem;
+  fill: #d1d5db;
 }
 
 .services-group {
@@ -334,6 +355,50 @@ button {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
+}
+
+.location-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.location-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 1rem;
+}
+
+.map-frame {
+  width: 100%;
+  min-height: 380px;
+  border: 0;
+}
+
+.location-actions {
+  margin-top: 0.9rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.location-info h3 {
+  margin: 0 0 0.75rem;
+  letter-spacing: 0.04em;
+}
+
+.location-info ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--muted);
+  display: grid;
+  gap: 0.45rem;
+}
+
+.location-note {
+  margin-top: 1rem;
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 0.86rem;
 }
 
 .about-card {
@@ -717,7 +782,8 @@ button {
   }
 
   .about-grid,
-  .contact-grid {
+  .contact-grid,
+  .location-grid {
     grid-template-columns: 1fr 1fr;
   }
 }

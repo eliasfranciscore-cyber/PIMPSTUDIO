@@ -236,7 +236,14 @@ function setupHomePage() {
     barbersGrid.innerHTML = FIGMA_BARBERS.map(
       (barber) => `
         <article class="barber-card">
-          <h3 class="barber-name">${escapeHtml(barber.name)}</h3>
+          <h3 class="barber-name">
+            <span class="barber-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" role="presentation" focusable="false">
+                <path d="M12 12.5a5.25 5.25 0 1 0-5.25-5.25A5.26 5.26 0 0 0 12 12.5Zm0 2.25c-4.88 0-8.75 2.34-8.75 5.25V21h17.5v-1c0-2.91-3.87-5.25-8.75-5.25Z"></path>
+              </svg>
+            </span>
+            <span>${escapeHtml(barber.name)}</span>
+          </h3>
         </article>
       `
     ).join("");
