@@ -48,19 +48,18 @@ module.exports = async (req, res) => {
       updatedAt: new Date().toISOString(),
     };
 
-    const pathname = `clientes/${phone}.json`;
+    const pathname = `clientes/${phone}-${Date.now()}.json`;
 
     const blob = await put(pathname, JSON.stringify(record, null, 2), {
-      access: "private",
-      addRandomSuffix: false,
+      access: "public",
+      addRandomSuffix: true,
       contentType: "application/json; charset=utf-8",
     });
 
     sendJson(res, 200, {
       ok: true,
       saved: true,
-      pathname,
-      blobUrl: blob.url,
+      pathname: blob.pathname,
     });
   } catch (error) {
     sendJson(res, 500, {
