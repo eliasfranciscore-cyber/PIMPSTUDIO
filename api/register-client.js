@@ -15,6 +15,33 @@ function sendJson(res, status, payload) {
   res.end(JSON.stringify(payload));
 }
 
+async function putClientRecord(pathname, body) {
+  const commonOptions = {
+    addRandomSuffix: true,
+    contentType: "application/json; charset=utf-8",
+  };
+
+  try {
+    return await put(pathname, body, {
+      ...commonOptions,
+      access: "private",
+    });
+  } catch (privateError) {
+    const detail = String(
+      privateError && privateError.message ? privateError.message : privateError
+    );
+
+    if (!/must be "public"/i.test(detail)) {
+      throw privateError;
+    }
+
+    return put(pathname, body, {
+      ...commonOptions,
+      access: "public",
+    });
+  }
+}
+
 module.exports = async (req, res) => {
   if (req.method === "OPTIONS") {
     res.statusCode = 204;
@@ -50,11 +77,10 @@ module.exports = async (req, res) => {
 
     const pathname = `clientes/${phone}-${Date.now()}.json`;
 
-    const blob = await put(pathname, JSON.stringify(record, null, 2), {
-      access: "public",
-      addRandomSuffix: true,
-      contentType: "application/json; charset=utf-8",
-    });
+    const blob = await putClientRecord(
+      pathname,
+      JSON.stringify(record, null, 2)
+    );
 
     sendJson(res, 200, {
       ok: true,
