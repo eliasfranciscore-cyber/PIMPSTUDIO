@@ -1,0 +1,12 @@
+.git
+node_modules
+.docs
+.DS_Store
+docs
+inbox
+skills
+data
+server.js
+README.md
+*.log
+*.db

@@ -3,62 +3,155 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PIMP STUDIO | Inicio</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <title>PIMP STUDIO</title>
+    <meta name="description" content="PIMP STUDIO - modelo completo basado en Figma." />
     <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
   </head>
-  <body>
-    <header class="topbar" id="top">
-      <div class="topbar-main">
-        <a class="brand-logo-wrap" href="index.html" aria-label="PIMP STUDIO inicio"><img src="assets/pimp-studio-logo.jpg" alt="Logo PIMP STUDIO" class="brand-logo" /></a>
-        <div class="brand-center"><p class="brand-kicker">Barbería</p><h1 class="brand">PIMP STUDIO</h1></div>
-        <div class="top-actions">
-          <a class="top-cta" href="cliente.html" target="_blank" rel="noopener">Reserva Aquí</a>
-          <a class="top-cta" href="ingreso.html" target="_blank" rel="noopener">Ingreso</a>
-        </div>
+  <body data-page="home">
+    <header class="site-header">
+      <div class="nav-wrap">
+        <a class="brand" href="/">
+          <img src="assets/pimp-studio-logo.jpg" alt="Pimp Studio" class="brand-logo" />
+          <span class="brand-name">PIMP STUDIO</span>
+        </a>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú">☰</button>
+        <nav class="site-nav" id="site-nav">
+          <a href="#hero">Inicio</a>
+          <a href="#brunetti">Brunetti Experience</a>
+          <a href="#services">Servicios</a>
+          <a href="#gallery">Galería</a>
+          <a href="#about">Nosotros</a>
+          <a href="#contact">Contacto</a>
+          <a class="btn-top" href="/login">RESERVAR</a>
+        </nav>
       </div>
-      <nav class="module-row" aria-label="Módulos">
-        <a class="module-chip" href="servicios.html">Servicios</a>
-        <a class="module-chip" href="barberos.html">Barberos</a>
-        <a class="module-chip" href="reservas.html">Reservas</a>
-        <a class="module-chip" href="cursos.html">Cursos</a>
-        <a class="module-chip" href="contacto.html">Contacto</a>
-      </nav>
     </header>
 
     <main>
-      <section class="hero">
-        <div class="hero-copy panel-3d">
-          <p class="eyebrow">Agenda online</p>
-          <h2>Reserva con tu barbero en PIMP STUDIO</h2>
-          <p>Clientes se registran con celular y barberos gestionan su disponibilidad por bloques.</p>
+      <section id="hero" class="hero">
+        <div class="hero-bg" style="background-image: url('https://images.unsplash.com/photo-1759134198561-e2041049419c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600')"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <img src="assets/pimp-studio-logo.jpg" alt="Pimp Studio Logo" class="hero-logo" />
+          <h1>PIMP STUDIO</h1>
+          <p>Donde el Estilo se Encuentra con la Excelencia</p>
           <div class="hero-actions">
-            <a class="cta" href="cliente.html" target="_blank" rel="noopener">Reservar ahora</a>
-            <a class="ghost" href="servicios.html">Ver servicios</a>
+            <a class="btn btn-primary" href="/login">RESERVAR CITA</a>
+            <a class="btn btn-ghost" href="#services">VER SERVICIOS</a>
           </div>
         </div>
-        <aside class="hero-card panel-3d">
-          <h3>Disponibilidad de hoy</h3>
-          <ul id="today-availability" class="list"></ul>
-        </aside>
       </section>
 
-      <section class="section module-showcase">
-        <article class="mini-module panel-3d"><h3>Servicios</h3><p>Catálogo y reglas TNE.</p><a class="ghost" href="servicios.html">Ir</a></article>
-        <article class="mini-module panel-3d"><h3>Barberos</h3><p>Agenda disponible por barbero.</p><a class="ghost" href="barberos.html">Ir</a></article>
-        <article class="mini-module panel-3d"><h3>Reserva</h3><p>Registro cliente e historial.</p><a class="ghost" href="cliente.html" target="_blank" rel="noopener">Ir</a></article>
-        <article class="mini-module panel-3d"><h3>Ingreso</h3><p>Barberos y administrador.</p><a class="ghost" href="ingreso.html" target="_blank" rel="noopener">Ir</a></article>
+      <section id="brunetti" class="section section-dark">
+        <div class="container">
+          <div class="section-head">
+            <h2>BRUNETTI EXPERIENCE</h2>
+            <div class="section-line"></div>
+            <p>Experiencia premium con Bruno Herrera</p>
+          </div>
+          <div class="services-grid" id="brunetti-grid"></div>
+        </div>
       </section>
 
-      <section class="section">
-        <div class="section-head"><h2>Ubicación</h2><p id="location-text" class="hint">Monumento 1750 Local C, Maipú.</p></div>
-        <div class="map-wrap panel-3d"><iframe title="Mapa Barberia" src="https://www.google.com/maps?q=Monumento+1750+Local+C,+Maip%C3%BA&output=embed" loading="lazy"></iframe></div>
+      <section id="services" class="section section-dark alt">
+        <div class="container">
+          <div class="section-head">
+            <h2>SERVICIOS</h2>
+            <div class="section-line"></div>
+            <p>Precios y módulos del diseño Figma</p>
+          </div>
+          <section class="services-group">
+            <h3>Servicios Generales</h3>
+            <div class="services-grid" id="general-grid"></div>
+            <p class="discount-note">Descuento TNE: 20% presentando Tarjeta Nacional Estudiantil</p>
+          </section>
+          <section class="services-group">
+            <h3>Servicios Químicos</h3>
+            <div class="services-grid" id="quimico-grid"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="barberos" class="section section-dark">
+        <div class="container">
+          <div class="section-head">
+            <h2>BARBEROS</h2>
+            <div class="section-line"></div>
+            <p>Barberos del modelo Figma</p>
+          </div>
+          <div class="barbers-grid" id="barbers-grid"></div>
+        </div>
+      </section>
+
+      <section id="gallery" class="section section-dark alt">
+        <div class="container">
+          <div class="section-head">
+            <h2>GALERÍA</h2>
+            <div class="section-line"></div>
+          </div>
+          <div class="gallery-grid">
+            <article class="gallery-card"><img src="https://images.unsplash.com/photo-1759134198561-e2041049419c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="Galería 1" /></article>
+            <article class="gallery-card"><img src="https://images.unsplash.com/photo-1761931403671-d020a14928d9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="Galería 2" /></article>
+            <article class="gallery-card"><img src="https://images.unsplash.com/photo-1656921350183-7935040cf7fb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="Galería 3" /></article>
+            <article class="gallery-card"><img src="https://images.unsplash.com/photo-1759134198561-e2041049419c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="Galería 4" /></article>
+            <article class="gallery-card"><img src="https://images.unsplash.com/photo-1761931403671-d020a14928d9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="Galería 5" /></article>
+            <article class="gallery-card"><img src="https://images.unsplash.com/photo-1656921350183-7935040cf7fb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="Galería 6" /></article>
+          </div>
+        </div>
+      </section>
+
+      <section id="about" class="section section-dark">
+        <div class="container about-grid">
+          <article class="about-card">
+            <h2>NOSOTROS</h2>
+            <div class="section-line"></div>
+            <p>
+              En Pimp Studio, creemos en el arte de la barbería tradicional combinada con técnicas modernas.
+              Nuestros maestros barberos aportan décadas de experiencia combinada para entregar servicios
+              excepcionales en una atmósfera premium.
+            </p>
+            <p>
+              Cada cliente recibe atención personalizada para asegurar un resultado a tu medida.
+            </p>
+          </article>
+          <article class="about-card">
+            <ul class="stats-list">
+              <li><strong>15+</strong><span>Años de experiencia</span></li>
+              <li><strong>5000+</strong><span>Clientes satisfechos</span></li>
+              <li><strong>Premium</strong><span>Servicio de calidad</span></li>
+              <li><strong>6 días</strong><span>Abierto semanalmente</span></li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section id="contact" class="section section-dark alt">
+        <div class="container contact-grid">
+          <article class="about-card">
+            <h2>CONTÁCTANOS</h2>
+            <div class="section-line"></div>
+            <p>Monumento 1750 local C, Maipú</p>
+            <p>(+56) 9 1234 5678</p>
+            <p>info@pimpstudio.cl</p>
+            <p>Lunes a Sábado: 10:00 AM - 8:00 PM</p>
+          </article>
+          <article class="about-card">
+            <p>Para agendar, inicia sesión o regístrate en nuestro sistema de reservas.</p>
+            <a href="/login" class="btn btn-primary">IR A RESERVAS</a>
+          </article>
+        </div>
       </section>
     </main>
 
-    <footer><p id="footer-location">PIMP STUDIO · Monumento 1750 Local C, Maipú · Instagram: @pimpstudiochile · Atención: Lunes a Sábado de 10:00 a 20:00</p></footer>
-    <script src="app.js"></script>
+    <footer class="site-footer">
+      <div class="container footer-wrap">
+        <div class="footer-brand">
+          <img src="assets/pimp-studio-logo.jpg" alt="Pimp Studio" class="footer-logo" />
+          <span>PIMP STUDIO</span>
+        </div>
+        <p>© 2026 Pimp Studio. Todos los derechos reservados.</p>
+      </div>
+    </footer>
   </body>
 </html>

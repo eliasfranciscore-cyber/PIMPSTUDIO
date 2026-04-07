@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PIMP STUDIO | Dashboard</title>
+    <meta name="description" content="Panel de cliente y citas PIMP STUDIO." />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body data-page="dashboard">
+    <main class="dash-page">
+      <header class="dash-header">
+        <a href="/" class="dash-brand">
+          <img src="assets/pimp-studio-logo.jpg" alt="Pimp Studio" class="brand-logo" />
+          <span>PIMP STUDIO</span>
+        </a>
+
+        <nav class="dash-actions">
+          <a href="/booking" class="btn btn-primary">NUEVA CITA</a>
+          <button id="logout-btn" class="btn btn-ghost" type="button">CERRAR SESIÓN</button>
+        </nav>
+      </header>
+
+      <section class="dash-grid">
+        <article class="dash-card">
+          <h2>MI PERFIL</h2>
+          <p><strong>Nombre:</strong> <span id="profile-name">-</span></p>
+          <p><strong>Teléfono:</strong> <span id="profile-phone">-</span></p>
+          <p><strong>Email:</strong> <span id="profile-email">-</span></p>
+        </article>
+
+        <article class="dash-card">
+          <h2>BARBERÍA</h2>
+          <p><strong>Dirección:</strong> Monumento 1750 local C, Maipú</p>
+          <p><strong>Horario:</strong> Lunes a Sábado: 10:00 AM - 8:00 PM</p>
+          <p><strong>Domingo:</strong> Cerrado</p>
+        </article>
+      </section>
+
+      <section class="dash-card">
+        <h2>MIS CITAS</h2>
+        <div id="appointments-list" class="dash-appointments"></div>
+      </section>
+    </main>
+  </body>
+</html>

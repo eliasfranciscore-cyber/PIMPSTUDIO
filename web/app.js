@@ -1,24 +1,75 @@
-const API_BASE = "";
-const BASE_SLOTS = ["10:00", "11:00", "12:00", "13:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00"];
+const FIGMA_BARBERS = [
+  { id: "1", name: "Juan Carlos" },
+  { id: "2", name: "Andryz" },
+  { id: "3", name: "Bruno Herrera" },
+  { id: "4", name: "Diego Moya" },
+  { id: "5", name: "Thinn Sayen Herrera" },
+  { id: "6", name: "Vicente Pietrapiana" },
+  { id: "7", name: "Rodrigo Godoy" },
+  { id: "8", name: "Matías Inostroza" },
+];
 
-const state = {
-  token: localStorage.getItem("barber_token") || "",
-  user: readLS("barber_user", null),
-  barberToken: localStorage.getItem("barber_staff_token") || "",
-  barberUser: readLS("barber_staff_user", null),
-  selectedBarberAgendaId: null,
-  services: [],
-  barbers: [],
-  courses: [],
-  blocked: [],
-  businessInfo: null,
+const FIGMA_SERVICES = [
+  { value: "asesoria-corte", label: "Asesoría de Corte", price: "$24.990", duration: "90 min", category: "general" },
+  { value: "corte-cabello", label: "Corte de Cabello", price: "$15.990", duration: "60 min", category: "general" },
+  {
+    value: "corte-barba",
+    label: "Corte de Cabello y Perfilado de Barba",
+    price: "$22.990",
+    duration: "75 min",
+    category: "general",
+  },
+  { value: "perfilado-barba", label: "Perfilado de Barba", price: "$11.990", duration: "45 min", category: "general" },
+  { value: "solo-fade", label: "Solo Fade", price: "$9.990", duration: "40 min", category: "general" },
+  {
+    value: "bruno-visagista",
+    label: "Asesoría de Imagen-Visagista",
+    price: "$39.990",
+    duration: "120 min",
+    category: "brunetti",
+  },
+  { value: "bruno-corte", label: "Corte de Cabello (Bruno)", price: "$19.990", duration: "60 min", category: "brunetti" },
+  {
+    value: "bruno-corte-barba",
+    label: "Corte de Cabello y Barba (Bruno)",
+    price: "$29.990",
+    duration: "90 min",
+    category: "brunetti",
+  },
+  { value: "ondulacion", label: "Ondulación Permanente", price: "$65.990", duration: "180 min", category: "quimico" },
+  { value: "platinado-global", label: "Platinado Global", price: "$89.990", duration: "240 min", category: "quimico" },
+  { value: "visos-platinados", label: "Visos Platinados", price: "$74.990", duration: "210 min", category: "quimico" },
+];
+
+const TEST_USERS = [
+  { phone: "987654321", name: "Carlos Rodríguez", email: "carlos@ejemplo.com" },
+  { phone: "912345678", name: "María González", email: "maria@ejemplo.com" },
+  { phone: "955556666", name: "Pedro Sánchez", email: "pedro@ejemplo.com" },
+];
+
+const TIME_SLOTS = {
+  maniana: ["9:00 am", "9:30 am", "10:00 am", "10:30 am", "11:00 am", "11:30 am"],
+  tarde: ["12:00 pm", "1:00 pm", "2:00 pm", "3:00 pm", "4:00 pm", "5:00 pm"],
+  noche: ["6:00 pm", "7:00 pm", "7:30 pm"],
 };
 
-function byId(id) {
-  return document.getElementById(id);
-}
+const SERVICE_DESCRIPTIONS = {
+  "bruno-visagista":
+    "Consulta personalizada con Bruno Herrera para encontrar el estilo perfecto según tu fisonomía y personalidad.",
+  "bruno-corte": "Corte de precisión ejecutado por Bruno Herrera con técnicas avanzadas de barbería italiana.",
+  "bruno-corte-barba":
+    "Servicio completo de corte de cabello y arreglo de barba con la experiencia premium de Bruno Herrera.",
+  "asesoria-corte": "Consulta profesional para encontrar el estilo ideal para ti.",
+  "corte-cabello": "Corte profesional con técnicas modernas y clásicas.",
+  "corte-barba": "Servicio completo de corte de cabello y arreglo de barba.",
+  "perfilado-barba": "Perfilado y arreglo profesional de barba.",
+  "solo-fade": "Degradado perfecto y limpio.",
+  ondulacion: "Tratamiento para dar forma y textura duradera al cabello.",
+  "platinado-global": "Decoloración completa para un rubio platino espectacular.",
+  "visos-platinados": "Mechas platinadas para un look moderno y sofisticado.",
+};
 
-function readLS(key, fallback) {
+function readJson(key, fallback) {
   try {
     return JSON.parse(localStorage.getItem(key)) ?? fallback;
   } catch {
@@ -26,828 +77,574 @@ function readLS(key, fallback) {
   }
 }
 
-function writeLS(key, value) {
+function writeJson(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
 }
 
+function digitsOnly(value) {
+  return String(value || "").replace(/\D/g, "");
+}
+
+function escapeHtml(text) {
+  return String(text || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function parsePriceToInt(priceText) {
+  return Number(String(priceText).replace(/[^\d]/g, "")) || 0;
+}
+
 function formatCLP(value) {
-  return new Intl.NumberFormat("es-CL", {
-    style: "currency",
-    currency: "CLP",
-    maximumFractionDigits: 0,
-  }).format(value);
+  return `$${Number(value || 0).toLocaleString("es-CL")}`;
 }
 
-function todayISO() {
-  return new Date().toISOString().slice(0, 10);
+function tnePrice(priceText) {
+  const base = parsePriceToInt(priceText);
+  return formatCLP(Math.round(base * 0.8));
 }
 
-function normalizePhoneCl(raw) {
-  const digits = String(raw || "").replace(/\D/g, "");
-  if (digits.length === 11 && digits.startsWith("569")) {
-    return `+569 ${digits.slice(3, 7)} ${digits.slice(7, 11)}`;
+function formatPhoneInput(value) {
+  const d = digitsOnly(value).slice(0, 9);
+  if (d.length <= 1) return d;
+  if (d.length <= 5) return `${d[0]} ${d.slice(1)}`;
+  return `${d[0]} ${d.slice(1, 5)} ${d.slice(5)}`;
+}
+
+function formatStoredPhone(value) {
+  const d = digitsOnly(value).slice(0, 9);
+  if (d.length !== 9) return d;
+  return `${d[0]} ${d.slice(1, 5)} ${d.slice(5)}`;
+}
+
+function ensureSeedData() {
+  const users = readJson("users", null);
+  if (!Array.isArray(users) || users.length === 0) {
+    writeJson("users", TEST_USERS);
   }
-  return String(raw || "").trim();
+  const appointments = readJson("appointments", null);
+  if (!Array.isArray(appointments)) {
+    writeJson("appointments", []);
+  }
 }
 
-function isValidPhoneCl(raw) {
-  return /^\+569\s\d{4}\s\d{4}$/.test(String(raw || "").trim());
+function getCurrentUser() {
+  return readJson("currentUser", null);
 }
 
-function fileToDataUrl(file) {
-  return new Promise((resolve, reject) => {
-    if (!file) {
-      resolve("");
+function setCurrentUser(user) {
+  if (user) {
+    writeJson("currentUser", user);
+  } else {
+    localStorage.removeItem("currentUser");
+  }
+}
+
+function loginByPhone(phoneDigits) {
+  const users = readJson("users", []);
+  const user = users.find((item) => item.phone === phoneDigits);
+  if (!user) return null;
+  setCurrentUser(user);
+  return user;
+}
+
+function registerUser(phoneDigits, name, email) {
+  const users = readJson("users", []);
+  if (users.some((item) => item.phone === phoneDigits)) {
+    return null;
+  }
+  const user = { phone: phoneDigits, name, email };
+  users.push(user);
+  writeJson("users", users);
+  setCurrentUser(user);
+  return user;
+}
+
+function logout() {
+  setCurrentUser(null);
+  window.location.assign("/");
+}
+
+function getAppointmentsForCurrentUser() {
+  const user = getCurrentUser();
+  if (!user) return [];
+  const appointments = readJson("appointments", []);
+  return appointments.filter((item) => item.userPhone === user.phone);
+}
+
+function addAppointment(payload) {
+  const user = getCurrentUser();
+  if (!user) return false;
+  const appointments = readJson("appointments", []);
+  appointments.push({
+    id: Date.now().toString(),
+    userPhone: user.phone,
+    ...payload,
+  });
+  writeJson("appointments", appointments);
+  return true;
+}
+
+function redirectIfNoAuth() {
+  const user = getCurrentUser();
+  if (!user) {
+    window.location.assign("/login");
+    return null;
+  }
+  return user;
+}
+
+function renderServiceCard(service, withTne) {
+  return `
+    <article class="service-card">
+      <h4 class="service-name">${escapeHtml(service.label)}</h4>
+      <p class="service-price">${escapeHtml(service.price)}</p>
+      ${withTne ? `<p class="service-note">Con TNE: ${escapeHtml(tnePrice(service.price))}</p>` : ""}
+      <p class="service-note">${escapeHtml(SERVICE_DESCRIPTIONS[service.value] || "")}</p>
+    </article>
+  `;
+}
+
+function setupHomePage() {
+  const brunettiGrid = document.getElementById("brunetti-grid");
+  const generalGrid = document.getElementById("general-grid");
+  const quimicoGrid = document.getElementById("quimico-grid");
+  const barbersGrid = document.getElementById("barbers-grid");
+
+  if (brunettiGrid) {
+    brunettiGrid.innerHTML = FIGMA_SERVICES.filter((item) => item.category === "brunetti")
+      .map((item) => renderServiceCard(item, false))
+      .join("");
+  }
+
+  if (generalGrid) {
+    generalGrid.innerHTML = FIGMA_SERVICES.filter((item) => item.category === "general")
+      .map((item) => renderServiceCard(item, true))
+      .join("");
+  }
+
+  if (quimicoGrid) {
+    quimicoGrid.innerHTML = FIGMA_SERVICES.filter((item) => item.category === "quimico")
+      .map((item) => renderServiceCard(item, false))
+      .join("");
+  }
+
+  if (barbersGrid) {
+    barbersGrid.innerHTML = FIGMA_BARBERS.map(
+      (barber) => `
+        <article class="barber-card">
+          <h3 class="barber-name">${escapeHtml(barber.name)}</h3>
+        </article>
+      `
+    ).join("");
+  }
+
+  const menuToggle = document.getElementById("menu-toggle");
+  const siteNav = document.getElementById("site-nav");
+  if (menuToggle && siteNav) {
+    menuToggle.addEventListener("click", () => {
+      siteNav.classList.toggle("is-open");
+    });
+
+    siteNav.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        siteNav.classList.remove("is-open");
+      });
+    });
+  }
+}
+
+function setupLoginPage() {
+  if (getCurrentUser()) {
+    window.location.assign("/booking");
+    return;
+  }
+
+  const tabLogin = document.getElementById("tab-login");
+  const tabRegister = document.getElementById("tab-register");
+  const registerFields = document.getElementById("register-fields");
+  const authForm = document.getElementById("auth-form");
+  const phoneInput = document.getElementById("phone-input");
+  const nameInput = document.getElementById("name-input");
+  const emailInput = document.getElementById("email-input");
+  const authError = document.getElementById("auth-error");
+  const authSubmit = document.getElementById("auth-submit");
+  const testUsers = document.getElementById("test-users");
+
+  if (!tabLogin || !tabRegister || !registerFields || !authForm || !phoneInput || !authError || !authSubmit || !testUsers) {
+    return;
+  }
+
+  let isLoginMode = true;
+
+  function showError(message) {
+    authError.textContent = message;
+    authError.classList.remove("hidden");
+  }
+
+  function clearError() {
+    authError.textContent = "";
+    authError.classList.add("hidden");
+  }
+
+  function setMode(loginMode) {
+    isLoginMode = loginMode;
+    tabLogin.classList.toggle("is-active", loginMode);
+    tabRegister.classList.toggle("is-active", !loginMode);
+    registerFields.classList.toggle("hidden", loginMode);
+    testUsers.classList.toggle("hidden", !loginMode);
+    authSubmit.textContent = loginMode ? "INGRESAR" : "REGISTRARSE";
+
+    if (nameInput) nameInput.required = !loginMode;
+    if (emailInput) emailInput.required = !loginMode;
+    clearError();
+  }
+
+  tabLogin.addEventListener("click", () => setMode(true));
+  tabRegister.addEventListener("click", () => setMode(false));
+
+  phoneInput.addEventListener("input", () => {
+    phoneInput.value = formatPhoneInput(phoneInput.value);
+  });
+
+  testUsers.querySelectorAll("button[data-phone]").forEach((button) => {
+    button.addEventListener("click", () => {
+      phoneInput.value = button.getAttribute("data-phone") || "";
+      clearError();
+    });
+  });
+
+  authForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    clearError();
+
+    const phone = digitsOnly(phoneInput.value);
+    if (phone.length !== 9) {
+      showError("El número de teléfono debe tener 9 dígitos");
       return;
     }
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result || ""));
-    reader.onerror = () => reject(new Error("No se pudo leer la imagen."));
-    reader.readAsDataURL(file);
+
+    if (isLoginMode) {
+      const user = loginByPhone(phone);
+      if (!user) {
+        showError("Número de teléfono no encontrado. Por favor regístrate.");
+        return;
+      }
+      window.location.assign("/booking");
+      return;
+    }
+
+    const name = String(nameInput?.value || "").trim();
+    const email = String(emailInput?.value || "").trim();
+
+    if (!name || !email) {
+      showError("Por favor completa todos los campos");
+      return;
+    }
+
+    const user = registerUser(phone, name, email);
+    if (!user) {
+      showError("Este número de teléfono ya está registrado");
+      return;
+    }
+
+    window.location.assign("/booking");
   });
 }
 
-async function api(path, options = {}) {
-  const headers = { ...(options.headers || {}) };
-  if (!headers["Content-Type"] && options.body) {
-    headers["Content-Type"] = "application/json";
+function setupDashboardPage() {
+  const user = redirectIfNoAuth();
+  if (!user) return;
+
+  const profileName = document.getElementById("profile-name");
+  const profilePhone = document.getElementById("profile-phone");
+  const profileEmail = document.getElementById("profile-email");
+  const appointmentsList = document.getElementById("appointments-list");
+  const logoutBtn = document.getElementById("logout-btn");
+
+  if (profileName) profileName.textContent = user.name;
+  if (profilePhone) profilePhone.textContent = formatStoredPhone(user.phone);
+  if (profileEmail) profileEmail.textContent = user.email;
+
+  const appointments = getAppointmentsForCurrentUser();
+  if (appointmentsList) {
+    if (appointments.length === 0) {
+      appointmentsList.innerHTML = `<div class="empty-state light">No tienes citas agendadas</div>`;
+    } else {
+      appointmentsList.innerHTML = appointments
+        .map(
+          (item) => `
+            <article class="dash-appointment">
+              <p><strong>Fecha:</strong> ${escapeHtml(new Date(item.date).toLocaleDateString("es-CL"))}</p>
+              <p><strong>Hora:</strong> ${escapeHtml(item.time)}</p>
+              <p><strong>Barbero:</strong> ${escapeHtml(item.barber)}</p>
+              <p><strong>Servicio:</strong> ${escapeHtml(item.service)}</p>
+              <p><strong>Estado:</strong> ${escapeHtml(item.status)}</p>
+            </article>
+          `
+        )
+        .join("");
+    }
   }
-  if (state.token) {
-    headers.Authorization = `Bearer ${state.token}`;
-  }
 
-  const response = await fetch(`${API_BASE}${path}`, {
-    ...options,
-    headers,
-  });
-
-  const payload = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    throw new Error(payload.error || "Error de servidor");
-  }
-  return payload;
-}
-
-async function apiBarber(path, options = {}) {
-  const headers = { ...(options.headers || {}) };
-  if (!headers["Content-Type"] && options.body) {
-    headers["Content-Type"] = "application/json";
-  }
-  if (state.barberToken) {
-    headers.Authorization = `Bearer ${state.barberToken}`;
-  }
-
-  const response = await fetch(`${API_BASE}${path}`, {
-    ...options,
-    headers,
-  });
-
-  const payload = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    throw new Error(payload.error || "Error de servidor");
-  }
-  return payload;
-}
-
-function renderServices() {
-  const servicesGrid = byId("services-grid");
-  if (!servicesGrid) return;
-
-  const categoryOrder = ["Servicios", "Brunetti Experiencia", "Servicios Químicos"];
-  const sortedServices = [...state.services].sort((a, b) => {
-    const aIdx = categoryOrder.indexOf(a.category);
-    const bIdx = categoryOrder.indexOf(b.category);
-    const aWeight = aIdx === -1 ? 99 : aIdx;
-    const bWeight = bIdx === -1 ? 99 : bIdx;
-    if (aWeight !== bWeight) return aWeight - bWeight;
-    return String(a.name).localeCompare(String(b.name), "es");
-  });
-
-  servicesGrid.innerHTML = sortedServices
-    .map(
-      (s) => `
-      <article class="card">
-        <p class="service-category">${s.category}</p>
-        <h3>${s.name}</h3>
-        <p>Duración: ${s.duration} min</p>
-        <p class="price">${formatCLP(s.price)}</p>
-        <p class="hint">${
-          s.only_bruno ? "Disponible solo con Bruno Herrera." : "Disponible con todos los barberos excepto Bruno."
-        }</p>
-        ${s.tne_eligible ? '<p class="hint">TNE: 20% de descuento.</p>' : ""}
-      </article>
-    `
-    )
-    .join("");
-}
-
-function applyBusinessInfo() {
-  if (!state.businessInfo) return;
-
-  const locationText = byId("location-text");
-  const footerLocation = byId("footer-location");
-  const tneNote = byId("services-tne-note");
-
-  if (locationText && state.businessInfo.location) {
-    locationText.textContent = state.businessInfo.location;
-  }
-  if (footerLocation && state.businessInfo.location) {
-    footerLocation.textContent = `PIMP STUDIO · ${state.businessInfo.location} · Instagram: @pimpstudiochile · Atención: Lunes a Sábado de 10:00 a 20:00`;
-  }
-  if (tneNote && state.businessInfo.tne_rule) {
-    tneNote.textContent = `${state.businessInfo.tne_rule} Los servicios Brunetti Experiencia son exclusivos de Bruno Herrera.`;
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", logout);
   }
 }
 
-function renderBarbers() {
-  const barbersGrid = byId("barbers-grid");
-  if (!barbersGrid) return;
+function setupBookingPage() {
+  const user = redirectIfNoAuth();
+  if (!user) return;
 
-  barbersGrid.innerHTML = state.barbers
-    .map(
-      (b) => `
-      <article class="card barber-card" data-barber-id="${b.id}">
-        ${
-          b.photo_url
-            ? `<img src="${b.photo_url}" alt="Foto de ${b.name}" class="barber-photo" />`
-            : `<img src="assets/pimp-studio-logo.jpg" alt="Foto de ${b.name}" class="barber-photo" />`
-        }
-        <h3>${b.name}</h3>
-        <p>${b.specialty}</p>
-      </article>
-    `
-    )
-    .join("");
+  const logoutBtn = document.getElementById("logout-btn");
+  const barbersOptions = document.getElementById("barbers-options");
+  const servicesOptions = document.getElementById("services-options");
+  const continueBtn = document.getElementById("continue-btn");
+  const backBtn = document.getElementById("back-btn");
+  const confirmBtn = document.getElementById("confirm-btn");
+  const dateInput = document.getElementById("date-input");
+  const step1 = document.getElementById("booking-step-1");
+  const step2 = document.getElementById("booking-step-2");
 
-  if (byId("barber-agenda-slots")) {
-    barbersGrid.querySelectorAll(".barber-card").forEach((card) => {
-      card.addEventListener("click", async () => {
-        const barberId = Number(card.getAttribute("data-barber-id"));
-        state.selectedBarberAgendaId = barberId;
-        await renderSelectedBarberAgenda();
+  if (
+    !barbersOptions ||
+    !servicesOptions ||
+    !continueBtn ||
+    !backBtn ||
+    !confirmBtn ||
+    !dateInput ||
+    !step1 ||
+    !step2
+  ) {
+    return;
+  }
+
+  const summaryClient = document.getElementById("sum-client");
+  const summaryBarber = document.getElementById("sum-barber");
+  const summaryService = document.getElementById("sum-service");
+  const summaryPrice = document.getElementById("sum-price");
+  const summaryDuration = document.getElementById("sum-duration");
+  const summaryDate = document.getElementById("sum-date");
+  const summaryTime = document.getElementById("sum-time");
+
+  if (summaryClient) {
+    summaryClient.textContent = user.name;
+  }
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", logout);
+  }
+
+  const state = {
+    barber: "",
+    service: null,
+    date: "",
+    time: "",
+  };
+
+  dateInput.min = new Date().toISOString().slice(0, 10);
+
+  function updateSummary() {
+    if (summaryBarber) summaryBarber.textContent = state.barber || "-";
+    if (summaryService) summaryService.textContent = state.service?.label || "-";
+    if (summaryPrice) summaryPrice.textContent = state.service?.price || "-";
+    if (summaryDuration) summaryDuration.textContent = state.service?.duration || "-";
+    if (summaryDate) summaryDate.textContent = state.date || "-";
+    if (summaryTime) summaryTime.textContent = state.time || "-";
+  }
+
+  function filteredServices() {
+    if (!state.barber) return [];
+    if (state.barber === "Bruno Herrera") {
+      return FIGMA_SERVICES.filter((item) => item.category === "brunetti" || item.category === "quimico");
+    }
+    return FIGMA_SERVICES.filter((item) => item.category === "general" || item.category === "quimico");
+  }
+
+  function validateDate() {
+    if (!state.date) return false;
+    const date = new Date(`${state.date}T00:00:00`);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (date < today) return false;
+    if (date.getDay() === 0) return false;
+    return true;
+  }
+
+  function validateConfirm() {
+    confirmBtn.disabled = !(state.barber && state.service && validateDate() && state.time);
+  }
+
+  function renderSlots() {
+    const groups = [
+      ["slots-maniana", TIME_SLOTS.maniana],
+      ["slots-tarde", TIME_SLOTS.tarde],
+      ["slots-noche", TIME_SLOTS.noche],
+    ];
+
+    groups.forEach(([groupId, items]) => {
+      const container = document.getElementById(groupId);
+      if (!container) return;
+
+      container.innerHTML = items
+        .map(
+          (slot) => `
+            <button type="button" class="slot-btn ${state.time === slot ? "is-selected" : ""}" data-slot="${escapeHtml(slot)}">
+              ${escapeHtml(slot)}
+            </button>
+          `
+        )
+        .join("");
+
+      container.querySelectorAll("[data-slot]").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.time = button.getAttribute("data-slot") || "";
+          renderSlots();
+          updateSummary();
+          validateConfirm();
+        });
+      });
+    });
+  }
+
+  function renderServiceOptions() {
+    const services = filteredServices();
+
+    if (!state.barber) {
+      servicesOptions.className = "services-options empty-state light";
+      servicesOptions.textContent = "Primero selecciona un barbero";
+      continueBtn.disabled = true;
+      return;
+    }
+
+    servicesOptions.className = "services-options";
+    servicesOptions.innerHTML = services
+      .map(
+        (service) => `
+          <button
+            type="button"
+            class="service-option ${state.service?.value === service.value ? "is-selected" : ""}"
+            data-service="${escapeHtml(service.value)}"
+          >
+            <span>${escapeHtml(service.label)}</span>
+            <span>${escapeHtml(service.price)}</span>
+            <small>${escapeHtml(service.duration)}</small>
+          </button>
+        `
+      )
+      .join("");
+
+    servicesOptions.querySelectorAll("[data-service]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const value = button.getAttribute("data-service");
+        state.service = services.find((item) => item.value === value) || null;
+        renderServiceOptions();
+        updateSummary();
+        continueBtn.disabled = !state.service;
+        validateConfirm();
       });
     });
 
-    if (!state.selectedBarberAgendaId && state.barbers.length) {
-      state.selectedBarberAgendaId = Number(state.barbers[0].id);
-    }
+    continueBtn.disabled = !state.service;
   }
-}
 
-function renderCourses() {
-  const coursesGrid = byId("courses-grid");
-  if (!coursesGrid) return;
-
-  coursesGrid.innerHTML = state.courses
-    .map(
-      (c) => `
-      <article class="card course-card">
-        <iframe class="course-video" src="${c.embed_url}" title="${c.title}" loading="lazy" allowfullscreen></iframe>
-        <h3>${c.title}</h3>
-        <p>${c.description}</p>
-      </article>
+  barbersOptions.innerHTML = FIGMA_BARBERS.map(
+    (barber) => `
+      <button type="button" class="pill-btn" data-barber="${escapeHtml(barber.name)}">
+        ${escapeHtml(barber.name)}
+      </button>
     `
-    )
-    .join("");
+  ).join("");
+
+  barbersOptions.querySelectorAll("[data-barber]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.barber = button.getAttribute("data-barber") || "";
+      state.service = null;
+      state.time = "";
+
+      barbersOptions.querySelectorAll("[data-barber]").forEach((item) => {
+        item.classList.remove("is-selected");
+      });
+
+      button.classList.add("is-selected");
+      renderServiceOptions();
+      renderSlots();
+      updateSummary();
+      validateConfirm();
+    });
+  });
+
+  continueBtn.addEventListener("click", () => {
+    if (!state.service) return;
+    step1.classList.add("hidden");
+    step2.classList.remove("hidden");
+  });
+
+  backBtn.addEventListener("click", () => {
+    step2.classList.add("hidden");
+    step1.classList.remove("hidden");
+  });
+
+  dateInput.addEventListener("change", () => {
+    state.date = dateInput.value;
+    if (!validateDate()) {
+      alert("Debes seleccionar una fecha válida (sin domingos ni fechas pasadas).");
+      state.date = "";
+      dateInput.value = "";
+    }
+    updateSummary();
+    validateConfirm();
+  });
+
+  confirmBtn.addEventListener("click", () => {
+    if (!validateDate() || !state.service) return;
+
+    const ok = addAppointment({
+      date: state.date,
+      time: state.time,
+      barber: state.barber,
+      service: `${state.service.label} - ${state.service.price}`,
+      status: "Confirmada",
+    });
+
+    if (!ok) return;
+
+    alert("¡Reserva confirmada exitosamente!");
+    window.location.assign("/dashboard");
+  });
+
+  renderServiceOptions();
+  renderSlots();
+  updateSummary();
+  validateConfirm();
 }
 
-function fillSelectors() {
-  const barberSelect = byId("barber-select");
-  const blockBarber = byId("block-barber");
-  const blockSlot = byId("block-slot");
-  const dateInput = byId("date-input");
-  const blockDate = byId("block-date");
-  const adminCreateBarber = byId("admin-create-barber");
-  const barberAvailabilityDate = byId("barber-availability-date");
-  const barberAvailabilitySlots = byId("barber-availability-slots");
+function boot() {
+  ensureSeedData();
+  const page = document.body?.dataset?.page;
 
-  if (barberSelect) {
-    barberSelect.innerHTML = state.barbers.map((b) => `<option value="${b.id}">${b.name}</option>`).join("");
-  }
-
-  if (blockBarber) {
-    blockBarber.innerHTML = state.barbers.map((b) => `<option value="${b.id}">${b.name}</option>`).join("");
-  }
-
-  if (adminCreateBarber) {
-    adminCreateBarber.innerHTML = state.barbers.map((b) => `<option value="${b.id}">${b.name}</option>`).join("");
-  }
-
-  if (blockSlot) {
-    blockSlot.innerHTML = BASE_SLOTS.map((s) => `<option value="${s}">${s}</option>`).join("");
-  }
-
-  if (barberAvailabilitySlots) {
-    barberAvailabilitySlots.innerHTML = BASE_SLOTS.map((s) => `<option value="${s}">${s}</option>`).join("");
-  }
-
-  syncServiceOptionsByBarber();
-
-  if (dateInput) {
-    dateInput.min = todayISO();
-    dateInput.value = todayISO();
-  }
-  if (blockDate) {
-    blockDate.min = todayISO();
-    blockDate.value = todayISO();
-  }
-  if (barberAvailabilityDate) {
-    barberAvailabilityDate.min = todayISO();
-    barberAvailabilityDate.value = todayISO();
-  }
-
-  const agendaDateInput = byId("barber-agenda-date");
-  if (agendaDateInput) {
-    agendaDateInput.min = todayISO();
-    agendaDateInput.value = todayISO();
-  }
-}
-
-function syncServiceOptionsByBarber() {
-  const serviceSelect = byId("service-select");
-  const barberSelect = byId("barber-select");
-  if (!serviceSelect || !barberSelect) return;
-
-  const barberId = Number(barberSelect.value);
-  const selectedService = Number(serviceSelect.value);
-  const services = state.services.filter((s) => !barberId || s.barber_ids.includes(barberId));
-
-  serviceSelect.innerHTML = services.length
-    ? services.map((s) => `<option value="${s.id}">${s.name}</option>`).join("")
-    : `<option value="">Sin servicios disponibles</option>`;
-
-  if (services.some((s) => Number(s.id) === selectedService)) {
-    serviceSelect.value = String(selectedService);
-  }
-}
-
-function renderServiceSummary() {
-  const summary = byId("service-summary");
-  const serviceSelect = byId("service-select");
-  const barberSelect = byId("barber-select");
-  if (!summary || !serviceSelect || !barberSelect) return;
-
-  syncServiceOptionsByBarber();
-
-  const serviceId = Number(serviceSelect.value);
-  const barberId = Number(barberSelect.value);
-  const barber = state.barbers.find((b) => Number(b.id) === barberId);
-  const service = state.services.find((s) => Number(s.id) === serviceId);
-
-  if (!service) {
-    summary.textContent = "";
+  if (page === "home") {
+    setupHomePage();
     return;
   }
 
-  const tneText = service.tne_eligible ? " · TNE disponible (20% descuento)." : " · Sin descuento TNE para este servicio.";
-  const barberText = barber ? ` · ${barber.name}` : "";
-  summary.textContent = `${service.duration} min · ${formatCLP(service.price)}${barberText}${tneText}`;
-}
-
-async function refreshSlotOptions() {
-  const barberSelect = byId("barber-select");
-  const dateInput = byId("date-input");
-  const slotSelect = byId("slot-select");
-  if (!barberSelect || !dateInput || !slotSelect) return;
-
-  const barberId = Number(barberSelect.value);
-  const date = dateInput.value;
-  if (!barberId || !date) return;
-
-  const data = await api(`/api/availability?barberId=${barberId}&date=${date}`);
-  const freeSlots = data.slots.filter((s) => s.available);
-
-  slotSelect.innerHTML = freeSlots.length
-    ? freeSlots.map((s) => `<option value="${s.slot}">${s.slot}</option>`).join("")
-    : `<option value="">Sin bloques disponibles</option>`;
-}
-
-async function renderTodayAvailability() {
-  const list = byId("today-availability");
-  if (!list) return;
-
-  const date = todayISO();
-  const rows = await Promise.all(
-    state.barbers.map(async (barber) => {
-      const data = await api(`/api/availability?barberId=${barber.id}&date=${date}`);
-      const freeCount = data.slots.filter((s) => s.available).length;
-      return `<li>${barber.name}: ${freeCount} bloques</li>`;
-    })
-  );
-
-  list.innerHTML = rows.join("");
-}
-
-async function renderSelectedBarberAgenda() {
-  const list = byId("barber-agenda-slots");
-  const title = byId("barber-agenda-title");
-  const dateInput = byId("barber-agenda-date");
-  if (!list || !title || !dateInput || !state.selectedBarberAgendaId) return;
-
-  const barber = state.barbers.find((b) => Number(b.id) === Number(state.selectedBarberAgendaId));
-  if (!barber) return;
-
-  const date = dateInput.value || todayISO();
-  const data = await api(`/api/availability?barberId=${barber.id}&date=${date}`);
-  const freeSlots = data.slots.filter((s) => s.available);
-
-  title.textContent = `Agenda disponible · ${barber.name}`;
-
-  if (!freeSlots.length) {
-    list.innerHTML = "<li>No hay bloques disponibles para esta fecha.</li>";
+  if (page === "login") {
+    setupLoginPage();
     return;
   }
 
-  list.innerHTML = freeSlots.map((s) => `<li>${s.slot}</li>`).join("");
-}
-
-async function renderBlocked() {
-  const list = byId("blocked-slots");
-  if (!list) return;
-
-  const rows = await api("/api/blocked-slots");
-  state.blocked = rows;
-
-  if (!rows.length) {
-    list.innerHTML = "<li>No hay bloqueos activos.</li>";
+  if (page === "dashboard") {
+    setupDashboardPage();
     return;
   }
 
-  list.innerHTML = rows
-    .map((b) => `<li>${b.date} · ${b.slot} · ${b.barber_name}${b.reason ? ` · ${b.reason}` : ""}</li>`)
-    .join("");
-}
-
-async function renderUserBookings() {
-  const list = byId("user-bookings");
-  if (!list) return;
-
-  if (!state.token || !state.user) {
-    list.innerHTML = "<li>Regístrate para ver reservas.</li>";
-    return;
-  }
-
-  const rows = await api("/api/bookings/me");
-  if (!rows.length) {
-    list.innerHTML = "<li>No tienes reservas aun.</li>";
-    return;
-  }
-
-  list.innerHTML = rows
-    .map(
-      (b) =>
-        `<li>Atención: ${b.date} ${b.slot} · ${b.service_name} (${formatCLP(b.service_price)}) con ${b.barber_name}</li>`
-    )
-    .join("");
-}
-
-function hydrateUser() {
-  const userName = byId("user-name");
-  const userEmail = byId("user-email");
-  const userPhone = byId("user-phone");
-  if (!state.user) return;
-
-  if (userName) userName.value = state.user.name || "";
-  if (userEmail) userEmail.value = state.user.email || "";
-  if (userPhone) userPhone.value = state.user.phone || "";
-}
-
-async function loadClientProfile() {
-  const result = byId("client-profile-result");
-  const phoneInput = byId("client-phone");
-  const noteInput = byId("client-note");
-  if (!result || !phoneInput || !noteInput) return;
-
-  if (!state.token || !state.user) {
-    phoneInput.value = "";
-    noteInput.value = "";
-    result.textContent = "Regístrate para guardar o editar tu perfil de cliente.";
-    return;
-  }
-
-  const profile = await api("/api/client-profile/me");
-  phoneInput.value = profile?.phone || state.user.phone || "";
-  noteInput.value = profile?.note || "";
-  result.textContent = profile ? "Perfil cargado." : "Completa tu registro básico de cliente.";
-}
-
-async function loadBarberAvailabilityForDate() {
-  const dateInput = byId("barber-availability-date");
-  const slotsSelect = byId("barber-availability-slots");
-  const result = byId("barber-availability-result");
-  if (!dateInput || !slotsSelect) return;
-
-  for (const opt of slotsSelect.options) {
-    opt.selected = false;
-  }
-
-  if (!state.barberToken || !state.barberUser) {
-    if (result) result.textContent = "Inicia sesión como barbero para definir disponibilidad.";
-    return;
-  }
-
-  const data = await apiBarber(`/api/barber-availability/me?date=${encodeURIComponent(dateInput.value)}`);
-  for (const opt of slotsSelect.options) {
-    opt.selected = data.slots.includes(opt.value);
-  }
-  if (result) result.textContent = `Sesión activa: ${state.barberUser.barber_name}`;
-}
-
-function bindEvents() {
-  const serviceSelect = byId("service-select");
-  const barberSelect = byId("barber-select");
-  const dateInput = byId("date-input");
-  const agendaDateInput = byId("barber-agenda-date");
-
-  const authForm = byId("auth-form");
-  const profileForm = byId("client-profile-form");
-  const bookingForm = byId("booking-form");
-  const blockForm = byId("block-form");
-  const newsletterForm = byId("newsletter-form");
-  const contactForm = byId("contact-form");
-  const agendaForm = byId("user-agenda-form");
-  const clientsForm = byId("clients-list-form");
-  const adminCreateForm = byId("admin-create-barber-user-form");
-  const adminCreateNewBarberForm = byId("admin-create-new-barber-form");
-  const barberLoginForm = byId("barber-login-form");
-  const barberAvailabilityForm = byId("barber-availability-form");
-
-  if (serviceSelect) {
-    serviceSelect.addEventListener("change", renderServiceSummary);
-  }
-  if (barberSelect) {
-    barberSelect.addEventListener("change", () => {
-      renderServiceSummary();
-      void refreshSlotOptions();
-    });
-  }
-  if (dateInput) {
-    dateInput.addEventListener("change", () => void refreshSlotOptions());
-  }
-  if (agendaDateInput) {
-    agendaDateInput.addEventListener("change", () => void renderSelectedBarberAgenda());
-  }
-
-  if (authForm) {
-    authForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const name = byId("user-name").value.trim();
-      const email = byId("user-email").value.trim().toLowerCase();
-      const phone = normalizePhoneCl(byId("user-phone").value);
-      if (!isValidPhoneCl(phone)) {
-        alert("Celular inválido. Usa formato +569 9999 9999");
-        return;
-      }
-
-      try {
-        const data = await api("/api/auth/access", {
-          method: "POST",
-          body: JSON.stringify({ name, email, phone }),
-        });
-
-        state.token = data.token;
-        state.user = data.user;
-        localStorage.setItem("barber_token", state.token);
-        writeLS("barber_user", state.user);
-
-        byId("user-phone").value = phone;
-        await renderUserBookings();
-        await loadClientProfile();
-        alert(data.mode === "created" ? "Registro completado. Ya puedes agendar." : "Datos actualizados.");
-      } catch (error) {
-        alert(error.message);
-      }
-    });
-  }
-
-  if (profileForm) {
-    profileForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      if (!state.token || !state.user) {
-        alert("Primero debes registrarte en Reserva Aquí.");
-        return;
-      }
-
-      const phone = normalizePhoneCl(byId("client-phone").value);
-      const note = byId("client-note").value.trim();
-      if (!isValidPhoneCl(phone)) {
-        alert("Celular inválido. Usa formato +569 9999 9999");
-        return;
-      }
-
-      try {
-        const data = await api("/api/client-profile/me", {
-          method: "POST",
-          body: JSON.stringify({ phone, note }),
-        });
-        byId("client-profile-result").textContent =
-          data.mode === "created" ? "Perfil registrado correctamente." : "Perfil actualizado correctamente.";
-      } catch (error) {
-        alert(error.message);
-      }
-    });
-  }
-
-  if (bookingForm) {
-    bookingForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      if (!state.token || !state.user) {
-        alert("Debes registrarte en Reserva Aquí antes de agendar.");
-        return;
-      }
-
-      const barberId = Number(byId("barber-select").value);
-      const serviceId = Number(byId("service-select").value);
-      const date = byId("date-input").value;
-      const slot = byId("slot-select").value;
-
-      try {
-        await api("/api/bookings", {
-          method: "POST",
-          body: JSON.stringify({ barberId, serviceId, date, slot }),
-        });
-
-        await refreshSlotOptions();
-        await renderTodayAvailability();
-        await renderUserBookings();
-        alert("Reserva confirmada.");
-      } catch (error) {
-        alert(error.message);
-      }
-    });
-  }
-
-  if (blockForm) {
-    blockForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const adminKey = byId("admin-key").value;
-      const barberId = Number(byId("block-barber").value);
-      const date = byId("block-date").value;
-      const slot = byId("block-slot").value;
-
-      try {
-        await api("/api/blocked-slots", {
-          method: "POST",
-          headers: { "x-admin-key": adminKey },
-          body: JSON.stringify({ barberId, date, slot, reason: "Bloqueado por gestión interna" }),
-        });
-
-        await renderBlocked();
-        await refreshSlotOptions();
-        await renderTodayAvailability();
-        alert("Bloque agregado.");
-      } catch (error) {
-        alert(error.message);
-      }
-    });
-  }
-
-  if (adminCreateForm) {
-    adminCreateForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const adminKey = byId("admin-create-key").value;
-      const barberId = Number(byId("admin-create-barber").value);
-      const username = byId("admin-create-username").value.trim().toLowerCase();
-      const password = byId("admin-create-password").value;
-      const photoFile = byId("admin-create-photo")?.files?.[0] || null;
-      const photoDataUrl = await fileToDataUrl(photoFile);
-
-      try {
-        const data = await api("/api/admin/barber-accounts", {
-          method: "POST",
-          headers: { "x-admin-key": adminKey },
-          body: JSON.stringify({ barberId, username, password, photoDataUrl }),
-        });
-        byId("admin-create-result").textContent = `Usuario ${data.username} listo para ${data.barber.name}.`;
-        await loadCatalogs();
-        renderBarbers();
-        fillSelectors();
-      } catch (error) {
-        byId("admin-create-result").textContent = error.message;
-      }
-    });
-  }
-
-  if (adminCreateNewBarberForm) {
-    adminCreateNewBarberForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const adminKey = byId("admin-new-key").value;
-      const name = byId("admin-new-name").value.trim();
-      const specialty = byId("admin-new-specialty").value.trim();
-      const username = byId("admin-new-username").value.trim().toLowerCase();
-      const password = byId("admin-new-password").value;
-      const photoFile = byId("admin-new-photo")?.files?.[0] || null;
-      const photoDataUrl = await fileToDataUrl(photoFile);
-
-      try {
-        const data = await api("/api/admin/barbers", {
-          method: "POST",
-          headers: { "x-admin-key": adminKey },
-          body: JSON.stringify({ name, specialty, username, password, photoDataUrl }),
-        });
-        byId("admin-new-result").textContent = `Barbero ${data.barber.name} creado correctamente.`;
-        await loadCatalogs();
-        renderBarbers();
-        fillSelectors();
-      } catch (error) {
-        byId("admin-new-result").textContent = error.message;
-      }
-    });
-  }
-
-  if (barberLoginForm) {
-    barberLoginForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const username = byId("barber-login-username").value.trim().toLowerCase();
-      const password = byId("barber-login-password").value;
-
-      try {
-        const data = await apiBarber("/api/barber-auth/login", {
-          method: "POST",
-          body: JSON.stringify({ username, password }),
-        });
-        state.barberToken = data.token;
-        state.barberUser = data.barber;
-        localStorage.setItem("barber_staff_token", state.barberToken);
-        writeLS("barber_staff_user", state.barberUser);
-        byId("barber-login-result").textContent = `Sesión activa: ${data.barber.barber_name}`;
-        await loadBarberAvailabilityForDate();
-      } catch (error) {
-        byId("barber-login-result").textContent = error.message;
-      }
-    });
-  }
-
-  const barberAvailabilityDate = byId("barber-availability-date");
-  if (barberAvailabilityDate) {
-    barberAvailabilityDate.addEventListener("change", () => void loadBarberAvailabilityForDate());
-  }
-
-  if (barberAvailabilityForm) {
-    barberAvailabilityForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      if (!state.barberToken) {
-        byId("barber-availability-result").textContent = "Inicia sesión como barbero primero.";
-        return;
-      }
-
-      const date = byId("barber-availability-date").value;
-      const slots = Array.from(byId("barber-availability-slots").selectedOptions).map((opt) => opt.value);
-
-      try {
-        await apiBarber("/api/barber-availability/me", {
-          method: "POST",
-          body: JSON.stringify({ date, slots }),
-        });
-        byId("barber-availability-result").textContent = "Disponibilidad guardada.";
-        await renderTodayAvailability();
-        await renderSelectedBarberAgenda();
-      } catch (error) {
-        byId("barber-availability-result").textContent = error.message;
-      }
-    });
-  }
-
-  if (newsletterForm) {
-    newsletterForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = byId("newsletter-email").value.trim().toLowerCase();
-
-      try {
-        await api("/api/newsletter", {
-          method: "POST",
-          body: JSON.stringify({ email }),
-        });
-        byId("newsletter-result").textContent = "Suscripción confirmada.";
-        e.target.reset();
-      } catch (error) {
-        alert(error.message);
-      }
-    });
-  }
-
-  if (contactForm) {
-    contactForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const name = byId("contact-name").value.trim();
-      const phone = byId("contact-phone").value.trim();
-      const message = byId("contact-message").value.trim();
-
-      try {
-        await api("/api/contact", {
-          method: "POST",
-          body: JSON.stringify({ name, phone, message }),
-        });
-        alert("Mensaje enviado. Te responderemos pronto.");
-        e.target.reset();
-      } catch (error) {
-        alert(error.message);
-      }
-    });
-  }
-
-  if (agendaForm) {
-    agendaForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const adminKey = byId("agenda-admin-key").value;
-      const email = byId("agenda-user-email").value.trim().toLowerCase();
-      const list = byId("user-agenda-results");
-
-      try {
-        const data = await api(`/api/bookings/by-user?email=${encodeURIComponent(email)}`, {
-          headers: { "x-admin-key": adminKey },
-        });
-
-        if (!data.bookings.length) {
-          list.innerHTML = `<li>${data.user.name} no tiene reservas registradas.</li>`;
-          return;
-        }
-
-        list.innerHTML = data.bookings
-          .map(
-            (b) =>
-              `<li>${data.user.name} · ${b.date} ${b.slot} · ${b.service_name} (${formatCLP(b.service_price)}) con ${b.barber_name}</li>`
-          )
-          .join("");
-      } catch (error) {
-        alert(error.message);
-      }
-    });
-  }
-
-  if (clientsForm) {
-    clientsForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const adminKey = byId("clients-admin-key").value;
-      const list = byId("clients-list");
-
-      try {
-        const rows = await api("/api/clients", {
-          headers: { "x-admin-key": adminKey },
-        });
-
-        if (!rows.length) {
-          list.innerHTML = "<li>No hay clientes registrados.</li>";
-          return;
-        }
-
-        list.innerHTML = rows
-          .map(
-            (c) =>
-              `<li>${c.name} · ${c.email} · ${c.phone || "Sin teléfono"} · Reservas: ${c.bookings_count}${
-                c.note ? ` · Nota: ${c.note}` : ""
-              }</li>`
-          )
-          .join("");
-      } catch (error) {
-        alert(error.message);
-      }
-    });
+  if (page === "booking") {
+    setupBookingPage();
   }
 }
 
-async function loadCatalogs() {
-  const [services, barbers, courses, businessInfo] = await Promise.all([
-    api("/api/services"),
-    api("/api/barbers"),
-    api("/api/courses"),
-    api("/api/business-info"),
-  ]);
-
-  state.services = services;
-  state.barbers = barbers;
-  state.courses = courses;
-  state.businessInfo = businessInfo;
-}
-
-async function init() {
-  try {
-    await loadCatalogs();
-    applyBusinessInfo();
-    renderServices();
-    renderBarbers();
-    renderCourses();
-    fillSelectors();
-    bindEvents();
-    hydrateUser();
-    renderServiceSummary();
-    await refreshSlotOptions();
-    await renderTodayAvailability();
-    await renderSelectedBarberAgenda();
-    await renderBlocked();
-    await renderUserBookings();
-    await loadClientProfile();
-    await loadBarberAvailabilityForDate();
-  } catch (error) {
-    console.error(error);
-    alert(`No se pudo iniciar la app: ${error.message}`);
-  }
-}
-
-void init();
+document.addEventListener("DOMContentLoaded", boot);

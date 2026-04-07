@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PIMP STUDIO | Booking</title>
+    <meta name="description" content="Reserva de servicios PIMP STUDIO." />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body data-page="booking">
+    <main class="booking-page">
+      <header class="booking-top">
+        <a href="/" class="dash-brand">
+          <img src="assets/pimp-studio-logo.jpg" alt="Pimp Studio" class="brand-logo" />
+          <span>PIMP STUDIO</span>
+        </a>
+
+        <div class="dash-actions">
+          <a href="/dashboard" class="btn btn-ghost">DASHBOARD</a>
+          <button id="logout-btn" class="btn btn-ghost" type="button">CERRAR SESIÓN</button>
+        </div>
+      </header>
+
+      <div class="booking-layout">
+        <section class="booking-main">
+          <h2>Selecciona fecha y hora de tu servicio</h2>
+
+          <div id="booking-step-1">
+            <h3>1. Selecciona tu Barbero</h3>
+            <div id="barbers-options" class="pill-grid"></div>
+
+            <h3>2. Selecciona tu Servicio</h3>
+            <div id="services-options" class="services-options empty-state light">
+              Primero selecciona un barbero
+            </div>
+
+            <button id="continue-btn" class="btn btn-primary" type="button" disabled>Continuar</button>
+          </div>
+
+          <div id="booking-step-2" class="hidden">
+            <button id="back-btn" class="btn btn-ghost" type="button">← Volver</button>
+
+            <h3>3. Selecciona Fecha</h3>
+            <input id="date-input" type="date" class="date-input" />
+
+            <h3>4. Selecciona Horario</h3>
+            <p class="slot-label">Mañana</p>
+            <div id="slots-maniana" class="slot-grid"></div>
+
+            <p class="slot-label">Tarde</p>
+            <div id="slots-tarde" class="slot-grid"></div>
+
+            <p class="slot-label">Noche</p>
+            <div id="slots-noche" class="slot-grid"></div>
+
+            <button id="confirm-btn" class="btn btn-primary" type="button" disabled>Confirmar Reserva</button>
+          </div>
+        </section>
+
+        <aside class="booking-summary">
+          <h3>Información del servicio</h3>
+          <p><strong>Cliente:</strong> <span id="sum-client">-</span></p>
+          <p><strong>Barbero:</strong> <span id="sum-barber">-</span></p>
+          <p><strong>Servicio:</strong> <span id="sum-service">-</span></p>
+          <p><strong>Precio:</strong> <span id="sum-price">-</span></p>
+          <p><strong>Duración:</strong> <span id="sum-duration">-</span></p>
+          <p><strong>Fecha:</strong> <span id="sum-date">-</span></p>
+          <p><strong>Hora:</strong> <span id="sum-time">-</span></p>
+          <p class="service-note">* Los domingos estamos cerrados</p>
+        </aside>
+      </div>
+    </main>
+  </body>
+</html>

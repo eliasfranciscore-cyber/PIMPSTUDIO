@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PIMP STUDIO | Login</title>
+    <meta name="description" content="Login y registro de clientes PIMP STUDIO." />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body data-page="login">
+    <main class="auth-page">
+      <section class="auth-card">
+        <div class="auth-brand">
+          <img src="assets/pimp-studio-logo.jpg" alt="Pimp Studio" class="auth-logo" />
+          <h1>PIMP STUDIO</h1>
+          <p>Sistema de Reservas</p>
+        </div>
+
+        <div class="auth-tabs">
+          <button id="tab-login" class="is-active" type="button">INGRESAR</button>
+          <button id="tab-register" type="button">REGISTRARSE</button>
+        </div>
+
+        <form id="auth-form" class="auth-form">
+          <label for="phone-input">Número de Teléfono</label>
+          <input id="phone-input" type="text" placeholder="9 9883 3889" required />
+
+          <div id="register-fields" class="register-fields hidden">
+            <label for="name-input">Nombre Completo</label>
+            <input id="name-input" type="text" placeholder="Juan Pérez" />
+
+            <label for="email-input">Correo Electrónico</label>
+            <input id="email-input" type="email" placeholder="correo@ejemplo.com" />
+          </div>
+
+          <p id="auth-error" class="auth-error hidden"></p>
+          <button id="auth-submit" type="submit" class="btn btn-primary">INGRESAR</button>
+        </form>
+
+        <div id="test-users" class="test-users">
+          <p>Usuarios de prueba:</p>
+          <button type="button" data-phone="9 8765 4321">9 8765 4321</button>
+          <button type="button" data-phone="9 1234 5678">9 1234 5678</button>
+          <button type="button" data-phone="9 5555 6666">9 5555 6666</button>
+        </div>
+
+        <p class="auth-back"><a href="/">← Volver al inicio</a></p>
+      </section>
+    </main>
+  </body>
+</html>

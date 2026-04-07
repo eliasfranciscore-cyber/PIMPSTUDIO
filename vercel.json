@@ -1,15 +1,14 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "server.js",
-      "use": "@vercel/node"
-    }
-  ],
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "server.js"
-    }
+    { "src": "^/$", "dest": "/web/index.html" },
+    { "src": "^/login$", "dest": "/web/login.html" },
+    { "src": "^/booking$", "dest": "/web/booking.html" },
+    { "src": "^/dashboard$", "dest": "/web/dashboard.html" },
+    { "src": "^/assets/(.*)$", "dest": "/web/assets/$1" },
+    { "src": "^/styles.css$", "dest": "/web/styles.css" },
+    { "src": "^/app.js$", "dest": "/web/app.js" },
+    { "handle": "filesystem" },
+    { "src": "^(.*)$", "dest": "/web/index.html" }
   ]
 }
