@@ -1052,6 +1052,10 @@ app.use((_req, res) => {
   res.sendFile(path.join(__dirname, "web", "index.html"));
 });
 
-app.listen(PORT, () => {
-  console.log(`ELIJA backend activo en http://localhost:${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`ELIJA backend activo en http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
