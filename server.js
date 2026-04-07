@@ -9,9 +9,10 @@ const jwt = require("jsonwebtoken");
 const PORT = Number(process.env.PORT || 3000);
 const JWT_SECRET = process.env.JWT_SECRET || "elija-dev-secret";
 const ADMIN_KEY = process.env.ADMIN_KEY || "barber-admin-2026";
-const DB_DIR = path.join(__dirname, "data");
+const IS_VERCEL = Boolean(process.env.VERCEL);
+const DB_DIR = IS_VERCEL ? "/tmp/pimpstudio-data" : path.join(__dirname, "data");
 const DB_PATH = path.join(DB_DIR, "barberia.db");
-const UPLOADS_DIR = path.join(__dirname, "web", "uploads");
+const UPLOADS_DIR = IS_VERCEL ? "/tmp/pimpstudio-uploads" : path.join(__dirname, "web", "uploads");
 const BASE_SLOTS = [
   "10:00",
   "11:00",
@@ -497,6 +498,7 @@ initDb();
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use("/uploads", express.static(UPLOADS_DIR));
 app.use(express.static(path.join(__dirname, "web")));
 
 app.get("/api/health", (_req, res) => {
