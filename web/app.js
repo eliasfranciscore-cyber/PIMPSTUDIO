@@ -163,6 +163,30 @@ function registerUser(phoneDigits, name, email) {
   return user;
 }
 
+async function syncRegisteredClient(user) {
+  try {
+    const response = await fetch("/api/register-client", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+      }),
+    });
+
+    if (!response.ok) {
+      const detail = await response.text();
+      throw new Error(detail || `HTTP ${response.status}`);
+    }
+
+    return true;
+  } catch (error) {
+    console.warn("No se pudo sincronizar cliente en la nube:", error);
+    return false;
+  }
+}
+
 function logout() {
   setCurrentUser(null);
   window.location.assign("/");
@@ -324,7 +348,7 @@ function setupLoginPage() {
     });
   });
 
-  authForm.addEventListener("submit", (event) => {
+  authForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     clearError();
 
@@ -358,6 +382,7 @@ function setupLoginPage() {
       return;
     }
 
+    await syncRegisteredClient(user);
     window.location.assign("/booking");
   });
 }

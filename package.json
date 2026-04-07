@@ -1,28 +1,16 @@
 {
-  "name": "elija",
+  "name": "pimpstudio",
   "version": "1.0.0",
-  "description": "ELIJA es tu mano derecha para construir y operar la plataforma web de una barberia. Este repositorio define su personalidad, alcance funcional, skills y flujos de ejecucion.",
+  "private": true,
+  "description": "PIMP STUDIO web rebuilt from Figma layout",
   "main": "server.js",
-  "directories": {
-    "doc": "docs"
-  },
   "scripts": {
-    "start": "node server.js",
-    "test": "echo \"No tests yet\""
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "engines": {
-    "node": "20.x"
+    "start": "node server.js"
   },
   "dependencies": {
-    "bcryptjs": "^3.0.3",
-    "better-sqlite3": "^12.8.0",
-    "cors": "^2.8.6",
-    "dotenv": "^17.4.1",
-    "express": "^5.2.1",
-    "jsonwebtoken": "^9.0.3"
+    "@vercel/blob": "^1.1.1"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
