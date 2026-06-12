@@ -480,21 +480,65 @@ export default function Dashboard() {
               <Stat icon="scissors" label="Cortes registrados" value={clients.reduce((sum, item) => sum + Number(item.visits || 0), 0)} />
               <Stat icon="wallet" label="Valor historial" value={CLP(clients.reduce((sum, item) => sum + Number(item.totalSpent || 0), 0))} />
             </div>
-            <Panel title="Panel de clientes" action={<span className="chip chip-gold">Telefono como ID</span>}>
-              <div style={{ display: "grid", gap: ".55rem" }}>
-                {clients.map((client) => (
-                  <div key={client.id || client.phone} className="admin-row">
-                    <div>
-                      <strong>{client.name}</strong>
-                      <span>+56 {client.phone} · {client.email || "sin correo"}</span>
+            <div className="clients-workspace">
+              <Panel title="Panel de clientes" action={<span className="chip chip-gold">Telefono como ID</span>}>
+                <div className="client-search">
+                  <Icon name="user" size={15} />
+                  <input value={clientQuery} onChange={(e) => setClientQuery(e.target.value)} placeholder="Buscar por nombre, telefono o correo" />
+                </div>
+                <div className="client-list">
+                  {filteredClients.map((client) => (
+                    <button key={client.id || client.phone} className={`client-row ${selectedClient?.phone === client.phone ? "is-selected" : ""}`} onClick={() => openClient(client)}>
+                      <div>
+                        <strong>{client.name}</strong>
+                        <span>+56 {client.phone} · {client.email || "sin correo"}</span>
+                      </div>
+                      <div><strong>{client.visits || 0}</strong><span>visitas</span></div>
+                      <div><strong>{CLP(client.totalSpent || 0)}</strong><span>{client.lastVisit || "sin visitas"}</span></div>
+                      <span className="chip">{client.status || "activo"}</span>
+                    </button>
+                  ))}
+                  {!filteredClients.length && (
+                    <div className="empty-state">No hay clientes que coincidan con la busqueda.</div>
+                  )}
+                </div>
+              </Panel>
+              <Panel title="Historial del cliente" action={selectedClient ? <span className="chip">{clientHistory.length} registros</span> : <span className="chip">Selecciona un cliente</span>}>
+                {selectedClient ? (
+                  <div className="client-detail">
+                    <div className="client-profile">
+                      <div className="client-avatar">{(selectedClient.name || "C")[0]?.toUpperCase()}</div>
+                      <div>
+                        <strong>{selectedClient.name}</strong>
+                        <span>+56 {selectedClient.phone}</span>
+                        <span>{selectedClient.email || "sin correo"}</span>
+                      </div>
                     </div>
-                    <div><strong>{client.visits || 0}</strong><span>visitas</span></div>
-                    <div><strong>{CLP(client.totalSpent || 0)}</strong><span>{client.lastVisit || "sin visitas"}</span></div>
-                    <span className="chip">{client.status || "activo"}</span>
+                    <div className="client-kpis">
+                      <div><strong>{selectedClient.visits || clientHistory.length}</strong><span>Cortes</span></div>
+                      <div><strong>{CLP(selectedClient.totalSpent || clientHistory.reduce((sum, item) => sum + Number(item.price || 0), 0))}</strong><span>Total</span></div>
+                      <div><strong>{selectedClient.lastVisit || clientHistory[0]?.date || "sin fecha"}</strong><span>Ultima visita</span></div>
+                    </div>
+                    <div className="history-list">
+                      {clientHistory.map((item) => {
+                        const b = barbers.find((barberItem) => Number(barberItem.id) === Number(item.barberId)) || barberById(item.barberId)
+                        return (
+                          <div key={item.id || `${item.date}-${item.time}`} className="history-row">
+                            <div><strong>{item.service}</strong><span>{item.date} · {item.time}</span></div>
+                            <div><span>{b?.short || b?.name || "Barbero"}</span><strong>{CLP(item.price)}</strong></div>
+                            <span className="chip">{item.status}</span>
+                          </div>
+                        )
+                      })}
+                      {!clientHistory.length && <div className="empty-state">Este cliente aun no tiene historial de reservas.</div>}
+                    </div>
+                    <button className="btn btn-gold btn-block" onClick={() => navigate("/reservar")}><Icon name="calendar" size={15} /> Agendar para este cliente</button>
                   </div>
-                ))}
-              </div>
-            </Panel>
+                ) : (
+                  <div className="empty-state">Selecciona un cliente para revisar sus visitas, consumo e historial.</div>
+                )}
+              </Panel>
+            </div>
           </div>
         )}
 

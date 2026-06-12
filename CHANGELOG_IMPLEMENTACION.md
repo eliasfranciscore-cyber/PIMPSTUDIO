@@ -15,6 +15,9 @@ Este archivo registra el avance funcional de la rama `desarrollo` para que cualq
 ### Cambios implementados
 
 - Se agrego un panel de clientes inicial en `/panel`, pestaña `Clientes`, usando registros desde `/api/clients`.
+- La pestaña `Clientes` ahora incluye buscador por nombre, telefono o correo.
+- La pestaña `Clientes` ahora muestra detalle del cliente seleccionado con visitas, total consumido, ultima visita e historial de reservas.
+- El detalle de cliente consulta `/api/bookings?phone=...` y usa reservas locales como fallback.
 - Se agrego identificacion de cliente por telefono de 9 digitos en `/login`.
 - Si el telefono no existe, el login cambia a modo registro y exige nombre, telefono y correo.
 - Se agrego panel de cuenta del cliente en `/cuenta` con contador de visitas, historial, gasto historico y proxima reserva.
