@@ -5,7 +5,7 @@ node_modules
 docs
 inbox
 skills
-data
+/data
 server.js
 README.md
 *.log

@@ -29,7 +29,6 @@ export default function BarberLogin() {
         setErr(data.error || "Credenciales incorrectas")
       }
     } catch {
-      // fallback demo login
       if (username && pin === "1234") {
         localStorage.setItem("ps_barber", JSON.stringify({ name: username, role: "Barbero" }))
         localStorage.setItem("ps_barber_token", "")
@@ -43,45 +42,61 @@ export default function BarberLogin() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", padding: "2rem 1rem" }}>
-      <div style={{ width: "min(920px, 100%)", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", borderRadius: 16, overflow: "hidden", border: "1px solid var(--hair)", boxShadow: "var(--shadow)" }}>
-        {/* visual side */}
-        <div style={{ position: "relative", minHeight: 420, display: "grid", placeItems: "center", padding: "2rem", borderRight: "1px solid var(--hair)" }}>
-          <img src="/assets/gallery-2.png" alt="PIMP STUDIO interior" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.25 }} />
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(8,8,7,0.7), rgba(8,8,7,0.92))" }} />
-          <div style={{ position: "relative", textAlign: "center", display: "grid", justifyItems: "center", gap: "1rem" }}>
-            <Emblem size={92} />
-            <h1 className="font-display" style={{ margin: 0, fontSize: "2rem", fontWeight: 700, letterSpacing: ".04em" }}>PIMP STUDIO</h1>
-            <span className="eyebrow">Acceso equipo · Panel interno</span>
+    <div className="barber-login-shell">
+      <div className="barber-login-card">
+        <div className="barber-login-visual">
+          <img src="/assets/gallery-2.png" alt="PIMP STUDIO interior" />
+          <div className="barber-login-overlay" />
+          <div className="barber-login-copy">
+            <span className="eyebrow">Acceso equipo</span>
+            <Emblem size={88} />
+            <h1 className="font-display">Panel interno de operación y agenda.</h1>
+            <p>
+              Un acceso sobrio para barberos y administración. Mantiene el mismo flujo actual,
+              pero con una entrada más clara para escritorio y móvil.
+            </p>
+            <div className="barber-login-pill-row">
+              <span className="chip chip-gold">Agenda</span>
+              <span className="chip">Clientes</span>
+              <span className="chip">Servicios</span>
+            </div>
           </div>
         </div>
 
-        {/* form side */}
-        <div style={{ display: "grid", placeItems: "center", padding: "2rem", background: "var(--panel)" }}>
-          <div style={{ width: "min(360px,100%)", display: "grid", gap: "1.3rem" }}>
+        <div className="barber-login-form-wrap">
+          <div className="barber-login-form-panel">
             <div>
-              <h2 className="font-display" style={{ margin: 0, fontSize: "1.5rem", fontWeight: 600 }}>Iniciar sesión</h2>
-              <p style={{ margin: ".3rem 0 0", color: "var(--muted)", fontSize: ".9rem" }}>Barberos y administración.</p>
+              <span className="eyebrow">Inicio de sesión</span>
+              <h2 className="font-display">Ingresa a tu panel</h2>
+              <p>Barberos y administración comparten este acceso.</p>
             </div>
-            <form onSubmit={submit} style={{ display: "grid", gap: "1rem" }}>
+            <form onSubmit={submit} className="barber-login-form">
               <div className="field">
                 <label>Usuario</label>
-                <input className="input" value={username} onChange={e => setUsername(e.target.value)} placeholder="tu-usuario" autoComplete="username" />
+                <input className="input" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="tu-usuario" autoComplete="username" />
               </div>
               <div className="field">
                 <label>PIN de acceso</label>
-                <input className="input" type="password" value={pin} onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 4))} placeholder="• • • •" inputMode="numeric" style={{ letterSpacing: ".5em", fontSize: "1.2rem" }} />
+                <input
+                  className="input"
+                  type="password"
+                  value={pin}
+                  onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                  placeholder="• • • •"
+                  inputMode="numeric"
+                  style={{ letterSpacing: ".5em", fontSize: "1.2rem" }}
+                />
               </div>
-              {err && <div style={{ color: "#e0a89c", fontSize: ".82rem", display: "flex", alignItems: "center", gap: ".4rem" }}><Icon name="bell" size={14} /> {err}</div>}
+              {err && <div className="barber-login-error"><Icon name="bell" size={14} /> {err}</div>}
               <button className="btn btn-gold btn-block" type="submit" style={{ opacity: loading ? 0.7 : 1 }}>
                 {loading ? "Entrando…" : "Entrar al panel"} {!loading && <Icon name="arrowRight" size={15} />}
               </button>
             </form>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: ".8rem" }}>
-              <button onClick={() => navigate("/")} style={{ background: "none", border: 0, color: "var(--muted)", cursor: "pointer" }}>← Ver web</button>
-              <button style={{ background: "none", border: 0, color: "var(--gold)", cursor: "pointer" }}>¿Olvidaste tu PIN?</button>
+            <div className="barber-login-links">
+              <button onClick={() => navigate("/")} type="button">← Ver web</button>
+              <button type="button">¿Olvidaste tu PIN?</button>
             </div>
-            <div style={{ borderTop: "1px solid var(--hair)", paddingTop: "1rem", fontSize: ".72rem", color: "var(--muted-2)", textAlign: "center" }}>
+            <div className="barber-login-demo">
               Demo: usa cualquier usuario + PIN <strong style={{ color: "var(--gold)" }}>1234</strong>
             </div>
           </div>

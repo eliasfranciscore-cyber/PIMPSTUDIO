@@ -2,19 +2,17 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Emblem, Brandmark, Icon, Reveal, SectionHead } from '../components/ui.jsx'
 import { SERVICES, BARBERS, CAT_LABEL, CLP, tne } from '../data.js'
+import { FEATURE_CARDS, TESTIMONIALS, WORKSHOP_HIGHLIGHTS } from '../data/workshop.js'
+import { FeatureCarousel, ImageCompare, LampBanner, Testimonials } from '../components/liquidShowcase.jsx'
+
+const HERO_STATS = [["15+", "Años"], ["5.000+", "Clientes"], ["8", "Barberos"], ["4.9★", "Rating"]]
+const WORKSHOP_PILLS = ["Grabación", "Edición", "Marca personal"]
 
 export default function Home() {
   const navigate = useNavigate()
   const scrollRef = useRef(null)
   const [scrolled, setScrolled] = useState(false)
   const [services, setServices] = useState(SERVICES)
-  const [galleryIndex, setGalleryIndex] = useState(0)
-
-  const gallery = [
-    { src: "/assets/gallery-1.jpg", label: "Corte clasico" },
-    { src: "/assets/gallery-2.png", label: "Fade limpio" },
-    { src: "/assets/gallery-3.jpg", label: "Barba y detalle" },
-  ]
 
   useEffect(() => {
     const el = scrollRef.current
@@ -38,184 +36,203 @@ export default function Home() {
   }
 
   const groups = ["general", "premium", "quimico"]
-  const nav = [["servicios", "Servicios"], ["barberos", "Barberos"], ["galeria", "Galería"], ["nosotros", "Nosotros"], ["ubicacion", "Ubicación"]]
+  const nav = [["servicios", "Servicios"], ["barberos", "Barberos"], ["workshop", "Workshop"], ["nosotros", "Nosotros"], ["ubicacion", "Ubicación"]]
 
   return (
     <div ref={scrollRef} className="home-scroll" style={{ height: "100vh", overflowY: "auto", overflowX: "hidden", position: "relative" }}>
-      {/* NAV */}
-      <header style={{
-        position: "sticky", top: 0, zIndex: 40,
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        padding: "0.85rem clamp(1rem,4vw,2.4rem)",
-        background: scrolled ? "rgba(8,8,7,0.82)" : "transparent",
-        backdropFilter: scrolled ? "blur(14px)" : "none",
-        borderBottom: scrolled ? "1px solid var(--hair)" : "1px solid transparent",
-        transition: "all .35s ease",
-      }}>
+      <header className={`home-nav ${scrolled ? "is-scrolled" : ""}`}>
         <Brandmark size={38} />
-        <nav style={{ display: "flex", alignItems: "center", gap: "clamp(.5rem,1.5vw,1.6rem)" }}>
+        <nav className="home-nav-links">
           {nav.map(([id, label]) => (
-            <button key={id} onClick={() => scrollTo(id)} className="nav-link" style={{
-              background: "none", border: 0, color: "var(--ink-soft)", fontSize: ".82rem",
-              letterSpacing: ".04em", padding: ".3rem 0", display: "none",
-            }}>{label}</button>
+            <button key={id} onClick={() => scrollTo(id)} className="nav-link">{label}</button>
           ))}
-          <style>{`@media(min-width:900px){.home-scroll .nav-link{display:inline-block !important;} .home-scroll .nav-link:hover{color:var(--gold-lt);}}`}</style>
           <button className="btn btn-gold btn-sm" onClick={() => navigate("/login")}><Icon name="calendar" size={14} /> Reservar</button>
         </nav>
       </header>
 
-      {/* HERO */}
-      <section style={{ position: "relative", minHeight: "92vh", display: "grid", placeItems: "center", textAlign: "center", padding: "3rem 1.5rem 5rem", marginTop: -64 }}>
-        <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
-          <img src="/assets/gallery-1.jpg" alt="PIMP STUDIO" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", opacity: 0.35 }} />
+      <section className="home-hero">
+        <div className="home-hero-media">
+          <img src="/assets/gallery-1.jpg" alt="PIMP STUDIO" />
         </div>
-        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(900px 600px at 50% 18%, rgba(201,161,78,0.12), transparent 60%), linear-gradient(180deg, rgba(8,8,7,0.55) 0%, rgba(8,8,7,0.78) 55%, var(--bg) 100%)" }} />
-        <div style={{ position: "relative", display: "grid", justifyItems: "center", gap: "1.3rem" }}>
-          <div className="float animate-scale">
-            <img src="/assets/pimp-studio-logo.jpg" alt="PIMP STUDIO Logo" style={{ width: 104, height: 104, borderRadius: "50%", objectFit: "cover", border: "2px solid var(--gold-line)", boxShadow: "var(--shadow-gold)" }} />
-          </div>
-          <span className="eyebrow animate-up" style={{ animationDelay: ".1s" }}>Maipú · Santiago de Chile</span>
-          <h1 className="font-display animate-up" style={{ margin: 0, fontSize: "clamp(2.6rem,7vw,5rem)", fontWeight: 700, letterSpacing: "-.02em", lineHeight: 1.04, animationDelay: ".16s" }}>
-            PIMP <span className="gold-text">STUDIO</span>
-          </h1>
-          <p className="animate-up" style={{ margin: 0, color: "var(--ink-soft)", fontSize: "clamp(1rem,2vw,1.3rem)", maxWidth: 540, animationDelay: ".24s" }}>
-            Donde el estilo se encuentra con la excelencia. Barbería premium, reservas en segundos.
-          </p>
-          <div className="animate-up" style={{ display: "flex", gap: ".7rem", flexWrap: "wrap", justifyContent: "center", marginTop: ".4rem", animationDelay: ".32s" }}>
-            <button className="btn btn-gold" onClick={() => navigate("/login")}><Icon name="calendar" size={16} /> Reservar cita</button>
-            <button className="btn btn-ghost" onClick={() => scrollTo("servicios")}>Ver servicios</button>
-          </div>
-          <div style={{ display: "flex", gap: "1.8rem", marginTop: "1.6rem", flexWrap: "wrap", justifyContent: "center" }}>
-            {[["15+", "Años"], ["5.000+", "Clientes"], ["8", "Barberos"], ["4.9★", "Rating"]].map(([n, l]) => (
-              <div key={l} style={{ textAlign: "center" }}>
-                <div className="font-display gold-text" style={{ fontSize: "1.5rem", fontWeight: 700 }}>{n}</div>
-                <div style={{ fontSize: ".7rem", letterSpacing: ".12em", textTransform: "uppercase", color: "var(--muted)" }}>{l}</div>
-              </div>
-            ))}
-          </div>
+        <div className="home-hero-overlay" />
+        <div className="home-hero-layout">
+          <Reveal className="home-hero-copy" style={{ position: "relative" }}>
+            <div className="home-hero-badge">
+              <img src="/assets/pimp-studio-logo.jpg" alt="PIMP STUDIO Logo" />
+              <span className="eyebrow">Maipú · Santiago de Chile</span>
+            </div>
+            <h1 className="font-display">Barbería premium con agenda rápida y presencia real.</h1>
+            <p>
+              PIMP STUDIO combina técnica, detalle y una experiencia más limpia desde el primer clic.
+              Reserva en segundos, elige tu barbero y encuentra el servicio correcto sin ruido.
+            </p>
+            <div className="home-hero-actions">
+              <button className="btn btn-gold" onClick={() => navigate("/login")}><Icon name="calendar" size={16} /> Reservar cita</button>
+              <button className="btn btn-ghost" onClick={() => scrollTo("servicios")}>Ver servicios</button>
+            </div>
+          </Reveal>
+
+          <Reveal className="home-hero-aside card" style={{ position: "relative" }}>
+            <span className="eyebrow">Experiencia PIMP</span>
+            <h2 className="font-display">Más aire, mejor lectura, decisiones rápidas.</h2>
+            <p>La web pública muestra lo esencial: servicios, equipo, ubicación y workshop, con un recorrido comercial claro.</p>
+            <div className="home-stat-grid">
+              {HERO_STATS.map(([n, l]) => (
+                <div key={l}>
+                  <strong className="font-display gold-text">{n}</strong>
+                  <span>{l}</span>
+                </div>
+              ))}
+            </div>
+          </Reveal>
         </div>
       </section>
 
-      {/* SERVICIOS */}
-      <section id="sec-servicios" style={{ padding: "clamp(3rem,7vw,5rem) clamp(1rem,5vw,3rem)" }}>
+      <LampBanner
+        kicker="Maipú · Barbería Premium"
+        title="Donde cada corte se ve como una obra bien dirigida."
+        text="Técnica de precisión, color profesional y una experiencia pensada al detalle. Reserva tu hora y descubre por qué PIMP STUDIO se siente distinto desde la primera pantalla."
+      />
+
+      <section id="sec-servicios" className="home-section">
         <SectionHead center eyebrow="Carta de servicios" title="Servicios y precios" sub="Reserva directo desde cualquier servicio. Descuento TNE 20% en servicios generales presentando Tarjeta Nacional Estudiantil." />
         {groups.map((g) => {
           const items = services.filter((s) => s.cat === g)
           return (
             <div key={g} style={{ marginBottom: "2.4rem" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: ".8rem", marginBottom: "1.1rem", maxWidth: 1000, marginInline: "auto" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: ".8rem", marginBottom: "1.1rem", maxWidth: 1160, marginInline: "auto" }}>
                 {g === "premium" && <span className="chip chip-gold"><Icon name="star" size={13} /> Brunetti</span>}
                 <h3 className="font-display" style={{ margin: 0, fontSize: "1.05rem", letterSpacing: ".05em", color: g === "premium" ? "var(--gold-lt)" : "var(--ink)" }}>{CAT_LABEL[g]}</h3>
                 <span className="hair" style={{ flex: 1 }} />
               </div>
-              <Reveal stagger style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: ".9rem", maxWidth: 1000, marginInline: "auto" }}>
+              <Reveal stagger className="home-services-grid">
                 {items.map((s) => (
-                  <button key={s.id} onClick={() => navigate("/login")} className="svc-card card glowing-card" style={{
-                    textAlign: "left", padding: "1.2rem", display: "grid", gap: ".55rem", cursor: "pointer",
-                    borderTop: g === "premium" ? "1px solid var(--gold-line)" : undefined, transition: "transform .25s, border-color .25s",
-                  }}>
+                  <button key={s.id} onClick={() => navigate("/login")} className="svc-card card glowing-card home-service-card">
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", gap: ".5rem" }}>
-                      <span className="font-display" style={{ fontWeight: 600, fontSize: "1.02rem" }}>{s.name}</span>
-                      <span style={{ color: "var(--muted)", flexShrink: 0 }}><Icon name="cut" size={16} /></span>
+                      <span className="font-display" style={{ fontWeight: 600, fontSize: "1.08rem" }}>{s.name}</span>
+                      <span style={{ color: "var(--muted)", flexShrink: 0 }}><Icon name="cut" size={18} /></span>
                     </div>
-                    <p style={{ margin: 0, color: "var(--muted)", fontSize: ".82rem", lineHeight: 1.45 }}>{s.desc}</p>
-                    <div style={{ display: "flex", alignItems: "baseline", gap: ".6rem", marginTop: ".2rem" }}>
-                      <span className="font-display gold-text" style={{ fontSize: "1.35rem", fontWeight: 700 }}>{CLP(s.price)}</span>
+                    <p>{s.desc}</p>
+                    <div className="home-service-meta">
+                      <span className="font-display gold-text">{CLP(s.price)}</span>
                       <span className="chip"><Icon name="clock" size={12} /> {s.min} min</span>
                     </div>
-                    {s.tne && <span style={{ fontSize: ".74rem", color: "var(--muted-2)" }}>Con TNE: {CLP(tne(s.price))}</span>}
-                    <span style={{ marginTop: ".3rem", fontSize: ".74rem", letterSpacing: ".1em", textTransform: "uppercase", color: "var(--gold)", display: "inline-flex", alignItems: "center", gap: ".3rem" }}>Reservar <Icon name="arrowRight" size={13} /></span>
+                    {s.tne && <span className="home-service-note">Con TNE: {CLP(tne(s.price))}</span>}
+                    <span className="home-service-link">Reservar <Icon name="arrowRight" size={13} /></span>
                   </button>
                 ))}
               </Reveal>
             </div>
           )
         })}
-        <style>{`.svc-card:hover{transform:translateY(-4px);border-color:var(--gold-line);}`}</style>
       </section>
 
-      {/* BARBEROS */}
-      <section id="sec-barberos" style={{ padding: "clamp(3rem,7vw,5rem) clamp(1rem,5vw,3rem)", background: "linear-gradient(180deg, transparent, rgba(255,255,255,0.015), transparent)" }}>
+      <FeatureCarousel items={FEATURE_CARDS} />
+
+      <ImageCompare
+        beforeSrc="/assets/gallery-1.jpg"
+        afterSrc="/assets/gallery-3.jpg"
+      />
+
+      <Testimonials items={TESTIMONIALS} />
+
+      <section id="sec-barberos" className="home-section home-section-soft">
         <SectionHead center eyebrow="El equipo" title="Nuestros barberos" sub="Elige tu barbero y revisa su agenda en tiempo real." />
-        <Reveal stagger style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(190px,1fr))", gap: "1rem", maxWidth: 1000, marginInline: "auto" }}>
+        <Reveal stagger className="home-barber-grid">
           {BARBERS.map((b) => (
-            <button key={b.id} onClick={() => navigate("/login")} className="barber-card card" style={{ textAlign: "center", padding: "1.4rem 1rem", display: "grid", gap: ".7rem", justifyItems: "center", cursor: "pointer", transition: "transform .25s, border-color .25s", borderTop: b.tier === "premium" ? "1px solid var(--gold-line)" : undefined }}>
-              <div style={{ width: 92, height: 92, borderRadius: "50%", overflow: "hidden", border: "2px solid var(--hair-2)", background: "var(--panel)" }}>
-                <img src="/assets/pimp-studio-logo.jpg" alt={b.name} style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.6 }} />
+            <button key={b.id} onClick={() => navigate("/login")} className="barber-card card home-barber-card">
+              <div className="home-barber-avatar">
+                <img src="/assets/pimp-studio-logo.jpg" alt={b.name} />
               </div>
               <div>
-                <div className="font-display" style={{ fontWeight: 600, fontSize: "1.02rem" }}>{b.name}</div>
-                <div style={{ fontSize: ".74rem", color: b.tier === "premium" ? "var(--gold-lt)" : "var(--muted)", letterSpacing: ".04em" }}>{b.role}</div>
+                <div className="font-display" style={{ fontWeight: 600, fontSize: "1.08rem" }}>{b.name}</div>
+                <div style={{ fontSize: ".78rem", color: b.tier === "premium" ? "var(--gold-lt)" : "var(--muted)", letterSpacing: ".04em" }}>{b.role}</div>
               </div>
-              <div style={{ display: "flex", gap: ".5rem", fontSize: ".72rem", color: "var(--muted)" }}>
+              <div style={{ display: "flex", gap: ".5rem", fontSize: ".72rem", color: "var(--muted)", flexWrap: "wrap", justifyContent: "center" }}>
                 <span className="chip"><Icon name="star" size={11} color="var(--gold)" /> {b.rating}</span>
                 <span className="chip">{b.exp}</span>
               </div>
-              <span style={{ fontSize: ".72rem", letterSpacing: ".1em", textTransform: "uppercase", color: "var(--gold)" }}>Ver agenda →</span>
+              <span className="home-service-link">Ver agenda <Icon name="arrowRight" size={13} /></span>
             </button>
           ))}
         </Reveal>
-        <style>{`.barber-card:hover{transform:translateY(-4px);border-color:var(--gold-line);}`}</style>
       </section>
 
-      {/* GALERIA */}
-      <section id="sec-galeria" style={{ padding: "clamp(3rem,7vw,5rem) clamp(1rem,5vw,3rem)" }}>
-        <SectionHead center eyebrow="Portafolio" title="Galería" sub="Cortes, fades y trabajos del estudio." />
-        <Reveal className="gallery-carousel" style={{ maxWidth: 1060, marginInline: "auto" }}>
-          <button className="carousel-arrow left" aria-label="Anterior" onClick={() => setGalleryIndex((galleryIndex + gallery.length - 1) % gallery.length)}><Icon name="arrowLeft" size={18} /></button>
-          <div className="gallery-stage">
-            {gallery.map((item, i) => (
-              <figure key={item.src} className={`gallery-slide ${i === galleryIndex ? "is-active" : ""}`}>
-                <img src={item.src} alt={item.label} />
-                <figcaption>{item.label}</figcaption>
-              </figure>
-            ))}
-          </div>
-          <button className="carousel-arrow right" aria-label="Siguiente" onClick={() => setGalleryIndex((galleryIndex + 1) % gallery.length)}><Icon name="arrowRight" size={18} /></button>
-          <div className="carousel-dots">
-            {gallery.map((item, i) => <button key={item.src} aria-label={item.label} className={i === galleryIndex ? "is-active" : ""} onClick={() => setGalleryIndex(i)} />)}
-          </div>
-        </Reveal>
+      <section id="sec-workshop" className="home-section">
+        <div className="workshop-teaser">
+          <Reveal className="workshop-teaser-copy">
+            <span className="eyebrow">Workshop</span>
+            <h2 className="font-display">Contenido que vende para barberos que quieren verse premium y agendar mejor.</h2>
+            <p>
+              Reemplazamos la antigua galería por una pieza útil: una invitación clara al workshop de marca personal,
+              grabación y edición diseñado para barbería real.
+            </p>
+            <div className="workshop-pill-row">
+              {WORKSHOP_PILLS.map((item) => <span key={item} className="chip">{item}</span>)}
+            </div>
+            <div className="home-hero-actions">
+              <button className="btn btn-gold" onClick={() => navigate("/workshop")}><Icon name="spark" size={16} /> Ver workshop</button>
+              <button className="btn btn-ghost" onClick={() => navigate("/login")}>Reservar cita</button>
+            </div>
+          </Reveal>
+          <Reveal className="workshop-teaser-rail">
+            <div className="workshop-teaser-quote">
+              <span className="eyebrow">Enfoque</span>
+              <p>Tu técnica ya existe. El workshop trabaja cómo mostrarla, venderla y sostenerla con contenido consistente.</p>
+            </div>
+            <div className="workshop-teaser-list">
+              {WORKSHOP_HIGHLIGHTS.map((item) => (
+                <div key={item}>
+                  <Icon name="check" size={15} color="var(--gold)" />
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </div>
       </section>
 
-      {/* NOSOTROS */}
-      <section id="sec-nosotros" style={{ padding: "clamp(3rem,7vw,5rem) clamp(1rem,5vw,3rem)" }}>
-        <div style={{ maxWidth: 1000, marginInline: "auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: "1.4rem", alignItems: "center" }}>
+      <section id="sec-nosotros" className="home-section">
+        <div className="home-about-grid">
           <Reveal style={{ display: "grid", gap: "1rem" }}>
             <span className="eyebrow">Nosotros</span>
-            <h2 className="font-display" style={{ margin: 0, fontSize: "clamp(1.6rem,3vw,2.4rem)", fontWeight: 600, lineHeight: 1.05 }}>Barbería tradicional, técnica moderna</h2>
+            <h2 className="font-display" style={{ margin: 0, fontSize: "clamp(1.8rem,3vw,2.8rem)", fontWeight: 600, lineHeight: 1.03 }}>Barbería tradicional, criterio contemporáneo.</h2>
             <span style={{ width: 64, height: 2, background: "var(--gold-grad)" }} />
-            <p style={{ margin: 0, color: "var(--muted)", lineHeight: 1.6 }}>En PIMP STUDIO combinamos el arte de la barbería clásica con técnicas contemporáneas. Cada cliente recibe atención personalizada para un resultado a su medida, en una atmósfera premium.</p>
+            <p style={{ margin: 0, color: "var(--muted)", lineHeight: 1.7 }}>
+              En PIMP STUDIO combinamos el arte de la barbería clásica con una experiencia más refinada:
+              atención personalizada, técnica sólida y una estética que se cuida tanto en el sillón como en pantalla.
+            </p>
             <div style={{ display: "flex", gap: ".6rem", flexWrap: "wrap" }}>
               <span className="chip chip-gold"><Icon name="check" size={13} /> Atención personalizada</span>
               <span className="chip"><Icon name="check" size={13} /> Productos premium</span>
             </div>
           </Reveal>
-          <Reveal className="card" style={{ padding: "1.6rem", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+          <Reveal className="card home-about-stats">
             {[["15+", "Años de experiencia"], ["5.000+", "Clientes satisfechos"], ["6 días", "Abierto a la semana"], ["Premium", "Servicio de calidad"]].map(([n, l]) => (
-              <div key={l} style={{ padding: "1rem", border: "1px solid var(--hair)", borderRadius: 12, background: "rgba(0,0,0,0.25)" }}>
-                <div className="font-display gold-text" style={{ fontSize: "1.6rem", fontWeight: 700 }}>{n}</div>
-                <div style={{ fontSize: ".78rem", color: "var(--muted)" }}>{l}</div>
+              <div key={l}>
+                <div className="font-display gold-text">{n}</div>
+                <div>{l}</div>
               </div>
             ))}
           </Reveal>
         </div>
       </section>
 
-      {/* UBICACION */}
-      <section id="sec-ubicacion" style={{ padding: "clamp(3rem,7vw,5rem) clamp(1rem,5vw,3rem)" }}>
+      <section id="sec-ubicacion" className="home-section">
         <SectionHead center eyebrow="Cómo llegar" title="Ubicación" sub="A pasos del Metro Plaza de Maipú (Línea 5)." />
-        <div style={{ maxWidth: 1000, marginInline: "auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: "1rem" }}>
-          <div style={{ minHeight: 280, borderRadius: 14, overflow: "hidden", border: "1px solid var(--hair)" }}>
+        <div className="home-location-grid">
+          <div className="home-map-frame">
             <iframe
               title="Mapa PIMP STUDIO"
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3323.5!2d-70.758!3d-33.512!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sMonumento+1750+Local+C+Maip%C3%BA!5e0!3m2!1ses!2scl!4v1"
-              width="100%" height="280" style={{ border: 0, display: "block", filter: "invert(90%) hue-rotate(180deg)" }}
-              allowFullScreen loading="lazy"
+              width="100%"
+              height="320"
+              style={{ border: 0, display: "block", filter: "invert(90%) hue-rotate(180deg)" }}
+              allowFullScreen
+              loading="lazy"
             />
           </div>
-          <div className="card" style={{ padding: "1.6rem", display: "grid", gap: ".9rem", alignContent: "start" }}>
+          <div className="card home-location-card">
             {[["pin", "Monumento 1750, Local C, Maipú"], ["phone", "+56 9 1234 5678"], ["clock", "Lun a Sáb · 10:00 – 20:00"], ["clock", "Domingo · Cerrado"]].map(([ic, tx], i) => (
               <div key={i} style={{ display: "flex", gap: ".8rem", alignItems: "center", color: "var(--ink-soft)" }}>
                 <span style={{ color: "var(--gold)" }}><Icon name={ic} size={18} /></span> {tx}
@@ -228,27 +245,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section style={{ padding: "clamp(3rem,6vw,4.5rem) 1.5rem", textAlign: "center", position: "relative", overflow: "hidden", borderTop: "1px solid var(--hair)" }}>
-        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(700px 300px at 50% 0%, rgba(201,161,78,0.12), transparent 70%)" }} />
-        <div style={{ position: "relative", display: "grid", justifyItems: "center", gap: "1.1rem" }}>
+      <section className="home-cta">
+        <div className="home-cta-inner">
           <Emblem size={64} />
-          <h2 className="font-display" style={{ margin: 0, fontSize: "clamp(1.8rem,4vw,2.8rem)", fontWeight: 700 }}>Tu próximo corte te espera</h2>
-          <p style={{ margin: 0, color: "var(--muted)" }}>Inicia sesión solo con tu número de teléfono. Sin contraseñas.</p>
+          <h2 className="font-display">Tu próximo corte te espera.</h2>
+          <p>Inicia sesión solo con tu número de teléfono. Sin contraseñas.</p>
           <button className="btn btn-gold" onClick={() => navigate("/login")}><Icon name="calendar" size={16} /> Reservar ahora</button>
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer style={{ padding: "1.6rem clamp(1rem,5vw,3rem)", borderTop: "1px solid var(--hair)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
+      <footer className="home-footer">
         <Brandmark size={34} />
         <span style={{ color: "var(--muted-2)", fontSize: ".8rem" }}>© 2026 PIMP STUDIO · Maipú, Chile</span>
-        <button
-          onClick={() => navigate("/ingreso")}
-          style={{ background: "none", border: "1px solid var(--hair)", borderRadius: 999, padding: ".4rem 1rem", fontSize: ".72rem", letterSpacing: ".1em", textTransform: "uppercase", color: "var(--muted)", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: ".4rem", transition: "border-color .2s, color .2s" }}
-          onMouseOver={e => { e.currentTarget.style.borderColor = "var(--gold-line)"; e.currentTarget.style.color = "var(--gold-lt)" }}
-          onMouseOut={e => { e.currentTarget.style.borderColor = "var(--hair)"; e.currentTarget.style.color = "var(--muted)" }}
-        >
+        <button className="home-footer-access" onClick={() => navigate("/ingreso")}>
           <Icon name="key" size={13} /> Acceso Barberos
         </button>
       </footer>

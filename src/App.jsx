@@ -6,12 +6,14 @@ import Booking from './pages/Booking.jsx'
 import Account from './pages/Account.jsx'
 import BarberLogin from './pages/BarberLogin.jsx'
 import Dashboard from './pages/Dashboard.jsx'
+import Workshop from './pages/Workshop.jsx'
 
 export default function App() {
   return (
     <div className="stage">
       <Routes>
         <Route path="/"         element={<Home />} />
+        <Route path="/workshop" element={<Workshop />} />
         <Route path="/login"    element={<Login />} />
         <Route path="/reservar" element={<Booking />} />
         <Route path="/cuenta"   element={<Account />} />

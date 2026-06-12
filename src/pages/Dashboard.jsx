@@ -53,7 +53,7 @@ function BarChart({ data, fmt }) {
 
 function Panel({ title, action, children, style }) {
   return (
-    <div className="card" style={{ padding: "1.3rem", ...style }}>
+    <div className="card dashboard-panel" style={{ padding: "1.3rem", ...style }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.1rem" }}>
         <h3 className="font-display" style={{ margin: 0, fontSize: "1rem", fontWeight: 600 }}>{title}</h3>
         {action}
@@ -238,23 +238,20 @@ export default function Dashboard() {
   if (!barber) return null
 
   return (
-    <div style={{ minHeight: "100vh", display: "grid", gridTemplateColumns: "210px 1fr" }}>
+    <div className="dashboard-shell">
       {/* SIDEBAR */}
-      <aside style={{ borderRight: "1px solid var(--hair)", padding: "1.3rem 1rem", display: "flex", flexDirection: "column", gap: "1.4rem", background: "rgba(0,0,0,0.25)", position: "sticky", top: 0, height: "100vh", overflowY: "auto" }}>
+      <aside className="dashboard-sidebar">
         <Brandmark size={36} sub="Panel interno" />
-        <nav style={{ display: "grid", gap: ".25rem" }}>
+        <nav className="dashboard-nav">
           {nav.map(([id, ic, label]) => (
-            <button key={id} onClick={() => setTab(id)} style={{
-              display: "flex", alignItems: "center", gap: ".7rem", padding: ".7rem .8rem", borderRadius: 10, border: 0, textAlign: "left",
-              background: tab === id ? "rgba(201,161,78,0.1)" : "transparent",
-              color: tab === id ? "var(--gold-lt)" : "var(--muted)", fontSize: ".88rem", transition: "all .2s",
-              boxShadow: tab === id ? "inset 2px 0 0 var(--gold)" : "none", cursor: "pointer",
-            }}><Icon name={ic} size={17} /> {label}</button>
+            <button key={id} onClick={() => setTab(id)} className={`dashboard-nav-item ${tab === id ? "is-active" : ""}`}>
+              <Icon name={ic} size={17} /> {label}
+            </button>
           ))}
         </nav>
-        <div style={{ marginTop: "auto", display: "grid", gap: ".5rem" }}>
-          <div className="card" style={{ padding: ".8rem", display: "flex", alignItems: "center", gap: ".6rem" }}>
-            <div style={{ width: 34, height: 34, borderRadius: "50%", background: "var(--gold-grad)", display: "grid", placeItems: "center", fontSize: ".9rem", fontWeight: 700, color: "#1a1407", flexShrink: 0 }}>
+        <div className="dashboard-sidebar-footer">
+          <div className="card dashboard-user-card">
+            <div className="dashboard-user-avatar">
               {(barber.name || "B")[0].toUpperCase()}
             </div>
             <div style={{ minWidth: 0 }}>
@@ -262,18 +259,18 @@ export default function Dashboard() {
               <div style={{ fontSize: ".68rem", color: "var(--muted)" }}>{barber.role || "Barbero"}</div>
             </div>
           </div>
-          <button onClick={logout} style={{ display: "flex", alignItems: "center", gap: ".6rem", padding: ".6rem .8rem", borderRadius: 10, border: "1px solid var(--hair)", background: "transparent", color: "var(--muted)", fontSize: ".82rem", cursor: "pointer" }}><Icon name="logout" size={15} /> Cerrar sesión</button>
+          <button onClick={logout} className="dashboard-logout"><Icon name="logout" size={15} /> Cerrar sesión</button>
         </div>
       </aside>
 
       {/* MAIN */}
-      <main style={{ padding: "1.5rem", overflowY: "auto" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.4rem", flexWrap: "wrap", gap: ".8rem" }}>
+      <main className="dashboard-main">
+        <div className="dashboard-main-head">
           <div>
             <h1 className="font-display" style={{ margin: 0, fontSize: "1.5rem", fontWeight: 600, textTransform: "capitalize" }}>{nav.find(n => n[0] === tab)?.[2]}</h1>
             <p style={{ margin: ".2rem 0 0", color: "var(--muted)", fontSize: ".85rem" }}>Panel interno · PIMP STUDIO</p>
           </div>
-          <div style={{ display: "flex", gap: ".5rem", alignItems: "center" }}>
+          <div className="dashboard-main-actions">
             <span className="chip"><Icon name="bell" size={14} /> 3</span>
             <button className="btn btn-gold btn-sm"><Icon name="spark" size={14} /> Exportar</button>
           </div>
