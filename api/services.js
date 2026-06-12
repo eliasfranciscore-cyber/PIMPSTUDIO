@@ -1,4 +1,5 @@
 import { neon } from "@neondatabase/serverless"
+import { requireInternal } from "./_auth.js"
 
 const STATIC_SERVICES = [
   { id: 5,  name: "Asesoría de corte",              price: 24990, min: 90,  cat: "general",  tne: true,  desc: "Consulta profesional para encontrar tu estilo ideal." },
@@ -15,12 +16,63 @@ const STATIC_SERVICES = [
 ]
 
 export default async function handler(req, res) {
-  if (req.method !== "GET") return res.status(405).json({ error: "Method not allowed" })
   try {
     const sql = neon(process.env.DATABASE_URL)
-    const services = await sql`SELECT id, name, price, duration_min as min, category as cat, tne_eligible as tne, description as desc FROM services WHERE active = true ORDER BY id`
-    return res.json({ ok: true, services })
-  } catch {
-    return res.json({ ok: true, services: STATIC_SERVICES })
+
+    if (req.method === "GET") {
+      const includeInactive = req.query.includeInactive === "true"
+      if (includeInactive) {
+        const session = requireInternal(req, res)
+        if (!session) return
+      }
+      const services = includeInactive
+        ? await sql`SELECT id, name, price, duration_min as min, category as cat, tne_eligible as tne, description as desc, active FROM services ORDER BY id`
+        : await sql`SELECT id, name, price, duration_min as min, category as cat, tne_eligible as tne, description as desc, active FROM services WHERE active = true ORDER BY id`
+      return res.json({ ok: true, services })
+    }
+
+    const session = requireInternal(req, res, { admin: true })
+    if (!session) return
+
+    if (req.method === "POST") {
+      const { name, price, min, cat, tne, desc } = req.body || {}
+      if (!String(name || "").trim() || !Number(price) || !Number(min) || !cat) {
+        return res.status(400).json({ ok: false, error: "Datos incompletos" })
+      }
+      const [service] = await sql`
+        INSERT INTO services (id, name, price, duration_min, category, tne_eligible, description, active)
+        VALUES ((SELECT COALESCE(MAX(id), 0) + 1 FROM services), ${String(name).trim()}, ${Number(price)}, ${Number(min)}, ${cat}, ${Boolean(tne)}, ${String(desc || "").trim()}, true)
+        RETURNING id, name, price, duration_min as min, category as cat, tne_eligible as tne, description as desc, active
+      `
+      return res.json({ ok: true, service })
+    }
+
+    if (req.method === "PATCH") {
+      const { id, name, price, min, cat, tne, desc, active } = req.body || {}
+      if (!id) return res.status(400).json({ ok: false, error: "id requerido" })
+      const [service] = await sql`
+        UPDATE services SET
+          name = COALESCE(${name || null}, name),
+          price = COALESCE(${price ? Number(price) : null}, price),
+          duration_min = COALESCE(${min ? Number(min) : null}, duration_min),
+          category = COALESCE(${cat || null}, category),
+          tne_eligible = COALESCE(${typeof tne === "boolean" ? tne : null}, tne_eligible),
+          description = COALESCE(${desc ?? null}, description),
+          active = COALESCE(${typeof active === "boolean" ? active : null}, active)
+        WHERE id = ${Number(id)}
+        RETURNING id, name, price, duration_min as min, category as cat, tne_eligible as tne, description as desc, active
+      `
+      return res.json({ ok: true, service })
+    }
+
+    return res.status(405).json({ error: "Method not allowed" })
+  } catch (err) {
+    console.error("services error:", err)
+    if (req.method === "GET") return res.json({ ok: true, services: STATIC_SERVICES.map((service) => ({ ...service, active: true })) })
+    const session = requireInternal(req, res, { admin: true })
+    if (!session) return
+    if (req.method === "POST") return res.json({ ok: true, service: { id: Date.now(), ...(req.body || {}), active: true } })
+    if (req.method === "PATCH") return res.json({ ok: true, service: req.body })
+    return res.status(500).json({ ok: false, error: "No se pudo procesar servicios" })
   }
 }

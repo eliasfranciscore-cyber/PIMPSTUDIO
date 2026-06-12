@@ -1,10 +1,23 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Emblem, Icon, MobileScreen, StatusBar } from '../components/ui.jsx'
 import { BARBERS, SERVICES, SERVICE_BARBERS, SLOT_GROUPS, DAYS_ES, MONTHS_ES, slotState, barberById, CLP, tne } from '../data.js'
 
+const ALL_BOOKING_SLOTS = Object.values(SLOT_GROUPS).flat()
+
+function localBlockKey(barberId, date, slot) {
+  return `${barberId}|${date}|${slot}`
+}
+
+function readLocalBlocks() {
+  try { return JSON.parse(localStorage.getItem("ps_availability_blocks") || "{}") } catch { return {} }
+}
+
 export default function Booking() {
   const navigate = useNavigate()
+  const [barbers, setBarbers] = useState(BARBERS)
+  const [services, setServices] = useState(SERVICES)
+  const [availableSlots, setAvailableSlots] = useState([])
   const [step, setStep] = useState(0)
   const [barberId, setBarberId] = useState(null)
   const [serviceId, setServiceId] = useState(null)
@@ -14,9 +27,34 @@ export default function Booking() {
   const [slot, setSlot] = useState(null)
   const [saving, setSaving] = useState(false)
 
-  const barber = barberById(barberId)
-  const service = SERVICES.find((s) => s.id === serviceId)
-  const allowedServices = barberId ? SERVICES.filter((s) => SERVICE_BARBERS[barberId]?.includes(s.id)) : []
+  useEffect(() => {
+    const user = localStorage.getItem("ps_user")
+    if (!user) navigate("/login")
+    fetch("/api/barbers").then((r) => r.json()).then((data) => { if (data.barbers?.length) setBarbers(data.barbers) }).catch(() => {})
+    fetch("/api/services").then((r) => r.json()).then((data) => { if (data.services?.length) setServices(data.services.filter((item) => item.active !== false)) }).catch(() => {})
+  }, [])
+
+  useEffect(() => {
+    if (!barberId || !dateKey) { setAvailableSlots([]); return }
+    fetch(`/api/availability?barberId=${barberId}&date=${dateKey}`)
+      .then((r) => r.headers.get("content-type")?.includes("application/json") ? r.json() : Promise.reject(new Error("api unavailable")))
+      .then((data) => {
+        const localBlocks = readLocalBlocks()
+        const slots = (data.slots?.length ? data.slots : ALL_BOOKING_SLOTS.map((slot) => ({ slot, available: true }))).map((item) => {
+          if (localBlocks[localBlockKey(barberId, dateKey, item.slot)]) return { ...item, available: false, state: "blocked" }
+          return item
+        })
+        setAvailableSlots(slots)
+      })
+      .catch(() => {
+        const localBlocks = readLocalBlocks()
+        setAvailableSlots(ALL_BOOKING_SLOTS.map((slot) => ({ slot, available: !localBlocks[localBlockKey(barberId, dateKey, slot)] })))
+      })
+  }, [barberId, dateKey])
+
+  const barber = barbers.find((b) => b.id === barberId) || barberById(barberId)
+  const service = services.find((s) => s.id === serviceId)
+  const allowedServices = barberId ? services.filter((s) => SERVICE_BARBERS[barberId] ? SERVICE_BARBERS[barberId].includes(s.id) : true) : []
   const steps = ["Barbero", "Servicio", "Fecha", "Listo"]
   const canNext = (step === 0 && barberId) || (step === 1 && serviceId) || (step === 2 && dateKey && slot)
 
@@ -67,12 +105,12 @@ export default function Booking() {
         ))}
       </div>
 
-      <div style={{ padding: "0 1.2rem 6rem", display: "grid", gap: "1rem" }}>
+      <div className="booking-shell" style={{ padding: "0 1.2rem 6rem", display: "grid", gap: "1rem" }}>
         {/* PASO 0 — BARBERO */}
         {step === 0 && (
           <div className="animate-in" style={{ display: "grid", gap: ".7rem" }}>
             <h3 className="font-display" style={{ margin: ".2rem 0", fontSize: "1.05rem" }}>Elige tu barbero</h3>
-            {BARBERS.map((b) => (
+            {barbers.map((b) => (
               <button key={b.id} onClick={() => { setBarberId(b.id); setServiceId(null) }} className="card" style={{
                 textAlign: "left", padding: ".85rem", display: "flex", alignItems: "center", gap: ".9rem", cursor: "pointer",
                 borderColor: barberId === b.id ? "var(--gold-line)" : "var(--hair)",
@@ -155,7 +193,8 @@ export default function Booking() {
                     <div style={{ fontSize: ".68rem", letterSpacing: ".14em", textTransform: "uppercase", color: "var(--muted)", marginBottom: ".5rem" }}>{grp}</div>
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: ".4rem" }}>
                       {list.map((t) => {
-                        const st = slotState(barberId, dateKey, t)
+                        const fromApi = availableSlots.find((item) => item.slot === t)
+                        const st = fromApi ? (fromApi.available ? "free" : "booked") : slotState(barberId, dateKey, t)
                         const taken = st !== "free"
                         const sel = slot === t
                         return (

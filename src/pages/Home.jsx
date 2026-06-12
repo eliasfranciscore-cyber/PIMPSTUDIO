@@ -7,6 +7,14 @@ export default function Home() {
   const navigate = useNavigate()
   const scrollRef = useRef(null)
   const [scrolled, setScrolled] = useState(false)
+  const [services, setServices] = useState(SERVICES)
+  const [galleryIndex, setGalleryIndex] = useState(0)
+
+  const gallery = [
+    { src: "/assets/gallery-1.jpg", label: "Corte clasico" },
+    { src: "/assets/gallery-2.png", label: "Fade limpio" },
+    { src: "/assets/gallery-3.jpg", label: "Barba y detalle" },
+  ]
 
   useEffect(() => {
     const el = scrollRef.current
@@ -14,6 +22,13 @@ export default function Home() {
     const onScroll = () => setScrolled(el.scrollTop > 60)
     el.addEventListener("scroll", onScroll)
     return () => el.removeEventListener("scroll", onScroll)
+  }, [])
+
+  useEffect(() => {
+    fetch("/api/services")
+      .then((r) => r.json())
+      .then((data) => { if (data.services?.length) setServices(data.services.filter((item) => item.active !== false)) })
+      .catch(() => {})
   }, [])
 
   const scrollTo = (id) => {
@@ -86,7 +101,7 @@ export default function Home() {
       <section id="sec-servicios" style={{ padding: "clamp(3rem,7vw,5rem) clamp(1rem,5vw,3rem)" }}>
         <SectionHead center eyebrow="Carta de servicios" title="Servicios y precios" sub="Reserva directo desde cualquier servicio. Descuento TNE 20% en servicios generales presentando Tarjeta Nacional Estudiantil." />
         {groups.map((g) => {
-          const items = SERVICES.filter((s) => s.cat === g)
+          const items = services.filter((s) => s.cat === g)
           return (
             <div key={g} style={{ marginBottom: "2.4rem" }}>
               <div style={{ display: "flex", alignItems: "center", gap: ".8rem", marginBottom: "1.1rem", maxWidth: 1000, marginInline: "auto" }}>
@@ -96,7 +111,7 @@ export default function Home() {
               </div>
               <Reveal stagger style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: ".9rem", maxWidth: 1000, marginInline: "auto" }}>
                 {items.map((s) => (
-                  <button key={s.id} onClick={() => navigate("/login")} className="svc-card card" style={{
+                  <button key={s.id} onClick={() => navigate("/login")} className="svc-card card glowing-card" style={{
                     textAlign: "left", padding: "1.2rem", display: "grid", gap: ".55rem", cursor: "pointer",
                     borderTop: g === "premium" ? "1px solid var(--gold-line)" : undefined, transition: "transform .25s, border-color .25s",
                   }}>
@@ -147,25 +162,20 @@ export default function Home() {
       {/* GALERIA */}
       <section id="sec-galeria" style={{ padding: "clamp(3rem,7vw,5rem) clamp(1rem,5vw,3rem)" }}>
         <SectionHead center eyebrow="Portafolio" title="Galería" sub="Cortes, fades y trabajos del estudio." />
-        <Reveal stagger style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: ".7rem", maxWidth: 1000, marginInline: "auto" }}>
-          {[
-            { src: "/assets/gallery-1.jpg", label: "Corte clásico" },
-            { src: "/assets/gallery-2.png", label: "Fade" },
-            { src: "/assets/gallery-3.jpg", label: "Barba" },
-            { src: "/assets/gallery-1.jpg", label: "Platinado" },
-            { src: "/assets/gallery-2.png", label: "Visos" },
-            { src: "/assets/gallery-3.jpg", label: "Estilo libre" },
-          ].map((item, i) => (
-            <div key={i} style={{ aspectRatio: i % 5 === 0 ? "1/1.2" : "1/1", borderRadius: 12, overflow: "hidden", position: "relative", border: "1px solid var(--hair)" }}>
-              <img src={item.src} alt={item.label} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform .4s ease" }}
-                onMouseOver={e => e.currentTarget.style.transform = "scale(1.05)"}
-                onMouseOut={e => e.currentTarget.style.transform = "scale(1)"}
-              />
-              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 50%, rgba(8,8,7,0.7))", display: "flex", alignItems: "flex-end", padding: ".8rem" }}>
-                <span style={{ fontSize: ".72rem", letterSpacing: ".1em", textTransform: "uppercase", color: "var(--ink-soft)" }}>{item.label}</span>
-              </div>
-            </div>
-          ))}
+        <Reveal className="gallery-carousel" style={{ maxWidth: 1060, marginInline: "auto" }}>
+          <button className="carousel-arrow left" aria-label="Anterior" onClick={() => setGalleryIndex((galleryIndex + gallery.length - 1) % gallery.length)}><Icon name="arrowLeft" size={18} /></button>
+          <div className="gallery-stage">
+            {gallery.map((item, i) => (
+              <figure key={item.src} className={`gallery-slide ${i === galleryIndex ? "is-active" : ""}`}>
+                <img src={item.src} alt={item.label} />
+                <figcaption>{item.label}</figcaption>
+              </figure>
+            ))}
+          </div>
+          <button className="carousel-arrow right" aria-label="Siguiente" onClick={() => setGalleryIndex((galleryIndex + 1) % gallery.length)}><Icon name="arrowRight" size={18} /></button>
+          <div className="carousel-dots">
+            {gallery.map((item, i) => <button key={item.src} aria-label={item.label} className={i === galleryIndex ? "is-active" : ""} onClick={() => setGalleryIndex(i)} />)}
+          </div>
         </Reveal>
       </section>
 

@@ -23,6 +23,7 @@ export default function BarberLogin() {
       const data = await res.json()
       if (data.ok) {
         localStorage.setItem("ps_barber", JSON.stringify(data.barber))
+        localStorage.setItem("ps_barber_token", data.token || "")
         navigate("/panel")
       } else {
         setErr(data.error || "Credenciales incorrectas")
@@ -31,6 +32,7 @@ export default function BarberLogin() {
       // fallback demo login
       if (username && pin === "1234") {
         localStorage.setItem("ps_barber", JSON.stringify({ name: username, role: "Barbero" }))
+        localStorage.setItem("ps_barber_token", "")
         navigate("/panel")
       } else {
         setErr("Demo: usa PIN 1234 para probar")

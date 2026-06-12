@@ -11,8 +11,13 @@ export default function Account() {
   useEffect(() => {
     const stored = localStorage.getItem("ps_user")
     if (!stored) { navigate("/login"); return }
-    setUser(JSON.parse(stored))
-    fetch("/api/bookings?phone=" + JSON.parse(stored).phone)
+    const parsed = JSON.parse(stored)
+    setUser(parsed)
+    fetch("/api/clients?phone=" + parsed.phone)
+      .then(r => r.json())
+      .then(data => { if (data.client) setUser((current) => ({ ...current, ...data.client })) })
+      .catch(() => {})
+    fetch("/api/bookings?phone=" + parsed.phone)
       .then(r => r.json())
       .then(data => { if (data.bookings?.length) setAppts(data.bookings) })
       .catch(() => {})
@@ -42,7 +47,13 @@ export default function Account() {
             <div className="font-display" style={{ fontWeight: 600, fontSize: "1.15rem" }}>{user.name || "Cliente"}</div>
             <div style={{ color: "var(--muted)", fontSize: ".82rem" }}>+56 {user.phone?.replace(/(\d)(\d{4})(\d{4})/, "$1 $2 $3")}</div>
           </div>
-          <span className="chip chip-gold"><Icon name="star" size={12} /> VIP</span>
+          <span className="chip chip-gold"><Icon name="star" size={12} /> {past.length || user.visits || 0} visitas</span>
+        </div>
+
+        <div className="account-stats">
+          <div className="card"><strong>{past.length || user.visits || 0}</strong><span>Cortes registrados</span></div>
+          <div className="card"><strong>{CLP(user.totalSpent || past.reduce((sum, item) => sum + Number(item.price || 0), 0))}</strong><span>Historial pagado</span></div>
+          <div className="card"><strong>{next ? next.date : "Sin cita"}</strong><span>Proxima reserva</span></div>
         </div>
 
         <div className="animate-up" style={{ animationDelay: ".06s" }}>

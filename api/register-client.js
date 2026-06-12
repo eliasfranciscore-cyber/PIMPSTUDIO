@@ -73,7 +73,7 @@ module.exports = async (req, res) => {
     const email = String(body.email || "").trim();
     const phone = String(body.phone || "").replace(/\D/g, "");
 
-    if (!name || !email || phone.length < 8) {
+    if (!name || !email || phone.length !== 9) {
       sendJson(res, 400, { ok: false, error: "Invalid payload" });
       return;
     }

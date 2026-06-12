@@ -36,6 +36,11 @@ export default function Login() {
         localStorage.setItem("ps_user", JSON.stringify(data.user))
         navigate("/reservar")
       } else {
+        if (res.status === 404 && mode === "login") {
+          setMode("register")
+          setErr("No encontramos ese telefono. Completa tus datos para registrarte.")
+          return
+        }
         setErr(data.error || "Error de autenticación")
       }
     } catch {
@@ -59,7 +64,7 @@ export default function Login() {
           <Emblem size={78} />
           <div>
             <h1 className="font-display" style={{ margin: 0, fontSize: "1.7rem", fontWeight: 700, letterSpacing: ".02em" }}>PIMP STUDIO</h1>
-            <p style={{ margin: ".2rem 0 0", color: "var(--muted)", fontSize: ".88rem" }}>Reserva en segundos. Solo tu teléfono.</p>
+              <p style={{ margin: ".2rem 0 0", color: "var(--muted)", fontSize: ".88rem" }}>Ingresa con tu telefono o registra tus datos una sola vez.</p>
           </div>
         </div>
 

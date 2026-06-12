@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless"
 import crypto from "crypto"
+import { createSession } from "./_auth.js"
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" })
@@ -16,12 +17,14 @@ export default async function handler(req, res) {
       AND pin_hash = ${pinHash} AND active = true
     `
     if (!barber) return res.status(401).json({ error: "Credenciales incorrectas" })
-    return res.json({ ok: true, barber })
+    const withAdmin = { ...barber, admin: /brunetti|bruno|admin/i.test(`${barber.name} ${barber.code} ${barber.role}`) }
+    return res.json({ ok: true, barber: withAdmin, token: createSession(withAdmin) })
   } catch (err) {
     console.error("auth-barber error:", err)
     // Demo fallback: PIN 1234 works for any username
     if (pin === "1234") {
-      return res.json({ ok: true, barber: { name: username, role: "Barbero", tier: "general" } })
+      const demo = { id: username.toLowerCase().includes("brunetti") ? 6 : 99, name: username, code: username.toLowerCase(), role: username.toLowerCase().includes("brunetti") ? "Admin" : "Barbero", tier: "general", admin: username.toLowerCase().includes("brunetti") || username.toLowerCase().includes("bruno") }
+      return res.json({ ok: true, barber: demo, token: createSession(demo) })
     }
     return res.status(401).json({ error: "Credenciales incorrectas" })
   }

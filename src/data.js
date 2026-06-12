@@ -23,6 +23,18 @@ export const SERVICES = [
   { id: 15, name: "Visos Platinados",               price: 74990, min: 210, cat: "quimico",  tne: false, desc: "Mechas platinadas para un look sofisticado." },
 ]
 
+export const CLIENTS = [
+  { id: 1, name: "Carlos Rodriguez", phone: "987654321", email: "carlos@ejemplo.com", visits: 4, lastVisit: "2026-05-22", totalSpent: 68960, status: "activo" },
+  { id: 2, name: "Maria Gonzalez", phone: "912345678", email: "maria@ejemplo.com", visits: 2, lastVisit: "2026-06-04", totalSpent: 55980, status: "activo" },
+  { id: 3, name: "Pedro Soto", phone: "956789012", email: "pedro@ejemplo.com", visits: 1, lastVisit: "2026-06-09", totalSpent: 9990, status: "nuevo" },
+]
+
+export const EXPENSES = [
+  { id: 1, date: "2026-06-03", category: "Insumos", detail: "Cera, navajas y peines", amount: 145000, owner: "Brunetti" },
+  { id: 2, date: "2026-06-05", category: "Marketing", detail: "Campana Instagram", amount: 85000, owner: "Brunetti" },
+  { id: 3, date: "2026-06-08", category: "Arriendo", detail: "Local Monumento 1750", amount: 620000, owner: "Administracion" },
+]
+
 export const SERVICE_BARBERS = (() => {
   const map = {}
   BARBERS.forEach((b) => { map[b.id] = [] })
@@ -116,3 +128,8 @@ export function CLP(n) { return "$" + Number(n || 0).toLocaleString("es-CL") }
 export function CLPk(n) { return "$" + (Math.round(Number(n) / 1000)).toLocaleString("es-CL") + "k" }
 export function barberById(id) { return BARBERS.find((b) => b.id === id) || null }
 export function tne(price) { return Math.round(price * 0.8) }
+export function cleanPhone(v) { return String(v || "").replace(/\D/g, "").slice(0, 9) }
+export function isAdminUser(user) {
+  const haystack = `${user?.name || ""} ${user?.code || ""} ${user?.role || ""}`.toLowerCase()
+  return haystack.includes("brunetti") || haystack.includes("bruno") || haystack.includes("admin")
+}

@@ -28,7 +28,15 @@ export default async function handler(req, res) {
     }
   } catch (err) {
     console.error("auth-login error:", err)
-    // Fallback: allow login without DB (demo mode)
-    return res.json({ ok: true, user: { phone: cleanPhone, name: name || "Cliente", email: email || "" } })
+    if (mode === "register") {
+      if (!name?.trim()) return res.status(400).json({ error: "Nombre requerido" })
+      return res.json({ ok: true, user: { phone: cleanPhone, name: name.trim(), email: email || "" } })
+    }
+    const demo = {
+      "987654321": { phone: "987654321", name: "Carlos Rodriguez", email: "carlos@ejemplo.com" },
+      "912345678": { phone: "912345678", name: "Maria Gonzalez", email: "maria@ejemplo.com" },
+    }[cleanPhone]
+    if (!demo) return res.status(404).json({ error: "Numero no registrado. Crea una cuenta primero." })
+    return res.json({ ok: true, user: demo })
   }
 }

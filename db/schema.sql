@@ -59,6 +59,26 @@ CREATE TABLE IF NOT EXISTS availability_blocks (
   UNIQUE (barber_id, block_date, slot_time)
 );
 
+CREATE TABLE IF NOT EXISTS expenses (
+  id           SERIAL PRIMARY KEY,
+  expense_date DATE        NOT NULL,
+  category     VARCHAR(120) NOT NULL,
+  detail       TEXT        NOT NULL,
+  amount       INTEGER     NOT NULL CHECK (amount > 0),
+  owner        VARCHAR(160) DEFAULT 'Brunetti',
+  created_at   TIMESTAMP   DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS barber_permissions (
+  barber_id       INTEGER PRIMARY KEY REFERENCES barbers(id),
+  can_view_finance BOOLEAN DEFAULT false,
+  can_manage_team  BOOLEAN DEFAULT false,
+  can_edit_services BOOLEAN DEFAULT false,
+  can_manage_blocks BOOLEAN DEFAULT true,
+  updated_at       TIMESTAMP DEFAULT NOW()
+);
+
 CREATE INDEX IF NOT EXISTS idx_bookings_barber_date  ON bookings(barber_id, booking_date);
 CREATE INDEX IF NOT EXISTS idx_bookings_client       ON bookings(client_id);
 CREATE INDEX IF NOT EXISTS idx_users_phone           ON users(phone);
+CREATE INDEX IF NOT EXISTS idx_expenses_date         ON expenses(expense_date);

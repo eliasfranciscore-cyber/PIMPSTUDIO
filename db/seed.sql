@@ -40,3 +40,17 @@ INSERT INTO bookings (client_id, barber_id, service_id, booking_date, booking_ti
   (2, 6, 10, CURRENT_DATE + 4, '10:00', 'confirmada'),
   (3, 5, 9, CURRENT_DATE - 3, '14:00', 'completada')
 ON CONFLICT DO NOTHING;
+
+INSERT INTO expenses (expense_date, category, detail, amount, owner) VALUES
+  (CURRENT_DATE - 9, 'Insumos', 'Cera, navajas y peines', 145000, 'Brunetti'),
+  (CURRENT_DATE - 7, 'Marketing', 'Campana Instagram', 85000, 'Brunetti'),
+  (CURRENT_DATE - 4, 'Arriendo', 'Local Monumento 1750', 620000, 'Administracion')
+ON CONFLICT DO NOTHING;
+
+INSERT INTO barber_permissions (barber_id, can_view_finance, can_manage_team, can_edit_services, can_manage_blocks) VALUES
+  (6, true, true, true, true)
+ON CONFLICT (barber_id) DO UPDATE SET
+  can_view_finance = EXCLUDED.can_view_finance,
+  can_manage_team = EXCLUDED.can_manage_team,
+  can_edit_services = EXCLUDED.can_edit_services,
+  can_manage_blocks = EXCLUDED.can_manage_blocks;
