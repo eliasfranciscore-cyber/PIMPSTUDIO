@@ -46,9 +46,9 @@ export const SERVICE_BARBERS = (() => {
 export const CAT_LABEL = { general: "Servicios generales", premium: "Brunetti Experience", quimico: "Servicios químicos" }
 
 export const SLOT_GROUPS = {
-  Mañana: ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30"],
+  Mañana: ["09:00", "10:00", "11:00"],
   Tarde:  ["12:00", "13:00", "14:00", "15:00", "16:00", "17:00"],
-  Noche:  ["18:00", "18:30", "19:00", "19:30"],
+  Noche:  ["18:00", "19:00"],
 }
 export const ALL_SLOTS = [...SLOT_GROUPS["Mañana"], ...SLOT_GROUPS["Tarde"], ...SLOT_GROUPS["Noche"]]
 

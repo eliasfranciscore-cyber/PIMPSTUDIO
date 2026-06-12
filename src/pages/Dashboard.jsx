@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Brandmark, Icon, Stat } from '../components/ui.jsx'
 import { BARBERS, CLIENTS, EXPENSES, METRICS, SERVICES, TODAY_BOOKINGS, barberById, CLP, CLPk, isAdminUser } from '../data.js'
 
-const AGENDA_SLOTS = ["09:00","09:30","10:00","10:30","11:00","11:30","12:00","13:00","14:00","15:00","16:00","17:00","18:00","18:30","19:00","19:30"]
+const AGENDA_SLOTS = ["09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00"]
 const DAY_LABELS = ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"]
 
 function isoDate(date) {
@@ -74,6 +74,9 @@ export default function Dashboard() {
   const [barbers, setBarbers] = useState(BARBERS.map((item) => ({ ...item, active: true })))
   const [bookings, setBookings] = useState(TODAY_BOOKINGS.map((item, index) => ({ ...item, id: index + 1, date: isoDate(new Date()) })))
   const [clients, setClients] = useState(CLIENTS)
+  const [clientQuery, setClientQuery] = useState("")
+  const [selectedClient, setSelectedClient] = useState(null)
+  const [clientHistory, setClientHistory] = useState([])
   const [services, setServices] = useState(SERVICES.map((item) => ({ ...item, active: true })))
   const [expenses, setExpenses] = useState(EXPENSES)
   const [serviceDraft, setServiceDraft] = useState({ name: "", price: "", min: 60, cat: "general", desc: "", tne: false })
@@ -93,6 +96,10 @@ export default function Dashboard() {
     return { id: b.id, cuts: own.filter((item) => item.status === "completada").length || own.length, rev: own.reduce((sum, item) => sum + Number(item.price || 0), 0) }
   }).filter((item) => item.cuts || item.rev).sort((a, b) => b.rev - a.rev)
   const maxRev = Math.max(1, ...ranking.map((r) => r.rev), ...m.barberRanking.map((r) => r.rev))
+  const filteredClients = clients.filter((client) => {
+    const haystack = `${client.name || ""} ${client.phone || ""} ${client.email || ""}`.toLowerCase()
+    return haystack.includes(clientQuery.trim().toLowerCase())
+  })
 
   useEffect(() => {
     const stored = localStorage.getItem("ps_barber")
@@ -194,6 +201,16 @@ export default function Dashboard() {
     if (res && !res.ok) {
       setBookings((items) => items.map((item) => item.id === booking.id ? booking : item))
     }
+  }
+
+  const openClient = async (client) => {
+    setSelectedClient(client)
+    const local = bookings.filter((item) => item.phone === client.phone)
+    setClientHistory(local)
+    const data = await fetch(`/api/bookings?phone=${client.phone}`)
+      .then((r) => r.headers.get("content-type")?.includes("application/json") ? r.json() : Promise.reject(new Error("api unavailable")))
+      .catch(() => ({ bookings: local }))
+    setClientHistory(data.bookings?.length ? data.bookings : local)
   }
 
   const toggleSlot = async (dayKey, slot, state) => {
@@ -323,13 +340,20 @@ export default function Dashboard() {
             <Panel
               title={`Agenda · ${(barbers.find((item) => item.id === agendaBarber) || barberById(agendaBarber))?.name || "Barbero"}`}
               action={
-                <div style={{ display: "flex", gap: ".45rem", alignItems: "center", flexWrap: "wrap" }}>
-                  <button className="chip" onClick={() => setWeekOffset(weekOffset - 1)}><Icon name="arrowLeft" size={13} /> Semana</button>
-                  <span className="chip chip-gold">{weekDays[0]?.key} al {weekDays[5]?.key}</span>
-                  <button className="chip" onClick={() => setWeekOffset(weekOffset + 1)}>Semana <Icon name="arrowRight" size={13} /></button>
+                <div className="week-picker">
+                  <button className="chip" onClick={() => setWeekOffset(weekOffset - 1)}><Icon name="arrowLeft" size={13} /> Anterior</button>
+                  <span className="chip chip-gold">Semana {weekOffset === 0 ? "actual" : weekOffset > 0 ? `+${weekOffset}` : weekOffset}</span>
+                  <button className="chip" onClick={() => setWeekOffset(weekOffset + 1)}>Siguiente <Icon name="arrowRight" size={13} /></button>
+                  {weekOffset !== 0 && <button className="chip" onClick={() => setWeekOffset(0)}>Hoy</button>}
                 </div>
               }
             >
+              <div className="agenda-week-summary">
+                <div><strong>{weekDays[0]?.key}</strong><span>Inicio</span></div>
+                <div><strong>{weekDays[5]?.key}</strong><span>Fin</span></div>
+                <div><strong>1 hora</strong><span>Duracion de bloque</span></div>
+                <div><strong>{(Object.values(availability).flat().filter((item) => item.state === "free").length)}</strong><span>Disponibles</span></div>
+              </div>
               <div className="agenda-legend">
                 <span><i className="free" /> Atiende</span>
                 <span><i className="blocked" /> Bloqueado</span>
@@ -598,6 +622,24 @@ export default function Dashboard() {
                 <div><strong>Servicios</strong><span>La web publica consume `/api/services`.</span></div>
                 <div><strong>Agenda</strong><span>Reservas y bloqueos comparten `/api/availability`.</span></div>
                 <div><strong>Neon</strong><span>Ejecutar `db/schema.sql` y `db/seed.sql` en la base.</span></div>
+              </div>
+            </Panel>
+            <Panel title="Opciones operativas" action={<span className="chip">Reglas del negocio</span>}>
+              <div className="ops-settings-grid">
+                <label><span>Duracion bloque agenda</span><select className="input" defaultValue="60"><option value="60">1 hora</option></select></label>
+                <label><span>Anticipacion minima</span><select className="input" defaultValue="120"><option value="60">1 hora</option><option value="120">2 horas</option><option value="240">4 horas</option></select></label>
+                <label><span>Ventana de reservas</span><select className="input" defaultValue="30"><option value="14">14 dias</option><option value="30">30 dias</option><option value="60">60 dias</option></select></label>
+                <label><span>Domingos</span><select className="input" defaultValue="closed"><option value="closed">Cerrado</option><option value="open">Disponible</option></select></label>
+                <label><span>Recordatorio cliente</span><select className="input" defaultValue="whatsapp"><option value="whatsapp">WhatsApp</option><option value="email">Email</option><option value="both">WhatsApp + Email</option></select></label>
+                <label><span>Cancelacion cliente</span><select className="input" defaultValue="manual"><option value="manual">Solo manual</option><option value="24h">Hasta 24h antes</option><option value="12h">Hasta 12h antes</option></select></label>
+              </div>
+            </Panel>
+            <Panel title="Seguridad, datos y mantencion">
+              <div className="settings-grid">
+                <div><strong>Sesion interna</strong><span>`PS_SESSION_SECRET` debe estar configurado en Vercel.</span></div>
+                <div><strong>Backups Neon</strong><span>Revisar snapshot antes de cambios masivos en servicios/clientes.</span></div>
+                <div><strong>Exportacion</strong><span>Reservado para CSV de clientes, reservas, gastos y metricas.</span></div>
+                <div><strong>Auditoria</strong><span>Cambios de agenda y servicios deben quedar trazables en una siguiente etapa.</span></div>
               </div>
             </Panel>
           </div>

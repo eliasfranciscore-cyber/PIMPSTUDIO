@@ -36,7 +36,9 @@ Este archivo registra el avance funcional de la rama `desarrollo` para que cualq
 - Se reemplazo la agenda interna mock por una grilla semanal real en `/panel`, pestaña `Agenda`.
 - La agenda interna permite bloquear/desbloquear horarios por barbero y fecha.
 - Los bloqueos de la agenda interna alimentan el mismo endpoint que ve el cliente al agendar.
-- La agenda interna ya no usa fechas fijas ni `slotState`; usa semana actual, navegacion semanal y slots de 30 minutos.
+- La agenda interna ya no usa fechas fijas ni `slotState`; usa semana actual, navegacion semanal y slots de 1 hora.
+- La agenda interna y la reserva publica ahora usan bloques de 1 hora: `09:00` a `19:00`.
+- La agenda interna muestra selector de semana anterior/actual/siguiente, resumen de semana e indicadores de disponibles.
 - Los estados de agenda quedan separados como `Atiende`, `Bloqueado` y `Reservado`.
 - Los slots `Reservado` no se pueden tocar desde la grilla para evitar sobrescribir reservas de clientes.
 - Se agrego fallback local con `localStorage.ps_availability_blocks` para probar bloqueo/desbloqueo en `localhost:5174`, donde Vite no ejecuta serverless functions.
@@ -47,6 +49,8 @@ Este archivo registra el avance funcional de la rama `desarrollo` para que cualq
 - Los permisos disponibles son: `Finanzas`, `Servicios`, `Equipo` y `Bloques`.
 - La navegacion interna usa permisos: finanzas solo aparece con permiso financiero/admin; servicios solo aparece con permiso de servicios/admin.
 - La cuenta Brunetti/admin queda protegida como administrador completo y no se puede desactivar desde la tabla.
+- La pestaña `Config.` ahora agrega opciones operativas: duracion de bloque, anticipacion minima, ventana de reservas, domingos, recordatorio cliente y regla de cancelacion.
+- Se agrego bloque de seguridad/datos/mantencion con recordatorios de `PS_SESSION_SECRET`, backups Neon, exportaciones y auditoria futura.
 - `api/bookings.js` ahora permite listado interno autenticado de reservas y cambio de estado por `PATCH`.
 - La pestaña `Reservas` ya no depende solo de `TODAY_BOOKINGS`; carga reservas desde `/api/bookings` cuando la API esta disponible.
 - Las reservas internas permiten cambiar estado: pendiente, confirmada, en curso, completada y cancelada.
