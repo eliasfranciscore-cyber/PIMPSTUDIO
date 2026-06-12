@@ -72,6 +72,7 @@ export default function Dashboard() {
   const [agendaBusy, setAgendaBusy] = useState("")
   const [barber, setBarber] = useState(null)
   const [barbers, setBarbers] = useState(BARBERS.map((item) => ({ ...item, active: true })))
+  const [bookings, setBookings] = useState(TODAY_BOOKINGS.map((item, index) => ({ ...item, id: index + 1, date: isoDate(new Date()) })))
   const [clients, setClients] = useState(CLIENTS)
   const [services, setServices] = useState(SERVICES.map((item) => ({ ...item, active: true })))
   const [expenses, setExpenses] = useState(EXPENSES)
@@ -79,7 +80,19 @@ export default function Dashboard() {
   const [expenseDraft, setExpenseDraft] = useState({ date: new Date().toISOString().slice(0, 10), category: "Insumos", detail: "", amount: "" })
   const [barberDraft, setBarberDraft] = useState({ name: "", code: "", role: "Barbero", tier: "general", pin: "1234", canViewFinance: false, canManageTeam: false, canEditServices: false, canManageBlocks: true })
   const m = METRICS
-  const maxRev = Math.max(...m.barberRanking.map((r) => r.rev))
+  const admin = isAdminUser(barber)
+  const canViewFinance = admin || barber?.canViewFinance
+  const canEditServices = admin || barber?.canEditServices
+  const canManageTeam = admin || barber?.canManageTeam
+  const completedBookings = bookings.filter((item) => item.status === "completada" || item.status === "confirmada" || item.status === "en curso")
+  const revenueTotal = completedBookings.reduce((sum, item) => sum + Number(item.price || 0), 0)
+  const avgTicket = completedBookings.length ? Math.round(revenueTotal / completedBookings.length) : m.avgTicket
+  const visibleBookings = admin ? bookings : bookings.filter((item) => Number(item.barberId) === Number(barber?.id))
+  const ranking = barbers.map((b) => {
+    const own = bookings.filter((item) => Number(item.barberId) === Number(b.id) && item.status !== "cancelada")
+    return { id: b.id, cuts: own.filter((item) => item.status === "completada").length || own.length, rev: own.reduce((sum, item) => sum + Number(item.price || 0), 0) }
+  }).filter((item) => item.cuts || item.rev).sort((a, b) => b.rev - a.rev)
+  const maxRev = Math.max(1, ...ranking.map((r) => r.rev), ...m.barberRanking.map((r) => r.rev))
 
   useEffect(() => {
     const stored = localStorage.getItem("ps_barber")
@@ -89,15 +102,12 @@ export default function Dashboard() {
     const headers = authHeaders()
     fetch("/api/clients", { headers }).then((r) => r.json()).then((data) => { if (data.clients?.length) setClients(data.clients) }).catch(() => {})
     fetch("/api/barbers?includeInactive=true", { headers }).then((r) => r.json()).then((data) => { if (data.barbers?.length) setBarbers(data.barbers) }).catch(() => {})
+    fetch("/api/bookings", { headers }).then((r) => r.json()).then((data) => { if (data.bookings?.length) setBookings(data.bookings) }).catch(() => {})
     fetch("/api/services?includeInactive=true", { headers }).then((r) => r.json()).then((data) => { if (data.services?.length) setServices(data.services) }).catch(() => {})
     fetch("/api/expenses", { headers }).then((r) => r.json()).then((data) => { if (data.expenses?.length) setExpenses(data.expenses) }).catch(() => {})
   }, [])
 
   const logout = () => { localStorage.removeItem("ps_barber"); localStorage.removeItem("ps_barber_token"); navigate("/") }
-  const admin = isAdminUser(barber)
-  const canViewFinance = admin || barber?.canViewFinance
-  const canEditServices = admin || barber?.canEditServices
-  const canManageTeam = admin || barber?.canManageTeam
   const weekDays = buildWeek(weekOffset)
 
   function authHeaders(extra = {}) {
@@ -174,6 +184,18 @@ export default function Dashboard() {
     setBarbers((items) => items.map((item) => item.id === id ? { ...item, ...patch } : item))
   }
 
+  const updateBookingStatus = async (booking, status) => {
+    setBookings((items) => items.map((item) => item.id === booking.id ? { ...item, status } : item))
+    const res = await fetch("/api/bookings", {
+      method: "PATCH",
+      headers: authHeaders({ "Content-Type": "application/json" }),
+      body: JSON.stringify({ id: booking.id, status }),
+    }).catch(() => null)
+    if (res && !res.ok) {
+      setBookings((items) => items.map((item) => item.id === booking.id ? booking : item))
+    }
+  }
+
   const toggleSlot = async (dayKey, slot, state) => {
     if (state === "booked") return
     const busyKey = `${dayKey}-${slot}`
@@ -244,19 +266,19 @@ export default function Dashboard() {
         {tab === "resumen" && (
           <div className="animate-in" style={{ display: "grid", gap: "1.1rem" }}>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: "1rem" }}>
-              <Stat icon="wallet"   label="Ingresos semana"  value={CLP(m.revenueWeek)}  delta={m.revenueWeekDelta}  accent />
-              <Stat icon="calendar" label="Reservas"         value={m.bookingsWeek}       delta={m.bookingsWeekDelta} />
-              <Stat icon="chart"    label="Ticket promedio"  value={CLP(m.avgTicket)}     delta={m.avgTicketDelta} />
+              <Stat icon="wallet"   label="Ingresos agenda"  value={CLP(revenueTotal)}  delta={m.revenueWeekDelta}  accent />
+              <Stat icon="calendar" label="Reservas"         value={visibleBookings.length}       delta={m.bookingsWeekDelta} />
+              <Stat icon="chart"    label="Ticket promedio"  value={CLP(avgTicket)}     delta={m.avgTicketDelta} />
               <Stat icon="trend"    label="Ocupación"        value={m.occupancy}          suffix="%" delta={m.occupancyDelta} />
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: "1.1rem" }}>
-              <Panel title="Ingresos por día" action={<span className="chip chip-gold">{CLP(m.revenueWeek)}</span>}>
+              <Panel title="Ingresos por día" action={<span className="chip chip-gold">{CLP(revenueTotal)}</span>}>
                 <BarChart data={m.revenueByDay} fmt={CLP} />
               </Panel>
               <Panel title="Ranking barberos" action={<span style={{ fontSize: ".74rem", color: "var(--muted)" }}>Esta semana</span>}>
                 <div style={{ display: "grid", gap: ".7rem" }}>
-                  {m.barberRanking.slice(0, 5).map((r, i) => {
-                    const b = barberById(r.id)
+                  {(ranking.length ? ranking : m.barberRanking).slice(0, 5).map((r, i) => {
+                    const b = barbers.find((item) => item.id === r.id) || barberById(r.id)
                     return (
                       <div key={r.id} style={{ display: "flex", alignItems: "center", gap: ".8rem" }}>
                         <span className="font-display" style={{ width: 20, color: i === 0 ? "var(--gold)" : "var(--muted-2)", fontWeight: 700 }}>{i + 1}</span>
@@ -357,22 +379,28 @@ export default function Dashboard() {
                 <span key={f} className={i === 0 ? "chip chip-gold" : "chip"} style={{ cursor: "pointer" }}>{f}</span>
               ))}
             </div>
-            <Panel title="Reservas de hoy" action={<span className="chip">{TODAY_BOOKINGS.length} citas</span>}>
+            <Panel title={admin ? "Reservas internas" : "Mis reservas"} action={<span className="chip">{visibleBookings.length} citas</span>}>
               <div style={{ display: "grid", gap: ".4rem", overflowX: "auto" }}>
                 <div style={{ display: "grid", gridTemplateColumns: "70px 1.4fr 1.6fr 1fr 90px 110px", gap: ".5rem", padding: "0 .6rem .5rem", fontSize: ".68rem", letterSpacing: ".1em", textTransform: "uppercase", color: "var(--muted-2)", minWidth: 600 }}>
                   <span>Hora</span><span>Cliente</span><span>Servicio</span><span>Barbero</span><span>Total</span><span>Estado</span>
                 </div>
-                {TODAY_BOOKINGS.map((bk, i) => {
-                  const b = barberById(bk.barberId)
+                {visibleBookings.map((bk, i) => {
+                  const b = barbers.find((item) => item.id === bk.barberId) || barberById(bk.barberId)
                   const stc = { "confirmada": ["rgba(201,161,78,0.1)", "var(--gold-lt)"], "en curso": ["rgba(120,180,140,0.12)", "#9fd0a0"], "pendiente": ["rgba(255,255,255,0.05)", "var(--muted)"] }[bk.status] || ["transparent", "var(--muted)"]
                   return (
-                    <div key={i} style={{ display: "grid", gridTemplateColumns: "70px 1.4fr 1.6fr 1fr 90px 110px", gap: ".5rem", alignItems: "center", padding: ".7rem .6rem", borderRadius: 9, background: "rgba(255,255,255,0.02)", border: "1px solid var(--hair)", fontSize: ".84rem", minWidth: 600 }}>
+                    <div key={bk.id || i} style={{ display: "grid", gridTemplateColumns: "70px 1.4fr 1.6fr 1fr 90px 130px", gap: ".5rem", alignItems: "center", padding: ".7rem .6rem", borderRadius: 9, background: "rgba(255,255,255,0.02)", border: "1px solid var(--hair)", fontSize: ".84rem", minWidth: 640 }}>
                       <span className="font-display gold-text" style={{ fontWeight: 600 }}>{bk.time}</span>
-                      <span style={{ fontWeight: 500 }}>{bk.client}</span>
+                      <span style={{ fontWeight: 500 }}>{bk.client}<small style={{ display: "block", color: "var(--muted-2)", fontWeight: 400 }}>{bk.date}</small></span>
                       <span style={{ color: "var(--muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{bk.service}</span>
                       <span style={{ color: "var(--ink-soft)" }}>{b?.short}</span>
                       <span style={{ color: "var(--ink-soft)" }}>{CLP(bk.price)}</span>
-                      <span style={{ fontSize: ".72rem", padding: ".3rem .6rem", borderRadius: 99, background: stc[0], color: stc[1], textAlign: "center", textTransform: "capitalize" }}>{bk.status}</span>
+                      <select className="status-select" value={bk.status} style={{ background: stc[0], color: stc[1] }} onChange={(e) => updateBookingStatus(bk, e.target.value)}>
+                        <option value="pendiente">Pendiente</option>
+                        <option value="confirmada">Confirmada</option>
+                        <option value="en curso">En curso</option>
+                        <option value="completada">Completada</option>
+                        <option value="cancelada">Cancelada</option>
+                      </select>
                     </div>
                   )
                 })}

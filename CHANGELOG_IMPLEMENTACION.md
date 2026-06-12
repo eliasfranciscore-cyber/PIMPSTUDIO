@@ -47,6 +47,11 @@ Este archivo registra el avance funcional de la rama `desarrollo` para que cualq
 - Los permisos disponibles son: `Finanzas`, `Servicios`, `Equipo` y `Bloques`.
 - La navegacion interna usa permisos: finanzas solo aparece con permiso financiero/admin; servicios solo aparece con permiso de servicios/admin.
 - La cuenta Brunetti/admin queda protegida como administrador completo y no se puede desactivar desde la tabla.
+- `api/bookings.js` ahora permite listado interno autenticado de reservas y cambio de estado por `PATCH`.
+- La pestaña `Reservas` ya no depende solo de `TODAY_BOOKINGS`; carga reservas desde `/api/bookings` cuando la API esta disponible.
+- Las reservas internas permiten cambiar estado: pendiente, confirmada, en curso, completada y cancelada.
+- El resumen del panel calcula ingresos, cantidad de reservas y ticket promedio desde reservas cargadas.
+- Los barberos normales ven sus propias reservas y metricas derivadas; Brunetti/admin ve la vista global.
 - Se agregaron tablas `expenses` y `barber_permissions` a `db/schema.sql`.
 - Se agregaron seeds de gastos y permisos admin Brunetti a `db/seed.sql`.
 
@@ -86,6 +91,7 @@ Este archivo registra el avance funcional de la rama `desarrollo` para que cualq
   - `/reservar`: confirmar que esa hora aparece no disponible para el cliente.
 - Completar proteccion granular por permiso especifico, no solo admin/sesion.
 - Probar manualmente UI CRUD de barberos en `Config.` con Neon activo: crear, activar/desactivar, permisos por modulo y PIN.
+- Probar manualmente cambios de estado en `Reservas` con Neon activo y verificar que `completada` alimente historial/metricas.
 - Completar restriccion real por permisos:
   - Brunetti/admin ve finanzas, gastos, usuarios y servicios.
   - Barbero normal ve solo su agenda, sus metricas, sus reservas y disponibilidad.

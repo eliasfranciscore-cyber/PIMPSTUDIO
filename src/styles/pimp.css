@@ -531,6 +531,19 @@ input, select, textarea { font: inherit; }
   justify-content: flex-end;
   flex-wrap: wrap;
 }
+.status-select {
+  width: 100%;
+  border: 1px solid var(--hair-2);
+  border-radius: 999px;
+  padding: .42rem .55rem;
+  font-size: .72rem;
+  text-transform: capitalize;
+  outline: none;
+}
+.status-select:focus {
+  border-color: var(--gold-line);
+  box-shadow: 0 0 0 3px var(--gold-glow);
+}
 
 .agenda-legend {
   display: flex;
