@@ -42,6 +42,11 @@ Este archivo registra el avance funcional de la rama `desarrollo` para que cualq
 - Se agrego fallback local con `localStorage.ps_availability_blocks` para probar bloqueo/desbloqueo en `localhost:5174`, donde Vite no ejecuta serverless functions.
 - `/reservar` tambien lee `localStorage.ps_availability_blocks` como fallback local, por lo que un bloqueo hecho en `/panel` se refleja al reservar durante pruebas locales.
 - `api/clients.js`, `api/expenses.js` y mutaciones de `api/services.js` ahora exigen sesion interna cuando corren como API real.
+- La pestaña `Config.` ahora incluye formulario para crear cuentas de barberos con nombre, usuario, rol, categoria y PIN inicial.
+- La pestaña `Config.` ahora permite editar nombre/usuario/rol, activar/desactivar barberos y guardar permisos por modulo.
+- Los permisos disponibles son: `Finanzas`, `Servicios`, `Equipo` y `Bloques`.
+- La navegacion interna usa permisos: finanzas solo aparece con permiso financiero/admin; servicios solo aparece con permiso de servicios/admin.
+- La cuenta Brunetti/admin queda protegida como administrador completo y no se puede desactivar desde la tabla.
 - Se agregaron tablas `expenses` y `barber_permissions` a `db/schema.sql`.
 - Se agregaron seeds de gastos y permisos admin Brunetti a `db/seed.sql`.
 
@@ -80,7 +85,7 @@ Este archivo registra el avance funcional de la rama `desarrollo` para que cualq
   - Pestaña `Agenda`: bloquear una hora libre y desbloquearla.
   - `/reservar`: confirmar que esa hora aparece no disponible para el cliente.
 - Completar proteccion granular por permiso especifico, no solo admin/sesion.
-- Completar UI CRUD de barberos en `Config.`: crear, activar/desactivar, permisos por modulo y PIN.
+- Probar manualmente UI CRUD de barberos en `Config.` con Neon activo: crear, activar/desactivar, permisos por modulo y PIN.
 - Completar restriccion real por permisos:
   - Brunetti/admin ve finanzas, gastos, usuarios y servicios.
   - Barbero normal ve solo su agenda, sus metricas, sus reservas y disponibilidad.

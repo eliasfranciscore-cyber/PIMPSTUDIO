@@ -77,6 +77,7 @@ export default function Dashboard() {
   const [expenses, setExpenses] = useState(EXPENSES)
   const [serviceDraft, setServiceDraft] = useState({ name: "", price: "", min: 60, cat: "general", desc: "", tne: false })
   const [expenseDraft, setExpenseDraft] = useState({ date: new Date().toISOString().slice(0, 10), category: "Insumos", detail: "", amount: "" })
+  const [barberDraft, setBarberDraft] = useState({ name: "", code: "", role: "Barbero", tier: "general", pin: "1234", canViewFinance: false, canManageTeam: false, canEditServices: false, canManageBlocks: true })
   const m = METRICS
   const maxRev = Math.max(...m.barberRanking.map((r) => r.rev))
 
@@ -94,6 +95,9 @@ export default function Dashboard() {
 
   const logout = () => { localStorage.removeItem("ps_barber"); localStorage.removeItem("ps_barber_token"); navigate("/") }
   const admin = isAdminUser(barber)
+  const canViewFinance = admin || barber?.canViewFinance
+  const canEditServices = admin || barber?.canEditServices
+  const canManageTeam = admin || barber?.canManageTeam
   const weekDays = buildWeek(weekOffset)
 
   function authHeaders(extra = {}) {
@@ -127,9 +131,9 @@ export default function Dashboard() {
     ["resumen",   "grid",     "Resumen"],
     ["agenda",    "calendar", "Agenda"],
     ["reservas",  "scissors", "Reservas"],
-    ...(admin ? [["finanzas", "wallet", "Finanzas"]] : []),
+    ...(canViewFinance ? [["finanzas", "wallet", "Finanzas"]] : []),
     ["clientes",  "user",     "Clientes"],
-    ["servicios", "cut",      "Servicios"],
+    ...(canEditServices ? [["servicios", "cut", "Servicios"]] : []),
     ...(admin ? [["gastos", "wallet", "Gastos"]] : []),
     ["marketing", "spark",    "Marketing"],
     ["config",    "key",      "Config."],
@@ -154,6 +158,20 @@ export default function Dashboard() {
     const json = res ? await res.json().catch(() => ({})) : {}
     setExpenses((items) => [json.expense || { ...payload, id: Date.now() }, ...items])
     setExpenseDraft({ date: new Date().toISOString().slice(0, 10), category: "Insumos", detail: "", amount: "" })
+  }
+
+  const saveBarber = async (payload) => {
+    if (!payload.name || !payload.code) return
+    const method = payload.id ? "PATCH" : "POST"
+    const res = await fetch("/api/barbers", { method, headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload) }).catch(() => null)
+    const json = res ? await res.json().catch(() => ({})) : {}
+    const saved = json.barber || { ...payload, id: payload.id || Date.now(), active: payload.active !== false }
+    setBarbers((items) => payload.id ? items.map((item) => item.id === saved.id ? { ...item, ...payload, ...saved } : item) : [...items, { ...saved, ...payload, active: true }])
+    if (!payload.id) setBarberDraft({ name: "", code: "", role: "Barbero", tier: "general", pin: "1234", canViewFinance: false, canManageTeam: false, canEditServices: false, canManageBlocks: true })
+  }
+
+  const updateBarberLocal = (id, patch) => {
+    setBarbers((items) => items.map((item) => item.id === id ? { ...item, ...patch } : item))
   }
 
   const toggleSlot = async (dayKey, slot, state) => {
@@ -494,16 +512,53 @@ export default function Dashboard() {
         {/* CONFIG */}
         {tab === "config" && (
           <div className="animate-in" style={{ display: "grid", gap: "1.1rem" }}>
-            <Panel title="Seguridad y permisos" action={<span className="chip chip-gold">{admin ? "Admin" : "Barbero"}</span>}>
-              <div style={{ display: "grid", gap: ".7rem" }}>
-                {BARBERS.map((item) => {
-                  const isBrunetti = item.name.toLowerCase().includes("brunetti")
+            {canManageTeam && (
+              <Panel title="Crear cuenta de barbero" action={<span className="chip chip-gold">Solo Brunetti/Admin</span>}>
+                <div className="barber-create-grid">
+                  <input className="input" placeholder="Nombre" value={barberDraft.name} onChange={(e) => setBarberDraft({ ...barberDraft, name: e.target.value })} />
+                  <input className="input" placeholder="Usuario" value={barberDraft.code} onChange={(e) => setBarberDraft({ ...barberDraft, code: e.target.value.toLowerCase().replace(/\s+/g, "-") })} />
+                  <input className="input" placeholder="Rol" value={barberDraft.role} onChange={(e) => setBarberDraft({ ...barberDraft, role: e.target.value })} />
+                  <select className="input" value={barberDraft.tier} onChange={(e) => setBarberDraft({ ...barberDraft, tier: e.target.value })}>
+                    <option value="general">General</option>
+                    <option value="premium">Premium</option>
+                  </select>
+                  <input className="input" placeholder="PIN inicial" inputMode="numeric" value={barberDraft.pin} onChange={(e) => setBarberDraft({ ...barberDraft, pin: e.target.value.replace(/\D/g, "").slice(0, 4) })} />
+                  <button className="btn btn-gold btn-block" onClick={() => saveBarber(barberDraft)}><Icon name="check" size={15} /> Crear cuenta</button>
+                </div>
+              </Panel>
+            )}
+            <Panel title="Usuarios, modulos y permisos" action={<span className={admin ? "chip chip-gold" : "chip"}>{admin ? "Admin" : "Vista limitada"}</span>}>
+              <div className="barber-permissions">
+                {barbers.map((item) => {
+                  const lockedAdmin = item.name?.toLowerCase().includes("brunetti") || item.admin
                   return (
-                    <div key={item.id} className="admin-row">
-                      <div><strong>{item.name}</strong><span>{item.role}</span></div>
-                      <span className={isBrunetti ? "chip chip-gold" : "chip"}>{isBrunetti ? "Admin completo" : "Finanzas ocultas"}</span>
-                      <span className="chip">Agenda activa</span>
-                      <span className="chip">Bloques horarios</span>
+                    <div key={item.id} className={`barber-permission-row ${item.active === false ? "is-disabled" : ""}`}>
+                      <div className="barber-identity">
+                        <input className="input" value={item.name || ""} disabled={!canManageTeam || lockedAdmin} onChange={(e) => updateBarberLocal(item.id, { name: e.target.value })} />
+                        <input className="input" value={item.code || ""} disabled={!canManageTeam || lockedAdmin} onChange={(e) => updateBarberLocal(item.id, { code: e.target.value.toLowerCase().replace(/\s+/g, "-") })} />
+                        <input className="input" value={item.role || ""} disabled={!canManageTeam || lockedAdmin} onChange={(e) => updateBarberLocal(item.id, { role: e.target.value })} />
+                      </div>
+                      <div className="permission-switches">
+                        {[
+                          ["canViewFinance", "Finanzas"],
+                          ["canEditServices", "Servicios"],
+                          ["canManageTeam", "Equipo"],
+                          ["canManageBlocks", "Bloques"],
+                        ].map(([key, label]) => (
+                          <label key={key} className="switch-line">
+                            <input type="checkbox" disabled={!canManageTeam || lockedAdmin} checked={lockedAdmin || item[key] !== false && key === "canManageBlocks" || Boolean(item[key])} onChange={(e) => updateBarberLocal(item.id, { [key]: e.target.checked })} />
+                            <span>{label}</span>
+                          </label>
+                        ))}
+                      </div>
+                      <div className="barber-actions">
+                        <button className={item.active === false ? "chip" : "chip chip-gold"} disabled={!canManageTeam || lockedAdmin} onClick={() => {
+                          const next = { ...item, active: item.active === false }
+                          updateBarberLocal(item.id, { active: next.active })
+                          saveBarber(next)
+                        }}>{item.active === false ? "Desactivado" : "Activo"}</button>
+                        <button className="btn btn-dark btn-sm" disabled={!canManageTeam || lockedAdmin} onClick={() => saveBarber(item)}>Guardar</button>
+                      </div>
                     </div>
                   )
                 })}
@@ -513,7 +568,7 @@ export default function Dashboard() {
               <div className="settings-grid">
                 <div><strong>Cliente</strong><span>Telefono de 9 digitos como identificador unico.</span></div>
                 <div><strong>Servicios</strong><span>La web publica consume `/api/services`.</span></div>
-                <div><strong>Agenda</strong><span>Reservas bloquean barbero, fecha y hora.</span></div>
+                <div><strong>Agenda</strong><span>Reservas y bloqueos comparten `/api/availability`.</span></div>
                 <div><strong>Neon</strong><span>Ejecutar `db/schema.sql` y `db/seed.sql` en la base.</span></div>
               </div>
             </Panel>
