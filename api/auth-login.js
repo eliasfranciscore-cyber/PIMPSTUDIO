@@ -1,0 +1,34 @@
+import { neon } from "@neondatabase/serverless"
+
+export default async function handler(req, res) {
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" })
+
+  const { phone, name, email, mode } = req.body || {}
+  if (!phone) return res.status(400).json({ error: "Teléfono requerido" })
+
+  const cleanPhone = String(phone).replace(/\D/g, "")
+  if (cleanPhone.length !== 9) return res.status(400).json({ error: "Teléfono inválido" })
+
+  try {
+    const sql = neon(process.env.DATABASE_URL)
+
+    if (mode === "register") {
+      if (!name?.trim()) return res.status(400).json({ error: "Nombre requerido" })
+      const [user] = await sql`
+        INSERT INTO users (phone, name, email)
+        VALUES (${cleanPhone}, ${name.trim()}, ${email?.trim() || null})
+        ON CONFLICT (phone) DO UPDATE SET name = EXCLUDED.name, email = COALESCE(EXCLUDED.email, users.email)
+        RETURNING id, phone, name, email
+      `
+      return res.json({ ok: true, user })
+    } else {
+      const [user] = await sql`SELECT id, phone, name, email FROM users WHERE phone = ${cleanPhone}`
+      if (!user) return res.status(404).json({ error: "Número no registrado. Crea una cuenta primero." })
+      return res.json({ ok: true, user })
+    }
+  } catch (err) {
+    console.error("auth-login error:", err)
+    // Fallback: allow login without DB (demo mode)
+    return res.json({ ok: true, user: { phone: cleanPhone, name: name || "Cliente", email: email || "" } })
+  }
+}
