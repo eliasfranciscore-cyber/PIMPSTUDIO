@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Brandmark, Icon, Stat } from '../components/ui.jsx'
-import { ThemeToggle } from '../components/theme.jsx'
+import { ThemeProvider, ThemeToggle, useTheme } from '../components/theme.jsx'
 import MobileDock from '../components/MobileDock.jsx'
 import { BARBERS, CLIENTS, EXPENSES, METRICS, SERVICES, TODAY_BOOKINGS, barberById, CLP, CLPk, isAdminUser } from '../data.js'
 
@@ -252,6 +252,7 @@ export default function Dashboard() {
   if (!barber) return null
 
   return (
+    <ThemeProvider>
     <DashboardShell
       tab={tab}
       setTab={setTab}
@@ -600,86 +601,17 @@ export default function Dashboard() {
 
         {/* CONFIG */}
         {tab === "config" && (
-          <div className="animate-in" style={{ display: "grid", gap: "1.1rem" }}>
-            {canManageTeam && (
-              <Panel title="Crear cuenta de barbero" action={<span className="chip chip-gold">Solo Brunetti/Admin</span>}>
-                <div className="barber-create-grid">
-                  <input className="input" placeholder="Nombre" value={barberDraft.name} onChange={(e) => setBarberDraft({ ...barberDraft, name: e.target.value })} />
-                  <input className="input" placeholder="Usuario" value={barberDraft.code} onChange={(e) => setBarberDraft({ ...barberDraft, code: e.target.value.toLowerCase().replace(/\s+/g, "-") })} />
-                  <input className="input" placeholder="Rol" value={barberDraft.role} onChange={(e) => setBarberDraft({ ...barberDraft, role: e.target.value })} />
-                  <select className="input" value={barberDraft.tier} onChange={(e) => setBarberDraft({ ...barberDraft, tier: e.target.value })}>
-                    <option value="general">General</option>
-                    <option value="premium">Premium</option>
-                  </select>
-                  <input className="input" placeholder="PIN inicial" inputMode="numeric" value={barberDraft.pin} onChange={(e) => setBarberDraft({ ...barberDraft, pin: e.target.value.replace(/\D/g, "").slice(0, 4) })} />
-                  <button className="btn btn-gold btn-block" onClick={() => saveBarber(barberDraft)}><Icon name="check" size={15} /> Crear cuenta</button>
-                </div>
-              </Panel>
-            )}
-            <Panel title="Usuarios, modulos y permisos" action={<span className={admin ? "chip chip-gold" : "chip"}>{admin ? "Admin" : "Vista limitada"}</span>}>
-              <div className="barber-permissions">
-                {barbers.map((item) => {
-                  const lockedAdmin = item.name?.toLowerCase().includes("brunetti") || item.admin
-                  return (
-                    <div key={item.id} className={`barber-permission-row ${item.active === false ? "is-disabled" : ""}`}>
-                      <div className="barber-identity">
-                        <input className="input" value={item.name || ""} disabled={!canManageTeam || lockedAdmin} onChange={(e) => updateBarberLocal(item.id, { name: e.target.value })} />
-                        <input className="input" value={item.code || ""} disabled={!canManageTeam || lockedAdmin} onChange={(e) => updateBarberLocal(item.id, { code: e.target.value.toLowerCase().replace(/\s+/g, "-") })} />
-                        <input className="input" value={item.role || ""} disabled={!canManageTeam || lockedAdmin} onChange={(e) => updateBarberLocal(item.id, { role: e.target.value })} />
-                      </div>
-                      <div className="permission-switches">
-                        {[
-                          ["canViewFinance", "Finanzas"],
-                          ["canEditServices", "Servicios"],
-                          ["canManageTeam", "Equipo"],
-                          ["canManageBlocks", "Bloques"],
-                        ].map(([key, label]) => (
-                          <label key={key} className="switch-line">
-                            <input type="checkbox" disabled={!canManageTeam || lockedAdmin} checked={lockedAdmin || item[key] !== false && key === "canManageBlocks" || Boolean(item[key])} onChange={(e) => updateBarberLocal(item.id, { [key]: e.target.checked })} />
-                            <span>{label}</span>
-                          </label>
-                        ))}
-                      </div>
-                      <div className="barber-actions">
-                        <button className={item.active === false ? "chip" : "chip chip-gold"} disabled={!canManageTeam || lockedAdmin} onClick={() => {
-                          const next = { ...item, active: item.active === false }
-                          updateBarberLocal(item.id, { active: next.active })
-                          saveBarber(next)
-                        }}>{item.active === false ? "Desactivado" : "Activo"}</button>
-                        <button className="btn btn-dark btn-sm" disabled={!canManageTeam || lockedAdmin} onClick={() => saveBarber(item)}>Guardar</button>
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            </Panel>
-            <Panel title="Base operacional">
-              <div className="settings-grid">
-                <div><strong>Cliente</strong><span>Telefono de 9 digitos como identificador unico.</span></div>
-                <div><strong>Servicios</strong><span>La web publica consume `/api/services`.</span></div>
-                <div><strong>Agenda</strong><span>Reservas y bloqueos comparten `/api/availability`.</span></div>
-                <div><strong>Neon</strong><span>Ejecutar `db/schema.sql` y `db/seed.sql` en la base.</span></div>
-              </div>
-            </Panel>
-            <Panel title="Opciones operativas" action={<span className="chip">Reglas del negocio</span>}>
-              <div className="ops-settings-grid">
-                <label><span>Duracion bloque agenda</span><select className="input" defaultValue="60"><option value="60">1 hora</option></select></label>
-                <label><span>Anticipacion minima</span><select className="input" defaultValue="120"><option value="60">1 hora</option><option value="120">2 horas</option><option value="240">4 horas</option></select></label>
-                <label><span>Ventana de reservas</span><select className="input" defaultValue="30"><option value="14">14 dias</option><option value="30">30 dias</option><option value="60">60 dias</option></select></label>
-                <label><span>Domingos</span><select className="input" defaultValue="closed"><option value="closed">Cerrado</option><option value="open">Disponible</option></select></label>
-                <label><span>Recordatorio cliente</span><select className="input" defaultValue="whatsapp"><option value="whatsapp">WhatsApp</option><option value="email">Email</option><option value="both">WhatsApp + Email</option></select></label>
-                <label><span>Cancelacion cliente</span><select className="input" defaultValue="manual"><option value="manual">Solo manual</option><option value="24h">Hasta 24h antes</option><option value="12h">Hasta 12h antes</option></select></label>
-              </div>
-            </Panel>
-            <Panel title="Seguridad, datos y mantencion">
-              <div className="settings-grid">
-                <div><strong>Sesion interna</strong><span>`PS_SESSION_SECRET` debe estar configurado en Vercel.</span></div>
-                <div><strong>Backups Neon</strong><span>Revisar snapshot antes de cambios masivos en servicios/clientes.</span></div>
-                <div><strong>Exportacion</strong><span>Reservado para CSV de clientes, reservas, gastos y metricas.</span></div>
-                <div><strong>Auditoria</strong><span>Cambios de agenda y servicios deben quedar trazables en una siguiente etapa.</span></div>
-              </div>
-            </Panel>
-          </div>
+          <ConfigPanel
+            barber={barber}
+            barbers={barbers}
+            admin={admin}
+            canManageTeam={canManageTeam}
+            barberDraft={barberDraft}
+            setBarberDraft={setBarberDraft}
+            saveBarber={saveBarber}
+            updateBarberLocal={updateBarberLocal}
+            onLogout={logout}
+          />
         )}
 
         {/* MARKETING */}
@@ -723,6 +655,407 @@ export default function Dashboard() {
         )}
       </main>
     </DashboardShell>
+    </ThemeProvider>
+  )
+}
+
+/* ============================================================
+   Config Panel — Santa Julieta style two-column settings
+   ============================================================ */
+const CFG_SECTIONS = [
+  { id: "cuenta",        icon: "user",     label: "Cuenta y seguridad" },
+  { id: "apariencia",    icon: "star",     label: "Apariencia" },
+  { id: "navegacion",    icon: "grid",     label: "Navegacion" },
+  { id: "notificaciones",icon: "bell",     label: "Notificaciones" },
+  { id: "whatsapp",      icon: "whatsapp", label: "WhatsApp" },
+  { id: "negocio",       icon: "scissors", label: "Negocio" },
+  { id: "equipo",        icon: "key",      label: "Equipo y permisos" },
+  { id: "datos",         icon: "wallet",   label: "Datos y respaldos" },
+  { id: "acerca",        icon: "spark",    label: "Acerca de" },
+]
+
+function PinDots({ value }) {
+  return (
+    <div style={{ display: "flex", gap: ".75rem", margin: ".5rem 0 1rem" }}>
+      {[0,1,2,3].map((i) => (
+        <div key={i} style={{ width: 14, height: 14, borderRadius: "50%", background: i < value.length ? "var(--gold)" : "var(--hair-2)", border: "1px solid var(--gold-line)", transition: "background .15s" }} />
+      ))}
+    </div>
+  )
+}
+
+function ConfigSwitch({ checked, onChange, disabled }) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      disabled={disabled}
+      onClick={() => onChange(!checked)}
+      style={{
+        width: 44, height: 26, borderRadius: 13, border: "none", cursor: disabled ? "default" : "pointer",
+        background: checked ? "var(--gold)" : "var(--hair-2)",
+        position: "relative", flexShrink: 0, transition: "background .2s",
+        opacity: disabled ? .45 : 1,
+      }}
+    >
+      <span style={{
+        position: "absolute", top: 3, left: checked ? 21 : 3, width: 20, height: 20,
+        borderRadius: "50%", background: "#fff", transition: "left .2s",
+        boxShadow: "0 1px 4px rgba(0,0,0,.35)",
+      }} />
+    </button>
+  )
+}
+
+function CfgRow({ label, sub, children }) {
+  return (
+    <div className="cfg-setting-row">
+      <div>
+        <div className="cfg-setting-label">{label}</div>
+        {sub && <div className="cfg-setting-sub">{sub}</div>}
+      </div>
+      <div style={{ flexShrink: 0 }}>{children}</div>
+    </div>
+  )
+}
+
+function ConfigPanel({ barber, barbers, admin, canManageTeam, barberDraft, setBarberDraft, saveBarber, updateBarberLocal, onLogout }) {
+  const [section, setSection] = useState("cuenta")
+  const [pin, setPin] = useState("")
+  const [pinStep, setPinStep] = useState("idle") // idle | current | new | confirm
+  const [pinError, setPinError] = useState("")
+  const [notifSettings, setNotifSettings] = useState({ reserva: true, cancelacion: true, recordatorio: true, marketing: false })
+  const [waSettings, setWaSettings] = useState({ activo: true, recordatorio24h: true, recordatorio2h: false, confirmacion: true })
+  const [navSettings, setNavSettings] = useState({ agenda: true, reservas: true, finanzas: true, clientes: true, servicios: true, gastos: false, marketing: true })
+  const { theme, toggle } = useTheme()
+
+  const handlePinKey = (digit) => {
+    if (pin.length >= 4) return
+    const next = pin + digit
+    setPin(next)
+    if (next.length === 4) {
+      setTimeout(() => { setPin(""); setPinStep((s) => s === "current" ? "new" : s === "new" ? "confirm" : "idle") }, 400)
+    }
+  }
+  const handlePinBack = () => setPin((p) => p.slice(0, -1))
+
+  const current = CFG_SECTIONS.find((s) => s.id === section)
+
+  return (
+    <div className="animate-in cfg-shell">
+      {/* Left nav */}
+      <aside className="cfg-nav">
+        <p className="cfg-nav-head">Configuraciones</p>
+        {CFG_SECTIONS.map((s) => (
+          <button
+            key={s.id}
+            type="button"
+            className={`cfg-nav-item ${section === s.id ? "is-active" : ""}`}
+            onClick={() => setSection(s.id)}
+          >
+            <Icon name={s.icon} size={16} />
+            <span>{s.label}</span>
+          </button>
+        ))}
+      </aside>
+
+      {/* Right content */}
+      <div className="cfg-content">
+        <h2 className="cfg-content-title">{current?.label}</h2>
+
+        {/* CUENTA Y SEGURIDAD */}
+        {section === "cuenta" && (
+          <div style={{ display: "grid", gap: "1.4rem" }}>
+            <div className="cfg-card">
+              <p className="cfg-card-head">Datos personales</p>
+              <div className="cfg-form-grid">
+                <div className="cfg-field">
+                  <label>Nombre</label>
+                  <input className="input" defaultValue={barber?.name || ""} placeholder="Nombre completo" />
+                </div>
+                <div className="cfg-field">
+                  <label>Usuario</label>
+                  <input className="input" defaultValue={barber?.code || ""} placeholder="usuario" />
+                </div>
+                <div className="cfg-field">
+                  <label>Rol</label>
+                  <input className="input" defaultValue={barber?.role || "Barbero"} disabled />
+                </div>
+              </div>
+              <button className="btn btn-gold" style={{ marginTop: ".5rem" }}><Icon name="check" size={14} /> Guardar cambios</button>
+            </div>
+
+            <div className="cfg-card">
+              <p className="cfg-card-head">Cambiar PIN de acceso</p>
+              {pinStep === "idle" && (
+                <button className="btn btn-dark" onClick={() => { setPin(""); setPinStep("current") }}>
+                  <Icon name="key" size={14} /> Cambiar PIN
+                </button>
+              )}
+              {pinStep !== "idle" && (
+                <div style={{ display: "grid", gap: ".5rem" }}>
+                  <p style={{ fontSize: ".84rem", color: "var(--muted)", margin: 0 }}>
+                    {pinStep === "current" ? "Ingresa tu PIN actual" : pinStep === "new" ? "Ingresa el nuevo PIN" : "Confirma el nuevo PIN"}
+                  </p>
+                  <PinDots value={pin} />
+                  {pinError && <p style={{ fontSize: ".78rem", color: "#d99a8f", margin: 0 }}>{pinError}</p>}
+                  <div className="pin-pad">
+                    {[1,2,3,4,5,6,7,8,9,"",0,"⌫"].map((d, i) => (
+                      d === "" ? <span key={i} /> :
+                      d === "⌫" ? <button key={i} type="button" className="pin-key" onClick={handlePinBack}>{d}</button> :
+                      <button key={i} type="button" className="pin-key" onClick={() => handlePinKey(String(d))}>{d}</button>
+                    ))}
+                  </div>
+                  <button className="btn btn-dark btn-sm" onClick={() => { setPinStep("idle"); setPin(""); setPinError("") }}>Cancelar</button>
+                </div>
+              )}
+            </div>
+
+            <div className="cfg-card">
+              <p className="cfg-card-head">Sesion</p>
+              <CfgRow label="Cerrar sesion" sub="Seras redirigido al ingreso">
+                <button className="btn btn-dark btn-sm" onClick={onLogout}><Icon name="logout" size={14} /> Salir</button>
+              </CfgRow>
+            </div>
+          </div>
+        )}
+
+        {/* APARIENCIA */}
+        {section === "apariencia" && (
+          <div style={{ display: "grid", gap: "1.4rem" }}>
+            <div className="cfg-card">
+              <p className="cfg-card-head">Tema de la interfaz</p>
+              <CfgRow label="Modo oscuro" sub="El modo claro solo esta disponible en el panel interno">
+                <ConfigSwitch checked={theme === "dark"} onChange={() => toggle()} />
+              </CfgRow>
+              <div className="cfg-theme-preview">
+                <div className={`cfg-theme-tile ${theme === "dark" ? "is-active" : ""}`} onClick={() => theme !== "dark" && toggle()}>
+                  <div className="cfg-theme-thumb dark" />
+                  <span>Oscuro</span>
+                </div>
+                <div className={`cfg-theme-tile ${theme === "light" ? "is-active" : ""}`} onClick={() => theme !== "light" && toggle()}>
+                  <div className="cfg-theme-thumb light" />
+                  <span>Claro</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* NAVEGACION */}
+        {section === "navegacion" && (
+          <div style={{ display: "grid", gap: "1.4rem" }}>
+            <div className="cfg-card">
+              <p className="cfg-card-head">Modulos visibles</p>
+              <p style={{ fontSize: ".82rem", color: "var(--muted)", margin: "0 0 1rem" }}>Activa o desactiva los modulos que aparecen en la barra lateral y el dock movil.</p>
+              {[
+                ["agenda",    "calendar", "Agenda",    true],
+                ["reservas",  "scissors", "Reservas",  true],
+                ["finanzas",  "wallet",   "Finanzas",  admin],
+                ["clientes",  "user",     "Clientes",  true],
+                ["servicios", "cut",      "Servicios", admin],
+                ["gastos",    "wallet",   "Gastos",    admin],
+                ["marketing", "spark",    "Marketing", true],
+              ].map(([id, ic, label, allowed]) => (
+                <CfgRow key={id} label={label}>
+                  <ConfigSwitch
+                    checked={navSettings[id] !== false}
+                    disabled={!allowed}
+                    onChange={(v) => setNavSettings((s) => ({ ...s, [id]: v }))}
+                  />
+                </CfgRow>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* NOTIFICACIONES */}
+        {section === "notificaciones" && (
+          <div style={{ display: "grid", gap: "1.4rem" }}>
+            <div className="cfg-card">
+              <p className="cfg-card-head">Alertas internas</p>
+              <CfgRow label="Nueva reserva" sub="Notificacion cuando un cliente agenda">
+                <ConfigSwitch checked={notifSettings.reserva} onChange={(v) => setNotifSettings((s) => ({ ...s, reserva: v }))} />
+              </CfgRow>
+              <CfgRow label="Cancelacion" sub="Cuando un cliente cancela su cita">
+                <ConfigSwitch checked={notifSettings.cancelacion} onChange={(v) => setNotifSettings((s) => ({ ...s, cancelacion: v }))} />
+              </CfgRow>
+              <CfgRow label="Recordatorio de cita" sub="30 minutos antes de cada servicio">
+                <ConfigSwitch checked={notifSettings.recordatorio} onChange={(v) => setNotifSettings((s) => ({ ...s, recordatorio: v }))} />
+              </CfgRow>
+              <CfgRow label="Novedades y marketing" sub="Actualizaciones del sistema">
+                <ConfigSwitch checked={notifSettings.marketing} onChange={(v) => setNotifSettings((s) => ({ ...s, marketing: v }))} />
+              </CfgRow>
+            </div>
+          </div>
+        )}
+
+        {/* WHATSAPP */}
+        {section === "whatsapp" && (
+          <div style={{ display: "grid", gap: "1.4rem" }}>
+            <div className="cfg-card">
+              <p className="cfg-card-head">Mensajeria automatica</p>
+              <CfgRow label="WhatsApp activo" sub="Envio automatico de mensajes a clientes">
+                <ConfigSwitch checked={waSettings.activo} onChange={(v) => setWaSettings((s) => ({ ...s, activo: v }))} />
+              </CfgRow>
+              <CfgRow label="Recordatorio 24h" sub="Mensaje el dia previo a la cita">
+                <ConfigSwitch checked={waSettings.recordatorio24h} disabled={!waSettings.activo} onChange={(v) => setWaSettings((s) => ({ ...s, recordatorio24h: v }))} />
+              </CfgRow>
+              <CfgRow label="Recordatorio 2h" sub="Mensaje dos horas antes">
+                <ConfigSwitch checked={waSettings.recordatorio2h} disabled={!waSettings.activo} onChange={(v) => setWaSettings((s) => ({ ...s, recordatorio2h: v }))} />
+              </CfgRow>
+              <CfgRow label="Confirmacion de reserva" sub="Mensaje inmediato al agendar">
+                <ConfigSwitch checked={waSettings.confirmacion} disabled={!waSettings.activo} onChange={(v) => setWaSettings((s) => ({ ...s, confirmacion: v }))} />
+              </CfgRow>
+            </div>
+            <div className="cfg-card">
+              <p className="cfg-card-head">Numero de negocio</p>
+              <div className="cfg-form-grid">
+                <div className="cfg-field">
+                  <label>Telefono WhatsApp Business</label>
+                  <input className="input" placeholder="+56 9 xxxx xxxx" defaultValue="+56 9 1234 5678" />
+                </div>
+              </div>
+              <button className="btn btn-gold" style={{ marginTop: ".5rem" }}><Icon name="check" size={14} /> Guardar</button>
+            </div>
+          </div>
+        )}
+
+        {/* NEGOCIO */}
+        {section === "negocio" && (
+          <div style={{ display: "grid", gap: "1.4rem" }}>
+            <div className="cfg-card">
+              <p className="cfg-card-head">Datos del negocio</p>
+              <div className="cfg-form-grid">
+                <div className="cfg-field"><label>Nombre</label><input className="input" defaultValue="PIMP STUDIO" /></div>
+                <div className="cfg-field"><label>Direccion</label><input className="input" defaultValue="Maipú, Santiago" /></div>
+                <div className="cfg-field"><label>Telefono</label><input className="input" defaultValue="+56 9 1234 5678" /></div>
+              </div>
+              <button className="btn btn-gold" style={{ marginTop: ".5rem" }}><Icon name="check" size={14} /> Guardar</button>
+            </div>
+            <div className="cfg-card">
+              <p className="cfg-card-head">Horario operativo</p>
+              <div className="ops-settings-grid">
+                <label><span>Apertura</span><select className="input" defaultValue="09:00"><option>09:00</option><option>10:00</option></select></label>
+                <label><span>Cierre</span><select className="input" defaultValue="20:00"><option>19:00</option><option>20:00</option><option>21:00</option></select></label>
+                <label><span>Anticipacion minima</span><select className="input" defaultValue="120"><option value="60">1 hora</option><option value="120">2 horas</option><option value="240">4 horas</option></select></label>
+                <label><span>Ventana de reservas</span><select className="input" defaultValue="30"><option value="14">14 dias</option><option value="30">30 dias</option></select></label>
+                <label><span>Domingos</span><select className="input" defaultValue="closed"><option value="closed">Cerrado</option><option value="open">Abierto</option></select></label>
+                <label><span>Cancelacion cliente</span><select className="input" defaultValue="24h"><option value="manual">Solo manual</option><option value="24h">Hasta 24h</option><option value="12h">Hasta 12h</option></select></label>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* EQUIPO */}
+        {section === "equipo" && (
+          <div style={{ display: "grid", gap: "1.4rem" }}>
+            {canManageTeam && (
+              <div className="cfg-card">
+                <p className="cfg-card-head">Crear cuenta de barbero</p>
+                <div className="cfg-form-grid">
+                  <div className="cfg-field"><label>Nombre</label><input className="input" placeholder="Nombre completo" value={barberDraft.name} onChange={(e) => setBarberDraft({ ...barberDraft, name: e.target.value })} /></div>
+                  <div className="cfg-field"><label>Usuario</label><input className="input" placeholder="usuario" value={barberDraft.code} onChange={(e) => setBarberDraft({ ...barberDraft, code: e.target.value.toLowerCase().replace(/\s+/g, "-") })} /></div>
+                  <div className="cfg-field"><label>Rol</label><input className="input" placeholder="Barbero" value={barberDraft.role} onChange={(e) => setBarberDraft({ ...barberDraft, role: e.target.value })} /></div>
+                  <div className="cfg-field"><label>Nivel</label>
+                    <select className="input" value={barberDraft.tier} onChange={(e) => setBarberDraft({ ...barberDraft, tier: e.target.value })}>
+                      <option value="general">General</option><option value="premium">Premium</option>
+                    </select>
+                  </div>
+                  <div className="cfg-field"><label>PIN inicial</label><input className="input" placeholder="1234" inputMode="numeric" maxLength={4} value={barberDraft.pin} onChange={(e) => setBarberDraft({ ...barberDraft, pin: e.target.value.replace(/\D/g, "").slice(0, 4) })} /></div>
+                </div>
+                <button className="btn btn-gold" style={{ marginTop: ".5rem" }} onClick={() => saveBarber(barberDraft)}><Icon name="check" size={14} /> Crear cuenta</button>
+              </div>
+            )}
+            <div className="cfg-card">
+              <p className="cfg-card-head">Usuarios y permisos</p>
+              <div style={{ display: "grid", gap: ".85rem" }}>
+                {barbers.map((item) => {
+                  const lockedAdmin = item.name?.toLowerCase().includes("brunetti") || item.admin
+                  return (
+                    <div key={item.id} className={`cfg-barber-row ${item.active === false ? "is-disabled" : ""}`}>
+                      <div className="cfg-barber-head">
+                        <div className="cfg-barber-avatar">{(item.name || "B")[0].toUpperCase()}</div>
+                        <div>
+                          <strong style={{ fontSize: ".9rem" }}>{item.name}</strong>
+                          <span style={{ fontSize: ".74rem", color: "var(--muted)", display: "block" }}>{item.role || "Barbero"} · @{item.code}</span>
+                        </div>
+                        <div style={{ marginLeft: "auto", display: "flex", gap: ".5rem" }}>
+                          <button className={item.active === false ? "chip" : "chip chip-gold"} disabled={!canManageTeam || lockedAdmin} onClick={() => {
+                            const next = { ...item, active: item.active === false }
+                            updateBarberLocal(item.id, { active: next.active })
+                            saveBarber(next)
+                          }}>{item.active === false ? "Inactivo" : "Activo"}</button>
+                          <button className="btn btn-dark btn-sm" disabled={!canManageTeam || lockedAdmin} onClick={() => saveBarber(item)}>Guardar</button>
+                        </div>
+                      </div>
+                      <div className="cfg-perm-grid">
+                        {[["canViewFinance","Finanzas"],["canEditServices","Servicios"],["canManageTeam","Equipo"],["canManageBlocks","Bloques"]].map(([key, lbl]) => (
+                          <label key={key} className="cfg-perm-chip">
+                            <input type="checkbox" disabled={!canManageTeam || lockedAdmin}
+                              checked={lockedAdmin || (key === "canManageBlocks" ? item[key] !== false : Boolean(item[key]))}
+                              onChange={(e) => updateBarberLocal(item.id, { [key]: e.target.checked })}
+                            />
+                            <span>{lbl}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* DATOS Y RESPALDOS */}
+        {section === "datos" && (
+          <div style={{ display: "grid", gap: "1.4rem" }}>
+            <div className="cfg-card">
+              <p className="cfg-card-head">Exportar datos</p>
+              <div style={{ display: "grid", gap: ".7rem" }}>
+                {[["Clientes","CSV con historial y contactos","user"],["Reservas","Historial completo de citas","calendar"],["Gastos","Registro de egresos por categoria","wallet"],["Servicios","Catalogo actual publicado","scissors"]].map(([label, sub, icon]) => (
+                  <div key={label} className="cfg-setting-row">
+                    <div>
+                      <div className="cfg-setting-label">{label}</div>
+                      <div className="cfg-setting-sub">{sub}</div>
+                    </div>
+                    <button className="btn btn-dark btn-sm"><Icon name={icon} size={13} /> Exportar CSV</button>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="cfg-card">
+              <p className="cfg-card-head">Base de datos</p>
+              <div className="settings-grid">
+                <div><strong>Neon PostgreSQL</strong><span>Backup automatico diario. Revisar snapshot antes de cambios masivos.</span></div>
+                <div><strong>Auditoria</strong><span>Cambios de agenda y servicios quedan trazables en el log del servidor.</span></div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ACERCA DE */}
+        {section === "acerca" && (
+          <div style={{ display: "grid", gap: "1.4rem" }}>
+            <div className="cfg-card" style={{ textAlign: "center", padding: "2rem 1.5rem" }}>
+              <span className="pimp-mark" style={{ width: 72, height: 72, margin: "0 auto 1rem", display: "block" }} />
+              <h3 className="font-display" style={{ margin: "0 0 .3rem", fontSize: "1.4rem" }}>PIMP STUDIO</h3>
+              <p style={{ margin: 0, color: "var(--muted)", fontSize: ".84rem" }}>Panel interno v2.0</p>
+              <p style={{ margin: ".5rem 0 0", color: "var(--muted-2)", fontSize: ".78rem" }}>Barberia Premium · Maipu, Santiago</p>
+            </div>
+            <div className="cfg-card">
+              <div className="settings-grid">
+                <div><strong>Version</strong><span>2.0.0 — React + Vite + Vercel</span></div>
+                <div><strong>Ambiente</strong><span>Produccion — rama desarrollo</span></div>
+                <div><strong>Soporte</strong><span>Panel gestionado internamente.</span></div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
   )
 }
 

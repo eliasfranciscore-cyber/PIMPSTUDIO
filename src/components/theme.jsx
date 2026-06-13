@@ -10,6 +10,7 @@ export function ThemeProvider({ children }) {
     document.documentElement.setAttribute('data-theme', theme)
     try { localStorage.setItem('ps_theme', theme) } catch {}
   }, [theme])
+  useEffect(() => () => { document.documentElement.setAttribute('data-theme', 'dark') }, [])
   const toggle = useCallback(() => setTheme((t) => (t === 'dark' ? 'light' : 'dark')), [])
   return <ThemeCtx.Provider value={{ theme, toggle }}>{children}</ThemeCtx.Provider>
 }

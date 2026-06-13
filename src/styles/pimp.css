@@ -2340,7 +2340,7 @@ input, select, textarea { font: inherit; }
   border-radius: 999px;
   display: inline-block;
   background: #0a0a09;
-  background-image: url("/assets/pimp-studio-mark.svg");
+  background-image: url("/assets/pimp-studio-logo.jpg");
   background-size: cover;
   background-position: center;
   border: 1px solid var(--gold-line);
@@ -2794,3 +2794,213 @@ input, select, textarea { font: inherit; }
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
+
+/* ============================================================
+   CONFIG PANEL — Santa Julieta two-column settings
+   ============================================================ */
+.cfg-shell {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 0;
+  min-height: calc(100vh - 64px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.cfg-nav {
+  border-right: 1px solid var(--border);
+  padding: 1.4rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+  background: var(--shell-bg);
+}
+
+.cfg-nav-head {
+  font-size: .66rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  font-family: var(--font-display);
+  padding: 0 1.2rem .6rem;
+  margin: 0;
+}
+
+.cfg-nav-item {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  padding: .7rem 1.2rem;
+  background: none;
+  border: none;
+  color: var(--ink-soft);
+  font-size: .84rem;
+  cursor: pointer;
+  border-radius: 0;
+  transition: background .15s, color .15s;
+  text-align: left;
+  width: 100%;
+}
+.cfg-nav-item:hover { background: rgba(255,255,255,0.04); color: var(--ink); }
+.cfg-nav-item.is-active { background: rgba(201,161,78,0.1); color: var(--gold-lt); border-right: 2px solid var(--gold); }
+
+.cfg-content {
+  padding: 2rem 2rem 3rem;
+  overflow-y: auto;
+}
+
+.cfg-content-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 1.6rem;
+  padding-bottom: .9rem;
+  border-bottom: 1px solid var(--border);
+  letter-spacing: -.01em;
+}
+
+.cfg-card {
+  background: var(--shell-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.3rem 1.4rem;
+}
+
+.cfg-card-head {
+  font-size: .72rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-family: var(--font-display);
+  margin: 0 0 1.1rem;
+}
+
+.cfg-setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .75rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.cfg-setting-row:last-child { border-bottom: none; }
+
+.cfg-setting-label { font-size: .88rem; font-weight: 500; color: var(--ink); }
+.cfg-setting-sub { font-size: .74rem; color: var(--muted); margin-top: .18rem; }
+
+.cfg-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: .75rem;
+}
+
+.cfg-field label {
+  display: block;
+  font-size: .72rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: .35rem;
+  font-family: var(--font-display);
+}
+
+.cfg-theme-preview {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+.cfg-theme-tile {
+  flex: 1;
+  cursor: pointer;
+  border-radius: 12px;
+  border: 2px solid var(--border);
+  overflow: hidden;
+  transition: border-color .2s;
+}
+.cfg-theme-tile.is-active { border-color: var(--gold); }
+.cfg-theme-tile span { display: block; text-align: center; font-size: .78rem; color: var(--muted); padding: .4rem; }
+.cfg-theme-thumb { height: 80px; }
+.cfg-theme-thumb.dark { background: linear-gradient(135deg,#111110,#1d1d1b); }
+.cfg-theme-thumb.light { background: linear-gradient(135deg,#f6f5f3,#e8e6e2); }
+
+.cfg-barber-row {
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.02);
+  display: grid;
+  gap: .75rem;
+}
+.cfg-barber-row.is-disabled { opacity: .5; }
+.cfg-barber-head { display: flex; align-items: center; gap: .8rem; }
+.cfg-barber-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--gold-grad); color: #000;
+  font-weight: 700; font-size: .95rem;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.cfg-perm-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+.cfg-perm-chip {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .35rem .7rem;
+  border-radius: 999px;
+  border: 1px solid var(--hair-2);
+  font-size: .76rem;
+  color: var(--muted);
+  cursor: pointer;
+  user-select: none;
+}
+.cfg-perm-chip input[type=checkbox] { accent-color: var(--gold); width: 13px; height: 13px; }
+.cfg-perm-chip:has(input:checked) { border-color: var(--gold-line); color: var(--gold-lt); background: rgba(201,161,78,0.08); }
+
+/* PIN pad */
+.pin-pad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .5rem;
+  max-width: 240px;
+}
+.pin-key {
+  padding: .9rem;
+  background: var(--shell-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background .12s;
+}
+.pin-key:hover { background: rgba(255,255,255,0.07); }
+.pin-key:active { background: rgba(201,161,78,0.15); }
+
+/* Mobile: cfg-shell stacks vertically */
+@media (max-width: 768px) {
+  .cfg-shell { grid-template-columns: 1fr; border-radius: 12px; }
+  .cfg-nav { flex-direction: row; overflow-x: auto; padding: .6rem .8rem; gap: .3rem; border-right: none; border-bottom: 1px solid var(--border); }
+  .cfg-nav-head { display: none; }
+  .cfg-nav-item { padding: .55rem .9rem; border-radius: 999px; white-space: nowrap; border-right: none !important; }
+  .cfg-nav-item.is-active { background: rgba(201,161,78,0.15); border: 1px solid var(--gold-line); }
+  .cfg-nav-item svg { display: none; }
+  .cfg-content { padding: 1.2rem 1rem 2rem; }
+  .cfg-content-title { font-size: 1.1rem; margin-bottom: 1.1rem; }
+  .cfg-form-grid { grid-template-columns: 1fr; }
+}
+
+[data-theme="light"] .cfg-nav { background: #f0ede8; }
+[data-theme="light"] .cfg-nav-item.is-active { color: #7a5c1a; background: rgba(201,161,78,0.14); }
+[data-theme="light"] .cfg-card { background: #fff; border-color: #ddd; }
+[data-theme="light"] .cfg-barber-row { background: #f9f8f6; }
+[data-theme="light"] .cfg-perm-chip { border-color: #ccc; color: #666; }
+[data-theme="light"] .cfg-theme-tile { border-color: #ddd; }
+[data-theme="light"] .pin-key { background: #f3f2f0; border-color: #ddd; }
