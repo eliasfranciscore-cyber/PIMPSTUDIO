@@ -16,14 +16,13 @@ export default function MobileDock({ tab, setTab, nav }) {
     return () => window.removeEventListener('keydown', close)
   }, [sheetOpen])
 
-  // Atajos fijos a la izq / derecha del centro
+  // Atajos fijos: 2 izq + centro (todo) + 2 der (5 totales sin config)
   const findKey = (key) => nav.find((n) => n[0] === key)
   const shortcuts = [
     findKey('resumen'),
     findKey('agenda'),
     findKey('reservas'),
     findKey('clientes'),
-    findKey('config'),
   ].filter(Boolean)
 
   const goto = (id) => { setTab(id); setSheetOpen(false) }

@@ -611,6 +611,7 @@ export default function Dashboard() {
             saveBarber={saveBarber}
             updateBarberLocal={updateBarberLocal}
             onLogout={logout}
+            nav={nav}
           />
         )}
 
@@ -665,6 +666,7 @@ export default function Dashboard() {
 const CFG_SECTIONS = [
   { id: "cuenta",        icon: "user",     label: "Cuenta y seguridad" },
   { id: "apariencia",    icon: "star",     label: "Apariencia" },
+  { id: "accesos",       icon: "pin",      label: "Accesos directos" },
   { id: "navegacion",    icon: "grid",     label: "Navegacion" },
   { id: "notificaciones",icon: "bell",     label: "Notificaciones" },
   { id: "whatsapp",      icon: "whatsapp", label: "WhatsApp" },
@@ -720,7 +722,7 @@ function CfgRow({ label, sub, children }) {
   )
 }
 
-function ConfigPanel({ barber, barbers, admin, canManageTeam, barberDraft, setBarberDraft, saveBarber, updateBarberLocal, onLogout }) {
+function ConfigPanel({ barber, barbers, admin, canManageTeam, barberDraft, setBarberDraft, saveBarber, updateBarberLocal, onLogout, nav }) {
   const [section, setSection] = useState("cuenta")
   const [pin, setPin] = useState("")
   const [pinStep, setPinStep] = useState("idle") // idle | current | new | confirm
@@ -728,6 +730,7 @@ function ConfigPanel({ barber, barbers, admin, canManageTeam, barberDraft, setBa
   const [notifSettings, setNotifSettings] = useState({ reserva: true, cancelacion: true, recordatorio: true, marketing: false })
   const [waSettings, setWaSettings] = useState({ activo: true, recordatorio24h: true, recordatorio2h: false, confirmacion: true })
   const [navSettings, setNavSettings] = useState({ agenda: true, reservas: true, finanzas: true, clientes: true, servicios: true, gastos: false, marketing: true })
+  const [dockShortcuts, setDockShortcuts] = useState(nav.slice(0, 4).map(n => n[0]))
   const { theme, toggle } = useTheme()
 
   const handlePinKey = (digit) => {
@@ -839,6 +842,38 @@ function ConfigPanel({ barber, barbers, admin, canManageTeam, barberDraft, setBa
                   <span>Claro</span>
                 </div>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* ACCESOS DIRECTOS */}
+        {section === "accesos" && (
+          <div style={{ display: "grid", gap: "1.4rem" }}>
+            <div className="cfg-card">
+              <p className="cfg-card-head">Footer bar — 4 accesos rapidos</p>
+              <p style={{ fontSize: ".82rem", color: "var(--muted)", margin: "0 0 1rem" }}>Elige los 4 modulos que aparecen en el dock móvil (el centro siempre abre el menú completo).</p>
+              <div style={{ display: "grid", gap: ".6rem" }}>
+                {nav.filter((n) => !n[0].includes("config")).map(([id, ic, label]) => (
+                  <label key={id} style={{ display: "flex", alignItems: "center", gap: ".8rem", padding: ".6rem .8rem", borderRadius: 10, border: "1px solid var(--border)", cursor: "pointer", transition: "background .15s" }}>
+                    <input
+                      type="checkbox"
+                      checked={dockShortcuts.includes(id)}
+                      onChange={(e) => {
+                        if (e.target.checked && dockShortcuts.length < 4) {
+                          setDockShortcuts([...dockShortcuts, id])
+                        } else if (!e.target.checked) {
+                          setDockShortcuts(dockShortcuts.filter((s) => s !== id))
+                        }
+                      }}
+                      style={{ accentColor: "var(--gold)", width: 18, height: 18 }}
+                    />
+                    <Icon name={ic} size={16} style={{ color: dockShortcuts.includes(id) ? "var(--gold)" : "var(--muted)" }} />
+                    <span style={{ fontSize: ".88rem", flex: 1 }}>{label}</span>
+                    {dockShortcuts.includes(id) && <span className="chip chip-gold" style={{ fontSize: ".66rem" }}>✓</span>}
+                  </label>
+                ))}
+              </div>
+              {dockShortcuts.length === 4 && <p style={{ fontSize: ".76rem", color: "var(--muted-2)", margin: "1rem 0 0" }}>✓ 4 accesos seleccionados</p>}
             </div>
           </div>
         )}

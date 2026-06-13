@@ -3004,3 +3004,95 @@ input, select, textarea { font: inherit; }
 [data-theme="light"] .cfg-perm-chip { border-color: #ccc; color: #666; }
 [data-theme="light"] .cfg-theme-tile { border-color: #ddd; }
 [data-theme="light"] .pin-key { background: #f3f2f0; border-color: #ddd; }
+
+/* ============================================================
+   MOBILE IMPROVEMENTS — hide title, compact layouts
+   ============================================================ */
+@media (max-width: 768px) {
+  /* Header mobile */
+  .dashboard-topbar {
+    padding: .5rem .8rem;
+    height: 48px;
+    gap: .3rem;
+  }
+  .dashboard-topbar-title { display: none; }
+  .dashboard-topbar-left { gap: .4rem; }
+  .dashboard-topbar-left .pimp-mark { width: 32px; height: 32px; }
+  .burger-btn { padding: .4rem; }
+  .notif-pill { font-size: .7rem; gap: .2rem; padding: .3rem .6rem; }
+  .user-chip-btn { width: 32px; height: 32px; font-size: .8rem; }
+
+  /* Agenda mobile: simple time-based list */
+  .agenda-grid {
+    display: grid !important;
+    grid-template-columns: 50px 1fr !important;
+    gap: .4rem !important;
+    row-gap: .8rem !important;
+  }
+  .agenda-day-head { display: none !important; }
+  .agenda-time {
+    font-size: .7rem !important;
+    color: var(--muted) !important;
+    padding: .4rem 0 !important;
+    text-align: right;
+    grid-column: 1 !important;
+  }
+  .agenda-slot {
+    padding: .6rem !important;
+    font-size: .75rem !important;
+    min-height: 32px !important;
+    border-radius: 8px !important;
+    grid-column: 2 !important;
+  }
+  .agenda-week-summary { grid-template-columns: repeat(2, 1fr); gap: .4rem; }
+
+  /* Reservas mobile: vertical cards */
+  .dashboard-panel { padding: .9rem !important; }
+  [style*="grid-template-columns: 70px"] {
+    grid-template-columns: 1fr !important;
+  }
+  [style*="minWidth: 640px"] { min-width: 100% !important; }
+  [style*="minWidth: 600px"] { min-width: 100% !important; }
+  .status-select { width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .dashboard-main { padding: .6rem; }
+  .card { margin: 0 !important; border-radius: 10px; }
+
+  /* Stats cards inline */
+  [style*="gridTemplateColumns: repeat(auto-fit"] { grid-template-columns: 1fr !important; }
+
+  /* Config panel mobile: full width tabs */
+  .cfg-shell {
+    grid-template-columns: 1fr !important;
+    border-radius: 10px !important;
+    min-height: auto;
+  }
+  .cfg-nav {
+    display: flex;
+    overflow-x: auto;
+    padding: .4rem .6rem;
+    gap: .3rem;
+    border-bottom: 1px solid var(--border);
+    border-right: none;
+    scroll-snap-type: x mandatory;
+  }
+  .cfg-nav-head { display: none; }
+  .cfg-nav-item {
+    padding: .4rem .6rem;
+    font-size: .7rem;
+    border-radius: 999px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+  }
+  .cfg-nav-item svg { display: none; }
+  .cfg-content { padding: .9rem .7rem; }
+  .cfg-content-title { font-size: .95rem; margin-bottom: .6rem; }
+  .cfg-form-grid { grid-template-columns: 1fr; gap: .4rem; }
+  
+  /* Stats cards */
+  .card.dashboard-panel { padding: .9rem !important; }
+  [style*="gridTemplateColumns: repeat(auto-fit"] { grid-template-columns: 1fr !important; }
+}
