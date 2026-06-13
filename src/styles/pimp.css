@@ -3009,6 +3009,13 @@ input, select, textarea { font: inherit; }
    MOBILE IMPROVEMENTS — hide title, compact layouts
    ============================================================ */
 @media (max-width: 768px) {
+  /* Force NO horizontal scroll anywhere */
+  html, body { overflow-x: hidden !important; }
+  .dashboard-shell { overflow-x: hidden !important; max-width: 100vw !important; }
+  .dashboard-main { overflow-x: hidden !important; max-width: 100vw !important; }
+  .dashboard-main > div { overflow-x: hidden !important; max-width: 100% !important; }
+  .card { max-width: 100% !important; overflow-x: hidden !important; }
+
   /* Header mobile */
   .dashboard-topbar {
     padding: .5rem .8rem;
@@ -3022,38 +3029,65 @@ input, select, textarea { font: inherit; }
   .notif-pill { font-size: .7rem; gap: .2rem; padding: .3rem .6rem; }
   .user-chip-btn { width: 32px; height: 32px; font-size: .8rem; }
 
-  /* Agenda mobile: simple time-based list */
+  /* Agenda mobile: collapse the week grid into vertical list per day */
   .agenda-grid {
     display: grid !important;
-    grid-template-columns: 50px 1fr !important;
-    gap: .4rem !important;
-    row-gap: .8rem !important;
+    grid-template-columns: 48px 1fr !important;
+    gap: .35rem .5rem !important;
+    width: 100% !important;
+    min-width: 0 !important;
   }
+  .agenda-grid > div:first-child { display: none !important; }
   .agenda-day-head { display: none !important; }
   .agenda-time {
-    font-size: .7rem !important;
+    font-size: .72rem !important;
     color: var(--muted) !important;
     padding: .4rem 0 !important;
-    text-align: right;
+    text-align: right !important;
     grid-column: 1 !important;
+    align-self: center;
   }
   .agenda-slot {
-    padding: .6rem !important;
+    padding: .55rem .7rem !important;
     font-size: .75rem !important;
-    min-height: 32px !important;
+    min-height: 34px !important;
     border-radius: 8px !important;
     grid-column: 2 !important;
+    width: 100% !important;
+    box-sizing: border-box;
   }
   .agenda-week-summary { grid-template-columns: repeat(2, 1fr); gap: .4rem; }
 
-  /* Reservas mobile: vertical cards */
-  .dashboard-panel { padding: .9rem !important; }
-  [style*="grid-template-columns: 70px"] {
-    grid-template-columns: 1fr !important;
+  /* Kill horizontal scroll wrappers */
+  .dashboard-panel > div[style*="overflow-x: auto"],
+  .dashboard-panel > div[style*="overflowX"] {
+    overflow-x: hidden !important;
+    overflow: visible !important;
   }
-  [style*="minWidth: 640px"] { min-width: 100% !important; }
-  [style*="minWidth: 600px"] { min-width: 100% !important; }
-  .status-select { width: 100%; }
+
+  /* Reservas mobile: vertical card per booking */
+  .dashboard-panel { padding: .9rem !important; }
+  [style*="grid-template-columns: 70px"],
+  [style*="gridTemplateColumns: 70px"] {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: .25rem !important;
+    min-width: 0 !important;
+  }
+  [style*="min-width: 640px"],
+  [style*="minWidth: 640px"],
+  [style*="min-width: 600px"],
+  [style*="minWidth: 600px"] {
+    min-width: 0 !important;
+  }
+
+  /* Hide table headers on mobile (turn into cards) */
+  .dashboard-panel [style*="grid-template-columns: 70px"]:first-of-type,
+  .dashboard-panel [style*="gridTemplateColumns: 70px"]:first-of-type {
+    display: none !important;
+  }
+
+  .status-select { width: 100% !important; padding: .5rem !important; }
 }
 
 @media (max-width: 480px) {
