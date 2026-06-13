@@ -2,9 +2,12 @@ import React, { useState, useEffect, useRef } from 'react'
 
 export function Emblem({ size = 46 }) {
   return (
-    <div className="emblem" style={{ width: size, height: size }}>
-      <span style={{ fontSize: size * 0.5 }}>PS</span>
-    </div>
+    <span
+      className="pimp-mark"
+      style={{ width: size, height: size }}
+      aria-label="PIMP STUDIO"
+      role="img"
+    />
   )
 }
 

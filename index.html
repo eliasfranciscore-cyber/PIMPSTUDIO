@@ -2,13 +2,28 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="/assets/pimp-studio-logo.jpg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/assets/pimp-studio-mark.svg" />
+    <link rel="apple-touch-icon" href="/assets/pimp-studio-logo.jpg" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="PIMP STUDIO" />
     <title>PIMP STUDIO · Barbería Premium Maipú</title>
     <meta name="description" content="Barbería premium en Maipú, Santiago. Reserva tu cita online con los mejores barberos. PIMP STUDIO - Donde el estilo se encuentra con la excelencia." />
     <meta property="og:title" content="PIMP STUDIO · Barbería Premium" />
     <meta property="og:description" content="Reserva tu cita en segundos. 8 barberos, servicios premium, Maipú Santiago." />
-    <meta name="theme-color" content="#080807" />
+    <meta name="theme-color" content="#080807" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f6f5f3" media="(prefers-color-scheme: light)" />
+    <script>
+      (function(){
+        try {
+          var t = localStorage.getItem('ps_theme') || 'dark';
+          document.documentElement.setAttribute('data-theme', t);
+        } catch(e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

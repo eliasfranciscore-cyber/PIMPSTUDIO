@@ -1,0 +1,15 @@
+{
+  "name": "PIMP STUDIO",
+  "short_name": "PIMP",
+  "description": "Barbería premium · Reserva online",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#080807",
+  "theme_color": "#080807",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "/assets/pimp-studio-mark.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" },
+    { "src": "/assets/pimp-studio-logo.jpg", "sizes": "1080x1080", "type": "image/jpeg" }
+  ]
+}

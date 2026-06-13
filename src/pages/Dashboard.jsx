@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Brandmark, Icon, Stat } from '../components/ui.jsx'
+import { ThemeToggle } from '../components/theme.jsx'
+import MobileDock from '../components/MobileDock.jsx'
 import { BARBERS, CLIENTS, EXPENSES, METRICS, SERVICES, TODAY_BOOKINGS, barberById, CLP, CLPk, isAdminUser } from '../data.js'
 
 const AGENDA_SLOTS = ["09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00"]
@@ -250,43 +252,22 @@ export default function Dashboard() {
   if (!barber) return null
 
   return (
-    <div className="dashboard-shell">
-      {/* SIDEBAR */}
-      <aside className="dashboard-sidebar">
-        <Brandmark size={36} sub="Panel interno" />
-        <nav className="dashboard-nav">
-          {nav.map(([id, ic, label]) => (
-            <button key={id} onClick={() => setTab(id)} className={`dashboard-nav-item ${tab === id ? "is-active" : ""}`}>
-              <Icon name={ic} size={17} /> {label}
-            </button>
-          ))}
-        </nav>
-        <div className="dashboard-sidebar-footer">
-          <div className="card dashboard-user-card">
-            <div className="dashboard-user-avatar">
-              {(barber.name || "B")[0].toUpperCase()}
-            </div>
-            <div style={{ minWidth: 0 }}>
-              <div style={{ fontSize: ".82rem", fontWeight: 600 }}>{barber.name}</div>
-              <div style={{ fontSize: ".68rem", color: "var(--muted)" }}>{barber.role || "Barbero"}</div>
-            </div>
-          </div>
-          <button onClick={logout} className="dashboard-logout"><Icon name="logout" size={15} /> Cerrar sesión</button>
-        </div>
-      </aside>
-
-      {/* MAIN */}
+    <DashboardShell
+      tab={tab}
+      setTab={setTab}
+      nav={nav}
+      barber={barber}
+      onLogout={logout}
+    >
       <main className="dashboard-main">
-        <div className="dashboard-main-head">
-          <div>
-            <h1 className="font-display" style={{ margin: 0, fontSize: "1.5rem", fontWeight: 600, textTransform: "capitalize" }}>{nav.find(n => n[0] === tab)?.[2]}</h1>
-            <p style={{ margin: ".2rem 0 0", color: "var(--muted)", fontSize: ".85rem" }}>Panel interno · PIMP STUDIO</p>
-          </div>
-          <div className="dashboard-main-actions">
-            <span className="chip"><Icon name="bell" size={14} /> 3</span>
-            <button className="btn btn-gold btn-sm"><Icon name="spark" size={14} /> Exportar</button>
-          </div>
-        </div>
+        <DashboardTopbar
+          title={nav.find((n) => n[0] === tab)?.[2] || 'Panel'}
+          barber={barber}
+          onLogout={logout}
+          tab={tab}
+          setTab={setTab}
+          nav={nav}
+        />
 
         {/* RESUMEN */}
         {tab === "resumen" && (
@@ -741,6 +722,101 @@ export default function Dashboard() {
           </div>
         )}
       </main>
+    </DashboardShell>
+  )
+}
+
+/* ============================================================
+   Shell + Topbar — UI envoltura responsive
+   ============================================================ */
+function DashboardShell({ tab, setTab, nav, barber, onLogout, children }) {
+  return (
+    <div className="dashboard-shell">
+      <aside className="dashboard-sidebar">
+        <Brandmark size={40} sub="Panel interno" />
+        <nav className="dashboard-nav">
+          {nav.map(([id, ic, label]) => (
+            <button
+              key={id}
+              onClick={() => setTab(id)}
+              className={`dashboard-nav-item ${tab === id ? 'is-active' : ''}`}
+            >
+              <Icon name={ic} size={17} /> {label}
+            </button>
+          ))}
+        </nav>
+        <div className="dashboard-sidebar-footer">
+          <button onClick={onLogout} className="dashboard-logout">
+            <Icon name="logout" size={15} /> Cerrar sesión
+          </button>
+        </div>
+      </aside>
+      {children}
+      <MobileDock tab={tab} setTab={setTab} nav={nav} />
     </div>
+  )
+}
+
+function DashboardTopbar({ title, barber, onLogout, tab, setTab, nav }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef(null)
+  useEffect(() => {
+    if (!open) return
+    const h = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false) }
+    document.addEventListener('mousedown', h)
+    return () => document.removeEventListener('mousedown', h)
+  }, [open])
+  const initial = (barber?.name || 'B')[0].toUpperCase()
+  return (
+    <header className="dashboard-topbar">
+      <div className="dashboard-topbar-left">
+        <button
+          type="button"
+          className="burger-btn"
+          aria-label="Cambiar módulo"
+          onClick={() => {
+            const cur = nav.findIndex((n) => n[0] === tab)
+            const next = nav[(cur + 1) % nav.length]
+            if (next) setTab(next[0])
+          }}
+        >
+          <Icon name="menu" size={18} />
+        </button>
+        <span className="pimp-mark" aria-hidden="true" />
+        <div className="dashboard-topbar-title">
+          <strong>{title}</strong>
+          <small>PIMP STUDIO</small>
+        </div>
+      </div>
+      <div className="dashboard-topbar-actions">
+        <ThemeToggle />
+        <span className="notif-pill" title="Notificaciones">
+          <Icon name="bell" size={14} /> 3
+        </span>
+        <div className="user-chip" ref={ref}>
+          <button
+            type="button"
+            className="user-chip-btn"
+            onClick={() => setOpen((v) => !v)}
+            aria-haspopup="true"
+            aria-expanded={open}
+            title={barber?.name || 'Cuenta'}
+          >
+            {initial}
+          </button>
+          {open && (
+            <div className="user-chip-pop" role="menu">
+              <div className="user-pop-name">
+                <strong>{barber?.name || 'Cuenta'}</strong>
+                <span>{barber?.role || 'Barbero'}</span>
+              </div>
+              <button className="user-pop-item" type="button" onClick={onLogout}>
+                <Icon name="logout" size={15} /> Cerrar sesión
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </header>
   )
 }
