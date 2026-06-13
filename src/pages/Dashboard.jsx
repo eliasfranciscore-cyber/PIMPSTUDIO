@@ -96,6 +96,18 @@ export default function Dashboard() {
     return { id: b.id, cuts: own.filter((item) => item.status === "completada").length || own.length, rev: own.reduce((sum, item) => sum + Number(item.price || 0), 0) }
   }).filter((item) => item.cuts || item.rev).sort((a, b) => b.rev - a.rev)
   const maxRev = Math.max(1, ...ranking.map((r) => r.rev), ...m.barberRanking.map((r) => r.rev))
+  const revenueByService = Object.values(completedBookings.reduce((acc, item) => {
+    const key = item.service || "Servicio"
+    acc[key] = acc[key] || { name: key, total: 0 }
+    acc[key].total += Number(item.price || 0)
+    return acc
+  }, {})).sort((a, b) => b.total - a.total)
+  const revenueByDate = Object.values(completedBookings.reduce((acc, item) => {
+    const key = item.date || "Sin fecha"
+    acc[key] = acc[key] || { d: key.slice(5).replace("-", "/"), v: 0 }
+    acc[key].v += Number(item.price || 0)
+    return acc
+  }, {})).slice(-7)
   const filteredClients = clients.filter((client) => {
     const haystack = `${client.name || ""} ${client.phone || ""} ${client.email || ""}`.toLowerCase()
     return haystack.includes(clientQuery.trim().toLowerCase())
@@ -434,28 +446,31 @@ export default function Dashboard() {
         {tab === "finanzas" && (
           <div className="animate-in" style={{ display: "grid", gap: "1.1rem" }}>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: "1rem" }}>
-              <Stat icon="wallet"   label="Ingresos mes"    value={CLP(16840000)} delta={9.6} accent />
-              <Stat icon="chart"    label="Ticket promedio" value={CLP(m.avgTicket)} delta={3.2} />
-              <Stat icon="scissors" label="Servicios mes"   value="734" delta={6.4} />
-              <Stat icon="trend"    label="Proyección"      value={CLP(17900000)} delta={6.3} />
+              <Stat icon="wallet"   label="Ingresos agenda" value={CLP(revenueTotal)} delta={9.6} accent />
+              <Stat icon="chart"    label="Ticket promedio" value={CLP(avgTicket)} delta={3.2} />
+              <Stat icon="scissors" label="Servicios"       value={completedBookings.length} delta={6.4} />
+              <Stat icon="trend"    label="Proyección"      value={CLP(revenueTotal * 4)} delta={6.3} />
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: "1.1rem" }}>
-              <Panel title="Ingresos por día"><BarChart data={m.revenueByDay} fmt={CLP} /></Panel>
+              <Panel title="Ingresos por día"><BarChart data={revenueByDate.length ? revenueByDate : m.revenueByDay} fmt={CLP} /></Panel>
               <Panel title="Ingresos por servicio">
                 <div style={{ display: "grid", gap: ".75rem" }}>
-                  {[["Corte de cabello", 38], ["Corte + barba", 26], ["Químicos / color", 18], ["Brunetti premium", 12], ["Perfilado barba", 6]].map(([n, p]) => (
-                    <div key={n} style={{ display: "grid", gap: ".3rem" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: ".82rem" }}><span style={{ color: "var(--ink-soft)" }}>{n}</span><span className="gold-text" style={{ fontWeight: 600 }}>{p}%</span></div>
-                      <div style={{ height: 6, borderRadius: 99, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}><div style={{ height: "100%", width: `${p}%`, background: "var(--gold-grad)", borderRadius: 99 }} /></div>
-                    </div>
-                  ))}
+                  {(revenueByService.length ? revenueByService : [["Corte de cabello", 38], ["Corte + barba", 26], ["Químicos / color", 18], ["Brunetti premium", 12], ["Perfilado barba", 6]].map(([name, pct]) => ({ name, total: pct }))).slice(0, 5).map((item) => {
+                    const p = revenueByService.length ? Math.round((item.total / Math.max(1, revenueTotal)) * 100) : item.total
+                    return (
+                      <div key={item.name} style={{ display: "grid", gap: ".3rem" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: ".82rem" }}><span style={{ color: "var(--ink-soft)" }}>{item.name}</span><span className="gold-text" style={{ fontWeight: 600 }}>{p}%</span></div>
+                        <div style={{ height: 6, borderRadius: 99, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}><div style={{ height: "100%", width: `${p}%`, background: "var(--gold-grad)", borderRadius: 99 }} /></div>
+                      </div>
+                    )
+                  })}
                 </div>
               </Panel>
             </div>
             <Panel title="Ingresos por barbero">
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(160px,1fr))", gap: ".8rem" }}>
-                {m.barberRanking.map((r) => {
-                  const b = barberById(r.id)
+                {(ranking.length ? ranking : m.barberRanking).map((r) => {
+                  const b = barbers.find((item) => item.id === r.id) || barberById(r.id)
                   return (
                     <div key={r.id} style={{ padding: "1rem", border: "1px solid var(--hair)", borderRadius: 12, background: "rgba(0,0,0,0.25)" }}>
                       <span style={{ fontSize: ".8rem", color: "var(--muted)", display: "block", marginBottom: ".3rem" }}>{b?.short}</span>

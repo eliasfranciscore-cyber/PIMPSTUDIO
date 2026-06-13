@@ -58,6 +58,7 @@ Este archivo registra el avance funcional de la rama `desarrollo` para que cualq
 - La pestaña `Reservas` ya no depende solo de `TODAY_BOOKINGS`; carga reservas desde `/api/bookings` cuando la API esta disponible.
 - Las reservas internas permiten cambiar estado: pendiente, confirmada, en curso, completada y cancelada.
 - El resumen del panel calcula ingresos, cantidad de reservas y ticket promedio desde reservas cargadas.
+- La pestaña `Finanzas` ahora deriva ingresos, ticket promedio, cantidad de servicios, proyeccion, ingresos por dia, ingresos por servicio e ingresos por barbero desde reservas completadas cargadas; los mocks quedan solo como fallback cuando no hay datos reales.
 - Los barberos normales ven sus propias reservas y metricas derivadas; Brunetti/admin ve la vista global.
 - Se agregaron tablas `expenses` y `barber_permissions` a `db/schema.sql`.
 - Se agregaron seeds de gastos y permisos admin Brunetti a `db/seed.sql`.
@@ -102,7 +103,7 @@ Este archivo registra el avance funcional de la rama `desarrollo` para que cualq
 - Completar restriccion real por permisos:
   - Brunetti/admin ve finanzas, gastos, usuarios y servicios.
   - Barbero normal ve solo su agenda, sus metricas, sus reservas y disponibilidad.
-- Persistir metricas reales desde `bookings`, `services`, `expenses` y `barbers`, no solo mocks.
+- Completar reportes avanzados cruzando `bookings`, `services`, `expenses` y `barbers`, incluyendo utilidad neta, costos por categoria y rangos de fecha configurables.
 - Revisar responsive real con navegador en desktop, tablet y movil.
 - Hacer commit en `desarrollo`, push y verificar deploy de Vercel.
 
