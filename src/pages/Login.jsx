@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Emblem, Icon, MobileScreen, StatusBar } from '../components/ui.jsx'
+import { Emblem, Icon, MobileScreen } from '../components/ui.jsx'
 
 function fmtPhone(v) {
   const d = String(v || "").replace(/\D/g, "").slice(0, 9)
@@ -54,8 +54,7 @@ export default function Login() {
 
   return (
     <MobileScreen>
-      <StatusBar />
-      <div style={{ minHeight: "calc(100vh - 40px)", display: "grid", alignContent: "center", padding: "1.4rem 1.5rem 2rem", gap: "1.4rem" }}>
+      <div style={{ minHeight: "100vh", display: "grid", alignContent: "center", padding: "1.4rem 1.5rem 2rem", gap: "1.4rem", maxWidth: "500px", margin: "0 auto" }}>
         <button onClick={() => navigate("/")} style={{ background: "none", border: 0, color: "var(--muted)", display: "inline-flex", alignItems: "center", gap: ".4rem", fontSize: ".8rem", justifySelf: "start" }}>
           <Icon name="arrowLeft" size={15} /> Volver al inicio
         </button>

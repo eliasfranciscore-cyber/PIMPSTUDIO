@@ -2,6 +2,43 @@
 
 Este archivo registra el avance funcional de la rama `desarrollo` para que cualquier computador o agente pueda retomar la tarea sin depender del historial de chat.
 
+## 2026-06-13 - Rediseño UI para web y componentes responsivos
+
+### Resumen
+Se transformó la interfaz de usuario de una app móvil agrandada a una aplicación web moderna y responsiva. Se eliminó StatusBar de todas las páginas, se creó componente GlareCard personalizado para efectos visuales, y se rediseñó completamente el flujo de reserva (barberos, servicios, fecha/hora) con grids responsivos. Se compactaron todas las vistas internas (Account, confirmación) para web.
+
+### Cambios principales
+
+- **Eliminado StatusBar**: removido de `Login.jsx`, `Booking.jsx` y `Account.jsx` para limpiar la interfaz.
+- **Nuevo componente GlareCard** (`src/components/GlareCard.jsx`): efecto de brillo dinámico al pasar el mouse, con soporte para múltiples elementos (`as` prop).
+- **Rediseño Booking paso 0 (barberos)**: cambio de lista vertical a grid responsivo `repeat(auto-fill, minmax(140px, 1fr))`, tarjetas más compactas con solo nombres y logos.
+- **Rediseño Booking paso 1 (servicios)**: grid responsivo `repeat(auto-fill, minmax(160px, 1fr))` con tarjetas centradas y más pequeñas.
+- **Rediseño Booking paso 2 (fecha/hora)**: layout horizontal con calendario compacto a la izquierda (`1fr`) y horas disponibles a la derecha (`1.2fr`), solo mostrando semanas y navegación de próxima semana.
+- **Rediseño Booking paso 3 (confirmación)**: compactado con círculo de checkmark más pequeño (60x60), título reducido, botones lado a lado en 2 columnas.
+- **Footer de Booking**: botón "CONFIRMAR RESERVA" ahora 1/4 del tamaño, posicionado al lado derecho con flex layout.
+- **Account.jsx (página cliente)**: agregado `maxWidth: 900px`, reducidos todos los paddings/gaps/font-sizes, grid de estadísticas responsivo, historial limitado a 5 items, botones más pequeños.
+- **Config general**: `maxWidth: 1000px` al contenedor principal de Booking para evitar que la interfaz sea demasiado ancha en desktop.
+
+### Archivos modificados
+
+- `src/components/GlareCard.jsx`: nuevo componente
+- `src/pages/Booking.jsx`: rediseño completo de los 4 pasos con grids responsivos y componentes compactos
+- `src/pages/Account.jsx`: compactado para web, reducción de paddings y font-sizes
+- `.claude/launch.json`: archivo de configuración de dev server
+
+### Verificación realizada
+
+- Dev server ejecutándose en puerto 5173
+- Interfaz responsive en desktop: tarjetas de barberos/servicios en múltiples columnas, calendario compacto, botones proporcionales
+- Efecto GlareCard funcionando en tarjetas (brillo dinámico al hover)
+- Flujo de reserva completo probado: barberos → servicios → fecha/hora → confirmación
+
+### Pendiente inmediato
+
+- Probar responsive en tablet y móvil para validar adaptabilidad del nuevo grid
+- Considerar animaciones suaves en transiciones entre pasos
+- Ajustar si hay overflow en pantallas muy pequeñas
+
 ## 2026-06-12 - Base operativa clientes, agenda y panel interno
 
 ### Contexto
