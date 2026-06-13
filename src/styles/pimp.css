@@ -3110,44 +3110,268 @@ input, select, textarea { font: inherit; }
   /* Stats cards inline */
   [style*="gridTemplateColumns: repeat(auto-fit"] { grid-template-columns: 1fr !important; }
 
-  /* Config panel mobile: vertical list of sections + content stacked below */
-  .cfg-shell {
-    display: flex !important;
-    flex-direction: column !important;
-    border-radius: 10px !important;
-    min-height: auto;
-  }
-  .cfg-nav {
-    display: flex !important;
-    flex-direction: column !important;
-    overflow-x: visible !important;
-    overflow-y: visible !important;
-    padding: .6rem .4rem !important;
-    gap: .1rem !important;
-    border-right: none !important;
-    border-bottom: 1px solid var(--border);
-    width: 100%;
-  }
-  .cfg-nav-head { display: block !important; padding: 0 .8rem .4rem; }
-  .cfg-nav-item {
-    display: flex !important;
-    align-items: center !important;
-    gap: .7rem !important;
-    padding: .65rem .9rem !important;
-    font-size: .82rem !important;
-    border-radius: 8px !important;
-    white-space: normal !important;
-    width: 100%;
-    text-align: left !important;
-    border-right: none !important;
-  }
-  .cfg-nav-item svg { display: inline !important; flex-shrink: 0; opacity: .75; }
-  .cfg-nav-item.is-active { background: rgba(201,161,78,0.12); border-right: none !important; border-left: 3px solid var(--gold); }
-  .cfg-content { padding: 1rem .8rem; }
   .cfg-content-title { font-size: 1.05rem; margin-bottom: .8rem; }
   .cfg-form-grid { grid-template-columns: 1fr; gap: .5rem; }
   
   /* Stats cards */
   .card.dashboard-panel { padding: .9rem !important; }
   [style*="gridTemplateColumns: repeat(auto-fit"] { grid-template-columns: 1fr !important; }
+}
+
+/* ============================================================
+   AGENDA V3 — single day, simple toggle list
+   ============================================================ */
+.agenda-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .7rem;
+}
+.agenda-control { display: grid; gap: .35rem; }
+.agenda-control span {
+  font-size: .68rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-family: var(--font-display);
+}
+.agenda-control .input { width: 100%; }
+
+.agenda-day-list {
+  display: grid;
+  gap: .5rem;
+  margin-top: .8rem;
+}
+.agenda-day-slot {
+  display: grid;
+  grid-template-columns: 60px 1fr auto;
+  align-items: center;
+  gap: .8rem;
+  padding: .85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--ink-soft);
+  cursor: pointer;
+  text-align: left;
+  font-size: .9rem;
+  transition: border-color .15s, background .15s;
+}
+.agenda-day-slot:hover { border-color: var(--gold-line); }
+.agenda-day-slot.blocked {
+  background: rgba(255,255,255,0.02);
+  color: var(--muted);
+}
+.agenda-day-slot.booked {
+  background: rgba(201,161,78,0.08);
+  border-color: var(--gold-line);
+  cursor: not-allowed;
+  color: var(--gold-lt);
+}
+.agenda-day-slot-time {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--ink);
+}
+[data-theme="light"] .agenda-day-slot.booked { color: #7a5c1a; }
+[data-theme="light"] .agenda-day-slot-time { color: #1a1817; }
+
+.agenda-day-slot-state {
+  font-size: .82rem;
+  color: var(--muted);
+}
+.agenda-day-slot.free .agenda-day-slot-state { color: #9fd0a0; font-weight: 500; }
+.agenda-day-slot.blocked .agenda-day-slot-state { color: var(--muted-2); }
+
+.agenda-day-slot-toggle {
+  width: 42px;
+  height: 24px;
+  border-radius: 12px;
+  background: var(--hair-2);
+  position: relative;
+  transition: background .2s;
+  flex-shrink: 0;
+}
+.agenda-day-slot-toggle > span {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  transition: left .2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,.3);
+}
+.agenda-day-slot-toggle.is-on { background: var(--gold); }
+.agenda-day-slot-toggle.is-on > span { left: 20px; }
+
+/* ============================================================
+   AGENDA TILE GRID — MAÑANA / TARDE interactive tiles
+   ============================================================ */
+.agenda-period { margin-top: 1rem; }
+.agenda-period-title {
+  font-family: var(--font-display);
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 .5rem .25rem;
+}
+.agenda-tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: .45rem;
+}
+.agenda-tile {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--ink-soft);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: .85rem;
+  cursor: pointer;
+  transition: background .15s, border-color .15s, color .15s, transform .1s;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.agenda-tile:active:not(:disabled) { transform: scale(.93); }
+.agenda-tile.free {
+  background: linear-gradient(135deg, var(--gold), #e8c547);
+  border-color: var(--gold);
+  color: #1a1400;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(201,161,78,.35);
+}
+.agenda-tile.blocked {
+  background: rgba(255,255,255,.03);
+  border-color: var(--hair-2);
+  color: var(--muted-2);
+}
+.agenda-tile.booked {
+  background: rgba(201,161,78,.08);
+  border-color: var(--gold-line);
+  color: var(--gold-lt);
+  cursor: not-allowed;
+  opacity: .7;
+}
+.agenda-tile:disabled { cursor: not-allowed; }
+
+[data-theme="light"] .agenda-tile.free {
+  background: linear-gradient(135deg, #c9a14e, #d4b35c);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(160,120,40,.3);
+}
+[data-theme="light"] .agenda-tile.blocked {
+  background: #f0ede8;
+  border-color: #d8d3ca;
+  color: #b0a898;
+}
+[data-theme="light"] .agenda-tile.booked {
+  background: rgba(201,161,78,.12);
+  border-color: rgba(201,161,78,.5);
+  color: #7a5c1a;
+}
+
+/* Fix "Semana actual" / chip-gold visibility in light mode */
+[data-theme="light"] .chip-gold {
+  background: rgba(201,161,78,0.18) !important;
+  color: #5a4314 !important;
+  border-color: rgba(201,161,78,0.5) !important;
+  font-weight: 600;
+}
+
+/* ============================================================
+   CONFIG V2 — list screen + detail screen with back button
+   ============================================================ */
+.cfg-list-screen {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.2rem;
+}
+.cfg-list-screen .cfg-nav-head {
+  font-size: .72rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  font-family: var(--font-display);
+  margin: 0 0 1rem;
+  padding: 0 .3rem;
+}
+.cfg-list { display: grid; gap: .35rem; }
+.cfg-list-item {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  align-items: center;
+  gap: .9rem;
+  padding: .85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: var(--shell-bg);
+  cursor: pointer;
+  color: var(--ink);
+  text-align: left;
+  transition: border-color .15s, background .15s;
+}
+.cfg-list-item:hover {
+  border-color: var(--gold-line);
+  background: rgba(201,161,78,0.04);
+}
+.cfg-list-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(201,161,78,0.1);
+  color: var(--gold-lt);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+[data-theme="light"] .cfg-list-icon { color: #7a5c1a; }
+.cfg-list-label {
+  font-size: .92rem;
+  font-weight: 500;
+  font-family: var(--font-display);
+}
+
+.cfg-detail-screen {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.cfg-back {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .8rem 1.2rem;
+  background: var(--shell-bg);
+  border: none;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  font-size: .85rem;
+  color: var(--ink-soft);
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-display);
+  font-weight: 500;
+}
+.cfg-back:hover { color: var(--gold-lt); }
+
+.cfg-detail-screen .cfg-content { padding: 1.4rem 1.4rem 2rem; }
+
+@media (max-width: 480px) {
+  .agenda-controls { grid-template-columns: 1fr; }
+  .agenda-day-slot { grid-template-columns: 52px 1fr 42px; padding: .75rem .85rem; }
+  .agenda-day-slot-time { font-size: .92rem; }
+  .agenda-day-slot-state { font-size: .76rem; }
+  .cfg-list-screen { padding: .9rem; }
+  .cfg-detail-screen .cfg-content { padding: 1rem .9rem 1.5rem; }
 }

@@ -68,7 +68,8 @@ function Panel({ title, action, children, style }) {
 export default function Dashboard() {
   const navigate = useNavigate()
   const [tab, setTab] = useState("resumen")
-  const [agendaBarber, setAgendaBarber] = useState(6)
+  const [agendaBarber, setAgendaBarber] = useState(null)
+  const [agendaDayKey, setAgendaDayKey] = useState(null)
   const [weekOffset, setWeekOffset] = useState(0)
   const [availability, setAvailability] = useState({})
   const [agendaBusy, setAgendaBusy] = useState("")
@@ -120,6 +121,8 @@ export default function Dashboard() {
     if (!stored) { navigate("/ingreso"); return }
     const parsed = JSON.parse(stored)
     setBarber(parsed)
+    setAgendaBarber(parsed.id || 6)
+    setAgendaDayKey(isoDate(new Date()))
     const headers = authHeaders()
     fetch("/api/clients", { headers }).then((r) => r.json()).then((data) => { if (data.clients?.length) setClients(data.clients) }).catch(() => {})
     fetch("/api/barbers?includeInactive=true", { headers }).then((r) => r.json()).then((data) => { if (data.barbers?.length) setBarbers(data.barbers) }).catch(() => {})
@@ -320,68 +323,70 @@ export default function Dashboard() {
         )}
 
         {/* AGENDA */}
-        {tab === "agenda" && (
+        {tab === "agenda" && agendaDayKey && (
           <div className="animate-in" style={{ display: "grid", gap: "1.1rem" }}>
-            <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap", alignItems: "center" }}>
-              <span style={{ fontSize: ".74rem", color: "var(--muted)", letterSpacing: ".1em", textTransform: "uppercase" }}>Barbero:</span>
-              {barbers.filter((item) => item.active !== false).map((b) => (
-                <button key={b.id} onClick={() => setAgendaBarber(b.id)} className="chip" style={{ cursor: "pointer", borderColor: agendaBarber === b.id ? "var(--gold-line)" : "var(--hair-2)", color: agendaBarber === b.id ? "var(--gold-lt)" : "var(--ink-soft)", background: agendaBarber === b.id ? "rgba(201,161,78,0.08)" : "transparent" }}>{b.short}</button>
-              ))}
+            <div className="agenda-controls">
+              <label className="agenda-control">
+                <span>Barbero</span>
+                <select className="input" value={agendaBarber || ""} onChange={(e) => setAgendaBarber(Number(e.target.value))}>
+                  {barbers.filter((item) => item.active !== false).map((b) => (
+                    <option key={b.id} value={b.id}>{b.name}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="agenda-control">
+                <span>Día</span>
+                <select className="input" value={agendaDayKey} onChange={(e) => setAgendaDayKey(e.target.value)}>
+                  {Array.from({ length: 14 }, (_, i) => {
+                    const d = new Date()
+                    d.setDate(d.getDate() + i)
+                    const k = isoDate(d)
+                    const label = i === 0 ? "Hoy" : i === 1 ? "Mañana" : `${DAY_LABELS[d.getDay()]} ${d.getDate()}/${d.getMonth() + 1}`
+                    return <option key={k} value={k}>{label}</option>
+                  })}
+                </select>
+              </label>
             </div>
             <Panel
-              title={`Agenda · ${(barbers.find((item) => item.id === agendaBarber) || barberById(agendaBarber))?.name || "Barbero"}`}
-              action={
-                <div className="week-picker">
-                  <button className="chip" onClick={() => setWeekOffset(weekOffset - 1)}><Icon name="arrowLeft" size={13} /> Anterior</button>
-                  <span className="chip chip-gold">Semana {weekOffset === 0 ? "actual" : weekOffset > 0 ? `+${weekOffset}` : weekOffset}</span>
-                  <button className="chip" onClick={() => setWeekOffset(weekOffset + 1)}>Siguiente <Icon name="arrowRight" size={13} /></button>
-                  {weekOffset !== 0 && <button className="chip" onClick={() => setWeekOffset(0)}>Hoy</button>}
-                </div>
-              }
+              title={`${(barbers.find((item) => item.id === agendaBarber) || barberById(agendaBarber))?.name || "Barbero"}`}
+              action={<span className="chip chip-gold">{(availability[agendaDayKey] || []).filter((s) => s.state === "free").length} libres</span>}
             >
-              <div className="agenda-week-summary">
-                <div><strong>{weekDays[0]?.key}</strong><span>Inicio</span></div>
-                <div><strong>{weekDays[5]?.key}</strong><span>Fin</span></div>
-                <div><strong>1 hora</strong><span>Duracion de bloque</span></div>
-                <div><strong>{(Object.values(availability).flat().filter((item) => item.state === "free").length)}</strong><span>Disponibles</span></div>
-              </div>
               <div className="agenda-legend">
                 <span><i className="free" /> Atiende</span>
                 <span><i className="blocked" /> Bloqueado</span>
                 <span><i className="booked" /> Reservado</span>
               </div>
-              <div style={{ overflowX: "auto" }}>
-                <div className="agenda-grid">
-                  <div />
-                  {weekDays.map((d) => <div key={d.key} className="agenda-day-head">{d.label}<span>{d.key.slice(5).replace("-", "/")}</span></div>)}
-                  {AGENDA_SLOTS.map((t) => (
-                    <React.Fragment key={t}>
-                      <div className="agenda-time">{t}</div>
-                      {weekDays.map((day) => {
-                        const slotInfo = (availability[day.key] || []).find((item) => item.slot === t)
+              {["MAÑANA", "TARDE"].map((label) => {
+                const slots = AGENDA_SLOTS.filter((t) => label === "MAÑANA" ? Number(t.slice(0, 2)) < 12 : Number(t.slice(0, 2)) >= 12)
+                return (
+                  <div key={label} className="agenda-period">
+                    <p className="agenda-period-title">{label}</p>
+                    <div className="agenda-tile-grid">
+                      {slots.map((t) => {
+                        const slotInfo = (availability[agendaDayKey] || []).find((item) => item.slot === t)
                         const state = slotInfo?.state || (slotInfo?.available === false ? "blocked" : "free")
-                        const busy = agendaBusy === `${day.key}-${t}`
+                        const busy = agendaBusy === `${agendaDayKey}-${t}`
                         return (
                           <button
-                            key={day.key}
-                            className={`agenda-slot ${state}`}
+                            key={t}
+                            className={`agenda-tile ${state}`}
                             disabled={state === "booked" || busy}
-                            title={state === "booked" ? "Reservado por cliente" : state === "blocked" ? "Tocar para atender" : "Tocar para bloquear"}
-                            onClick={() => toggleSlot(day.key, t, state)}
+                            onClick={() => toggleSlot(agendaDayKey, t, state)}
+                            title={state === "booked" ? "Reservado" : state === "blocked" ? "Tocar para atender" : "Tocar para bloquear"}
                           >
-                            {busy ? "..." : state === "booked" ? "Reservado" : state === "blocked" ? "Bloqueado" : "Atiende"}
+                            {busy ? "..." : t}
                           </button>
                         )
                       })}
-                    </React.Fragment>
-                  ))}
-                </div>
-              </div>
+                    </div>
+                  </div>
+                )
+              })}
             </Panel>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "1rem" }}>
-              <Stat icon="calendar" label="Reservados semana" value={Object.values(availability).flat().filter((item) => item.state === "booked").length} />
-              <Stat icon="clock"    label="Horas disponibles" value={(Object.values(availability).flat().filter((item) => item.state === "free").length * 0.5).toFixed(1)} suffix="h" />
-              <Stat icon="trend"    label="Bloques cerrados" value={Object.values(availability).flat().filter((item) => item.state === "blocked").length} accent />
+              <Stat icon="calendar" label="Reservados" value={(availability[agendaDayKey] || []).filter((item) => item.state === "booked").length} />
+              <Stat icon="clock"    label="Disponibles" value={(availability[agendaDayKey] || []).filter((item) => item.state === "free").length} suffix="h" />
+              <Stat icon="trend"    label="Bloqueados" value={(availability[agendaDayKey] || []).filter((item) => item.state === "blocked").length} accent />
             </div>
           </div>
         )}
@@ -723,7 +728,7 @@ function CfgRow({ label, sub, children }) {
 }
 
 function ConfigPanel({ barber, barbers, admin, canManageTeam, barberDraft, setBarberDraft, saveBarber, updateBarberLocal, onLogout, nav }) {
-  const [section, setSection] = useState("cuenta")
+  const [section, setSection] = useState(null)
   const [pin, setPin] = useState("")
   const [pinStep, setPinStep] = useState("idle") // idle | current | new | confirm
   const [pinError, setPinError] = useState("")
@@ -745,25 +750,34 @@ function ConfigPanel({ barber, barbers, admin, canManageTeam, barberDraft, setBa
 
   const current = CFG_SECTIONS.find((s) => s.id === section)
 
-  return (
-    <div className="animate-in cfg-shell">
-      {/* Left nav */}
-      <aside className="cfg-nav">
+  // If no section picked: show full-screen list
+  if (!section) {
+    return (
+      <div className="animate-in cfg-list-screen">
         <p className="cfg-nav-head">Configuraciones</p>
-        {CFG_SECTIONS.map((s) => (
-          <button
-            key={s.id}
-            type="button"
-            className={`cfg-nav-item ${section === s.id ? "is-active" : ""}`}
-            onClick={() => setSection(s.id)}
-          >
-            <Icon name={s.icon} size={16} />
-            <span>{s.label}</span>
-          </button>
-        ))}
-      </aside>
+        <div className="cfg-list">
+          {CFG_SECTIONS.map((s) => (
+            <button
+              key={s.id}
+              type="button"
+              className="cfg-list-item"
+              onClick={() => setSection(s.id)}
+            >
+              <span className="cfg-list-icon"><Icon name={s.icon} size={18} /></span>
+              <span className="cfg-list-label">{s.label}</span>
+              <Icon name="arrowRight" size={16} style={{ opacity: .4 }} />
+            </button>
+          ))}
+        </div>
+      </div>
+    )
+  }
 
-      {/* Right content */}
+  return (
+    <div className="animate-in cfg-detail-screen">
+      <button type="button" className="cfg-back" onClick={() => setSection(null)}>
+        <Icon name="arrowLeft" size={16} /> Volver a ajustes
+      </button>
       <div className="cfg-content">
         <h2 className="cfg-content-title">{current?.label}</h2>
 
