@@ -54,18 +54,22 @@
   .home-nav-links { display: none; }
   .site-nav-reserve-desktop { display: none !important; }
   .site-nav-barber-desktop { display: none !important; }
-  /* texto PIMP STUDIO centrado en el navbar, independiente del emblema */
+  /* texto PIMP STUDIO + botón de menú: van en position:absolute, así que su
+     `top:50%` se centra en TODA la caja del navbar (incluido el padding-top del
+     safe-area), quedando más arriba que el emblema (que se centra en el área de
+     contenido). Se compensa bajándolos medio safe-area-inset-top para alinearlos
+     con el emblema y que no se metan bajo el notch. */
   .home-nav .brandmark .wordmark {
     position: absolute;
     left: 50%;
-    top: 50%;
+    top: calc(50% + env(safe-area-inset-top) / 2);
     transform: translate(-50%, -50%);
   }
   /* botón de menú anclado a la derecha */
   .site-nav-burger {
     position: absolute;
     right: 1.4rem;
-    top: 50%;
+    top: calc(50% + env(safe-area-inset-top) / 2);
     transform: translateY(-50%);
   }
 }

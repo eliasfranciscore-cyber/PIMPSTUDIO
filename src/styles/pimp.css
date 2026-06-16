@@ -64,6 +64,9 @@ body {
   color: var(--ink);
   background: #080807;
   min-height: 100vh;
+  /* Sin rebote elástico: en iOS el overscroll movía los elementos fixed
+     (dock, navbar) "un poco" al hacer scroll hasta el borde. */
+  overscroll-behavior: none;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -498,6 +501,15 @@ select.input { text-overflow: ellipsis; }
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: .7rem;
   align-items: center;
+}
+/* Las inputs nunca deben desbordar su celda (en iOS el <input type=date> tiene
+   un ancho intrínseco grande y se montaba sobre la columna vecina). */
+.admin-form-grid > .input { width: 100%; min-width: 0; box-sizing: border-box; }
+/* El botón de registrar ocupa toda la fila, no una sola columna. */
+.admin-form-grid > .btn-block { grid-column: 1 / -1; }
+@media (max-width: 560px) {
+  /* En móvil, formulario en una sola columna: evita superposiciones. */
+  .admin-form-grid { grid-template-columns: 1fr; }
 }
 .settings-grid {
   display: grid;
