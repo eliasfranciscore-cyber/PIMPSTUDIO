@@ -54,12 +54,16 @@ html, body { margin: 0; padding: 0; }
    evita el scroll lateral SIN romper `position: sticky` (topbar) ni
    `position: fixed` (botón flotante Reservar) en iOS Safari, que sí se
    rompen cuando el ancestro recortado es un contenedor intermedio. */
-html { overflow-x: clip; }
+/* Base oscura SÓLIDA en la raíz: garantiza que el área segura del PWA (notch
+   arriba, home indicator abajo) tenga el mismo color y no aparezcan "cuadros"
+   de otro tono. #080807 = --bg en modo oscuro (público siempre oscuro). */
+html { overflow-x: clip; background: #080807; min-height: 100%; }
 
 body {
   font-family: var(--font-body);
   color: var(--ink);
-  background: var(--bg);
+  background: #080807;
+  min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -868,10 +872,15 @@ select.input { text-overflow: ellipsis; }
 }
 
 /* ---------- Public home refresh ---------- */
+/* Navbar FIJO al viewport (no sticky): el sticky se rompía/escondía en iOS
+   Safari y en la PWA; `position: fixed` nunca se desplaza con el scroll. La
+   .home-hero ya no compensa con margin-top negativo (ver más abajo). */
 .home-nav {
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 40;
+  left: 0;
+  right: 0;
+  z-index: 50;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -907,7 +916,9 @@ select.input { text-overflow: ellipsis; }
   display: grid;
   align-items: end;
   padding: clamp(5.5rem, 10vw, 7rem) clamp(1rem, 4vw, 2.6rem) clamp(3rem, 6vw, 4rem);
-  margin-top: -68px;
+  /* El navbar ahora es position:fixed (fuera de flujo); sin margen negativo el
+     hero ocupa la pantalla completa y el navbar transparente queda encima. */
+  margin-top: 0;
 }
 .home-hero-media,
 .home-hero-overlay {
@@ -1869,7 +1880,9 @@ select.input { text-overflow: ellipsis; }
 .workshop-topbar::before {
   content: "";
   position: absolute;
-  inset: .2rem clamp(.7rem, 4vw, 2.1rem) auto;
+  /* +safe-area-inset-top: que la píldora baje bajo el notch y envuelva el
+     contenido del navbar (si no, queda arriba y se ve "cortada" en iOS PWA). */
+  inset: calc(.2rem + env(safe-area-inset-top)) clamp(.7rem, 4vw, 2.1rem) auto;
   height: 62px;
   border-radius: 999px;
   background: linear-gradient(150deg, rgba(255,255,255,.14), rgba(255,255,255,.05));
@@ -3085,15 +3098,19 @@ select.input { text-overflow: ellipsis; }
   .dashboard-main > div { overflow-x: clip !important; max-width: 100% !important; }
   .card { max-width: 100% !important; overflow-x: clip !important; }
 
-  /* La barra superior gestiona el safe-area del notch/cámara (iPhone).
-     padding-top = base + inset; el fondo se extiende bajo la cámara. */
-  .dashboard-main { padding-top: 0 !important; }
-
-  /* Sticky header always visible on scroll */
+  /* Topbar FIJO al viewport (no sticky): igual que el navbar del landing, el
+     sticky se subía al hacer scroll en iOS/PWA. fixed nunca se mueve. El
+     .dashboard-main reserva padding-top = alto del topbar + safe-area para
+     que el contenido no quede oculto debajo. */
+  .dashboard-main {
+    padding-top: calc(64px + env(safe-area-inset-top)) !important;
+  }
   .dashboard-topbar {
-    position: sticky !important;
+    position: fixed !important;
     top: 0 !important;
-    margin: 0 0 .8rem !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin: 0 !important;
     z-index: 100 !important;
     border-radius: 0 0 14px 14px !important;
     background: var(--surface) !important;
@@ -3176,8 +3193,11 @@ select.input { text-overflow: ellipsis; }
 }
 
 @media (max-width: 480px) {
-  /* Mantener el espacio inferior para el dock flotante (no resetearlo a .6rem). */
-  .dashboard-main { padding: .6rem .6rem calc(7.5rem + env(safe-area-inset-bottom)) !important; }
+  /* Mantener arriba el espacio del topbar fijo y abajo el del dock flotante
+     (no resetear el padding a .6rem en los cuatro lados). */
+  .dashboard-main {
+    padding: calc(64px + env(safe-area-inset-top)) .6rem calc(7.5rem + env(safe-area-inset-bottom)) !important;
+  }
   .card { margin: 0 !important; border-radius: 10px; }
 
   /* Stats cards inline */
