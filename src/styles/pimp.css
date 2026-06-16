@@ -68,12 +68,24 @@ body {
 .stage {
   min-height: 100vh;
   position: relative;
+}
+/* Fondo decorativo (degradados + glow dorado) como capa FIJA al viewport vía
+   pseudo-elemento, en lugar de `background-attachment: fixed` sobre .stage.
+   En iOS Safari/PWA `background-attachment: fixed` crea una capa de composición
+   que rompe el `position: sticky` del navbar (se esconde) y el `position: fixed`
+   del botón flotante. Un pseudo `position: fixed; z-index:-1` da el mismo look
+   sin tocar el compositing del scroll. La base oscura la aporta el <body>. */
+.stage::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
   background:
     radial-gradient(1200px 700px at 78% -10%, rgba(201, 161, 78, 0.10), transparent 60%),
     radial-gradient(900px 600px at 10% 8%, rgba(255, 255, 255, 0.045), transparent 55%),
     radial-gradient(1000px 800px at 50% 120%, rgba(201, 161, 78, 0.06), transparent 60%),
     linear-gradient(180deg, #0a0a09 0%, #070706 100%);
-  background-attachment: fixed;
   background-size: 140% 140%, 130% 130%, 150% 150%, 100% 100%;
   animation: bgGradientDrift 18s ease-in-out infinite alternate;
 }
@@ -814,7 +826,7 @@ select.input { text-overflow: ellipsis; }
 }
 
 @media (max-width: 760px) {
-  .stage { animation: none; }
+  .stage::before { animation: none; }
   .gallery-stage { min-height: 420px; }
   .carousel-arrow { width: 38px; height: 38px; }
   .account-stats { grid-template-columns: 1fr; }
@@ -2619,7 +2631,9 @@ select.input { text-overflow: ellipsis; }
 }
 @media (max-width: 1024px) {
   .mobile-dock { display: inline-flex; }
-  .dashboard-main { padding-bottom: 6.5rem; }
+  /* Espacio inferior para que el dock flotante no tape el contenido final
+     (incluye el safe-area del home indicator en iPhone). */
+  .dashboard-main { padding-bottom: calc(7.5rem + env(safe-area-inset-bottom)) !important; }
 }
 
 /* Full menu sheet (triggered by center button) */
@@ -3060,10 +3074,14 @@ select.input { text-overflow: ellipsis; }
    MOBILE IMPROVEMENTS — hide title, compact layouts
    ============================================================ */
 @media (max-width: 768px) {
-  /* Force NO horizontal scroll anywhere — use 'clip' not 'hidden' so sticky still works */
+  /* Sin scroll horizontal: el recorte vive en la RAÍZ (html/body) y en los
+     elementos internos (cards, wrappers de tab). Los ANCESTROS del topbar
+     sticky (.dashboard-shell / .dashboard-main) NO deben recortar: en iOS
+     Safari un ancestro con overflow:clip rompe position:sticky y el topbar
+     se sube al hacer scroll. Dejándolos en `visible` el sticky funciona. */
   html, body { overflow-x: clip !important; }
-  .dashboard-shell { overflow-x: clip !important; max-width: 100vw !important; }
-  .dashboard-main { overflow-x: clip !important; max-width: 100vw !important; overflow-y: visible !important; }
+  .dashboard-shell { overflow: visible !important; max-width: 100vw !important; }
+  .dashboard-main { overflow: visible !important; max-width: 100vw !important; }
   .dashboard-main > div { overflow-x: clip !important; max-width: 100% !important; }
   .card { max-width: 100% !important; overflow-x: clip !important; }
 
@@ -3158,7 +3176,8 @@ select.input { text-overflow: ellipsis; }
 }
 
 @media (max-width: 480px) {
-  .dashboard-main { padding: .6rem; }
+  /* Mantener el espacio inferior para el dock flotante (no resetearlo a .6rem). */
+  .dashboard-main { padding: .6rem .6rem calc(7.5rem + env(safe-area-inset-bottom)) !important; }
   .card { margin: 0 !important; border-radius: 10px; }
 
   /* Stats cards inline */
