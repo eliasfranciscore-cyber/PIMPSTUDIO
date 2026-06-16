@@ -2,6 +2,23 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Brandmark, Icon, MobileScreen } from '../components/ui.jsx'
 import { CLIENT_APPTS, barberById, CLP, MONTHS_ES } from '../data.js'
+import { readLocalBookings, cancelLocalBooking, isCancelled } from '../bookingsStore.js'
+
+// Combina las citas (API/demo) con las reservas locales del cliente para que su
+// reserva recién hecha aparezca de inmediato en "Próxima cita" / historial.
+function withLocalAppts(appts, phone) {
+  const todayKey = new Date().toISOString().slice(0, 10)
+  const clean = String(phone || "").replace(/\D/g, "")
+  const local = readLocalBookings()
+    .filter((b) => String(b.phone || "").replace(/\D/g, "") === clean)
+    .map((b) => ({ ...b, when: b.date >= todayKey ? "next" : "past" }))
+  const byKey = new Map()
+  const keyOf = (a) => `${a.date}|${a.time}|${Number(a.barberId)}`
+  ;[...appts, ...local].forEach((a) => byKey.set(keyOf(a), a))
+  return [...byKey.values()]
+    .filter((a) => !isCancelled(a)) // ocultar citas canceladas
+    .sort((a, b) => (b.date + (b.time || "")).localeCompare(a.date + (a.time || "")))
+}
 
 export default function Account() {
   const navigate = useNavigate()
@@ -13,17 +30,31 @@ export default function Account() {
     if (!stored) { navigate("/login"); return }
     const parsed = JSON.parse(stored)
     setUser(parsed)
+    // Mostrar de inmediato la reserva local recién creada.
+    setAppts((current) => withLocalAppts(current, parsed.phone))
     fetch("/api/clients?phone=" + parsed.phone)
       .then(r => r.json())
       .then(data => { if (data.client) setUser((current) => ({ ...current, ...data.client })) })
       .catch(() => {})
     fetch("/api/bookings?phone=" + parsed.phone)
       .then(r => r.json())
-      .then(data => { if (data.bookings?.length) setAppts(data.bookings) })
+      .then(data => { setAppts(withLocalAppts(data.bookings?.length ? data.bookings : CLIENT_APPTS, parsed.phone)) })
       .catch(() => {})
   }, [])
 
   const logout = () => { localStorage.removeItem("ps_user"); navigate("/") }
+
+  const cancelAppt = (appt) => {
+    if (!appt) return
+    if (!window.confirm("¿Cancelar esta cita? Esta acción no se puede deshacer.")) return
+    // Mejor esfuerzo contra el backend; el estado local es la fuente inmediata.
+    if (appt.id) {
+      fetch(`/api/bookings?id=${appt.id}`, { method: "DELETE" }).catch(() => {})
+    }
+    cancelLocalBooking(appt)
+    setAppts((current) => current.filter((a) => !(a.date === appt.date && a.time === appt.time && Number(a.barberId) === Number(appt.barberId))))
+  }
+
   const next = appts.find((a) => a.when === "next")
   const past = appts.filter((a) => a.when === "past")
   const nb = next && barberById(next.barberId)
@@ -77,8 +108,8 @@ export default function Account() {
                   <span className="chip" style={{ fontSize: ".65rem", padding: ".3rem .5rem" }}>{CLP(next.price)}</span>
                 </div>
                 <div style={{ display: "flex", gap: ".4rem" }}>
-                  <button className="btn btn-dark btn-sm" style={{ flex: 1, fontSize: ".65rem", padding: ".35rem" }}>Reagendar</button>
-                  <button className="btn btn-ghost btn-sm" style={{ flex: 1, fontSize: ".65rem", padding: ".35rem" }}>Cancelar</button>
+                  <button className="btn btn-dark btn-sm" style={{ flex: 1, fontSize: ".65rem", padding: ".35rem" }} onClick={() => navigate("/reservar")}>Reagendar</button>
+                  <button className="btn btn-ghost btn-sm" style={{ flex: 1, fontSize: ".65rem", padding: ".35rem" }} onClick={() => cancelAppt(next)}>Cancelar</button>
                 </div>
               </div>
             </div>

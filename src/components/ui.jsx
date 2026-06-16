@@ -113,7 +113,14 @@ export function SectionHead({ eyebrow, title, sub, center }) {
 
 export function MobileScreen({ children }) {
   return (
-    <div style={{ minHeight: "100vh", overflowX: "hidden", background: "var(--bg)" }}>
+    <div style={{
+      minHeight: "100vh",
+      overflowX: "hidden",
+      background: "var(--bg)",
+      // safe-area-inset-top: evita que el contenido superior quede bajo el
+      // notch/cámara cuando la web corre como app instalada en iOS.
+      paddingTop: "env(safe-area-inset-top)",
+    }}>
       {children}
     </div>
   )

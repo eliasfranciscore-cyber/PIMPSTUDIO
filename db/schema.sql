@@ -21,8 +21,12 @@ CREATE TABLE IF NOT EXISTS barbers (
   rating     DECIMAL(3,1) DEFAULT 5.0,
   active     BOOLEAN      DEFAULT true,
   pin_hash   VARCHAR(64),
+  password_hash VARCHAR(64),
   created_at TIMESTAMP    DEFAULT NOW()
 );
+
+-- Para bases existentes (idempotente):
+ALTER TABLE barbers ADD COLUMN IF NOT EXISTS password_hash VARCHAR(64);
 
 CREATE TABLE IF NOT EXISTS services (
   id            INTEGER PRIMARY KEY,
@@ -78,6 +82,17 @@ CREATE TABLE IF NOT EXISTS barber_permissions (
   updated_at       TIMESTAMP DEFAULT NOW()
 );
 
+-- Suscripciones Web Push por barbero (notificaciones iOS / PWA)
+CREATE TABLE IF NOT EXISTS push_subscriptions (
+  id         SERIAL PRIMARY KEY,
+  barber_id  INTEGER REFERENCES barbers(id),
+  endpoint   TEXT UNIQUE NOT NULL,
+  p256dh     TEXT NOT NULL,
+  auth       TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_push_subs_barber       ON push_subscriptions(barber_id);
 CREATE INDEX IF NOT EXISTS idx_bookings_barber_date  ON bookings(barber_id, booking_date);
 CREATE INDEX IF NOT EXISTS idx_bookings_client       ON bookings(client_id);
 CREATE INDEX IF NOT EXISTS idx_users_phone           ON users(phone);

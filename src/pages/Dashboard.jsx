@@ -4,6 +4,12 @@ import { Brandmark, Icon, Stat } from '../components/ui.jsx'
 import { ThemeProvider, ThemeToggle, useTheme } from '../components/theme.jsx'
 import MobileDock from '../components/MobileDock.jsx'
 import { BARBERS, CLIENTS, EXPENSES, METRICS, SERVICES, TODAY_BOOKINGS, barberById, CLP, CLPk, isAdminUser } from '../data.js'
+import { mergeBookings, readLocalBookings } from '../bookingsStore.js'
+import {
+  registerServiceWorker, notifyBarberOfBooking, pushEnabledFor,
+  enablePush, disablePush, notifyLocal, permissionState,
+  pushAvailableHere, pushSupported, isIOS, isStandalone,
+} from '../push.js'
 
 const AGENDA_SLOTS = ["09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00"]
 const DAY_LABELS = ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"]
@@ -75,7 +81,7 @@ export default function Dashboard() {
   const [agendaBusy, setAgendaBusy] = useState("")
   const [barber, setBarber] = useState(null)
   const [barbers, setBarbers] = useState(BARBERS.map((item) => ({ ...item, active: true })))
-  const [bookings, setBookings] = useState(TODAY_BOOKINGS.map((item, index) => ({ ...item, id: index + 1, date: isoDate(new Date()) })))
+  const [bookings, setBookings] = useState(mergeBookings(TODAY_BOOKINGS.map((item, index) => ({ ...item, id: index + 1, date: isoDate(new Date()) }))))
   const [clients, setClients] = useState(CLIENTS)
   const [clientQuery, setClientQuery] = useState("")
   const [selectedClient, setSelectedClient] = useState(null)
@@ -126,7 +132,7 @@ export default function Dashboard() {
     const headers = authHeaders()
     fetch("/api/clients", { headers }).then((r) => r.json()).then((data) => { if (data.clients?.length) setClients(data.clients) }).catch(() => {})
     fetch("/api/barbers?includeInactive=true", { headers }).then((r) => r.json()).then((data) => { if (data.barbers?.length) setBarbers(data.barbers) }).catch(() => {})
-    fetch("/api/bookings", { headers }).then((r) => r.json()).then((data) => { if (data.bookings?.length) setBookings(data.bookings) }).catch(() => {})
+    fetch("/api/bookings", { headers }).then((r) => r.json()).then((data) => { setBookings(mergeBookings(data.bookings?.length ? data.bookings : TODAY_BOOKINGS.map((item, index) => ({ ...item, id: index + 1, date: isoDate(new Date()) })))) }).catch(() => {})
     fetch("/api/services?includeInactive=true", { headers }).then((r) => r.json()).then((data) => { if (data.services?.length) setServices(data.services) }).catch(() => {})
     fetch("/api/expenses", { headers }).then((r) => r.json()).then((data) => { if (data.expenses?.length) setExpenses(data.expenses) }).catch(() => {})
   }, [])
@@ -160,6 +166,31 @@ export default function Dashboard() {
     if (!barber) return
     loadAgenda()
   }, [barber, agendaBarber, weekOffset])
+
+  // Service worker + aviso al barbero cuando entra una reserva suya.
+  // El localStorage sincroniza entre pestañas del mismo navegador (evento
+  // 'storage'); el aviso push entre dispositivos lo emite el backend.
+  const seenBookingKeys = useRef(null)
+  useEffect(() => {
+    if (!barber) return
+    registerServiceWorker()
+    const keyOf = (b) => `${Number(b.barberId)}|${b.date}|${b.time}`
+    if (!seenBookingKeys.current) seenBookingKeys.current = new Set(readLocalBookings().map(keyOf))
+    const onStorage = (e) => {
+      if (e.key && e.key !== "ps_bookings_local") return
+      const local = readLocalBookings()
+      setBookings((current) => mergeBookings(current))
+      local.forEach((bk) => {
+        const k = keyOf(bk)
+        if (!seenBookingKeys.current.has(k)) {
+          seenBookingKeys.current.add(k)
+          if (pushEnabledFor(barber)) notifyBarberOfBooking(barber, bk)
+        }
+      })
+    }
+    window.addEventListener("storage", onStorage)
+    return () => window.removeEventListener("storage", onStorage)
+  }, [barber])
 
   const nav = [
     ["resumen",   "grid",     "Resumen"],
@@ -271,6 +302,7 @@ export default function Dashboard() {
           tab={tab}
           setTab={setTab}
           nav={nav}
+          notifCount={visibleBookings.filter((b) => b.status === 'pendiente').length}
         />
 
         {/* RESUMEN */}
@@ -383,7 +415,7 @@ export default function Dashboard() {
                 )
               })}
             </Panel>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "1rem" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3,minmax(0,1fr))", gap: ".6rem" }}>
               <Stat icon="calendar" label="Reservados" value={(availability[agendaDayKey] || []).filter((item) => item.state === "booked").length} />
               <Stat icon="clock"    label="Disponibles" value={(availability[agendaDayKey] || []).filter((item) => item.state === "free").length} suffix="h" />
               <Stat icon="trend"    label="Bloqueados" value={(availability[agendaDayKey] || []).filter((item) => item.state === "blocked").length} accent />
@@ -681,16 +713,6 @@ const CFG_SECTIONS = [
   { id: "acerca",        icon: "spark",    label: "Acerca de" },
 ]
 
-function PinDots({ value }) {
-  return (
-    <div style={{ display: "flex", gap: ".75rem", margin: ".5rem 0 1rem" }}>
-      {[0,1,2,3].map((i) => (
-        <div key={i} style={{ width: 14, height: 14, borderRadius: "50%", background: i < value.length ? "var(--gold)" : "var(--hair-2)", border: "1px solid var(--gold-line)", transition: "background .15s" }} />
-      ))}
-    </div>
-  )
-}
-
 function ConfigSwitch({ checked, onChange, disabled }) {
   return (
     <button
@@ -727,26 +749,148 @@ function CfgRow({ label, sub, children }) {
   )
 }
 
+/* Notificaciones push para iOS (app instalada en inicio).
+   Solo activa avisos para el barbero autenticado (su usuario): recibirá un push
+   cuando un cliente agende una hora con él. */
+function PushCard({ barber }) {
+  const [perm, setPerm] = useState(() => permissionState())
+  const [enabled, setEnabled] = useState(() => pushEnabledFor(barber))
+  const [busy, setBusy] = useState(false)
+  const [msg, setMsg] = useState("")
+  const supported = pushSupported()
+  const iosNeedsInstall = isIOS() && !isStandalone()
+
+  const toggle = async () => {
+    setBusy(true); setMsg("")
+    if (enabled) {
+      await disablePush(barber)
+      setEnabled(false)
+      setMsg("Notificaciones desactivadas.")
+    } else {
+      const r = await enablePush(barber)
+      setPerm(r.permission)
+      if (r.ok) {
+        setEnabled(true)
+        setMsg("Listo. Te avisaremos cuando agenden una hora contigo.")
+      } else if (r.reason === "ios-needs-install") {
+        setMsg("En iPhone: abre el menú Compartir y elige “Agregar a inicio”. Luego abre la app instalada y activa aquí.")
+      } else if (r.reason === "denied") {
+        setMsg("Permiso de notificaciones bloqueado. Actívalo en los ajustes del navegador/app.")
+      } else if (r.reason === "unsupported") {
+        setMsg("Este navegador no soporta notificaciones push.")
+      } else {
+        setMsg("No se pudo activar. Intenta nuevamente.")
+      }
+    }
+    setBusy(false)
+  }
+
+  const test = async () => {
+    const ok = await notifyLocal({
+      title: "PIMP STUDIO",
+      body: `Prueba de notificación para ${barber?.name || "ti"}.`,
+    })
+    setMsg(ok ? "Notificación de prueba enviada." : "Activa primero las notificaciones para probar.")
+  }
+
+  return (
+    <div className="cfg-card">
+      <p className="cfg-card-head">Notificaciones push · iOS</p>
+      <CfgRow
+        label="Avisarme de nuevas reservas"
+        sub="Recibe un aviso cuando un cliente agende una hora contigo."
+      >
+        <ConfigSwitch checked={enabled} disabled={busy || iosNeedsInstall} onChange={toggle} />
+      </CfgRow>
+
+      {iosNeedsInstall && (
+        <div style={{
+          marginTop: ".8rem", padding: ".85rem 1rem", borderRadius: 12,
+          border: "1px solid var(--gold-line)", background: "rgba(201,161,78,0.07)",
+          fontSize: ".82rem", color: "var(--ink-soft)", lineHeight: 1.5,
+        }}>
+          <strong style={{ color: "var(--gold-lt)" }}>Para activar en iPhone:</strong> abre esta web en Safari,
+          toca <b>Compartir</b> → <b>Agregar a inicio</b>. Abre la app instalada y vuelve aquí para activar las push.
+        </div>
+      )}
+
+      {!supported && !iosNeedsInstall && (
+        <p style={{ marginTop: ".7rem", fontSize: ".8rem", color: "var(--muted)" }}>
+          Este dispositivo o navegador no soporta notificaciones push.
+        </p>
+      )}
+
+      {enabled && (
+        <button className="btn btn-dark btn-sm" style={{ marginTop: ".9rem" }} onClick={test}>
+          <Icon name="bell" size={13} /> Enviar notificación de prueba
+        </button>
+      )}
+
+      {msg && <p style={{ marginTop: ".8rem", fontSize: ".8rem", color: "var(--gold-lt)" }}>{msg}</p>}
+
+      <p style={{ marginTop: ".9rem", fontSize: ".74rem", color: "var(--muted-2)", lineHeight: 1.5 }}>
+        Solo tú recibirás estos avisos en tu cuenta. Estado del permiso: <b>{perm}</b>.
+      </p>
+    </div>
+  )
+}
+
+function isStrongPassword(pw) {
+  return /^[A-Za-z0-9]{8,64}$/.test(pw) && /[A-Z]/.test(pw) && /[0-9]/.test(pw)
+}
+
 function ConfigPanel({ barber, barbers, admin, canManageTeam, barberDraft, setBarberDraft, saveBarber, updateBarberLocal, onLogout, nav }) {
   const [section, setSection] = useState(null)
-  const [pin, setPin] = useState("")
-  const [pinStep, setPinStep] = useState("idle") // idle | current | new | confirm
-  const [pinError, setPinError] = useState("")
+  const [pwOpen, setPwOpen] = useState(false)
+  const [pwForm, setPwForm] = useState({ current: "", next: "", confirm: "" })
+  const [pwStatus, setPwStatus] = useState("") // "", "saving", "done"
+  const [pwError, setPwError] = useState("")
+
+  const changePassword = async () => {
+    setPwError("")
+    if (!isStrongPassword(pwForm.next)) {
+      setPwError("La nueva contraseña debe tener 8 caracteres alfanuméricos, con al menos 1 mayúscula y 1 número.")
+      return
+    }
+    if (pwForm.next !== pwForm.confirm) {
+      setPwError("Las contraseñas no coinciden.")
+      return
+    }
+    setPwStatus("saving")
+    try {
+      const token = localStorage.getItem("ps_barber_token") || ""
+      const res = await fetch("/api/auth-barber", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+        body: JSON.stringify({ currentPassword: pwForm.current, newPassword: pwForm.next }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (res.ok && data.ok) {
+        setPwStatus("done")
+        setPwForm({ current: "", next: "", confirm: "" })
+        setTimeout(() => { setPwStatus(""); setPwOpen(false) }, 2000)
+      } else {
+        setPwStatus("")
+        setPwError(data.error || "No se pudo cambiar la contraseña.")
+      }
+    } catch {
+      setPwStatus("")
+      setPwError("No se pudo conectar con el servidor.")
+    }
+  }
   const [notifSettings, setNotifSettings] = useState({ reserva: true, cancelacion: true, recordatorio: true, marketing: false })
   const [waSettings, setWaSettings] = useState({ activo: true, recordatorio24h: true, recordatorio2h: false, confirmacion: true })
+  const [acct, setAcct] = useState({ name: barber?.name || "", code: barber?.code || "" })
+  const [acctSaved, setAcctSaved] = useState(false)
+  const saveAccount = () => {
+    const updated = { ...barber, name: acct.name.trim() || barber?.name, code: acct.code.trim() || barber?.code }
+    try { localStorage.setItem("ps_barber", JSON.stringify(updated)) } catch {}
+    setAcctSaved(true)
+    setTimeout(() => setAcctSaved(false), 2500)
+  }
   const [navSettings, setNavSettings] = useState({ agenda: true, reservas: true, finanzas: true, clientes: true, servicios: true, gastos: false, marketing: true })
   const [dockShortcuts, setDockShortcuts] = useState(nav.slice(0, 4).map(n => n[0]))
   const { theme, toggle } = useTheme()
-
-  const handlePinKey = (digit) => {
-    if (pin.length >= 4) return
-    const next = pin + digit
-    setPin(next)
-    if (next.length === 4) {
-      setTimeout(() => { setPin(""); setPinStep((s) => s === "current" ? "new" : s === "new" ? "confirm" : "idle") }, 400)
-    }
-  }
-  const handlePinBack = () => setPin((p) => p.slice(0, -1))
 
   const current = CFG_SECTIONS.find((s) => s.id === section)
 
@@ -789,42 +933,55 @@ function ConfigPanel({ barber, barbers, admin, canManageTeam, barberDraft, setBa
               <div className="cfg-form-grid">
                 <div className="cfg-field">
                   <label>Nombre</label>
-                  <input className="input" defaultValue={barber?.name || ""} placeholder="Nombre completo" />
+                  <input className="input" value={acct.name} onChange={(e) => setAcct((a) => ({ ...a, name: e.target.value }))} placeholder="Nombre completo" />
                 </div>
                 <div className="cfg-field">
                   <label>Usuario</label>
-                  <input className="input" defaultValue={barber?.code || ""} placeholder="usuario" />
+                  <input className="input" value={acct.code} onChange={(e) => setAcct((a) => ({ ...a, code: e.target.value.toLowerCase().replace(/\s+/g, "-") }))} placeholder="usuario" />
                 </div>
                 <div className="cfg-field">
                   <label>Rol</label>
                   <input className="input" defaultValue={barber?.role || "Barbero"} disabled />
                 </div>
               </div>
-              <button className="btn btn-gold" style={{ marginTop: ".5rem" }}><Icon name="check" size={14} /> Guardar cambios</button>
+              <div style={{ display: "flex", alignItems: "center", gap: ".8rem", marginTop: ".5rem" }}>
+                <button className="btn btn-gold" onClick={saveAccount}><Icon name="check" size={14} /> Guardar cambios</button>
+                {acctSaved && <span className="chip chip-gold" style={{ fontSize: ".72rem" }}><Icon name="check" size={12} /> Guardado</span>}
+              </div>
             </div>
 
             <div className="cfg-card">
-              <p className="cfg-card-head">Cambiar PIN de acceso</p>
-              {pinStep === "idle" && (
-                <button className="btn btn-dark" onClick={() => { setPin(""); setPinStep("current") }}>
-                  <Icon name="key" size={14} /> Cambiar PIN
+              <p className="cfg-card-head">Cambiar contraseña</p>
+              {!pwOpen && (
+                <button className="btn btn-dark" onClick={() => { setPwOpen(true); setPwError(""); setPwStatus(""); setPwForm({ current: "", next: "", confirm: "" }) }}>
+                  <Icon name="key" size={14} /> Cambiar contraseña
                 </button>
               )}
-              {pinStep !== "idle" && (
-                <div style={{ display: "grid", gap: ".5rem" }}>
-                  <p style={{ fontSize: ".84rem", color: "var(--muted)", margin: 0 }}>
-                    {pinStep === "current" ? "Ingresa tu PIN actual" : pinStep === "new" ? "Ingresa el nuevo PIN" : "Confirma el nuevo PIN"}
-                  </p>
-                  <PinDots value={pin} />
-                  {pinError && <p style={{ fontSize: ".78rem", color: "#d99a8f", margin: 0 }}>{pinError}</p>}
-                  <div className="pin-pad">
-                    {[1,2,3,4,5,6,7,8,9,"",0,"⌫"].map((d, i) => (
-                      d === "" ? <span key={i} /> :
-                      d === "⌫" ? <button key={i} type="button" className="pin-key" onClick={handlePinBack}>{d}</button> :
-                      <button key={i} type="button" className="pin-key" onClick={() => handlePinKey(String(d))}>{d}</button>
-                    ))}
+              {pwOpen && (
+                <div style={{ display: "grid", gap: ".7rem" }}>
+                  <div className="cfg-field">
+                    <label>Contraseña actual</label>
+                    <input className="input" type="password" autoComplete="current-password" value={pwForm.current} onChange={(e) => setPwForm((f) => ({ ...f, current: e.target.value }))} placeholder="Tu contraseña actual" />
                   </div>
-                  <button className="btn btn-dark btn-sm" onClick={() => { setPinStep("idle"); setPin(""); setPinError("") }}>Cancelar</button>
+                  <div className="cfg-field">
+                    <label>Nueva contraseña</label>
+                    <input className="input" type="password" autoComplete="new-password" value={pwForm.next} onChange={(e) => setPwForm((f) => ({ ...f, next: e.target.value.slice(0, 64) }))} placeholder="8+ caracteres, 1 mayúscula y 1 número" />
+                  </div>
+                  <div className="cfg-field">
+                    <label>Confirmar nueva contraseña</label>
+                    <input className="input" type="password" autoComplete="new-password" value={pwForm.confirm} onChange={(e) => setPwForm((f) => ({ ...f, confirm: e.target.value.slice(0, 64) }))} placeholder="Repite la nueva contraseña" />
+                  </div>
+                  <p style={{ fontSize: ".74rem", color: pwForm.next && !isStrongPassword(pwForm.next) ? "#d99a8f" : "var(--muted-2)", margin: 0 }}>
+                    Mínimo 8 caracteres alfanuméricos, con al menos 1 mayúscula y 1 número.
+                  </p>
+                  {pwError && <p style={{ fontSize: ".8rem", color: "#d99a8f", margin: 0 }}>{pwError}</p>}
+                  {pwStatus === "done" && <p style={{ fontSize: ".8rem", color: "var(--gold-lt)", margin: 0 }}><Icon name="check" size={12} /> Contraseña actualizada.</p>}
+                  <div style={{ display: "flex", gap: ".5rem", marginTop: ".2rem" }}>
+                    <button className="btn btn-gold btn-sm" disabled={pwStatus === "saving"} onClick={changePassword}>
+                      {pwStatus === "saving" ? "Guardando…" : "Guardar contraseña"}
+                    </button>
+                    <button className="btn btn-dark btn-sm" onClick={() => { setPwOpen(false); setPwError(""); setPwStatus("") }}>Cancelar</button>
+                  </div>
                 </div>
               )}
             </div>
@@ -922,6 +1079,7 @@ function ConfigPanel({ barber, barbers, admin, canManageTeam, barberDraft, setBa
         {/* NOTIFICACIONES */}
         {section === "notificaciones" && (
           <div style={{ display: "grid", gap: "1.4rem" }}>
+            <PushCard barber={barber} />
             <div className="cfg-card">
               <p className="cfg-card-head">Alertas internas</p>
               <CfgRow label="Nueva reserva" sub="Notificacion cuando un cliente agenda">
@@ -1139,7 +1297,7 @@ function DashboardShell({ tab, setTab, nav, barber, onLogout, children }) {
   )
 }
 
-function DashboardTopbar({ title, barber, onLogout, tab, setTab, nav }) {
+function DashboardTopbar({ title, barber, onLogout, tab, setTab, nav, notifCount = 0 }) {
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
   useEffect(() => {
@@ -1172,9 +1330,15 @@ function DashboardTopbar({ title, barber, onLogout, tab, setTab, nav }) {
       </div>
       <div className="dashboard-topbar-actions">
         <ThemeToggle />
-        <span className="notif-pill" title="Notificaciones">
-          <Icon name="bell" size={14} /> 3
-        </span>
+        <button
+          type="button"
+          className="notif-pill"
+          title={notifCount ? `${notifCount} reserva(s) pendiente(s)` : 'Sin pendientes'}
+          onClick={() => setTab('reservas')}
+          style={{ cursor: 'pointer' }}
+        >
+          <Icon name="bell" size={14} /> {notifCount}
+        </button>
         <div className="user-chip" ref={ref}>
           <button
             type="button"

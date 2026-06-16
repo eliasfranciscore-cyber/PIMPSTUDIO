@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless"
 import { requireInternal } from "./_auth.js"
+import { notifyBarber } from "./push.js"
 
 const DEMO_BOOKINGS = [
   { id: 1, time: "09:00", date: "2026-06-12", client: "Carlos Rodriguez", phone: "987654321", service: "Corte + perfilado de barba", barberId: 4, price: 22990, status: "confirmada" },
@@ -71,6 +72,24 @@ export default async function handler(req, res) {
         VALUES (${user.id}, ${barberId}, ${serviceId}, ${date}, ${time}, 'confirmada')
         RETURNING id, booking_date as date, booking_time as time, status
       `
+
+      // Aviso push SOLO al barbero de la reserva (su usuario). No bloquea la respuesta.
+      try {
+        const [info] = await sql`
+          SELECT u.name as client, s.name as service
+          FROM users u, services s
+          WHERE u.id = ${user.id} AND s.id = ${serviceId}
+        `
+        await notifyBarber(barberId, {
+          title: "Nueva reserva",
+          body: `${info?.client || "Cliente"} · ${info?.service || "Servicio"} · ${date} ${String(time).slice(0, 5)}`,
+          url: "/panel",
+          tag: `reserva-${booking.id}`,
+        })
+      } catch (notifyErr) {
+        console.error("notify barber error:", notifyErr)
+      }
+
       return res.json({ ok: true, booking })
     }
 

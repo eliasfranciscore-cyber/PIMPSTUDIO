@@ -127,3 +127,187 @@ export const WORKSHOP_VIDEOS = [
     description: "Encuadres simples para mostrar técnica, detalle y resultado final con más impacto.",
   },
 ]
+
+/* ============================================================
+   Workshop "Contenido que Vende" — Rediseño 2026
+   Modelo de datos para la página /workshop (src/pages/Workshop.jsx).
+   Reemplaza los enlaces de photos por /assets propias cuando tengas las fotos definitivas.
+   ============================================================ */
+
+/* Fecha del workshop: 16 de marzo. Si ya pasó respecto al reloj actual,
+   avanza al próximo año para que el countdown nunca quede en 00.
+   Para fijar una fecha exacta, edita BASE_MONTH/BASE_DAY/BASE_HOUR. */
+const WK_BASE = { month: 3, day: 16, hour: 9, minute: 30 };
+const WK_MESES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+const WK_DIAS = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+function wkEditionDate() {
+  const now = new Date();
+  let year = now.getFullYear();
+  let d = new Date(year, WK_BASE.month - 1, WK_BASE.day, WK_BASE.hour, WK_BASE.minute, 0);
+  if (d.getTime() < now.getTime()) { year += 1; d = new Date(year, WK_BASE.month - 1, WK_BASE.day, WK_BASE.hour, WK_BASE.minute, 0); }
+  const dd = String(WK_BASE.day).padStart(2, "0");
+  const mm = String(WK_BASE.month).padStart(2, "0");
+  return {
+    iso: d.toISOString(),
+    label: `${dd} · ${mm} · ${year}`,
+    long: `${WK_DIAS[d.getDay()].charAt(0).toUpperCase() + WK_DIAS[d.getDay()].slice(1)} ${WK_BASE.day} de ${WK_MESES[WK_BASE.month - 1]} · 09:30 a 13:00`,
+  };
+}
+const WK_ED = wkEditionDate();
+
+export const WORKSHOP = {
+  meta: {
+    kicker: "Workshop de marca personal para barberos",
+    title1: "Contenido",
+    title2: "que vende",
+    subtitle:
+      "Una jornada intensiva para barberos que ya dominan la técnica y ahora necesitan verse premium, comunicar mejor y convertir seguidores en agenda real.",
+    dateISO: WK_ED.iso,
+    dateLabel: WK_ED.label,
+    dateLong: WK_ED.long,
+    location: "Santiago, Providencia",
+    handle: "@brunetticutz",
+    whatsapp: "+56 9 0000 0000",
+    priceNow: 97000,
+    priceWas: 184000,
+    off: "-50%",
+    seatsTotal: 20,
+    seatsTaken: 13,
+  },
+
+  // imágenes Unsplash (se fuerzan a B/N por CSS). Reemplazables por /assets propias.
+  photos: {
+    hero: "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?auto=format&fit=crop&w=1600&q=80",
+    cobrar: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=900&q=80",
+    marca: "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=900&q=80",
+    redes: "https://images.unsplash.com/photo-1633681926035-ec1ac984418a?auto=format&fit=crop&w=900&q=80",
+    experiencia: "https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=1100&q=80",
+    asesoria: "https://images.unsplash.com/photo-1622286342621-4bd786c2447c?auto=format&fit=crop&w=1100&q=80",
+    bloque1: "https://images.unsplash.com/photo-1605497788044-5a32c7078486?auto=format&fit=crop&w=1100&q=80",
+    bloque2: "https://images.unsplash.com/photo-1517832606299-7ae9b720a186?auto=format&fit=crop&w=1100&q=80",
+    bloque3: "https://images.unsplash.com/photo-1634481949659-7c9c0a5c2c08?auto=format&fit=crop&w=1100&q=80",
+    pricing: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=1600&q=80",
+  },
+
+  transform: [
+    {
+      n: "01",
+      title: "Cobrar más",
+      body: "Eleva tu valor percibido y deja de competir por precio. Aprende a justificar un ticket premium.",
+      photo: "cobrar",
+    },
+    {
+      n: "02",
+      title: "Marca única",
+      body: "Diferénciate del barbero de la esquina. Construye una identidad que se reconozca a primera vista.",
+      photo: "marca",
+    },
+    {
+      n: "03",
+      title: "Redes activas",
+      body: "Convierte seguidores en citas. Tu Instagram deja de ser un álbum y pasa a ser tu mejor vendedor.",
+      photo: "redes",
+    },
+  ],
+
+  experiencia: {
+    eyebrow: "De servicio a experiencia premium",
+    title: "Para cobrar como un experto, debes verte y sentirte como uno.",
+    photo: "experiencia",
+    items: [
+      {
+        icon: "gift",
+        h: "Amenities de lujo",
+        p: "Regalar una bebida premium o café no es un gasto: es una inversión directa en tu ticket promedio.",
+      },
+      {
+        icon: "spark",
+        h: "Protocolo de lavado",
+        p: "Convierte el lavado capilar en un momento de relajación sensorial inigualable que el cliente recuerda.",
+      },
+    ],
+  },
+
+  asesoria: {
+    eyebrow: "Asesoría de imagen · el caso real",
+    title: "Una simulación de asesoría High-Ticket, grabada frente a la cámara.",
+    photo: "asesoria",
+    items: [
+      { icon: "user", h: "Escucha activa", p: "Identifica la necesidad real detrás del corte." },
+      { icon: "scissors", h: "Asesoramiento técnico", p: "Explica por qué ese look le favorece de verdad." },
+      { icon: "star", h: "Satisfacción total", p: "Cómo superar la expectativa del cliente, siempre." },
+    ],
+  },
+
+  modules: [
+    {
+      n: "Bloque 01",
+      title: "Contenido estratégico",
+      photo: "bloque1",
+      points: [
+        { b: "Hooks magnéticos", s: "Detén el scroll en los primeros 3 segundos con tus cortes." },
+        { b: "Estructura VSL", s: "Organiza tus videos para que el cliente desee agendar de inmediato." },
+        { b: "Autoridad Pro", s: "Posiciónate como el experto número 1 en degradados o barbas." },
+      ],
+    },
+    {
+      n: "Bloque 02",
+      title: "Cinematografía móvil",
+      photo: "bloque2",
+      points: [
+        { b: "Iluminación", s: "Aro de luz vs. luz natural del salón: cuándo usar cada una." },
+        { b: "Planos clave", s: "Macro, detalle y la reacción del cliente que vende el resultado." },
+        { b: "Audio limpio", s: "El secreto del ASMR en barbería para reels premium." },
+      ],
+    },
+    {
+      n: "Bloque 03",
+      title: "Edición de alto impacto",
+      photo: "bloque3",
+      points: [
+        { b: "Mastery en CapCut", s: "El workflow exacto que usan los creadores top, sin perder tiempo." },
+        { b: "Beat matching", s: "Sincroniza tus cortes con la música para máximo ritmo." },
+        { b: "Subtítulos & ramping", s: "Textos dinámicos y velocidad para un look cinematográfico." },
+      ],
+    },
+  ],
+
+  timeline: [
+    { time: "09:30", b: "Café & Alianzas", s: "Bienvenida, diagnóstico y networking entre barberos." },
+    { time: "10:00", b: "Psicología de Contenido", s: "Por qué la gente agenda: estrategia antes que cámara." },
+    { time: "11:00", b: "Hands-on Grabación", s: "Grabación guiada con casos reales en el salón." },
+    { time: "12:00", b: "Sprint de Edición", s: "Edición en vivo en CapCut, de bruto a publicable." },
+    { time: "13:00", b: "Plan de Acción", s: "Calendario de publicación y cierre con compromisos." },
+  ],
+
+  give: [
+    { b: "Certificado", s: "Validación oficial de tu formación PIMP STUDIO." },
+    { b: "Comunidad VIP", s: "Acceso al grupo privado de WhatsApp para seguimiento." },
+    { b: "Toolkit", s: "5 templates de CapCut de alto CTR, listos para usar." },
+  ],
+
+  kit: [
+    { b: "Hardware", s: "Celular cargado al 100% y con memoria libre." },
+    { b: "Software", s: "CapCut instalado (la versión gratuita es suficiente)." },
+    { b: "Mente", s: "Cero excusas y hambre real de crecimiento." },
+  ],
+
+  faq: [
+    {
+      q: "¿Necesito una cámara profesional?",
+      a: "No. Todo el workshop se hace desde el celular. Solo necesitas tu teléfono cargado, memoria libre y CapCut instalado.",
+    },
+    {
+      q: "¿Sirve si recién estoy empezando?",
+      a: "El workshop está pensado para barberos que ya cortan bien y quieren mostrarlo mejor. Si dominas la técnica, este es tu siguiente paso.",
+    },
+    {
+      q: "¿Cuántos cupos hay por fecha?",
+      a: "Solo 20 cupos por edición. Lo mantenemos reducido para garantizar feedback real y trabajo práctico con cada asistente.",
+    },
+    {
+      q: "¿El valor incluye todo?",
+      a: "Sí. La inversión de $97.000 incluye la jornada completa, el certificado, el toolkit de templates y el acceso a la comunidad VIP.",
+    },
+  ],
+};

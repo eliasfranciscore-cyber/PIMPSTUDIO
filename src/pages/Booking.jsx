@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Emblem, Icon, MobileScreen } from '../components/ui.jsx'
 import { GlareCard } from '../components/GlareCard.jsx'
 import { BARBERS, SERVICES, SERVICE_BARBERS, SLOT_GROUPS, DAYS_ES, MONTHS_ES, slotState, barberById, CLP, tne } from '../data.js'
+import { addLocalBooking } from '../bookingsStore.js'
 
 const ALL_BOOKING_SLOTS = Object.values(SLOT_GROUPS).flat()
 
@@ -74,14 +75,33 @@ export default function Booking() {
 
   const confirm = async () => {
     setSaving(true)
+    const user = JSON.parse(localStorage.getItem("ps_user") || "{}")
+    let savedId = null
     try {
-      const user = JSON.parse(localStorage.getItem("ps_user") || "{}")
-      await fetch("/api/bookings", {
+      const res = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ phone: user.phone, barberId, serviceId, date: dateKey, time: slot }),
       })
-    } catch { /* fallback: still show confirmation */ }
+      const data = await res.json().catch(() => ({}))
+      savedId = data?.booking?.id || null
+    } catch { /* fallback: persistimos localmente igualmente */ }
+
+    // Respaldo local: la reserva aparece de inmediato en el panel interno
+    // (Reservas) aunque el backend no esté disponible.
+    addLocalBooking({
+      id: savedId,
+      barberId,
+      serviceId,
+      service: service?.name,
+      price: service?.price,
+      client: user.name || "Cliente",
+      phone: user.phone,
+      date: dateKey,
+      time: slot,
+      status: "confirmada",
+    })
+
     setSaving(false)
     setStep(3)
   }
@@ -182,15 +202,26 @@ export default function Booking() {
         {step === 2 && (
           <div className="animate-in" style={{ display: "grid", gap: ".8rem" }}>
             <h3 className="font-display" style={{ margin: ".2rem 0", fontSize: "1.05rem" }}>Elige fecha y hora</h3>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1.2fr", gap: ".8rem", alignItems: "start" }}>
+            <div className="booking-datetime">
               {/* CALENDARIO COMPACTO */}
-              <div className="card" style={{ padding: ".7rem", display: "grid", gap: ".5rem" }}>
+              <div className="card booking-cal" style={{ padding: ".7rem", display: "grid", gap: ".5rem" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: ".3rem" }}>
-                  <span className="font-display" style={{ fontWeight: 600, fontSize: ".85rem", letterSpacing: ".02em" }}>{MONTHS_ES[month]}</span>
-                  <button onClick={() => setMonth(Math.min(11, month + 1))} style={{ background: "none", border: 0, color: "var(--gold-lt)", padding: 2 }}><Icon name="arrowRight" size={16} /></button>
+                  <button
+                    onClick={() => setMonth((mm) => Math.max(new Date().getMonth(), mm - 1))}
+                    disabled={month <= new Date().getMonth()}
+                    aria-label="Mes anterior"
+                    style={{ background: "none", border: 0, color: "var(--gold-lt)", padding: 2, opacity: month <= new Date().getMonth() ? 0.3 : 1, cursor: month <= new Date().getMonth() ? "default" : "pointer" }}
+                  ><Icon name="arrowLeft" size={16} /></button>
+                  <span className="font-display booking-cal-month" style={{ fontWeight: 600, fontSize: ".85rem", letterSpacing: ".02em" }}>{MONTHS_ES[month]} {year}</span>
+                  <button
+                    onClick={() => setMonth((mm) => Math.min(11, mm + 1))}
+                    disabled={month >= 11}
+                    aria-label="Mes siguiente"
+                    style={{ background: "none", border: 0, color: "var(--gold-lt)", padding: 2, opacity: month >= 11 ? 0.3 : 1, cursor: month >= 11 ? "default" : "pointer" }}
+                  ><Icon name="arrowRight" size={16} /></button>
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(7,1fr)", gap: ".2rem", marginBottom: ".3rem" }}>
-                  {DAYS_ES.map((d) => <div key={d} style={{ textAlign: "center", fontSize: ".5rem", letterSpacing: ".04em", color: "var(--muted-2)", textTransform: "uppercase", padding: ".1rem 0" }}>{d[0]}</div>)}
+                  {DAYS_ES.map((d) => <div key={d} className="booking-cal-dow" style={{ textAlign: "center", fontSize: ".5rem", letterSpacing: ".04em", color: "var(--muted-2)", textTransform: "uppercase", padding: ".1rem 0" }}>{d[0]}</div>)}
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(7,1fr)", gap: ".2rem" }}>
                   {cells.map((d, i) => {
@@ -199,7 +230,7 @@ export default function Booking() {
                     const disabled = isPast(d) || isSunday(d)
                     const sel = dateKey === k
                     return (
-                      <button key={i} disabled={disabled} onClick={() => { setDateKey(k); setSlot(null) }} style={{
+                      <button key={i} disabled={disabled} onClick={() => { setDateKey(k); setSlot(null) }} className="booking-cal-day" style={{
                         aspectRatio: "1", borderRadius: 6, border: sel ? "0" : "1px solid transparent",
                         background: sel ? "var(--gold-grad)" : disabled ? "transparent" : "rgba(255,255,255,0.03)",
                         color: sel ? "#1a1407" : disabled ? "var(--muted-2)" : "var(--ink)",
@@ -214,7 +245,7 @@ export default function Booking() {
 
               {/* HORAS DISPONIBLES */}
               {dateKey && (
-                <div className="animate-up" style={{ display: "grid", gap: ".6rem" }}>
+                <div className="animate-up booking-hours" style={{ display: "grid", gap: ".6rem" }}>
                   {Object.entries(SLOT_GROUPS).map(([grp, list]) => (
                     <div key={grp}>
                       <div style={{ fontSize: ".65rem", letterSpacing: ".12em", textTransform: "uppercase", color: "var(--muted)", marginBottom: ".4rem", fontWeight: 600 }}>{grp}</div>
@@ -225,7 +256,7 @@ export default function Booking() {
                           const taken = st !== "free"
                           const sel = slot === t
                           return (
-                            <button key={t} disabled={taken} onClick={() => setSlot(t)} style={{
+                            <button key={t} disabled={taken} onClick={() => setSlot(t)} className="booking-slot" style={{
                               padding: ".4rem 0", borderRadius: 6, fontSize: ".7rem", fontWeight: sel ? 700 : 400,
                               border: sel ? "0" : "1px solid var(--hair-2)",
                               background: sel ? "var(--gold-grad)" : taken ? "rgba(255,255,255,0.02)" : "rgba(255,255,255,0.04)",
@@ -271,7 +302,7 @@ export default function Booking() {
       </div>
 
       {step < 3 && (
-        <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, padding: ".7rem 1.2rem 1.2rem", background: "linear-gradient(180deg, transparent, var(--bg) 30%)", display: "flex", gap: ".6rem", justifyContent: "space-between", alignItems: "flex-end", maxWidth: "1000px", margin: "0 auto", right: 0, left: 0 }}>
+        <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, padding: ".7rem 1.2rem calc(1.2rem + env(safe-area-inset-bottom))", background: "linear-gradient(180deg, transparent, var(--bg) 30%)", display: "flex", gap: ".6rem", justifyContent: "space-between", alignItems: "flex-end" }}>
           {(barber || service) && (
             <div style={{ display: "flex", flexDirection: "column", gap: ".3rem", fontSize: ".7rem", color: "var(--muted)", flex: 1 }}>
               <span>{barber?.short}{service ? ` · ${service.name}` : ""}</span>

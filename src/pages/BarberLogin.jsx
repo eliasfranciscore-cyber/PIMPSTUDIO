@@ -5,20 +5,21 @@ import { Emblem, Icon } from '../components/ui.jsx'
 export default function BarberLogin() {
   const navigate = useNavigate()
   const [username, setUsername] = useState("")
-  const [pin, setPin] = useState("")
+  const [password, setPassword] = useState("")
+  const [showPass, setShowPass] = useState(false)
   const [err, setErr] = useState("")
   const [loading, setLoading] = useState(false)
 
   const submit = async (e) => {
     e.preventDefault()
-    if (!username.trim() || pin.length !== 4) { setErr("Ingresa usuario y PIN de 4 dígitos."); return }
+    if (!username.trim() || password.length < 8) { setErr("Ingresa tu usuario y contraseña (mínimo 8 caracteres)."); return }
     setErr("")
     setLoading(true)
     try {
       const res = await fetch("/api/auth-barber", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: username.trim(), pin }),
+        body: JSON.stringify({ username: username.trim(), password }),
       })
       const data = await res.json()
       if (data.ok) {
@@ -26,16 +27,10 @@ export default function BarberLogin() {
         localStorage.setItem("ps_barber_token", data.token || "")
         navigate("/panel")
       } else {
-        setErr(data.error || "Credenciales incorrectas")
+        setErr(data.error || "Usuario o contraseña incorrectos")
       }
     } catch {
-      if (username && pin === "1234") {
-        localStorage.setItem("ps_barber", JSON.stringify({ name: username, role: "Barbero" }))
-        localStorage.setItem("ps_barber_token", "")
-        navigate("/panel")
-      } else {
-        setErr("Demo: usa PIN 1234 para probar")
-      }
+      setErr("No se pudo conectar. Revisa tu conexión e inténtalo nuevamente.")
     } finally {
       setLoading(false)
     }
@@ -76,16 +71,26 @@ export default function BarberLogin() {
                 <input className="input" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="tu-usuario" autoComplete="username" />
               </div>
               <div className="field">
-                <label>PIN de acceso</label>
-                <input
-                  className="input"
-                  type="password"
-                  value={pin}
-                  onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 4))}
-                  placeholder="• • • •"
-                  inputMode="numeric"
-                  style={{ letterSpacing: ".5em", fontSize: "1.2rem" }}
-                />
+                <label>Contraseña</label>
+                <div style={{ position: "relative" }}>
+                  <input
+                    className="input"
+                    type={showPass ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value.slice(0, 64))}
+                    placeholder="Tu contraseña"
+                    autoComplete="current-password"
+                    style={{ paddingRight: "3rem" }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPass((v) => !v)}
+                    aria-label={showPass ? "Ocultar contraseña" : "Mostrar contraseña"}
+                    style={{ position: "absolute", right: ".6rem", top: "50%", transform: "translateY(-50%)", background: "none", border: 0, color: "var(--muted)", fontSize: ".72rem", letterSpacing: ".08em", textTransform: "uppercase", padding: ".3rem" }}
+                  >
+                    {showPass ? "Ocultar" : "Ver"}
+                  </button>
+                </div>
               </div>
               {err && <div className="barber-login-error"><Icon name="bell" size={14} /> {err}</div>}
               <button className="btn btn-gold btn-block" type="submit" style={{ opacity: loading ? 0.7 : 1 }}>
@@ -94,10 +99,10 @@ export default function BarberLogin() {
             </form>
             <div className="barber-login-links">
               <button onClick={() => navigate("/")} type="button">← Ver web</button>
-              <button type="button">¿Olvidaste tu PIN?</button>
+              <button type="button" onClick={() => setErr("Pide a la administración que restablezca tu contraseña, o cámbiala en Ajustes una vez dentro.")}>¿Olvidaste tu contraseña?</button>
             </div>
             <div className="barber-login-demo">
-              Demo: usa cualquier usuario + PIN <strong style={{ color: "var(--gold)" }}>1234</strong>
+              Tu contraseña inicial la entrega la administración. Puedes cambiarla en <strong style={{ color: "var(--gold)" }}>Ajustes → Cuenta y seguridad</strong>.
             </div>
           </div>
         </div>

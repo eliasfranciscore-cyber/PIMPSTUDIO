@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { Emblem, Brandmark, Icon, Reveal, SectionHead } from '../components/ui.jsx'
+import SiteNav from '../components/SiteNav.jsx'
 import { SERVICES, BARBERS, CAT_LABEL, CLP, tne } from '../data.js'
 import { FEATURE_CARDS, TESTIMONIALS, WORKSHOP_HIGHLIGHTS } from '../data/workshop.js'
 import { FeatureCarousel, ImageCompare, LampBanner, Testimonials } from '../components/liquidShowcase.jsx'
@@ -10,17 +11,8 @@ const WORKSHOP_PILLS = ["Grabación", "Edición", "Marca personal"]
 
 export default function Home() {
   const navigate = useNavigate()
-  const scrollRef = useRef(null)
-  const [scrolled, setScrolled] = useState(false)
+  const location = useLocation()
   const [services, setServices] = useState(SERVICES)
-
-  useEffect(() => {
-    const el = scrollRef.current
-    if (!el) return
-    const onScroll = () => setScrolled(el.scrollTop > 60)
-    el.addEventListener("scroll", onScroll)
-    return () => el.removeEventListener("scroll", onScroll)
-  }, [])
 
   useEffect(() => {
     fetch("/api/services")
@@ -30,25 +22,23 @@ export default function Home() {
   }, [])
 
   const scrollTo = (id) => {
-    const cont = scrollRef.current
-    const target = cont && cont.querySelector(`#sec-${id}`)
-    if (cont && target) cont.scrollTo({ top: target.offsetTop - 64, behavior: "smooth" })
+    const target = document.getElementById(`sec-${id}`)
+    if (target) window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 72, behavior: "smooth" })
   }
 
+  // Al llegar desde otra página (p. ej. Workshop) con un destino de sección, hacer scroll a él.
+  useEffect(() => {
+    const section = location.state?.section
+    if (!section) return
+    const t = setTimeout(() => scrollTo(section), 180)
+    return () => clearTimeout(t)
+  }, [location.state])
+
   const groups = ["general", "premium", "quimico"]
-  const nav = [["servicios", "Servicios"], ["barberos", "Barberos"], ["workshop", "Workshop"], ["nosotros", "Nosotros"], ["ubicacion", "Ubicación"]]
 
   return (
-    <div ref={scrollRef} className="home-scroll" style={{ height: "100vh", overflowY: "auto", overflowX: "hidden", position: "relative" }}>
-      <header className={`home-nav ${scrolled ? "is-scrolled" : ""}`}>
-        <Brandmark size={38} />
-        <nav className="home-nav-links">
-          {nav.map(([id, label]) => (
-            <button key={id} onClick={() => scrollTo(id)} className="nav-link">{label}</button>
-          ))}
-          <button className="btn btn-gold btn-sm" onClick={() => navigate("/login")}><Icon name="calendar" size={14} /> Reservar</button>
-        </nav>
-      </header>
+    <div className="home-scroll" style={{ position: "relative" }}>
+      <SiteNav onSection={scrollTo} />
 
       <section className="home-hero">
         <div className="home-hero-media">
@@ -139,8 +129,8 @@ export default function Home() {
       <section id="sec-barberos" className="home-section home-section-soft">
         <SectionHead center eyebrow="El equipo" title="Nuestros barberos" sub="Elige tu barbero y revisa su agenda en tiempo real." />
         <Reveal stagger className="home-barber-grid">
-          {BARBERS.map((b) => (
-            <button key={b.id} onClick={() => navigate("/login")} className="barber-card card home-barber-card">
+          {[...BARBERS].sort((a, b) => (b.tier === "premium" ? 1 : 0) - (a.tier === "premium" ? 1 : 0)).map((b) => (
+            <button key={b.id} onClick={() => navigate("/login")} className={`barber-card card home-barber-card ${b.tier === "premium" ? "is-featured" : ""}`}>
               <div className="home-barber-avatar">
                 <img src="/assets/pimp-studio-logo.jpg" alt={b.name} />
               </div>
