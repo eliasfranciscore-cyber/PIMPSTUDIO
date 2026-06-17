@@ -87,7 +87,7 @@ export function Stat({ icon, label, value, delta, suffix, accent }) {
         <span style={{ fontSize: ".66rem", letterSpacing: ".16em", textTransform: "uppercase", color: "var(--muted)", fontFamily: "var(--font-display)" }}>{label}</span>
         <span style={{ color: accent ? "var(--gold)" : "var(--muted)" }}><Icon name={icon} size={17} /></span>
       </div>
-      <div style={{ fontFamily: "var(--font-display)", fontSize: "1.85rem", fontWeight: 600, letterSpacing: "-.01em" }}>
+      <div style={{ fontFamily: "var(--font-display)", fontSize: "1.85rem", fontWeight: 600, letterSpacing: "-.01em", color: "var(--ink)" }}>
         {value}{suffix && <span style={{ fontSize: "1rem", color: "var(--muted)" }}>{suffix}</span>}
       </div>
       {delta != null && (

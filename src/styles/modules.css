@@ -214,8 +214,61 @@ a.home-footer-access { display: inline-flex; align-items: center; gap: .4rem; te
   .psn-inbox-search input { width: 100%; }
 }
 
+/* ---------- Reservas: tarjeta tappable + selector + modal de gestión ---------- */
+.psn-res-tap { display: grid; gap: .8rem; width: 100%; text-align: left; background: none; border: 0; padding: 0; margin: 0; color: inherit; cursor: pointer; font: inherit; }
+.psn-res-foot { display: flex; gap: .5rem; align-items: center; }
+.psn-res-status { flex: 1; min-width: 0; padding: .55rem .7rem; border-radius: 10px; border: 1px solid var(--hair-2); background: rgba(255,255,255,.03); color: var(--ink); font-family: var(--font-body); font-size: .82rem; cursor: pointer; }
+.psn-res-status.pendiente { border-color: var(--gold-line); color: var(--gold-lt); }
+.psn-res-status.confirmada { border-color: rgba(111,191,134,.45); }
+.psn-res-status.cancelada { border-color: rgba(217,154,143,.45); color: var(--red); }
+.psn-res-detail { flex: 0 0 auto; white-space: nowrap; }
+/* Teléfono legible en ambos temas (sin caja negra de auto-detección iOS) */
+.psn-res-client .ph { color: var(--muted); }
+
+.btn-danger { background: linear-gradient(135deg, #d9544a, #b23b32); color: #fff; border: 0; box-shadow: 0 12px 30px -16px rgba(217,84,74,.6); }
+.btn-danger:hover { filter: brightness(1.06); }
+
+.psn-res-modal { text-align: center; }
+.psn-res-modal .psn-res-badge { display: inline-flex; margin: 0 auto .7rem; }
+.psn-res-modal h3 { margin: 0; font-family: var(--font-display); font-size: 1.5rem; }
+.psn-res-modal-meta { margin: 1.1rem 0; text-align: left; }
+
+/* Popup de confirmación */
+.psn-modal-top { z-index: 160; }
+.psn-confirm { max-width: 380px; text-align: center; display: grid; gap: .4rem; justify-items: center; }
+.psn-confirm-ic { width: 52px; height: 52px; border-radius: 999px; display: grid; place-items: center; background: rgba(217,84,74,.14); color: #e0857c; border: 1px solid rgba(217,84,74,.4); margin-bottom: .3rem; }
+.psn-confirm h3 { margin: 0; font-family: var(--font-display); font-size: 1.3rem; }
+.psn-confirm p { color: var(--muted); font-size: .9rem; margin: 0 0 .8rem; }
+.psn-confirm-actions { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; width: 100%; }
+
+/* ---------- Clientes: fila tappable + modal de detalle ---------- */
+.client-row { cursor: pointer; }
+.client-row-edit { flex: 0 0 auto; justify-self: end; white-space: nowrap; }
+
+.psn-client-modal { text-align: left; width: min(480px, 100%); }
+.psn-client-profile { display: flex; align-items: center; gap: .9rem; margin-bottom: 1rem; padding-right: 2rem; }
+.psn-client-avatar { width: 56px; height: 56px; border-radius: 999px; flex-shrink: 0; display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; color: #1a1407; background: var(--gold-grad); }
+.psn-client-profile h3 { margin: 0; font-family: var(--font-display); font-size: 1.4rem; }
+.psn-client-sub { display: block; color: var(--muted); font-size: .82rem; }
+.psn-client-edit { display: grid; gap: .7rem; }
+.psn-client-edit .field { display: grid; gap: .3rem; }
+.psn-client-edit label { font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-family: var(--font-display); }
+.psn-client-edit .psn-confirm-actions { margin-top: .3rem; }
+.psn-client-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; margin-bottom: 1rem; }
+.psn-client-kpis > div { padding: .7rem; border-radius: 12px; border: 1px solid var(--hair); background: rgba(255,255,255,.02); text-align: center; }
+.psn-client-kpis strong { display: block; font-family: var(--font-display); font-size: 1.05rem; color: var(--ink); }
+.psn-client-kpis span { font-size: .66rem; color: var(--muted); }
+.psn-client-history { display: grid; gap: .45rem; max-height: 240px; overflow-y: auto; margin-bottom: 1rem; }
+.psn-client-hrow { display: flex; align-items: center; justify-content: space-between; gap: .6rem; padding: .6rem .7rem; border-radius: 10px; border: 1px solid var(--hair); background: rgba(255,255,255,.02); }
+.psn-client-hrow .svc { font-size: .85rem; font-weight: 500; }
+.psn-client-hrow .meta { font-size: .72rem; color: var(--muted); }
+
 /* Modo claro del panel interno (hereda variables de [data-theme="light"] de pimp.css) */
 [data-theme="light"] .psn-res-card,
 [data-theme="light"] .psn-kpi,
 [data-theme="light"] .psn-stat { background: #fff; }
 [data-theme="light"] .psn-donut::after { background: #fff; }
+[data-theme="light"] .psn-res-status { background: #fff; border-color: #d8d3ca; }
+[data-theme="light"] .psn-modal-card.psn-confirm,
+[data-theme="light"] .psn-modal-card.psn-res-modal,
+[data-theme="light"] .psn-modal-card.psn-client-modal { background: #fff; }

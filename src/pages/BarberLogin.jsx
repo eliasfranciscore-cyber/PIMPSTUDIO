@@ -47,8 +47,8 @@ export default function BarberLogin() {
             <Emblem size={88} />
             <h1 className="font-display">Panel interno de operación y agenda.</h1>
             <p>
-              Un acceso sobrio para barberos y administración. Mantiene el mismo flujo actual,
-              pero con una entrada más clara para escritorio y móvil.
+              Desde aquí gestionas tu agenda, las reservas, los clientes y los servicios
+              de PIMP STUDIO. Acceso para barberos y administración.
             </p>
             <div className="barber-login-pill-row">
               <span className="chip chip-gold">Agenda</span>

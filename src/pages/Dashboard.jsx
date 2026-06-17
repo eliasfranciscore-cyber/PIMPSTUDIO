@@ -7,6 +7,7 @@ import { BARBERS, CLIENTS, EXPENSES, METRICS, SERVICES, TODAY_BOOKINGS, barberBy
 import { mergeBookings, readLocalBookings } from '../bookingsStore.js'
 import BookingsInbox from '../components/BookingsInbox.jsx'
 import DashboardResumen from '../components/DashboardResumen.jsx'
+import ClientModal from '../components/ClientModal.jsx'
 import {
   registerServiceWorker, notifyBarberOfBooking, pushEnabledFor,
   enablePush, disablePush, notifyLocal, permissionState,
@@ -88,6 +89,7 @@ export default function Dashboard() {
   const [clientQuery, setClientQuery] = useState("")
   const [selectedClient, setSelectedClient] = useState(null)
   const [clientHistory, setClientHistory] = useState([])
+  const [clientEditing, setClientEditing] = useState(false)
   const [services, setServices] = useState(SERVICES.map((item) => ({ ...item, active: true })))
   const [expenses, setExpenses] = useState(EXPENSES)
   const [serviceDraft, setServiceDraft] = useState({ name: "", price: "", min: 60, cat: "general", desc: "", tne: false })
@@ -123,6 +125,14 @@ export default function Dashboard() {
     const haystack = `${client.name || ""} ${client.phone || ""} ${client.email || ""}`.toLowerCase()
     return haystack.includes(clientQuery.trim().toLowerCase())
   })
+
+  // Modo panel: bloquea el scroll del body para que el scroll viva dentro de
+  // .dashboard-main. Así el topbar (sticky) y el dock (fixed) no rebotan con el
+  // momentum scroll de iOS/PWA. Sólo afecta a /panel (no a la web pública).
+  useEffect(() => {
+    document.body.classList.add('dash-mode')
+    return () => document.body.classList.remove('dash-mode')
+  }, [])
 
   useEffect(() => {
     const stored = localStorage.getItem("ps_barber")
@@ -253,14 +263,28 @@ export default function Dashboard() {
     }
   }
 
-  const openClient = async (client) => {
+  const openClient = async (client, { edit = false } = {}) => {
     setSelectedClient(client)
+    setClientEditing(edit)
     const local = bookings.filter((item) => item.phone === client.phone)
     setClientHistory(local)
     const data = await fetch(`/api/bookings?phone=${client.phone}`)
       .then((r) => r.headers.get("content-type")?.includes("application/json") ? r.json() : Promise.reject(new Error("api unavailable")))
       .catch(() => ({ bookings: local }))
     setClientHistory(data.bookings?.length ? data.bookings : local)
+  }
+
+  const clientKey = (c) => c.id ?? c.phone
+  const saveClient = async (updated) => {
+    setClients((list) => list.map((c) => clientKey(c) === clientKey(updated) ? { ...c, ...updated } : c))
+    setSelectedClient((c) => (c && clientKey(c) === clientKey(updated) ? { ...c, ...updated } : c))
+    fetch("/api/clients", { method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(updated) }).catch(() => {})
+  }
+  const deleteClient = async (client) => {
+    setClients((list) => list.filter((c) => clientKey(c) !== clientKey(client)))
+    setSelectedClient(null)
+    setClientEditing(false)
+    fetch(`/api/clients?phone=${client.phone}`, { method: "DELETE", headers: authHeaders() }).catch(() => {})
   }
 
   const toggleSlot = async (dayKey, slot, state) => {
@@ -443,66 +467,44 @@ export default function Dashboard() {
               <Stat icon="scissors" label="Cortes registrados" value={clients.reduce((sum, item) => sum + Number(item.visits || 0), 0)} />
               <Stat icon="wallet" label="Valor historial" value={CLP(clients.reduce((sum, item) => sum + Number(item.totalSpent || 0), 0))} />
             </div>
-            <div className="clients-workspace">
-              <Panel title="Panel de clientes" action={<span className="chip chip-gold">Telefono como ID</span>}>
-                <div className="client-search">
-                  <Icon name="user" size={15} />
-                  <input value={clientQuery} onChange={(e) => setClientQuery(e.target.value)} placeholder="Buscar por nombre, telefono o correo" />
-                </div>
-                <div className="client-list">
-                  {filteredClients.map((client) => (
-                    <button key={client.id || client.phone} className={`client-row ${selectedClient?.phone === client.phone ? "is-selected" : ""}`} onClick={() => openClient(client)}>
-                      <div>
-                        <strong>{client.name}</strong>
-                        <span>+56 {client.phone} · {client.email || "sin correo"}</span>
-                      </div>
-                      <div><strong>{client.visits || 0}</strong><span>visitas</span></div>
-                      <div><strong>{CLP(client.totalSpent || 0)}</strong><span>{client.lastVisit || "sin visitas"}</span></div>
-                      <span className="chip">{client.status || "activo"}</span>
+            <Panel title="Panel de clientes" action={<span className="chip chip-gold">Telefono como ID</span>}>
+              <div className="client-search">
+                <Icon name="user" size={15} />
+                <input value={clientQuery} onChange={(e) => setClientQuery(e.target.value)} placeholder="Buscar por nombre, telefono o correo" />
+              </div>
+              <div className="client-list">
+                {filteredClients.map((client) => (
+                  <div key={client.id || client.phone} className="client-row" onClick={() => openClient(client)} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter') openClient(client) }}>
+                    <div style={{ minWidth: 0 }}>
+                      <strong>{client.name}</strong>
+                      <span>+56 {client.phone} · {client.email || "sin correo"}</span>
+                    </div>
+                    <div><strong>{client.visits || 0}</strong><span>visitas</span></div>
+                    <div><strong>{CLP(client.totalSpent || 0)}</strong><span>{client.lastVisit || "sin visitas"}</span></div>
+                    <button className="btn btn-dark btn-sm client-row-edit" onClick={(e) => { e.stopPropagation(); openClient(client, { edit: true }) }}>
+                      <Icon name="user" size={13} /> Editar
                     </button>
-                  ))}
-                  {!filteredClients.length && (
-                    <div className="empty-state">No hay clientes que coincidan con la busqueda.</div>
-                  )}
-                </div>
-              </Panel>
-              <Panel title="Historial del cliente" action={selectedClient ? <span className="chip">{clientHistory.length} registros</span> : <span className="chip">Selecciona un cliente</span>}>
-                {selectedClient ? (
-                  <div className="client-detail">
-                    <div className="client-profile">
-                      <div className="client-avatar">{(selectedClient.name || "C")[0]?.toUpperCase()}</div>
-                      <div>
-                        <strong>{selectedClient.name}</strong>
-                        <span>+56 {selectedClient.phone}</span>
-                        <span>{selectedClient.email || "sin correo"}</span>
-                      </div>
-                    </div>
-                    <div className="client-kpis">
-                      <div><strong>{selectedClient.visits || clientHistory.length}</strong><span>Cortes</span></div>
-                      <div><strong>{CLP(selectedClient.totalSpent || clientHistory.reduce((sum, item) => sum + Number(item.price || 0), 0))}</strong><span>Total</span></div>
-                      <div><strong>{selectedClient.lastVisit || clientHistory[0]?.date || "sin fecha"}</strong><span>Ultima visita</span></div>
-                    </div>
-                    <div className="history-list">
-                      {clientHistory.map((item) => {
-                        const b = barbers.find((barberItem) => Number(barberItem.id) === Number(item.barberId)) || barberById(item.barberId)
-                        return (
-                          <div key={item.id || `${item.date}-${item.time}`} className="history-row">
-                            <div><strong>{item.service}</strong><span>{item.date} · {item.time}</span></div>
-                            <div><span>{b?.short || b?.name || "Barbero"}</span><strong>{CLP(item.price)}</strong></div>
-                            <span className="chip">{item.status}</span>
-                          </div>
-                        )
-                      })}
-                      {!clientHistory.length && <div className="empty-state">Este cliente aun no tiene historial de reservas.</div>}
-                    </div>
-                    <button className="btn btn-gold btn-block" onClick={() => navigate("/reservar")}><Icon name="calendar" size={15} /> Agendar para este cliente</button>
                   </div>
-                ) : (
-                  <div className="empty-state">Selecciona un cliente para revisar sus visitas, consumo e historial.</div>
+                ))}
+                {!filteredClients.length && (
+                  <div className="empty-state">No hay clientes que coincidan con la busqueda.</div>
                 )}
-              </Panel>
-            </div>
+              </div>
+            </Panel>
           </div>
+        )}
+
+        {tab === "clientes" && selectedClient && (
+          <ClientModal
+            client={selectedClient}
+            history={clientHistory}
+            barbers={barbers}
+            startEditing={clientEditing}
+            onClose={() => setSelectedClient(null)}
+            onSave={saveClient}
+            onDelete={deleteClient}
+            onSchedule={() => navigate("/reservar")}
+          />
         )}
 
         {/* SERVICIOS */}

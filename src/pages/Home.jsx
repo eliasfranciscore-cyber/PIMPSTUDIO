@@ -65,8 +65,8 @@ export default function Home() {
 
           <Reveal className="home-hero-aside card" style={{ position: "relative" }}>
             <span className="eyebrow">Experiencia PIMP</span>
-            <h2 className="font-display">Más aire, mejor lectura, decisiones rápidas.</h2>
-            <p>La web pública muestra lo esencial: servicios, equipo, ubicación y workshop, con un recorrido comercial claro.</p>
+            <h2 className="font-display">Cortes con identidad y una atención que se siente.</h2>
+            <p>Reserva online en segundos, elige a tu barbero y revisa su agenda en tiempo real. Sin llamadas y sin esperas.</p>
             <div className="home-stat-grid">
               {HERO_STATS.map(([n, l]) => (
                 <div key={l}>
@@ -82,7 +82,7 @@ export default function Home() {
       <LampBanner
         kicker="Maipú · Barbería Premium"
         title="Donde cada corte se ve como una obra bien dirigida."
-        text="Técnica de precisión, color profesional y una experiencia pensada al detalle. Reserva tu hora y descubre por qué PIMP STUDIO se siente distinto desde la primera pantalla."
+        text="Técnica de precisión, color profesional y una experiencia pensada al detalle. Reserva tu hora y descubre por qué PIMP STUDIO se siente distinto desde que cruzas la puerta."
       />
 
       <section id="sec-servicios" className="home-section">
@@ -135,8 +135,8 @@ export default function Home() {
             <span className="eyebrow">Workshop</span>
             <h2 className="font-display">Contenido que vende para barberos que quieren verse premium y agendar mejor.</h2>
             <p>
-              Reemplazamos la antigua galería por una pieza útil: una invitación clara al workshop de marca personal,
-              grabación y edición diseñado para barbería real.
+              Además de atenderte, en PIMP STUDIO formamos barberos: un workshop de marca personal,
+              grabación y edición pensado para la barbería real.
             </p>
             <div className="workshop-pill-row">
               {WORKSHOP_PILLS.map((item) => <span key={item} className="chip">{item}</span>)}

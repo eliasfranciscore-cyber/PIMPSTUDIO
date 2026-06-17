@@ -417,7 +417,7 @@ function Pricing({ onReserve }) {
 
 /* ============================================================ REGISTER */
 function Register({ formRef }) {
-  const [form, setForm] = useState({ name: "", phone: "", email: "", edition: "16 de marzo · Santiago" });
+  const [form, setForm] = useState({ name: "", phone: "", email: "", edition: "16 de marzo · Maipú" });
   const [errors, setErrors] = useState({});
   const [sent, setSent] = useState(false);
   const m = WK.meta;
@@ -499,7 +499,7 @@ function Register({ formRef }) {
               <div className="wks-field">
                 <label>Edición</label>
                 <select value={form.edition} onChange={set("edition")}>
-                  <option>16 de marzo · Santiago</option>
+                  <option>16 de marzo · Maipú</option>
                   <option>Próxima edición · lista de espera</option>
                 </select>
               </div>
@@ -562,7 +562,7 @@ function Footer({ onReserve }) {
         <div className="wks-footer-contact">
           <span className="wks-eyebrow" style={{ marginBottom: "0.4rem" }}>Hablemos</span>
           <a href={`https://wa.me/${m.whatsapp.replace(/[^\d]/g, "")}`}><Icon name="whatsapp" size={18} color="var(--wk-gold-lt)" /> WhatsApp directo</a>
-          <a href="https://instagram.com/brunetticutz"><Icon name="instagram" size={18} color="var(--wk-gold-lt)" /> {m.handle}</a>
+          <a href="https://www.instagram.com/pimpstudiochile/" target="_blank" rel="noopener noreferrer"><Icon name="instagram" size={18} color="var(--wk-gold-lt)" /> {m.handle}</a>
           <a><Icon name="pin" size={18} color="var(--wk-gold-lt)" /> {m.location}</a>
         </div>
       </div>
