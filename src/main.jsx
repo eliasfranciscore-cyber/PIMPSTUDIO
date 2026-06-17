@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom'
 import './styles/pimp.css'
 import './styles/modules.css'
 import App from './App.jsx'
+import { Analytics } from '@vercel/analytics/react'
 
 // Service worker para PWA + notificaciones push (iOS instalado en inicio).
 if ('serviceWorker' in navigator) {
@@ -17,5 +18,6 @@ if ('serviceWorker' in navigator) {
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <App />
+    <Analytics />
   </BrowserRouter>
 )
