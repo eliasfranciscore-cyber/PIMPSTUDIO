@@ -19,7 +19,17 @@ const PERMS = [
   ['canManageBlocks', 'Bloques', 'Bloquear/abrir horas en su agenda'],
 ]
 
-const emptyBarber = { name: '', code: '', role: 'Barbero', tier: 'general', pin: '1234', active: true, canViewFinance: false, canEditServices: false, canManageTeam: false, canManageBlocks: true }
+// Módulos "abiertos" que el admin concede por barbero (Finanzas/Servicios/Gastos
+// se controlan con los permisos de arriba). Resumen y Config siempre están.
+const MODULES = [
+  ['agenda', 'Agenda'],
+  ['reservas', 'Reservas'],
+  ['clientes', 'Clientes'],
+  ['marketing', 'Marketing'],
+]
+const ALL_MODULE_IDS = MODULES.map((m) => m[0])
+
+const emptyBarber = { name: '', code: '', role: 'Barbero', tier: 'general', pin: '1234', active: true, modules: [...ALL_MODULE_IDS], canViewFinance: false, canEditServices: false, canManageTeam: false, canManageBlocks: true }
 
 export default function BarberModal({ barber, canManage = false, onClose, onSave, onDelete }) {
   const isNew = !barber?.id
@@ -29,9 +39,16 @@ export default function BarberModal({ barber, canManage = false, onClose, onSave
   const [err, setErr] = useState('')
 
   useEffect(() => {
-    setForm(barber ? { ...emptyBarber, ...barber, pin: barber.pin || '' } : { ...emptyBarber })
+    setForm(barber
+      ? { ...emptyBarber, ...barber, pin: barber.pin || '', modules: Array.isArray(barber.modules) ? barber.modules : [...ALL_MODULE_IDS] }
+      : { ...emptyBarber })
     setConfirmDel(false); setErr('')
   }, [barber])
+
+  const toggleModule = (id, on) => setForm((f) => {
+    const cur = Array.isArray(f.modules) ? f.modules : [...ALL_MODULE_IDS]
+    return { ...f, modules: on ? [...new Set([...cur, id])] : cur.filter((x) => x !== id) }
+  })
 
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') (confirmDel ? setConfirmDel(false) : onClose()) }
@@ -89,6 +106,19 @@ export default function BarberModal({ barber, canManage = false, onClose, onSave
                     <div className="sub">{sub}</div>
                   </div>
                   <input type="checkbox" checked={checked} disabled={!canManage || locked} onChange={(e) => togglePerm(key, e.target.checked)} />
+                </label>
+              )
+            })}
+          </div>
+
+          <div className="psn-barber-perms">
+            <span className="psn-perms-head">Módulos con acceso</span>
+            {MODULES.map(([id, lbl]) => {
+              const on = locked ? true : (Array.isArray(form.modules) ? form.modules.includes(id) : true)
+              return (
+                <label key={id} className={`psn-perm-row ${on ? 'on' : ''}`}>
+                  <div className="lbl">{lbl}</div>
+                  <input type="checkbox" checked={on} disabled={!canManage || locked} onChange={(e) => toggleModule(id, e.target.checked)} />
                 </label>
               )
             })}

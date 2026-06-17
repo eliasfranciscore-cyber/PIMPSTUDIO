@@ -61,9 +61,8 @@ export default function BarberLogin() {
         <div className="barber-login-form-wrap">
           <div className="barber-login-form-panel">
             <div>
-              <span className="eyebrow">Inicio de sesión</span>
+              <span className="eyebrow">Acceso equipo</span>
               <h2 className="font-display">Ingresa a tu panel</h2>
-              <p>Barberos y administración comparten este acceso.</p>
             </div>
             <form onSubmit={submit} className="barber-login-form">
               <div className="field">
@@ -102,7 +101,7 @@ export default function BarberLogin() {
               <button type="button" onClick={() => setErr("Pide a la administración que restablezca tu contraseña, o cámbiala en Ajustes una vez dentro.")}>¿Olvidaste tu contraseña?</button>
             </div>
             <div className="barber-login-demo">
-              Tu contraseña inicial la entrega la administración. Puedes cambiarla en <strong style={{ color: "var(--gold)" }}>Ajustes → Cuenta y seguridad</strong>.
+              ¿Primera vez? La administración te entrega tu contraseña.
             </div>
           </div>
         </div>

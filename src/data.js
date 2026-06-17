@@ -1,16 +1,17 @@
 // `instagram` y `photo` alimentan el nuevo BarberShowcase (web pública).
-// TODO: reemplazar los handles placeholder por los reales (solo Bruno/Brunetti
-// está confirmado) y subir las fotos a public/assets/barbers/. Si falta la foto,
-// el componente usa /assets/pimp-studio-logo.jpg como respaldo.
+// NOTA: las `photo` son retratos de EJEMPLO (Unsplash) mientras el cliente envía
+// las fotos reales. Reemplazar por /assets/barbers/<archivo>.jpg cuando lleguen.
+// Los handles de Instagram son placeholder salvo el de la barbería; confirmar.
+const EXAMPLE_PHOTO = (id) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=600&h=600&q=70`
 export const BARBERS = [
-  { id: 4,  name: "Juan Carlos",         short: "Juan Carlos", code: "juan-carlos",         role: "Barbero Senior",      exp: "8 años",  rating: 4.9, tier: "general", instagram: "juancarlos.cuts",  photo: "/assets/barbers/juan-carlos.jpg" }, // TODO: handle real
-  { id: 5,  name: "Andryz",              short: "Andryz",      code: "andryz",              role: "Barbero",             exp: "5 años",  rating: 4.8, tier: "general", instagram: "andryz.barber",    photo: "/assets/barbers/andryz.jpg" }, // TODO: handle real
-  { id: 6,  name: "Brunetti",            short: "Brunetti",    code: "bruno-herrera",       role: "Visagista · Premium", exp: "12 años", rating: 5.0, tier: "premium", instagram: "brunetti",         photo: "/assets/barbers/brunetti.jpg" }, // TODO: confirmar handle real de Bruno
-  { id: 7,  name: "Diego Moya",          short: "Diego",       code: "diego-moya",          role: "Barbero",             exp: "6 años",  rating: 4.7, tier: "general", instagram: "diegomoya.barber", photo: "/assets/barbers/diego-moya.jpg" }, // TODO: handle real
-  { id: 8,  name: "Thinn Sayen Herrera", short: "Thinn S.",    code: "thinn-sayen-herrera", role: "Barbero",             exp: "4 años",  rating: 4.8, tier: "general", instagram: "thinn.studio",     photo: "/assets/barbers/thinn.jpg" }, // TODO: handle real
-  { id: 9,  name: "Vicente Pietrapiana", short: "Vicente",     code: "vicente-pietrapiana", role: "Barbero",             exp: "5 años",  rating: 4.9, tier: "general", instagram: "vicente.barber",   photo: "/assets/barbers/vicente.jpg" }, // TODO: handle real
-  { id: 10, name: "Rodrigo Godoy",       short: "Rodrigo",     code: "rodrigo-godoy",       role: "Barbero",             exp: "7 años",  rating: 4.8, tier: "general", instagram: "rodrigo.fade",     photo: "/assets/barbers/rodrigo.jpg" }, // TODO: handle real
-  { id: 11, name: "Matías Inostroza",    short: "Matías",      code: "matias-inostroza",    role: "Barbero Junior",      exp: "3 años",  rating: 4.6, tier: "general", instagram: "matias.barber",    photo: "/assets/barbers/matias.jpg" }, // TODO: handle real
+  { id: 4,  name: "Juan Carlos",         short: "Juan Carlos", code: "juan-carlos",         role: "Barbero Senior",      exp: "8 años",  rating: 4.9, tier: "general", instagram: "juancarlos.cuts",  photo: EXAMPLE_PHOTO("1507003211169-0a1dd7228f2d") }, // TODO: foto y handle reales
+  { id: 5,  name: "Andryz",              short: "Andryz",      code: "andryz",              role: "Barbero",             exp: "5 años",  rating: 4.8, tier: "general", instagram: "andryz.barber",    photo: EXAMPLE_PHOTO("1500648767791-00dcc994a43e") }, // TODO: foto y handle reales
+  { id: 6,  name: "Brunetti",            short: "Brunetti",    code: "bruno-herrera",       role: "Visagista · Premium", exp: "12 años", rating: 5.0, tier: "premium", instagram: "brunetti",         photo: EXAMPLE_PHOTO("1506794778202-cad84cf45f1d") }, // TODO: foto y handle reales de Bruno
+  { id: 7,  name: "Diego Moya",          short: "Diego",       code: "diego-moya",          role: "Barbero",             exp: "6 años",  rating: 4.7, tier: "general", instagram: "diegomoya.barber", photo: EXAMPLE_PHOTO("1519085360753-af0119f7cbe7") }, // TODO: foto y handle reales
+  { id: 8,  name: "Thinn Sayen Herrera", short: "Thinn S.",    code: "thinn-sayen-herrera", role: "Barbero",             exp: "4 años",  rating: 4.8, tier: "general", instagram: "thinn.studio",     photo: EXAMPLE_PHOTO("1492562080023-ab3db95bfbce") }, // TODO: foto y handle reales
+  { id: 9,  name: "Vicente Pietrapiana", short: "Vicente",     code: "vicente-pietrapiana", role: "Barbero",             exp: "5 años",  rating: 4.9, tier: "general", instagram: "vicente.barber",   photo: EXAMPLE_PHOTO("1463453091185-61582044d556") }, // TODO: foto y handle reales
+  { id: 10, name: "Rodrigo Godoy",       short: "Rodrigo",     code: "rodrigo-godoy",       role: "Barbero",             exp: "7 años",  rating: 4.8, tier: "general", instagram: "rodrigo.fade",     photo: EXAMPLE_PHOTO("1488161628813-04466f872be2") }, // TODO: foto y handle reales
+  { id: 11, name: "Matías Inostroza",    short: "Matías",      code: "matias-inostroza",    role: "Barbero Junior",      exp: "3 años",  rating: 4.6, tier: "general", instagram: "matias.barber",    photo: EXAMPLE_PHOTO("1539571696357-5a69c17a67c6") }, // TODO: foto y handle reales
 ]
 
 export const SERVICES = [

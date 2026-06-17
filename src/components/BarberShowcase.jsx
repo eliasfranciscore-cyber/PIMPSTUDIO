@@ -26,15 +26,15 @@ function BarberCard({ b, featured, onOpen }) {
       <img src={b.photo || LOGO} alt={b.name} onError={(e) => { if (e.currentTarget.src !== window.location.origin + LOGO) e.currentTarget.src = LOGO }} />
       <div className="psn-card-top">
         <span className="psn-card-rank"><Icon name="star" size={11} color="var(--gold)" /> {Number(b.rating).toFixed(1)}</span>
-        {b.instagram && (
-          <a className="psn-card-ig" href={`https://instagram.com/${b.instagram}`} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
-            <Icon name="instagram" size={13} /> @{b.instagram}
-          </a>
-        )}
       </div>
       <div className="psn-card-body">
         <span className="nm">{b.name} {featured && <Icon name="star" size={14} color="var(--gold)" />}</span>
         <span className="role">{b.role}{b.exp ? ` · ${b.exp}` : ''}</span>
+        {b.instagram && (
+          <a className="psn-card-ig" href={`https://instagram.com/${b.instagram}`} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+            <Icon name="instagram" size={12} /> @{b.instagram}
+          </a>
+        )}
         <span className="psn-card-cta">Ver perfil y reservar <Icon name="arrowRight" size={13} /></span>
       </div>
     </button>

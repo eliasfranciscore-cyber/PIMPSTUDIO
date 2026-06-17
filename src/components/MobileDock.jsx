@@ -6,7 +6,7 @@ import { Icon } from './ui.jsx'
  * - 6 accesos directos: 2 a la izq, FAB central (abre menú completo), 2 a la der,
  *   y un botón final (config). El centro permite navegar a todos los módulos.
  */
-export default function MobileDock({ tab, setTab, nav }) {
+export default function MobileDock({ tab, setTab, nav, shortcuts: shortcutItems }) {
   const [sheetOpen, setSheetOpen] = useState(false)
 
   useEffect(() => {
@@ -16,14 +16,12 @@ export default function MobileDock({ tab, setTab, nav }) {
     return () => window.removeEventListener('keydown', close)
   }, [sheetOpen])
 
-  // Atajos fijos: 2 izq + centro (todo) + 2 der (5 totales sin config)
+  // Atajos configurables (Config → Accesos directos). Respaldo: primeros del nav.
   const findKey = (key) => nav.find((n) => n[0] === key)
-  const shortcuts = [
-    findKey('resumen'),
-    findKey('agenda'),
-    findKey('reservas'),
-    findKey('clientes'),
-  ].filter(Boolean)
+  const shortcuts = (shortcutItems && shortcutItems.length
+    ? shortcutItems
+    : ['resumen', 'agenda', 'reservas', 'clientes'].map(findKey)
+  ).filter(Boolean)
 
   const goto = (id) => { setTab(id); setSheetOpen(false) }
 

@@ -3569,3 +3569,13 @@ select.input { text-overflow: ellipsis; }
     bottom: calc(0.85rem + env(safe-area-inset-bottom));
   }
 }
+
+/* ============================================================
+   LOGIN INTERNO — simplificado en móvil (sin panel visual, sin scroll)
+   ============================================================ */
+@media (max-width: 720px) {
+  .barber-login-shell { padding: 0; place-items: stretch; }
+  .barber-login-card { grid-template-columns: 1fr; border: 0; border-radius: 0; box-shadow: none; background: var(--bg); min-height: 100vh; }
+  .barber-login-visual { display: none; }
+  .barber-login-form-wrap { min-height: 100vh; align-content: center; padding: clamp(1.2rem, 6vw, 2rem); padding-top: calc(env(safe-area-inset-top) + 1.5rem); }
+}

@@ -143,36 +143,37 @@ export default function Booking() {
         {step === 0 && (
           <div className="animate-in" style={{ display: "grid", gap: ".8rem" }}>
             <h3 className="font-display" style={{ margin: ".2rem 0", fontSize: "1.05rem" }}>Elige tu barbero</h3>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: ".6rem" }}>
-              {barbers.map((b) => (
-                <GlareCard
-                  key={b.id}
-                  as="button"
-                  type="button"
-                  onClick={() => { setBarberId(b.id); setServiceId(null) }}
-                  style={{
-                    border: barberId === b.id ? "2px solid var(--gold-line)" : "1px solid rgba(255,255,255,0.1)",
-                    padding: ".8rem",
-                    display: "grid",
-                    gap: ".4rem",
-                    cursor: "pointer",
-                    placeItems: "center",
-                    textAlign: "center",
-                    background: barberId === b.id ? "linear-gradient(135deg, rgba(214, 188, 70, 0.15), rgba(214, 188, 70, 0.05))" : "rgba(0,0,0,0.3)",
-                    transition: "all .2s",
-                    borderRadius: "12px",
-                    width: "100%",
-                  }}
-                >
-                  <div style={{ width: 48, height: 48, borderRadius: "50%", overflow: "hidden", border: "1px solid var(--hair-2)", background: "var(--panel)" }}>
-                    <img src="/assets/pimp-studio-logo.jpg" alt={b.name} style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.6 }} />
+            {(() => {
+              const LOGO = "/assets/pimp-studio-logo.jpg"
+              const onImgErr = (e) => { if (e.currentTarget.src !== window.location.origin + LOGO) e.currentTarget.src = LOGO }
+              const ordered = [...barbers].sort((a, b) => (b.tier === "premium" ? 1 : 0) - (a.tier === "premium" ? 1 : 0))
+              const featured = ordered.find((b) => b.tier === "premium")
+              const rest = ordered.filter((b) => b !== featured)
+              return (
+                <>
+                  {featured && (
+                    <button type="button" onClick={() => { setBarberId(featured.id); setServiceId(null) }}
+                      className={`booking-barber featured ${barberId === featured.id ? "is-sel" : ""}`}>
+                      <div className="booking-barber-av lg"><img src={featured.photo || LOGO} alt={featured.name} onError={onImgErr} /></div>
+                      <div className="booking-barber-meta">
+                        <div className="nm">{featured.name} <Icon name="star" size={13} color="var(--gold)" /></div>
+                        <div className="role">{featured.role}{featured.exp ? ` · ${featured.exp}` : ""}</div>
+                      </div>
+                      {barberId === featured.id && <span className="booking-barber-check"><Icon name="check" size={14} /></span>}
+                    </button>
+                  )}
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: ".6rem" }}>
+                    {rest.map((b) => (
+                      <button key={b.id} type="button" onClick={() => { setBarberId(b.id); setServiceId(null) }}
+                        className={`booking-barber ${barberId === b.id ? "is-sel" : ""}`}>
+                        <div className="booking-barber-av"><img src={b.photo || LOGO} alt={b.name} onError={onImgErr} /></div>
+                        <div className="font-display nm-sm">{b.name}</div>
+                      </button>
+                    ))}
                   </div>
-                  <div style={{ display: "grid", gap: ".2rem", width: "100%" }}>
-                    <div className="font-display" style={{ fontWeight: 600, fontSize: ".9rem", display: "flex", alignItems: "center", gap: ".3rem", justifyContent: "center" }}>{b.name} {b.tier === "premium" && <Icon name="star" size={10} color="var(--gold)" />}</div>
-                  </div>
-                </GlareCard>
-              ))}
-            </div>
+                </>
+              )
+            })()}
           </div>
         )}
 

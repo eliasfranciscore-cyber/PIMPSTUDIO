@@ -96,6 +96,12 @@ export default function Dashboard() {
   const [serviceDraft, setServiceDraft] = useState({ name: "", price: "", min: 60, cat: "general", desc: "", tne: false })
   const [expenseDraft, setExpenseDraft] = useState({ date: new Date().toISOString().slice(0, 10), category: "Insumos", detail: "", amount: "" })
   const [barberDraft, setBarberDraft] = useState({ name: "", code: "", role: "Barbero", tier: "general", pin: "1234", canViewFinance: false, canManageTeam: false, canEditServices: false, canManageBlocks: true })
+  // Preferencias de navegación (persisten por dispositivo): qué módulos se ven y
+  // qué 4 atajos van en el dock. Se aplican al nav/dock reales.
+  const [navSettings, setNavSettings] = useState(() => { try { return JSON.parse(localStorage.getItem("ps_nav_settings") || "{}") } catch { return {} } })
+  const [dockShortcuts, setDockShortcuts] = useState(() => { try { const s = JSON.parse(localStorage.getItem("ps_dock_shortcuts") || "null"); return Array.isArray(s) && s.length ? s : ["resumen", "agenda", "reservas", "clientes"] } catch { return ["resumen", "agenda", "reservas", "clientes"] } })
+  useEffect(() => { try { localStorage.setItem("ps_nav_settings", JSON.stringify(navSettings)) } catch {} }, [navSettings])
+  useEffect(() => { try { localStorage.setItem("ps_dock_shortcuts", JSON.stringify(dockShortcuts)) } catch {} }, [dockShortcuts])
   const m = METRICS
   const admin = isAdminUser(barber)
   const canViewFinance = admin || barber?.canViewFinance
@@ -216,6 +222,22 @@ export default function Dashboard() {
     ["marketing", "spark",    "Marketing"],
     ["config",    "key",      "Config."],
   ]
+
+  // Acceso por barbero: Bruno (admin) ve todo. El admin concede módulos por barbero
+  // (barber.modules) para los módulos "abiertos"; Finanzas/Servicios/Gastos siguen
+  // por permiso. Resumen y Config siempre disponibles.
+  const ALWAYS = ["resumen", "config"]
+  const MODULE_IDS = ["agenda", "reservas", "clientes", "marketing"]
+  const barberModules = Array.isArray(barber?.modules) ? barber.modules : null
+  const accessibleNav = nav.filter(([id]) => {
+    if (admin || !barberModules) return true
+    if (MODULE_IDS.includes(id)) return barberModules.includes(id)
+    return true
+  })
+  // Preferencia personal de visibilidad (config → módulos visibles).
+  const visibleNav = accessibleNav.filter(([id]) => ALWAYS.includes(id) || navSettings[id] !== false)
+  // Atajos del dock: los 4 elegidos, sólo si son accesibles/visibles.
+  const dockItems = dockShortcuts.map((id) => visibleNav.find((n) => n[0] === id)).filter(Boolean).slice(0, 4)
 
   const saveService = async (service) => {
     const payload = service?.id ? service : serviceDraft
@@ -340,7 +362,8 @@ export default function Dashboard() {
     <DashboardShell
       tab={tab}
       setTab={setTab}
-      nav={nav}
+      nav={visibleNav}
+      dockItems={dockItems}
       barber={barber}
       onLogout={logout}
     >
@@ -351,7 +374,7 @@ export default function Dashboard() {
           onLogout={logout}
           tab={tab}
           setTab={setTab}
-          nav={nav}
+          nav={visibleNav}
           notifCount={visibleBookings.filter((b) => b.status === 'pendiente').length}
         />
 
@@ -609,6 +632,10 @@ export default function Dashboard() {
             onExport={exportCSV}
             onLogout={logout}
             nav={nav}
+            navSettings={navSettings}
+            setNavSettings={setNavSettings}
+            dockShortcuts={dockShortcuts}
+            setDockShortcuts={setDockShortcuts}
           />
         )}
 
@@ -799,7 +826,7 @@ function isStrongPassword(pw) {
   return /^[A-Za-z0-9]{8,64}$/.test(pw) && /[A-Z]/.test(pw) && /[0-9]/.test(pw)
 }
 
-function ConfigPanel({ barber, barbers, admin, canManageTeam, barberDraft, setBarberDraft, saveBarber, updateBarberLocal, deleteBarber, onExport, onLogout, nav }) {
+function ConfigPanel({ barber, barbers, admin, canManageTeam, barberDraft, setBarberDraft, saveBarber, updateBarberLocal, deleteBarber, onExport, onLogout, nav, navSettings, setNavSettings, dockShortcuts, setDockShortcuts }) {
   const [section, setSection] = useState(null)
   const [teamModal, setTeamModal] = useState(null) // null=cerrado; {barber:null}=crear; {barber:obj}=editar
   const [biz, setBiz] = useState(() => {
@@ -857,8 +884,6 @@ function ConfigPanel({ barber, barbers, admin, canManageTeam, barberDraft, setBa
     setAcctSaved(true)
     setTimeout(() => setAcctSaved(false), 2500)
   }
-  const [navSettings, setNavSettings] = useState({ agenda: true, reservas: true, finanzas: true, clientes: true, servicios: true, gastos: false, marketing: true })
-  const [dockShortcuts, setDockShortcuts] = useState(nav.slice(0, 4).map(n => n[0]))
   const { theme, toggle } = useTheme()
 
   const current = CFG_SECTIONS.find((s) => s.id === section)
@@ -1234,7 +1259,7 @@ function ConfigPanel({ barber, barbers, admin, canManageTeam, barberDraft, setBa
 /* ============================================================
    Shell + Topbar — UI envoltura responsive
    ============================================================ */
-function DashboardShell({ tab, setTab, nav, barber, onLogout, children }) {
+function DashboardShell({ tab, setTab, nav, dockItems, barber, onLogout, children }) {
   return (
     <div className="dashboard-shell">
       <aside className="dashboard-sidebar">
@@ -1257,7 +1282,7 @@ function DashboardShell({ tab, setTab, nav, barber, onLogout, children }) {
         </div>
       </aside>
       {children}
-      <MobileDock tab={tab} setTab={setTab} nav={nav} />
+      <MobileDock tab={tab} setTab={setTab} nav={nav} shortcuts={dockItems} />
     </div>
   )
 }
