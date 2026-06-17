@@ -263,6 +263,28 @@ a.home-footer-access { display: inline-flex; align-items: center; gap: .4rem; te
 .psn-client-hrow .svc { font-size: .85rem; font-weight: 500; }
 .psn-client-hrow .meta { font-size: .72rem; color: var(--muted); }
 
+/* Spinner de carga de rutas (code-splitting) */
+.route-spinner { width: 34px; height: 34px; border-radius: 999px; border: 3px solid rgba(201,161,78,.25); border-top-color: var(--gold, #c9a14e); animation: routeSpin .7s linear infinite; }
+@keyframes routeSpin { to { transform: rotate(360deg); } }
+
+/* ---------- Equipo / barberos: fila tappable + modal ---------- */
+.cfg-card-head-row { display: flex; align-items: center; justify-content: space-between; gap: .6rem; margin-bottom: 1rem; }
+.cfg-barber-row.is-tappable { width: 100%; text-align: left; cursor: pointer; border: 1px solid var(--hair); border-radius: 14px; background: rgba(255,255,255,.02); padding: .8rem; transition: border-color .15s, background .15s; }
+.cfg-barber-row.is-tappable:hover:not(:disabled) { border-color: var(--gold-line); background: rgba(201,161,78,.06); }
+.cfg-barber-row.is-tappable:disabled { opacity: .6; cursor: default; }
+.cfg-barber-row.is-tappable .cfg-barber-head { display: flex; align-items: center; gap: .7rem; }
+
+.psn-barber-modal { text-align: left; width: min(480px, 100%); }
+.psn-barber-modal .psn-client-edit { margin-top: .2rem; }
+.psn-form-2col { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; }
+.psn-barber-perms { display: grid; gap: .4rem; margin-top: .3rem; }
+.psn-perms-head { font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-family: var(--font-display); }
+.psn-perm-row { display: flex; align-items: center; justify-content: space-between; gap: .8rem; padding: .6rem .75rem; border-radius: 10px; border: 1px solid var(--hair); background: rgba(255,255,255,.02); cursor: pointer; }
+.psn-perm-row.on { border-color: var(--gold-line); background: rgba(201,161,78,.05); }
+.psn-perm-row .lbl { font-size: .86rem; font-weight: 500; }
+.psn-perm-row .sub { font-size: .72rem; color: var(--muted); }
+.psn-perm-row input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--gold); flex-shrink: 0; }
+
 /* Modo claro del panel interno (hereda variables de [data-theme="light"] de pimp.css) */
 [data-theme="light"] .psn-res-card,
 [data-theme="light"] .psn-kpi,
@@ -271,4 +293,5 @@ a.home-footer-access { display: inline-flex; align-items: center; gap: .4rem; te
 [data-theme="light"] .psn-res-status { background: #fff; border-color: #d8d3ca; }
 [data-theme="light"] .psn-modal-card.psn-confirm,
 [data-theme="light"] .psn-modal-card.psn-res-modal,
-[data-theme="light"] .psn-modal-card.psn-client-modal { background: #fff; }
+[data-theme="light"] .psn-modal-card.psn-client-modal,
+[data-theme="light"] .psn-modal-card.psn-barber-modal { background: #fff; }

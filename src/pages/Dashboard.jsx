@@ -8,6 +8,7 @@ import { mergeBookings, readLocalBookings } from '../bookingsStore.js'
 import BookingsInbox from '../components/BookingsInbox.jsx'
 import DashboardResumen from '../components/DashboardResumen.jsx'
 import ClientModal from '../components/ClientModal.jsx'
+import BarberModal from '../components/BarberModal.jsx'
 import {
   registerServiceWorker, notifyBarberOfBooking, pushEnabledFor,
   enablePush, disablePush, notifyLocal, permissionState,
@@ -249,6 +250,29 @@ export default function Dashboard() {
 
   const updateBarberLocal = (id, patch) => {
     setBarbers((items) => items.map((item) => item.id === id ? { ...item, ...patch } : item))
+  }
+
+  const deleteBarber = async (target) => {
+    if (!target?.id) return
+    setBarbers((items) => items.filter((item) => item.id !== target.id))
+    fetch(`/api/barbers?id=${target.id}`, { method: "DELETE", headers: authHeaders() }).catch(() => {})
+  }
+
+  const exportCSV = (type) => {
+    const esc = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`
+    const toCSV = (headers, rows) => [headers.join(","), ...rows.map((r) => r.map(esc).join(","))].join("\n")
+    let name = "datos", csv = ""
+    if (type === "Clientes") { name = "clientes"; csv = toCSV(["Nombre", "Telefono", "Email", "Visitas", "Total", "Ultima visita", "Estado"], clients.map((c) => [c.name, c.phone, c.email, c.visits, c.totalSpent, c.lastVisit, c.status])) }
+    else if (type === "Reservas") { name = "reservas"; csv = toCSV(["Fecha", "Hora", "Cliente", "Telefono", "Servicio", "Barbero", "Precio", "Estado"], bookings.map((b) => { const bb = barberById(b.barberId); return [b.date, b.time, b.client, b.phone, b.service, bb?.short || bb?.name || "", b.price, b.status] })) }
+    else if (type === "Gastos") { name = "gastos"; csv = toCSV(["Fecha", "Categoria", "Detalle", "Monto", "Responsable"], expenses.map((e) => [e.date, e.category, e.detail, e.amount, e.owner])) }
+    else if (type === "Servicios") { name = "servicios"; csv = toCSV(["Nombre", "Precio", "Minutos", "Categoria", "Estado"], services.map((s) => [s.name, s.price, s.min, s.cat, s.active === false ? "oculto" : "publicado"])) }
+    const blob = new Blob([`﻿${csv}`], { type: "text/csv;charset=utf-8;" })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = `pimpstudio-${name}-${new Date().toISOString().slice(0, 10)}.csv`
+    document.body.appendChild(a); a.click(); a.remove()
+    setTimeout(() => URL.revokeObjectURL(url), 1000)
   }
 
   const updateBookingStatus = async (booking, status) => {
@@ -581,6 +605,8 @@ export default function Dashboard() {
             setBarberDraft={setBarberDraft}
             saveBarber={saveBarber}
             updateBarberLocal={updateBarberLocal}
+            deleteBarber={deleteBarber}
+            onExport={exportCSV}
             onLogout={logout}
             nav={nav}
           />
@@ -773,8 +799,17 @@ function isStrongPassword(pw) {
   return /^[A-Za-z0-9]{8,64}$/.test(pw) && /[A-Z]/.test(pw) && /[0-9]/.test(pw)
 }
 
-function ConfigPanel({ barber, barbers, admin, canManageTeam, barberDraft, setBarberDraft, saveBarber, updateBarberLocal, onLogout, nav }) {
+function ConfigPanel({ barber, barbers, admin, canManageTeam, barberDraft, setBarberDraft, saveBarber, updateBarberLocal, deleteBarber, onExport, onLogout, nav }) {
   const [section, setSection] = useState(null)
+  const [teamModal, setTeamModal] = useState(null) // null=cerrado; {barber:null}=crear; {barber:obj}=editar
+  const [biz, setBiz] = useState(() => {
+    try { return { name: "PIMP STUDIO", address: "Maipú, Santiago", phone: "+56 9 1234 5678", waPhone: "+56 9 1234 5678", ...JSON.parse(localStorage.getItem("ps_biz") || "{}") } } catch { return { name: "PIMP STUDIO", address: "Maipú, Santiago", phone: "+56 9 1234 5678", waPhone: "+56 9 1234 5678" } }
+  })
+  const [bizSaved, setBizSaved] = useState("")
+  const saveBiz = () => {
+    try { localStorage.setItem("ps_biz", JSON.stringify(biz)) } catch {}
+    setBizSaved("ok"); setTimeout(() => setBizSaved(""), 1800)
+  }
   const [pwOpen, setPwOpen] = useState(false)
   const [pwForm, setPwForm] = useState({ current: "", next: "", confirm: "" })
   const [pwStatus, setPwStatus] = useState("") // "", "saving", "done"
@@ -1055,10 +1090,10 @@ function ConfigPanel({ barber, barbers, admin, canManageTeam, barberDraft, setBa
               <div className="cfg-form-grid">
                 <div className="cfg-field">
                   <label>Telefono WhatsApp Business</label>
-                  <input className="input" placeholder="+56 9 xxxx xxxx" defaultValue="+56 9 1234 5678" />
+                  <input className="input" placeholder="+56 9 xxxx xxxx" value={biz.waPhone} onChange={(e) => setBiz((b) => ({ ...b, waPhone: e.target.value }))} />
                 </div>
               </div>
-              <button className="btn btn-gold" style={{ marginTop: ".5rem" }}><Icon name="check" size={14} /> Guardar</button>
+              <button className="btn btn-gold" style={{ marginTop: ".5rem" }} onClick={saveBiz}><Icon name="check" size={14} /> {bizSaved ? "Guardado ✓" : "Guardar"}</button>
             </div>
           </div>
         )}
@@ -1069,11 +1104,11 @@ function ConfigPanel({ barber, barbers, admin, canManageTeam, barberDraft, setBa
             <div className="cfg-card">
               <p className="cfg-card-head">Datos del negocio</p>
               <div className="cfg-form-grid">
-                <div className="cfg-field"><label>Nombre</label><input className="input" defaultValue="PIMP STUDIO" /></div>
-                <div className="cfg-field"><label>Direccion</label><input className="input" defaultValue="Maipú, Santiago" /></div>
-                <div className="cfg-field"><label>Telefono</label><input className="input" defaultValue="+56 9 1234 5678" /></div>
+                <div className="cfg-field"><label>Nombre</label><input className="input" value={biz.name} onChange={(e) => setBiz((b) => ({ ...b, name: e.target.value }))} /></div>
+                <div className="cfg-field"><label>Direccion</label><input className="input" value={biz.address} onChange={(e) => setBiz((b) => ({ ...b, address: e.target.value }))} /></div>
+                <div className="cfg-field"><label>Telefono</label><input className="input" value={biz.phone} onChange={(e) => setBiz((b) => ({ ...b, phone: e.target.value }))} /></div>
               </div>
-              <button className="btn btn-gold" style={{ marginTop: ".5rem" }}><Icon name="check" size={14} /> Guardar</button>
+              <button className="btn btn-gold" style={{ marginTop: ".5rem" }} onClick={saveBiz}><Icon name="check" size={14} /> {bizSaved ? "Guardado ✓" : "Guardar"}</button>
             </div>
             <div className="cfg-card">
               <p className="cfg-card-head">Horario operativo</p>
@@ -1092,57 +1127,43 @@ function ConfigPanel({ barber, barbers, admin, canManageTeam, barberDraft, setBa
         {/* EQUIPO */}
         {section === "equipo" && (
           <div style={{ display: "grid", gap: "1.4rem" }}>
-            {canManageTeam && (
-              <div className="cfg-card">
-                <p className="cfg-card-head">Crear cuenta de barbero</p>
-                <div className="cfg-form-grid">
-                  <div className="cfg-field"><label>Nombre</label><input className="input" placeholder="Nombre completo" value={barberDraft.name} onChange={(e) => setBarberDraft({ ...barberDraft, name: e.target.value })} /></div>
-                  <div className="cfg-field"><label>Usuario</label><input className="input" placeholder="usuario" value={barberDraft.code} onChange={(e) => setBarberDraft({ ...barberDraft, code: e.target.value.toLowerCase().replace(/\s+/g, "-") })} /></div>
-                  <div className="cfg-field"><label>Rol</label><input className="input" placeholder="Barbero" value={barberDraft.role} onChange={(e) => setBarberDraft({ ...barberDraft, role: e.target.value })} /></div>
-                  <div className="cfg-field"><label>Nivel</label>
-                    <select className="input" value={barberDraft.tier} onChange={(e) => setBarberDraft({ ...barberDraft, tier: e.target.value })}>
-                      <option value="general">General</option><option value="premium">Premium</option>
-                    </select>
-                  </div>
-                  <div className="cfg-field"><label>PIN inicial</label><input className="input" placeholder="1234" inputMode="numeric" maxLength={4} value={barberDraft.pin} onChange={(e) => setBarberDraft({ ...barberDraft, pin: e.target.value.replace(/\D/g, "").slice(0, 4) })} /></div>
-                </div>
-                <button className="btn btn-gold" style={{ marginTop: ".5rem" }} onClick={() => saveBarber(barberDraft)}><Icon name="check" size={14} /> Crear cuenta</button>
-              </div>
-            )}
             <div className="cfg-card">
-              <p className="cfg-card-head">Usuarios y permisos</p>
-              <div style={{ display: "grid", gap: ".85rem" }}>
+              <div className="cfg-card-head-row">
+                <p className="cfg-card-head" style={{ margin: 0 }}>Usuarios y permisos</p>
+                {canManageTeam && (
+                  <button className="btn btn-gold btn-sm" onClick={() => setTeamModal({ barber: null })}>
+                    <Icon name="user" size={14} /> Nuevo barbero
+                  </button>
+                )}
+              </div>
+              <div style={{ display: "grid", gap: ".6rem" }}>
                 {barbers.map((item) => {
                   const lockedAdmin = item.name?.toLowerCase().includes("brunetti") || item.admin
+                  const activePerms = [["canViewFinance","Finanzas"],["canEditServices","Servicios"],["canManageTeam","Equipo"],["canManageBlocks","Bloques"]]
+                    .filter(([k]) => lockedAdmin || (k === "canManageBlocks" ? item[k] !== false : Boolean(item[k])))
+                    .map(([, l]) => l)
                   return (
-                    <div key={item.id} className={`cfg-barber-row ${item.active === false ? "is-disabled" : ""}`}>
+                    <button
+                      key={item.id}
+                      type="button"
+                      className={`cfg-barber-row is-tappable ${item.active === false ? "is-disabled" : ""}`}
+                      onClick={() => canManageTeam && setTeamModal({ barber: item })}
+                      disabled={!canManageTeam}
+                    >
                       <div className="cfg-barber-head">
                         <div className="cfg-barber-avatar">{(item.name || "B")[0].toUpperCase()}</div>
-                        <div>
-                          <strong style={{ fontSize: ".9rem" }}>{item.name}</strong>
-                          <span style={{ fontSize: ".74rem", color: "var(--muted)", display: "block" }}>{item.role || "Barbero"} · @{item.code}</span>
+                        <div style={{ minWidth: 0 }}>
+                          <strong style={{ fontSize: ".9rem" }}>{item.name} {lockedAdmin && <Icon name="key" size={11} color="var(--gold)" />}</strong>
+                          <span style={{ fontSize: ".74rem", color: "var(--muted)", display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                            {activePerms.length ? activePerms.join(" · ") : "Sin permisos extra"}
+                          </span>
                         </div>
-                        <div style={{ marginLeft: "auto", display: "flex", gap: ".5rem" }}>
-                          <button className={item.active === false ? "chip" : "chip chip-gold"} disabled={!canManageTeam || lockedAdmin} onClick={() => {
-                            const next = { ...item, active: item.active === false }
-                            updateBarberLocal(item.id, { active: next.active })
-                            saveBarber(next)
-                          }}>{item.active === false ? "Inactivo" : "Activo"}</button>
-                          <button className="btn btn-dark btn-sm" disabled={!canManageTeam || lockedAdmin} onClick={() => saveBarber(item)}>Guardar</button>
+                        <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: ".5rem", flexShrink: 0 }}>
+                          <span className={item.active === false ? "chip" : "chip chip-gold"}>{item.active === false ? "Inactivo" : "Activo"}</span>
+                          <Icon name="arrowRight" size={15} color="var(--muted)" />
                         </div>
                       </div>
-                      <div className="cfg-perm-grid">
-                        {[["canViewFinance","Finanzas"],["canEditServices","Servicios"],["canManageTeam","Equipo"],["canManageBlocks","Bloques"]].map(([key, lbl]) => (
-                          <label key={key} className="cfg-perm-chip">
-                            <input type="checkbox" disabled={!canManageTeam || lockedAdmin}
-                              checked={lockedAdmin || (key === "canManageBlocks" ? item[key] !== false : Boolean(item[key]))}
-                              onChange={(e) => updateBarberLocal(item.id, { [key]: e.target.checked })}
-                            />
-                            <span>{lbl}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
+                    </button>
                   )
                 })}
               </div>
@@ -1162,7 +1183,7 @@ function ConfigPanel({ barber, barbers, admin, canManageTeam, barberDraft, setBa
                       <div className="cfg-setting-label">{label}</div>
                       <div className="cfg-setting-sub">{sub}</div>
                     </div>
-                    <button className="btn btn-dark btn-sm"><Icon name={icon} size={13} /> Exportar CSV</button>
+                    <button className="btn btn-dark btn-sm" onClick={() => onExport(label)}><Icon name={icon} size={13} /> Exportar CSV</button>
                   </div>
                 ))}
               </div>
@@ -1196,6 +1217,16 @@ function ConfigPanel({ barber, barbers, admin, canManageTeam, barberDraft, setBa
           </div>
         )}
       </div>
+
+      {teamModal && (
+        <BarberModal
+          barber={teamModal.barber}
+          canManage={canManageTeam}
+          onClose={() => setTeamModal(null)}
+          onSave={(payload) => { saveBarber(payload); setTeamModal(null) }}
+          onDelete={(b) => { deleteBarber(b); setTeamModal(null) }}
+        />
+      )}
     </div>
   )
 }
