@@ -1,12 +1,16 @@
+// `instagram` y `photo` alimentan el nuevo BarberShowcase (web pública).
+// TODO: reemplazar los handles placeholder por los reales (solo Bruno/Brunetti
+// está confirmado) y subir las fotos a public/assets/barbers/. Si falta la foto,
+// el componente usa /assets/pimp-studio-logo.jpg como respaldo.
 export const BARBERS = [
-  { id: 4,  name: "Juan Carlos",         short: "Juan Carlos", code: "juan-carlos",         role: "Barbero Senior",      exp: "8 años",  rating: 4.9, tier: "general" },
-  { id: 5,  name: "Andryz",              short: "Andryz",      code: "andryz",              role: "Barbero",             exp: "5 años",  rating: 4.8, tier: "general" },
-  { id: 6,  name: "Brunetti",            short: "Brunetti",    code: "bruno-herrera",       role: "Visagista · Premium", exp: "12 años", rating: 5.0, tier: "premium" },
-  { id: 7,  name: "Diego Moya",          short: "Diego",       code: "diego-moya",          role: "Barbero",             exp: "6 años",  rating: 4.7, tier: "general" },
-  { id: 8,  name: "Thinn Sayen Herrera", short: "Thinn S.",    code: "thinn-sayen-herrera", role: "Barbero",             exp: "4 años",  rating: 4.8, tier: "general" },
-  { id: 9,  name: "Vicente Pietrapiana", short: "Vicente",     code: "vicente-pietrapiana", role: "Barbero",             exp: "5 años",  rating: 4.9, tier: "general" },
-  { id: 10, name: "Rodrigo Godoy",       short: "Rodrigo",     code: "rodrigo-godoy",       role: "Barbero",             exp: "7 años",  rating: 4.8, tier: "general" },
-  { id: 11, name: "Matías Inostroza",    short: "Matías",      code: "matias-inostroza",    role: "Barbero Junior",      exp: "3 años",  rating: 4.6, tier: "general" },
+  { id: 4,  name: "Juan Carlos",         short: "Juan Carlos", code: "juan-carlos",         role: "Barbero Senior",      exp: "8 años",  rating: 4.9, tier: "general", instagram: "juancarlos.cuts",  photo: "/assets/barbers/juan-carlos.jpg" }, // TODO: handle real
+  { id: 5,  name: "Andryz",              short: "Andryz",      code: "andryz",              role: "Barbero",             exp: "5 años",  rating: 4.8, tier: "general", instagram: "andryz.barber",    photo: "/assets/barbers/andryz.jpg" }, // TODO: handle real
+  { id: 6,  name: "Brunetti",            short: "Brunetti",    code: "bruno-herrera",       role: "Visagista · Premium", exp: "12 años", rating: 5.0, tier: "premium", instagram: "brunetti",         photo: "/assets/barbers/brunetti.jpg" }, // TODO: confirmar handle real de Bruno
+  { id: 7,  name: "Diego Moya",          short: "Diego",       code: "diego-moya",          role: "Barbero",             exp: "6 años",  rating: 4.7, tier: "general", instagram: "diegomoya.barber", photo: "/assets/barbers/diego-moya.jpg" }, // TODO: handle real
+  { id: 8,  name: "Thinn Sayen Herrera", short: "Thinn S.",    code: "thinn-sayen-herrera", role: "Barbero",             exp: "4 años",  rating: 4.8, tier: "general", instagram: "thinn.studio",     photo: "/assets/barbers/thinn.jpg" }, // TODO: handle real
+  { id: 9,  name: "Vicente Pietrapiana", short: "Vicente",     code: "vicente-pietrapiana", role: "Barbero",             exp: "5 años",  rating: 4.9, tier: "general", instagram: "vicente.barber",   photo: "/assets/barbers/vicente.jpg" }, // TODO: handle real
+  { id: 10, name: "Rodrigo Godoy",       short: "Rodrigo",     code: "rodrigo-godoy",       role: "Barbero",             exp: "7 años",  rating: 4.8, tier: "general", instagram: "rodrigo.fade",     photo: "/assets/barbers/rodrigo.jpg" }, // TODO: handle real
+  { id: 11, name: "Matías Inostroza",    short: "Matías",      code: "matias-inostroza",    role: "Barbero Junior",      exp: "3 años",  rating: 4.6, tier: "general", instagram: "matias.barber",    photo: "/assets/barbers/matias.jpg" }, // TODO: handle real
 ]
 
 export const SERVICES = [
@@ -95,7 +99,17 @@ export const METRICS = {
   occupancy: 78,
   occupancyDelta: 5.0,
   newClients: 42,
+  newClientsDelta: 14.2,
   returningClients: 145,
+  // Métricas del día / mes para el Resumen ampliado (DashboardResumen).
+  // El componente calcula en vivo desde bookings/expenses y usa esto como fallback.
+  revenueDay: 248910,
+  revenueDayDelta: 12.4,
+  bookingsDayDelta: 8.1,
+  expensesMonth: 850000,
+  expensesDelta: -4.2,
+  marketingRoi: 3.8,
+  marketingRoiDelta: 0.6,
   revenueByDay: [
     { d: "Lun", v: 540000 }, { d: "Mar", v: 612000 }, { d: "Mié", v: 705000 },
     { d: "Jue", v: 668000 }, { d: "Vie", v: 820000 }, { d: "Sáb", v: 941000 },

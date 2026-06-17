@@ -5,6 +5,8 @@ import { ThemeProvider, ThemeToggle, useTheme } from '../components/theme.jsx'
 import MobileDock from '../components/MobileDock.jsx'
 import { BARBERS, CLIENTS, EXPENSES, METRICS, SERVICES, TODAY_BOOKINGS, barberById, CLP, CLPk, isAdminUser } from '../data.js'
 import { mergeBookings, readLocalBookings } from '../bookingsStore.js'
+import BookingsInbox from '../components/BookingsInbox.jsx'
+import DashboardResumen from '../components/DashboardResumen.jsx'
 import {
   registerServiceWorker, notifyBarberOfBooking, pushEnabledFor,
   enablePush, disablePush, notifyLocal, permissionState,
@@ -307,51 +309,7 @@ export default function Dashboard() {
 
         {/* RESUMEN */}
         {tab === "resumen" && (
-          <div className="animate-in" style={{ display: "grid", gap: "1.1rem" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: "1rem" }}>
-              <Stat icon="wallet"   label="Ingresos agenda"  value={CLP(revenueTotal)}  delta={m.revenueWeekDelta}  accent />
-              <Stat icon="calendar" label="Reservas"         value={visibleBookings.length}       delta={m.bookingsWeekDelta} />
-              <Stat icon="chart"    label="Ticket promedio"  value={CLP(avgTicket)}     delta={m.avgTicketDelta} />
-              <Stat icon="trend"    label="Ocupación"        value={m.occupancy}          suffix="%" delta={m.occupancyDelta} />
-            </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: "1.1rem" }}>
-              <Panel title="Ingresos por día" action={<span className="chip chip-gold">{CLP(revenueTotal)}</span>}>
-                <BarChart data={m.revenueByDay} fmt={CLP} />
-              </Panel>
-              <Panel title="Ranking barberos" action={<span style={{ fontSize: ".74rem", color: "var(--muted)" }}>Esta semana</span>}>
-                <div style={{ display: "grid", gap: ".7rem" }}>
-                  {(ranking.length ? ranking : m.barberRanking).slice(0, 5).map((r, i) => {
-                    const b = barbers.find((item) => item.id === r.id) || barberById(r.id)
-                    return (
-                      <div key={r.id} style={{ display: "flex", alignItems: "center", gap: ".8rem" }}>
-                        <span className="font-display" style={{ width: 20, color: i === 0 ? "var(--gold)" : "var(--muted-2)", fontWeight: 700 }}>{i + 1}</span>
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{ fontSize: ".86rem", fontWeight: 500 }}>{b?.name}</div>
-                          <div style={{ height: 5, borderRadius: 99, background: "rgba(255,255,255,0.06)", marginTop: 4, overflow: "hidden" }}>
-                            <div style={{ height: "100%", width: `${(r.rev / maxRev) * 100}%`, background: i === 0 ? "var(--gold-grad)" : "#4a4943", borderRadius: 99 }} />
-                          </div>
-                        </div>
-                        <div style={{ textAlign: "right" }}>
-                          <div style={{ fontSize: ".82rem", color: "var(--ink-soft)" }}>{CLP(r.rev)}</div>
-                          <div style={{ fontSize: ".68rem", color: "var(--muted-2)" }}>{r.cuts} cortes</div>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-              </Panel>
-            </div>
-            <Panel title="Origen de clientes">
-              <div style={{ display: "grid", gap: ".7rem" }}>
-                {m.channels.map((c) => (
-                  <div key={c.name} style={{ display: "grid", gap: ".3rem" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: ".8rem" }}><span style={{ color: "var(--ink-soft)" }}>{c.name}</span><span style={{ color: "var(--muted)" }}>{c.pct}%</span></div>
-                    <div style={{ height: 6, borderRadius: 99, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}><div style={{ height: "100%", width: `${c.pct}%`, background: c.color, borderRadius: 99 }} /></div>
-                  </div>
-                ))}
-              </div>
-            </Panel>
-          </div>
+          <DashboardResumen metrics={m} bookings={bookings} barbers={barbers} expenses={expenses} />
         )}
 
         {/* AGENDA */}
@@ -425,40 +383,14 @@ export default function Dashboard() {
 
         {/* RESERVAS */}
         {tab === "reservas" && (
-          <div className="animate-in" style={{ display: "grid", gap: "1.1rem" }}>
-            <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap" }}>
-              {["Todas", "Confirmadas", "En curso", "Pendientes"].map((f, i) => (
-                <span key={f} className={i === 0 ? "chip chip-gold" : "chip"} style={{ cursor: "pointer" }}>{f}</span>
-              ))}
-            </div>
-            <Panel title={admin ? "Reservas internas" : "Mis reservas"} action={<span className="chip">{visibleBookings.length} citas</span>}>
-              <div style={{ display: "grid", gap: ".4rem", overflowX: "auto" }}>
-                <div style={{ display: "grid", gridTemplateColumns: "70px 1.4fr 1.6fr 1fr 90px 110px", gap: ".5rem", padding: "0 .6rem .5rem", fontSize: ".68rem", letterSpacing: ".1em", textTransform: "uppercase", color: "var(--muted-2)", minWidth: 600 }}>
-                  <span>Hora</span><span>Cliente</span><span>Servicio</span><span>Barbero</span><span>Total</span><span>Estado</span>
-                </div>
-                {visibleBookings.map((bk, i) => {
-                  const b = barbers.find((item) => item.id === bk.barberId) || barberById(bk.barberId)
-                  const stc = { "confirmada": ["rgba(201,161,78,0.1)", "var(--gold-lt)"], "en curso": ["rgba(120,180,140,0.12)", "#9fd0a0"], "pendiente": ["rgba(255,255,255,0.05)", "var(--muted)"] }[bk.status] || ["transparent", "var(--muted)"]
-                  return (
-                    <div key={bk.id || i} style={{ display: "grid", gridTemplateColumns: "70px 1.4fr 1.6fr 1fr 90px 130px", gap: ".5rem", alignItems: "center", padding: ".7rem .6rem", borderRadius: 9, background: "rgba(255,255,255,0.02)", border: "1px solid var(--hair)", fontSize: ".84rem", minWidth: 640 }}>
-                      <span className="font-display gold-text" style={{ fontWeight: 600 }}>{bk.time}</span>
-                      <span style={{ fontWeight: 500 }}>{bk.client}<small style={{ display: "block", color: "var(--muted-2)", fontWeight: 400 }}>{bk.date}</small></span>
-                      <span style={{ color: "var(--muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{bk.service}</span>
-                      <span style={{ color: "var(--ink-soft)" }}>{b?.short}</span>
-                      <span style={{ color: "var(--ink-soft)" }}>{CLP(bk.price)}</span>
-                      <select className="status-select" value={bk.status} style={{ background: stc[0], color: stc[1] }} onChange={(e) => updateBookingStatus(bk, e.target.value)}>
-                        <option value="pendiente">Pendiente</option>
-                        <option value="confirmada">Confirmada</option>
-                        <option value="en curso">En curso</option>
-                        <option value="completada">Completada</option>
-                        <option value="cancelada">Cancelada</option>
-                      </select>
-                    </div>
-                  )
-                })}
-              </div>
-            </Panel>
-          </div>
+          <BookingsInbox
+            bookings={visibleBookings}
+            barbers={barbers}
+            barber={barber}
+            admin={admin}
+            onStatus={(bk, status) => updateBookingStatus(bk, status)}
+            onReschedule={() => setTab("agenda")}
+          />
         )}
 
         {/* FINANZAS */}

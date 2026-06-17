@@ -1850,10 +1850,17 @@ select.input { text-overflow: ellipsis; }
   }
   .workshop-include-grid,
   .workshop-date-grid,
-  .workshop-video-grid,
-  .home-services-grid {
+  .workshop-video-grid {
     grid-template-columns: 1fr;
   }
+  /* Servicios en móvil: 2 columnas para mostrar más y ahorrar scroll (en web sin cambios). */
+  .home-services-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: .6rem;
+  }
+  .home-service-card { padding: .9rem; gap: .45rem; }
+  .home-service-card p { font-size: .74rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .home-service-meta { flex-wrap: wrap; gap: .35rem; }
   /* Barberos en móvil: cuadrícula de 2 columnas para mostrar más y ahorrar espacio.
      Brunetti (destacado) sigue arriba ocupando el ancho completo. */
   .home-barber-grid {

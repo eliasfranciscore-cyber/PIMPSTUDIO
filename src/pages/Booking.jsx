@@ -32,6 +32,19 @@ export default function Booking() {
   useEffect(() => {
     const user = localStorage.getItem("ps_user")
     if (!user) navigate("/login")
+
+    // Barbero pre-seleccionado desde la web pública (BarberShowcase → "Reservar con X").
+    // Entra con el barbero ya elegido y salta directo al paso de fecha/hora.
+    const pending = localStorage.getItem("ps_pending_barber")
+    if (pending) {
+      localStorage.removeItem("ps_pending_barber")
+      const id = Number(pending)
+      setBarberId(id)
+      const allowed = SERVICES.filter((s) => SERVICE_BARBERS[id] ? SERVICE_BARBERS[id].includes(s.id) : true)
+      if (allowed[0]) setServiceId(allowed[0].id)
+      setStep(2) // paso de fecha + hora
+    }
+
     fetch("/api/barbers").then((r) => r.json()).then((data) => { if (data.barbers?.length) setBarbers(data.barbers) }).catch(() => {})
     fetch("/api/services").then((r) => r.json()).then((data) => { if (data.services?.length) setServices(data.services.filter((item) => item.active !== false)) }).catch(() => {})
   }, [])

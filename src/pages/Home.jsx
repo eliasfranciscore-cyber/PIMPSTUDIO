@@ -5,6 +5,7 @@ import SiteNav from '../components/SiteNav.jsx'
 import { SERVICES, BARBERS, CAT_LABEL, CLP, tne } from '../data.js'
 import { FEATURE_CARDS, TESTIMONIALS, WORKSHOP_HIGHLIGHTS } from '../data/workshop.js'
 import { FeatureCarousel, ImageCompare, LampBanner, Testimonials } from '../components/liquidShowcase.jsx'
+import BarberShowcase from '../components/BarberShowcase.jsx'
 
 const HERO_STATS = [["15+", "Años"], ["5.000+", "Clientes"], ["8", "Barberos"], ["4.9★", "Rating"]]
 const WORKSHOP_PILLS = ["Grabación", "Edición", "Marca personal"]
@@ -126,27 +127,7 @@ export default function Home() {
 
       <Testimonials items={TESTIMONIALS} />
 
-      <section id="sec-barberos" className="home-section home-section-soft">
-        <SectionHead center eyebrow="El equipo" title="Nuestros barberos" sub="Elige tu barbero y revisa su agenda en tiempo real." />
-        <Reveal stagger className="home-barber-grid">
-          {[...BARBERS].sort((a, b) => (b.tier === "premium" ? 1 : 0) - (a.tier === "premium" ? 1 : 0)).map((b) => (
-            <button key={b.id} onClick={() => navigate("/login")} className={`barber-card card home-barber-card ${b.tier === "premium" ? "is-featured" : ""}`}>
-              <div className="home-barber-avatar">
-                <img src="/assets/pimp-studio-logo.jpg" alt={b.name} />
-              </div>
-              <div>
-                <div className="font-display" style={{ fontWeight: 600, fontSize: "1.08rem" }}>{b.name}</div>
-                <div style={{ fontSize: ".78rem", color: b.tier === "premium" ? "var(--gold-lt)" : "var(--muted)", letterSpacing: ".04em" }}>{b.role}</div>
-              </div>
-              <div style={{ display: "flex", gap: ".5rem", fontSize: ".72rem", color: "var(--muted)", flexWrap: "wrap", justifyContent: "center" }}>
-                <span className="chip"><Icon name="star" size={11} color="var(--gold)" /> {b.rating}</span>
-                <span className="chip">{b.exp}</span>
-              </div>
-              <span className="home-service-link">Ver agenda <Icon name="arrowRight" size={13} /></span>
-            </button>
-          ))}
-        </Reveal>
-      </section>
+      <BarberShowcase />
 
       <section id="sec-workshop" className="home-section">
         <div className="workshop-teaser">
@@ -247,9 +228,14 @@ export default function Home() {
       <footer className="home-footer">
         <Brandmark size={34} />
         <span style={{ color: "var(--muted-2)", fontSize: ".8rem" }}>© 2026 PIMP STUDIO · Maipú, Chile</span>
-        <button className="home-footer-access" onClick={() => navigate("/ingreso")}>
-          <Icon name="key" size={13} /> Acceso Barberos
-        </button>
+        <div style={{ display: "flex", gap: ".6rem", alignItems: "center", flexWrap: "wrap" }}>
+          <a className="home-footer-access" href="https://www.instagram.com/pimpstudiochile/" target="_blank" rel="noopener noreferrer">
+            <Icon name="instagram" size={13} /> @pimpstudiochile
+          </a>
+          <button className="home-footer-access" onClick={() => navigate("/ingreso")}>
+            <Icon name="key" size={13} /> Acceso Barberos
+          </button>
+        </div>
       </footer>
     </div>
   )
