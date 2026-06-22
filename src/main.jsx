@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom'
 // se importa después y gana en conflictos de igual especificidad.
 import './styles/pimp.css'
 import './styles/modules.css'
+import './styles/brunetti.css'
 import App from './App.jsx'
 import { Analytics } from '@vercel/analytics/react'
 

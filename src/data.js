@@ -1,17 +1,7 @@
-// `instagram` y `photo` alimentan el nuevo BarberShowcase (web pública).
-// NOTA: las `photo` son retratos de EJEMPLO (Unsplash) mientras el cliente envía
-// las fotos reales. Reemplazar por /assets/barbers/<archivo>.jpg cuando lleguen.
-// Los handles de Instagram son placeholder salvo el de la barbería; confirmar.
-const EXAMPLE_PHOTO = (id) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=600&h=600&q=70`
+// Marca personal de un solo barbero: Brunetti (Bruno Herrera). Se eliminaron
+// los demás barberos del sitio público y del flujo de reserva.
 export const BARBERS = [
-  { id: 4,  name: "Juan Carlos",         short: "Juan Carlos", code: "juan-carlos",         role: "Barbero Senior",      exp: "8 años",  rating: 4.9, tier: "general", instagram: "juancarlos.cuts",  photo: EXAMPLE_PHOTO("1507003211169-0a1dd7228f2d") }, // TODO: foto y handle reales
-  { id: 5,  name: "Andryz",              short: "Andryz",      code: "andryz",              role: "Barbero",             exp: "5 años",  rating: 4.8, tier: "general", instagram: "andryz.barber",    photo: EXAMPLE_PHOTO("1500648767791-00dcc994a43e") }, // TODO: foto y handle reales
-  { id: 6,  name: "Brunetti",            short: "Brunetti",    code: "bruno-herrera",       role: "Visagista · Premium", exp: "12 años", rating: 5.0, tier: "premium", instagram: "brunetti",         photo: EXAMPLE_PHOTO("1506794778202-cad84cf45f1d") }, // TODO: foto y handle reales de Bruno
-  { id: 7,  name: "Diego Moya",          short: "Diego",       code: "diego-moya",          role: "Barbero",             exp: "6 años",  rating: 4.7, tier: "general", instagram: "diegomoya.barber", photo: EXAMPLE_PHOTO("1519085360753-af0119f7cbe7") }, // TODO: foto y handle reales
-  { id: 8,  name: "Thinn Sayen Herrera", short: "Thinn S.",    code: "thinn-sayen-herrera", role: "Barbero",             exp: "4 años",  rating: 4.8, tier: "general", instagram: "thinn.studio",     photo: EXAMPLE_PHOTO("1492562080023-ab3db95bfbce") }, // TODO: foto y handle reales
-  { id: 9,  name: "Vicente Pietrapiana", short: "Vicente",     code: "vicente-pietrapiana", role: "Barbero",             exp: "5 años",  rating: 4.9, tier: "general", instagram: "vicente.barber",   photo: EXAMPLE_PHOTO("1463453091185-61582044d556") }, // TODO: foto y handle reales
-  { id: 10, name: "Rodrigo Godoy",       short: "Rodrigo",     code: "rodrigo-godoy",       role: "Barbero",             exp: "7 años",  rating: 4.8, tier: "general", instagram: "rodrigo.fade",     photo: EXAMPLE_PHOTO("1488161628813-04466f872be2") }, // TODO: foto y handle reales
-  { id: 11, name: "Matías Inostroza",    short: "Matías",      code: "matias-inostroza",    role: "Barbero Junior",      exp: "3 años",  rating: 4.6, tier: "general", instagram: "matias.barber",    photo: EXAMPLE_PHOTO("1539571696357-5a69c17a67c6") }, // TODO: foto y handle reales
+  { id: 6, name: "Brunetti", short: "Brunetti", code: "bruno-herrera", role: "Visagista · Director de imagen", exp: "12 años", rating: 5.0, tier: "premium", instagram: "brunetticutz", photo: "/assets/bruno-hero.jpg" },
 ]
 
 export const SERVICES = [
@@ -40,13 +30,8 @@ export const EXPENSES = [
   { id: 3, date: "2026-06-08", category: "Arriendo", detail: "Local Monumento 1750", amount: 620000, owner: "Administracion" },
 ]
 
-export const SERVICE_BARBERS = (() => {
-  const map = {}
-  BARBERS.forEach((b) => { map[b.id] = [] })
-  map[6] = [10, 11, 12]
-  ;[4, 5, 7, 8, 9, 10, 11].forEach((bid) => { map[bid] = [5, 6, 7, 8, 9, 13, 14, 15] })
-  return map
-})()
+// Brunetti atiende todos los servicios (único barbero).
+export const SERVICE_BARBERS = { 6: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] }
 
 export const CAT_LABEL = { general: "Servicios generales", premium: "Brunetti Experience", quimico: "Servicios químicos" }
 
@@ -69,24 +54,24 @@ export function slotState(barberId, dateKey, slot) {
 }
 
 export const TODAY_BOOKINGS = [
-  { time: "09:00", client: "Carlos Rodríguez",  service: "Corte + perfilado de barba",     barberId: 4,  price: 22990, status: "confirmada" },
-  { time: "09:30", client: "Matías Pérez",       service: "Solo fade",                      barberId: 5,  price: 9990,  status: "confirmada" },
-  { time: "10:00", client: "Diego Salinas",      service: "Corte de cabello",               barberId: 4,  price: 15990, status: "en curso" },
+  { time: "09:00", client: "Carlos Rodríguez",  service: "Corte + perfilado de barba",     barberId: 6,  price: 22990, status: "confirmada" },
+  { time: "09:30", client: "Matías Pérez",       service: "Solo fade",                      barberId: 6,  price: 9990,  status: "confirmada" },
+  { time: "10:00", client: "Diego Salinas",      service: "Corte de cabello",               barberId: 6,  price: 15990, status: "en curso" },
   { time: "10:30", client: "Bruno Castro",       service: "Asesoría de Imagen · Visagista", barberId: 6,  price: 39990, status: "confirmada" },
-  { time: "11:00", client: "Felipe Aravena",     service: "Perfilado de barba",             barberId: 7,  price: 11990, status: "confirmada" },
-  { time: "12:00", client: "Joaquín Reyes",      service: "Corte de cabello",               barberId: 9,  price: 15990, status: "confirmada" },
-  { time: "13:00", client: "Tomás Vidal",        service: "Corte + perfilado de barba",     barberId: 5,  price: 22990, status: "confirmada" },
-  { time: "15:00", client: "Sebastián Núñez",    service: "Platinado Global",               barberId: 10, price: 89990, status: "confirmada" },
-  { time: "16:00", client: "Ignacio Soto",       service: "Corte de cabello",               barberId: 8,  price: 15990, status: "confirmada" },
-  { time: "17:00", client: "Vicente Lagos",      service: "Visos Platinados",               barberId: 11, price: 74990, status: "pendiente" },
-  { time: "18:00", client: "Andrés Fuentes",     service: "Solo fade",                      barberId: 4,  price: 9990,  status: "confirmada" },
+  { time: "11:00", client: "Felipe Aravena",     service: "Perfilado de barba",             barberId: 6,  price: 11990, status: "confirmada" },
+  { time: "12:00", client: "Joaquín Reyes",      service: "Corte de cabello",               barberId: 6,  price: 15990, status: "confirmada" },
+  { time: "13:00", client: "Tomás Vidal",        service: "Corte + perfilado de barba",     barberId: 6,  price: 22990, status: "confirmada" },
+  { time: "15:00", client: "Sebastián Núñez",    service: "Platinado Global",               barberId: 6, price: 89990, status: "confirmada" },
+  { time: "16:00", client: "Ignacio Soto",       service: "Corte de cabello",               barberId: 6,  price: 15990, status: "confirmada" },
+  { time: "17:00", client: "Vicente Lagos",      service: "Visos Platinados",               barberId: 6, price: 74990, status: "pendiente" },
+  { time: "18:00", client: "Andrés Fuentes",     service: "Solo fade",                      barberId: 6,  price: 9990,  status: "confirmada" },
   { time: "18:30", client: "Gabriel Muñoz",      service: "Corte + perfilado de barba",     barberId: 6,  price: 29990, status: "confirmada" },
 ]
 
 export const CLIENT_APPTS = [
-  { id: 1, date: "2026-06-14", time: "11:00", barberId: 4, service: "Corte + perfilado de barba",     price: 22990, status: "confirmada", when: "next" },
-  { id: 2, date: "2026-05-22", time: "16:00", barberId: 9, service: "Corte de cabello",               price: 15990, status: "completada", when: "past" },
-  { id: 3, date: "2026-04-30", time: "10:30", barberId: 4, service: "Solo fade",                      price: 9990,  status: "completada", when: "past" },
+  { id: 1, date: "2026-06-14", time: "11:00", barberId: 6, service: "Corte + perfilado de barba",     price: 22990, status: "confirmada", when: "next" },
+  { id: 2, date: "2026-05-22", time: "16:00", barberId: 6, service: "Corte de cabello",               price: 15990, status: "completada", when: "past" },
+  { id: 3, date: "2026-04-30", time: "10:30", barberId: 6, service: "Solo fade",                      price: 9990,  status: "completada", when: "past" },
   { id: 4, date: "2026-03-18", time: "18:00", barberId: 6, service: "Asesoría de Imagen · Visagista", price: 39990, status: "completada", when: "past" },
 ]
 
@@ -116,14 +101,7 @@ export const METRICS = {
     { d: "Jue", v: 668000 }, { d: "Vie", v: 820000 }, { d: "Sáb", v: 941000 },
   ],
   barberRanking: [
-    { id: 6,  cuts: 41, rev: 1124000 },
-    { id: 4,  cuts: 38, rev: 742000 },
-    { id: 9,  cuts: 33, rev: 588000 },
-    { id: 10, cuts: 29, rev: 836000 },
-    { id: 5,  cuts: 27, rev: 471000 },
-    { id: 7,  cuts: 24, rev: 402000 },
-    { id: 8,  cuts: 22, rev: 369000 },
-    { id: 11, cuts: 18, rev: 287000 },
+    { id: 6, cuts: 187, rev: 4286000 },
   ],
   channels: [
     { name: "Instagram",      pct: 38, color: "#c9a14e" },

@@ -17,11 +17,14 @@ function readLocalBlocks() {
 
 export default function Booking() {
   const navigate = useNavigate()
-  const [barbers, setBarbers] = useState(BARBERS)
+  // Marca personal de un solo barbero: Brunetti. Se reserva siempre con él.
+  const SINGLE_BARBER = BARBERS[0]?.id ?? 6
+  const [barbers] = useState(BARBERS)
   const [services, setServices] = useState(SERVICES)
   const [availableSlots, setAvailableSlots] = useState([])
-  const [step, setStep] = useState(0)
-  const [barberId, setBarberId] = useState(null)
+  // El paso "Barbero" se omite: arrancamos en Servicio con Brunetti ya elegido.
+  const [step, setStep] = useState(1)
+  const [barberId, setBarberId] = useState(SINGLE_BARBER)
   const [serviceId, setServiceId] = useState(null)
   const [month, setMonth] = useState(new Date().getMonth())
   const [year] = useState(new Date().getFullYear())
@@ -33,19 +36,15 @@ export default function Booking() {
     const user = localStorage.getItem("ps_user")
     if (!user) navigate("/login")
 
-    // Barbero pre-seleccionado desde la web pública (BarberShowcase → "Reservar con X").
-    // Entra con el barbero ya elegido y salta directo al paso de fecha/hora.
-    const pending = localStorage.getItem("ps_pending_barber")
-    if (pending) {
-      localStorage.removeItem("ps_pending_barber")
-      const id = Number(pending)
-      setBarberId(id)
-      const allowed = SERVICES.filter((s) => SERVICE_BARBERS[id] ? SERVICE_BARBERS[id].includes(s.id) : true)
-      if (allowed[0]) setServiceId(allowed[0].id)
+    // Servicio pre-seleccionado desde la web pública (tarjeta de servicio → reservar).
+    // Entra con el servicio ya elegido y salta directo al paso de fecha/hora.
+    const pendingSvc = localStorage.getItem("ps_pending_service")
+    if (pendingSvc) {
+      localStorage.removeItem("ps_pending_service")
+      setServiceId(Number(pendingSvc))
       setStep(2) // paso de fecha + hora
     }
 
-    fetch("/api/barbers").then((r) => r.json()).then((data) => { if (data.barbers?.length) setBarbers(data.barbers) }).catch(() => {})
     fetch("/api/services").then((r) => r.json()).then((data) => { if (data.services?.length) setServices(data.services.filter((item) => item.active !== false)) }).catch(() => {})
   }, [])
 
@@ -70,10 +69,10 @@ export default function Booking() {
   const barber = barbers.find((b) => b.id === barberId) || barberById(barberId)
   const service = services.find((s) => s.id === serviceId)
   const allowedServices = barberId ? services.filter((s) => SERVICE_BARBERS[barberId] ? SERVICE_BARBERS[barberId].includes(s.id) : true) : []
-  const steps = ["Barbero", "Servicio", "Fecha", "Listo"]
-  const canNext = (step === 0 && barberId) || (step === 1 && serviceId) || (step === 2 && dateKey && slot)
+  const steps = ["Servicio", "Fecha", "Listo"]
+  const canNext = (step === 1 && serviceId) || (step === 2 && dateKey && slot)
 
-  const reset = () => { setStep(0); setBarberId(null); setServiceId(null); setDateKey(null); setSlot(null) }
+  const reset = () => { setStep(1); setServiceId(null); setDateKey(null); setSlot(null) }
 
   const firstDow = new Date(year, month, 1).getDay()
   const daysInMonth = new Date(year, month + 1, 0).getDate()
@@ -122,11 +121,11 @@ export default function Booking() {
   return (
     <MobileScreen>
       <div style={{ padding: "0.5rem 1.2rem 0.9rem", display: "flex", alignItems: "center", gap: ".8rem" }}>
-        <button onClick={() => (step > 0 ? setStep(step - 1) : navigate("/"))} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid var(--hair)", borderRadius: 999, width: 38, height: 38, display: "grid", placeItems: "center", color: "var(--ink)", flexShrink: 0 }}>
+        <button onClick={() => (step > 1 ? setStep(step - 1) : navigate("/"))} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid var(--hair)", borderRadius: 999, width: 38, height: 38, display: "grid", placeItems: "center", color: "var(--ink)", flexShrink: 0 }}>
           <Icon name="arrowLeft" size={17} />
         </button>
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: ".68rem", letterSpacing: ".14em", textTransform: "uppercase", color: "var(--muted)" }}>Paso {Math.min(step + 1, 4)} de 4</div>
+          <div style={{ fontSize: ".68rem", letterSpacing: ".14em", textTransform: "uppercase", color: "var(--muted)" }}>Paso {Math.min(step, 3)} de 3</div>
           <div className="font-display" style={{ fontSize: "1.05rem", fontWeight: 600 }}>Reservar cita</div>
         </div>
         <Emblem size={34} />
@@ -134,7 +133,7 @@ export default function Booking() {
 
       <div style={{ padding: "0 1.2rem 1rem", display: "flex", gap: ".4rem" }}>
         {steps.map((_, i) => (
-          <div key={i} style={{ flex: 1, height: 4, borderRadius: 99, background: i <= step ? "var(--gold-grad)" : "rgba(255,255,255,0.08)", transition: "background .4s" }} />
+          <div key={i} style={{ flex: 1, height: 4, borderRadius: 99, background: (i + 1) <= step ? "var(--gold-grad)" : "rgba(255,255,255,0.08)", transition: "background .4s" }} />
         ))}
       </div>
 

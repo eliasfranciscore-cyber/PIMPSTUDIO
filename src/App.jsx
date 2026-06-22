@@ -10,6 +10,7 @@ const Account = lazy(() => import('./pages/Account.jsx'))
 const BarberLogin = lazy(() => import('./pages/BarberLogin.jsx'))
 const Dashboard = lazy(() => import('./pages/Dashboard.jsx'))
 const Workshop = lazy(() => import('./pages/Workshop.jsx'))
+const Cursos = lazy(() => import('./pages/Cursos.jsx'))
 
 function RouteFallback() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
         <Routes>
           <Route path="/"         element={<Home />} />
           <Route path="/workshop" element={<Workshop />} />
+          <Route path="/cursos"   element={<Cursos />} />
           <Route path="/login"    element={<Login />} />
           <Route path="/reservar" element={<Booking />} />
           <Route path="/cuenta"   element={<Account />} />
