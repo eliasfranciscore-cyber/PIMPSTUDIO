@@ -213,8 +213,9 @@
 .wks-hero h1 {
   font-family: var(--wk-font-mega);
   margin: 0; font-weight: 400;
-  font-size: clamp(4.2rem, 15vw, 12rem);
+  font-size: clamp(2.6rem, 13vw, 12rem);
   line-height: 0.86; letter-spacing: 0.005em; text-transform: uppercase;
+  overflow-wrap: break-word;
 }
 .wks-hero h1 .wks-hero-line2 { display: block; color: transparent; -webkit-text-stroke: 1.4px var(--wk-gold-lt); }
 @supports not (-webkit-text-stroke: 1px) { .wks-hero h1 .wks-hero-line2 { color: var(--wk-gold-lt); } }
@@ -227,6 +228,16 @@
   .wks-hero-kicker { justify-content: center; }
   .wks-hero-sub { margin-left: auto; margin-right: auto; }
   .wks-hero-actions { justify-content: center; }
+}
+
+/* Móvil: centrar TODO el texto y evitar desbordes horizontales. */
+@media (max-width: 860px) {
+  .wks-hero, .wks-section, .wks-pricing, .wks-register, .wks-footer { overflow-x: clip; }
+  .wks-container { text-align: center; }
+  .wks-hero-kicker, .wks-head, .wks-mod-tabs, .wks-pricing-cta,
+  .wks-feature-list, .wks-form-actions { justify-content: center; }
+  .wks-lead, .wks-hero-sub { margin-left: auto; margin-right: auto; }
+  .wks-eyebrow { width: 100%; }
 }
 
 /* hero side card: countdown + price */

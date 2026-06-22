@@ -74,6 +74,7 @@ export default function Home() {
   const goReserve = () => navigate('/reservar')
   const bookService = (id) => { try { localStorage.setItem('ps_pending_service', String(id)) } catch (e) {} navigate('/reservar') }
   const goCursos = () => navigate('/cursos')
+  const goWorkshop = () => navigate('/workshop')
 
   const navTo = (id) => { setMenuOpen(false); scrollToId(id) }
 
@@ -176,7 +177,9 @@ export default function Home() {
             <a onClick={() => navTo('sobre')}>Sobre Bruno</a>
             <a onClick={() => navTo('servicios')}>Servicios</a>
             <a onClick={() => { setMenuOpen(false); goCursos() }}>Cursos</a>
+            <a onClick={() => { setMenuOpen(false); goWorkshop() }}>Workshop</a>
             <a onClick={() => navTo('contacto')}>Contacto</a>
+            <a className="nav-only-mobile" onClick={() => { setMenuOpen(false); navigate('/ingreso') }}>Acceso barberos</a>
             <a className="btn-top" onClick={() => { setMenuOpen(false); goReserve() }}>RESERVAR</a>
           </nav>
         </div>

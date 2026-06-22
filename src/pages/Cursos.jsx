@@ -124,7 +124,9 @@ export default function Cursos() {
             <a onClick={() => goHomeSection('visagismo')}>Visagismo</a>
             <a onClick={() => goHomeSection('servicios')}>Servicios</a>
             <a onClick={() => { setMenuOpen(false); navigate('/cursos') }}>Cursos</a>
+            <a onClick={() => { setMenuOpen(false); navigate('/workshop') }}>Workshop</a>
             <a onClick={() => goAnchor('curriculum')}>Programa</a>
+            <a className="nav-only-mobile" onClick={() => { setMenuOpen(false); navigate('/ingreso') }}>Acceso barberos</a>
             <a className="btn-top" onClick={() => goAnchor('inscripcion')}>INSCRIBIRME</a>
           </nav>
         </div>

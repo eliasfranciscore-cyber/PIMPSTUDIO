@@ -177,7 +177,7 @@ export const WORKSHOP = {
 
   // imágenes Unsplash (se fuerzan a B/N por CSS). Reemplazables por /assets propias.
   photos: {
-    hero: "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?auto=format&fit=crop&w=1600&q=80",
+    hero: "/assets/workshop-2026.jpg",
     cobrar: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=900&q=80",
     marca: "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=900&q=80",
     redes: "https://images.unsplash.com/photo-1633681926035-ec1ac984418a?auto=format&fit=crop&w=900&q=80",

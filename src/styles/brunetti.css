@@ -200,6 +200,8 @@
   color: var(--gold-bright);
   background: var(--g-tint);
 }
+/* Enlaces que sólo se muestran dentro del menú desplegable móvil. */
+.brunetti-site .nav-only-mobile { display: none; }
 .brunetti-site .menu-toggle {
   display: none;
   background: var(--g-tint);
@@ -1490,10 +1492,18 @@
    RESPONSIVE
    ============================================================ */
 @media (max-width: 940px) {
-  .brunetti-site .bhero-grid { grid-template-columns: 1fr; gap: 2.4rem; }
-  .brunetti-site .bhero-figwrap { order: -1; width: min(340px, 78vw); }
-  .brunetti-site .bhero-chip.c1 { right: 2%; }
-  .brunetti-site .bhero-chip.c2 { left: 2%; }
+  .brunetti-site .bhero { padding-top: clamp(6rem, 16vh, 9rem); text-align: center; }
+  .brunetti-site .bhero-grid { grid-template-columns: 1fr; gap: 2rem; }
+  /* Texto primero, retrato debajo; todo centrado en móvil. */
+  .brunetti-site .bhero-text { text-align: center; }
+  .brunetti-site .bhero-kicker { margin-left: auto; margin-right: auto; }
+  .brunetti-site .bhero-sub { margin-left: auto; margin-right: auto; }
+  .brunetti-site .bhero-actions { justify-content: center; }
+  .brunetti-site .bhero-meta { justify-content: center; }
+  .brunetti-site .bhero-figwrap { order: 2; width: min(320px, 74vw); margin-inline: auto; }
+  /* Los chips flotantes se solapaban con el tag del retrato en pantallas chicas. */
+  .brunetti-site .bhero-chip { display: none; }
+  .brunetti-site .bhero-cue { display: none; }
   .brunetti-site .visagismo-grid { grid-template-columns: repeat(2, 1fr); }
   .brunetti-site .visagismo-grid .pillar:first-child { grid-column: span 2; }
   .brunetti-site .babout { grid-template-columns: 1fr; }
@@ -1532,6 +1542,11 @@
   .brunetti-site .includes-grid { grid-template-columns: 1fr; }
   .brunetti-site .enroll { grid-template-columns: 1fr; }
   .brunetti-site .module-meta .module-count { display: none; }
+  /* Teaser de cursos: centrado en móvil (incl. botón). */
+  .brunetti-site .bteaser-inner { text-align: center; }
+  .brunetti-site .bteaser-modchips { justify-content: center; }
+  /* Acceso interno (barberos) sólo aparece dentro del menú móvil. */
+  .brunetti-site .nav-only-mobile { display: block; }
 }
 @media (max-width: 760px) {
   .brunetti-site .testimonials { grid-template-columns: 1fr; gap: 1.4rem; }
@@ -1541,12 +1556,51 @@
 @media (max-width: 560px) {
   .brunetti-site .visagismo-grid { grid-template-columns: 1fr; }
   .brunetti-site .visagismo-grid .pillar:first-child { grid-column: span 1; }
-  .brunetti-site .babout-stats { grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
-  .brunetti-site .babout-stats .st { padding: 0.7rem; }
-  .brunetti-site .bhero-meta { gap: 1.2rem; }
+  /* Stats de "Sobre Bruno": que el 100% y los labels quepan sin recortarse. */
+  .brunetti-site .babout-stats { grid-template-columns: repeat(3, 1fr); gap: 0.45rem; }
+  .brunetti-site .babout-stats .st { padding: 0.7rem 0.4rem; text-align: center; }
+  .brunetti-site .babout-stats .st strong { font-size: 1.5rem; }
+  .brunetti-site .babout-stats .st span { font-size: 0.58rem; letter-spacing: 0.05em; }
+  .brunetti-site .bhero-name { font-size: clamp(3rem, 17vw, 5rem); }
+  .brunetti-site .bhero-meta { gap: 1.2rem; justify-content: center; }
 }
 @media (max-width: 480px) {
   .brunetti-site .enroll-form .frow.two { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   MÓVIL: TODO EL TEXTO CENTRADO (pedido explícito del cliente)
+   ============================================================ */
+@media (max-width: 860px) {
+  .brunetti-site { overflow-x: clip; }
+  .brunetti-site main { text-align: center; }
+  .brunetti-site .bhead,
+  .brunetti-site .babout-body,
+  .brunetti-site .bserv,
+  .brunetti-site .pillar,
+  .brunetti-site .bteaser-inner,
+  .brunetti-site .enroll-aside,
+  .brunetti-site .location-info,
+  .brunetti-site .bcard,
+  .brunetti-site .tm-body,
+  .brunetti-site .module-titles,
+  .brunetti-site .course-hero-inner,
+  .brunetti-site .feature-head { text-align: center; }
+  /* Filas flex: centrarlas para que no queden pegadas a la izquierda. */
+  .brunetti-site .bhero-actions,
+  .brunetti-site .bteaser-modchips,
+  .brunetti-site .bserv .meta,
+  .brunetti-site .tm-controls,
+  .brunetti-site .bcontact-list li,
+  .brunetti-site .shared-note { justify-content: center; }
+  .brunetti-site .bcontact-list { justify-items: center; }
+  .brunetti-site .include { flex-direction: column; align-items: center; text-align: center; }
+  .brunetti-site .location-info ul { padding-left: 0; list-style-position: inside; }
+  .brunetti-site .footer-wrap { justify-items: center; text-align: center; }
+  .brunetti-site .pillar .picon,
+  .brunetti-site .bserv .stag,
+  .brunetti-site .bsocial-ig { justify-content: center; }
+  .brunetti-site .pillar { align-items: center; }
 }
 
 /* ============================================================
