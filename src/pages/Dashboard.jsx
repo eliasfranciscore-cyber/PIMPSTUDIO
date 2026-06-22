@@ -77,7 +77,7 @@ function Panel({ title, action, children, style }) {
 
 export default function Dashboard() {
   const navigate = useNavigate()
-  const [tab, setTab] = useState("resumen")
+  const [tab, setTab] = useState("agenda")
   const [agendaBarber, setAgendaBarber] = useState(null)
   const [agendaDayKey, setAgendaDayKey] = useState(null)
   const [weekOffset, setWeekOffset] = useState(0)
@@ -150,7 +150,9 @@ export default function Dashboard() {
     setAgendaDayKey(isoDate(new Date()))
     const headers = authHeaders()
     fetch("/api/clients", { headers }).then((r) => r.json()).then((data) => { if (data.clients?.length) setClients(data.clients) }).catch(() => {})
-    fetch("/api/barbers?includeInactive=true", { headers }).then((r) => r.json()).then((data) => { if (data.barbers?.length) setBarbers(data.barbers) }).catch(() => {})
+    // App interna en modo "solo Brunetti": no cargamos otros barberos desde la API.
+    // (El fetch a /api/barbers queda guardado para cuando se reactive el multi-barbero.)
+    // fetch("/api/barbers?includeInactive=true", { headers }).then((r) => r.json()).then((data) => { if (data.barbers?.length) setBarbers(data.barbers) }).catch(() => {})
     fetch("/api/bookings", { headers }).then((r) => r.json()).then((data) => { setBookings(mergeBookings(data.bookings?.length ? data.bookings : TODAY_BOOKINGS.map((item, index) => ({ ...item, id: index + 1, date: isoDate(new Date()) })))) }).catch(() => {})
     fetch("/api/services?includeInactive=true", { headers }).then((r) => r.json()).then((data) => { if (data.services?.length) setServices(data.services) }).catch(() => {})
     fetch("/api/expenses", { headers }).then((r) => r.json()).then((data) => { if (data.expenses?.length) setExpenses(data.expenses) }).catch(() => {})
@@ -235,7 +237,17 @@ export default function Dashboard() {
     return true
   })
   // Preferencia personal de visibilidad (config → módulos visibles).
-  const visibleNav = accessibleNav.filter(([id]) => ALWAYS.includes(id) || navSettings[id] !== false)
+  const personalNav = accessibleNav.filter(([id]) => ALWAYS.includes(id) || navSettings[id] !== false)
+  // ── Modo "solo Brunetti" ──────────────────────────────────────────────
+  // Por ahora la app interna es exclusivamente para gestionar las HORAS de Bruno.
+  // El resto de módulos (resumen multi-barbero, finanzas, clientes, servicios,
+  // gastos, marketing, equipo) queda INACTIVO pero el código se conserva para
+  // reactivarlo a futuro bajo solicitud. Para volver al panel completo: BRUNETTI_ONLY = false.
+  const BRUNETTI_ONLY = true
+  const BRUNETTI_ONLY_TABS = ["agenda", "reservas", "config"]
+  const visibleNav = BRUNETTI_ONLY
+    ? personalNav.filter(([id]) => BRUNETTI_ONLY_TABS.includes(id))
+    : personalNav
   // Atajos del dock: los 4 elegidos, sólo si son accesibles/visibles.
   const dockItems = dockShortcuts.map((id) => visibleNav.find((n) => n[0] === id)).filter(Boolean).slice(0, 4)
 
@@ -387,14 +399,8 @@ export default function Dashboard() {
         {tab === "agenda" && agendaDayKey && (
           <div className="animate-in" style={{ display: "grid", gap: "1.1rem" }}>
             <div className="agenda-controls">
-              <label className="agenda-control">
-                <span>Barbero</span>
-                <select className="input" value={agendaBarber || ""} onChange={(e) => setAgendaBarber(Number(e.target.value))}>
-                  {barbers.filter((item) => item.active !== false).map((b) => (
-                    <option key={b.id} value={b.id}>{b.name}</option>
-                  ))}
-                </select>
-              </label>
+              {/* Selector de barbero retirado: la agenda es exclusiva de Brunetti.
+                  (Se conserva agendaBarber fijado a Bruno para la API de disponibilidad.) */}
               <label className="agenda-control">
                 <span>Día</span>
                 <select className="input" value={agendaDayKey} onChange={(e) => setAgendaDayKey(e.target.value)}>
@@ -620,6 +626,7 @@ export default function Dashboard() {
         {/* CONFIG */}
         {tab === "config" && (
           <ConfigPanel
+            brunettiOnly={BRUNETTI_ONLY}
             barber={barber}
             barbers={barbers}
             admin={admin}
@@ -826,8 +833,10 @@ function isStrongPassword(pw) {
   return /^[A-Za-z0-9]{8,64}$/.test(pw) && /[A-Z]/.test(pw) && /[0-9]/.test(pw)
 }
 
-function ConfigPanel({ barber, barbers, admin, canManageTeam, barberDraft, setBarberDraft, saveBarber, updateBarberLocal, deleteBarber, onExport, onLogout, nav, navSettings, setNavSettings, dockShortcuts, setDockShortcuts }) {
+function ConfigPanel({ brunettiOnly, barber, barbers, admin, canManageTeam, barberDraft, setBarberDraft, saveBarber, updateBarberLocal, deleteBarber, onExport, onLogout, nav, navSettings, setNavSettings, dockShortcuts, setDockShortcuts }) {
   const [section, setSection] = useState(null)
+  // En modo "solo Brunetti" se oculta la gestión de Equipo/barberos (código conservado).
+  const sections = brunettiOnly ? CFG_SECTIONS.filter((s) => s.id !== "equipo") : CFG_SECTIONS
   const [teamModal, setTeamModal] = useState(null) // null=cerrado; {barber:null}=crear; {barber:obj}=editar
   const [biz, setBiz] = useState(() => {
     try { return { name: "PIMP STUDIO", address: "Maipú, Santiago", phone: "+56 9 1234 5678", waPhone: "+56 9 1234 5678", ...JSON.parse(localStorage.getItem("ps_biz") || "{}") } } catch { return { name: "PIMP STUDIO", address: "Maipú, Santiago", phone: "+56 9 1234 5678", waPhone: "+56 9 1234 5678" } }
@@ -886,7 +895,7 @@ function ConfigPanel({ barber, barbers, admin, canManageTeam, barberDraft, setBa
   }
   const { theme, toggle } = useTheme()
 
-  const current = CFG_SECTIONS.find((s) => s.id === section)
+  const current = sections.find((s) => s.id === section)
 
   // If no section picked: show full-screen list
   if (!section) {
@@ -894,7 +903,7 @@ function ConfigPanel({ barber, barbers, admin, canManageTeam, barberDraft, setBa
       <div className="animate-in cfg-list-screen">
         <p className="cfg-nav-head">Configuraciones</p>
         <div className="cfg-list">
-          {CFG_SECTIONS.map((s) => (
+          {sections.map((s) => (
             <button
               key={s.id}
               type="button"

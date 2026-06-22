@@ -43,17 +43,16 @@ export default function BarberLogin() {
           <img src="/assets/gallery-2.png" alt="PIMP STUDIO interior" />
           <div className="barber-login-overlay" />
           <div className="barber-login-copy">
-            <span className="eyebrow">Acceso equipo</span>
+            <span className="eyebrow">Acceso Brunetti</span>
             <Emblem size={88} />
-            <h1 className="font-display">Panel interno de operación y agenda.</h1>
+            <h1 className="font-display">Panel interno · agenda de Brunetti.</h1>
             <p>
-              Desde aquí gestionas tu agenda, las reservas, los clientes y los servicios
-              de PIMP STUDIO. Acceso para barberos y administración.
+              Desde aquí Bruno gestiona su agenda y sus reservas en BRUNETTI.
+              Acceso exclusivo de administración.
             </p>
             <div className="barber-login-pill-row">
               <span className="chip chip-gold">Agenda</span>
-              <span className="chip">Clientes</span>
-              <span className="chip">Servicios</span>
+              <span className="chip">Reservas</span>
             </div>
           </div>
         </div>

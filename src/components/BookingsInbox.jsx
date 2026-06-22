@@ -177,6 +177,8 @@ export default function BookingsInbox({ bookings = [], barbers = [], barber, adm
 
   const todayKey = new Date().toISOString().slice(0, 10)
   const idOf = (b) => b.id ?? `${b.barberId}-${b.time}`
+  // Con un solo barbero (Brunetti) no tiene sentido el filtro ni la columna de barbero.
+  const multiBarber = barbers.length > 1
 
   // Alcance base: admin = todo; barbero = solo su agenda del día.
   const scope = useMemo(() => {
@@ -217,7 +219,7 @@ export default function BookingsInbox({ bookings = [], barbers = [], barber, adm
       <div className="psn-mod-head">
         <div>
           <h2 className="font-display">Reservas recibidas</h2>
-          <p>{admin ? 'Vista administrador · agenda de todos los barberos' : `Tu agenda de hoy · ${barber?.name || 'Barbero'}`}</p>
+          <p>{admin ? (multiBarber ? 'Vista administrador · agenda de todos los barberos' : 'Agenda de Brunetti') : `Tu agenda de hoy · ${barber?.name || 'Barbero'}`}</p>
         </div>
         <span className="chip chip-gold"><Icon name="bell" size={13} /> {count('pendiente')} por confirmar</span>
       </div>
@@ -235,7 +237,7 @@ export default function BookingsInbox({ bookings = [], barbers = [], barber, adm
             <button key={f} className={`chip ${filter === f ? 'chip-gold' : ''} psn-chip-btn`} onClick={() => setFilter(f)}>{f}</button>
           ))}
         </div>
-        {admin && (
+        {admin && multiBarber && (
           <select className="psn-barber-filter" value={barberFilter} onChange={(e) => setBarberFilter(e.target.value)}>
             <option value="all">Todos los barberos</option>
             {barbers.filter((b) => b.active !== false).map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
@@ -250,7 +252,7 @@ export default function BookingsInbox({ bookings = [], barbers = [], barber, adm
       {visible.length ? (
         <div className="psn-inbox-grid">
           {visible.map((bk) => (
-            <ResCard key={idOf(bk)} bk={bk} barbers={barbers} isAdmin={admin} onOpen={(b) => setDetailId(idOf(b))} onStatusSelect={onStatusSelect} />
+            <ResCard key={idOf(bk)} bk={bk} barbers={barbers} isAdmin={admin && multiBarber} onOpen={(b) => setDetailId(idOf(b))} onStatusSelect={onStatusSelect} />
           ))}
         </div>
       ) : (
@@ -261,7 +263,7 @@ export default function BookingsInbox({ bookings = [], barbers = [], barber, adm
         <ResModal
           bk={detailBk}
           barbers={barbers}
-          isAdmin={admin}
+          isAdmin={admin && multiBarber}
           onClose={() => setDetailId(null)}
           onStatus={onStatus}
           onReschedule={onReschedule}

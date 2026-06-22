@@ -2,6 +2,36 @@
 
 Este archivo registra el avance funcional de la rama `desarrollo` para que cualquier computador o agente pueda retomar la tarea sin depender del historial de chat.
 
+## 2026-06-22 - Marca personal Brunetti (un solo barbero) + módulo Cursos + panel interno solo-Brunetti
+
+### Resumen
+Giro radical a marca personal de **un único barbero, Brunetti (Bruno Herrera)**. Se rehízo la landing 1:1 desde el design handoff, se agregó la página `/cursos`, se mantuvo el `/workshop` antiguo (con nueva fecha/sede) y se redujo el panel interno a la **gestión exclusiva de horas de Brunetti**, dejando el resto inactivo pero conservado en código.
+
+### Cambios principales
+
+- **Landing (`src/pages/Home.jsx`)**: recreación del diseño Brunetti (hero cinematográfico con la foto de Bruno, visagismo 5 pilares, sobre Bruno con contadores, servicios, antes/después, carrusel + modal, teaser cursos, testimonios, contacto, ubicación). Foto central del hero = `public/assets/bruno-hero.jpg`.
+- **CSS scopeado** en `src/styles/brunetti.css` bajo `.brunetti-site` (tokens oro/glass, keyframes `bru*`) para no afectar booking/dashboard/login.
+- **Página Cursos** (`src/pages/Cursos.jsx`, ruta `/cursos`): hero Ken Burns, acordeón de 6 módulos, formulario de lista de espera (`localStorage["curso_waitlist"]`). Se **mantiene** `/workshop` antiguo.
+- **Workshop**: próxima edición **23 de agosto 2026 en Viña del Mar** (`src/data/workshop.js`); foto grupal (sesión anterior) como hero; título sin desbordes en móvil.
+- **Un solo barbero**: `src/data.js` `BARBERS` = solo Brunetti (id 6); `SERVICE_BARBERS` y datos demo reasignados a id 6. `Booking.jsx` omite el paso "Barbero" (arranca en Servicio con Brunetti) y no repuebla barberos desde la API.
+- **Navbar**: enlaces a `Workshop` y `Cursos`; "Acceso barberos" disponible en el menú móvil. Todo el texto centrado en vista móvil; sin solapes ni desbordes.
+- **Eliminada colisión CSS**: se removió de `pimp.css` el bloque muerto de estilos showcase (`.cmp-*/.tm-*/.ac-*/.lamp-*/.feature-*`) que rompía el antes/después.
+- **Panel interno solo-Brunetti** (flag `BRUNETTI_ONLY` en `Dashboard.jsx`): nav reducida a **Agenda + Reservas + Config**; resumen multi-barbero, finanzas, clientes, servicios, gastos, marketing y la sección **Equipo** quedan ocultos pero el código se conserva para reactivar a futuro. Selector de barbero retirado de la Agenda; `BookingsInbox` oculta filtro y columna de barbero cuando hay uno solo. `BarberModal` se conserva (inactivo). Login interno (`BarberLogin.jsx`) recopiado a "Acceso Brunetti".
+
+### Cómo revertir a multi-barbero
+- `Dashboard.jsx`: poner `BRUNETTI_ONLY = false` (reaparecen todos los módulos + Equipo).
+- Restaurar el fetch `/api/barbers` comentado en el `useEffect` de carga y repoblar `BARBERS` en `src/data.js`.
+
+### Archivos modificados
+- `src/pages/Home.jsx`, `src/pages/Cursos.jsx` (nuevo), `src/pages/Booking.jsx`, `src/pages/Dashboard.jsx`, `src/pages/BarberLogin.jsx`
+- `src/components/brunetti.jsx` (nuevo), `src/components/BookingsInbox.jsx`
+- `src/styles/brunetti.css` (nuevo), `src/styles/pimp.css`, `src/styles/workshop.css`
+- `src/data.js`, `src/data/workshop.js`, `src/App.jsx`, `src/main.jsx`
+- `public/assets/bruno-hero.jpg`, `bruno-feature.jpg`, `bruno-portrait.jpg`, `workshop-2026.jpg`
+
+### Verificación realizada
+- `npm run build` limpio. Landing/cursos/booking/workshop verificados en preview. Deploy a producción (`pimpstudio.cl`).
+
 ## 2026-06-13 - Rediseño UI para web y componentes responsivos
 
 ### Resumen
