@@ -164,6 +164,12 @@ export default function Home() {
 
   return (
     <div className="brunetti-site" ref={rootRef}>
+      <div className="bg-blobs" aria-hidden="true">
+        <div className="bg-blob bg-blob-1" />
+        <div className="bg-blob bg-blob-2" />
+        <div className="bg-blob bg-blob-3" />
+      </div>
+
       <header className="site-header">
         <div className="nav-wrap">
           <a className="brand" href="/" onClick={(e) => { e.preventDefault(); navTo('hero') }}>
@@ -188,6 +194,11 @@ export default function Home() {
       <main>
         {/* ============ HERO ============ */}
         <section id="hero" className="bhero">
+          <div className="bhero-lamp-wrap" aria-hidden="true">
+            <div className="bhero-lamp-dot" />
+            <div className="bhero-lamp-bar" />
+            <div className="bhero-lamp-cone" />
+          </div>
           <div className="bhero-grid">
             <div className="bhero-text">
               <span className="bhero-kicker"><span className="dot" />Visagista · Barbería Premium · Maipú</span>
@@ -426,7 +437,7 @@ export default function Home() {
                   <li><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8.1 9.5a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z" /></svg><a href="tel:+56912345678">(+56) 9 1234 5678</a></li>
                   <li><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M22 6l-10 7L2 6" /></svg><a href="mailto:hola@brunetti.cl">hola@brunetti.cl</a></li>
                 </ul>
-                <div style={{ marginTop: '1.4rem', display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
+                <div className="bcontact-actions" style={{ marginTop: '1.4rem', display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
                   <a className="btn btn-primary" onClick={goReserve}>RESERVAR HORA</a>
                   <a className="btn btn-ghost" onClick={goCursos}>VER CURSOS</a>
                 </div>
@@ -487,6 +498,12 @@ export default function Home() {
       </main>
 
       <BrunettiFooter rightSlot={<button className="barber-access" onClick={() => navigate('/ingreso')}>Acceso barberos</button>} />
+
+      {/* Botón flotante de reserva — siempre visible en móvil */}
+      <a className="bfloat-reserve" onClick={goReserve} aria-label="Reservar hora">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+        RESERVAR
+      </a>
 
       {/* ============ MODAL CARRUSEL ============ */}
       <div className={`ac-modal${modal !== null ? ' is-open' : ''}`} role="dialog" aria-modal="true">

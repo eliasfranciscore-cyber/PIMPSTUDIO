@@ -1602,7 +1602,7 @@
   .brunetti-site .bhero-sub { margin-left: auto; margin-right: auto; }
   .brunetti-site .bhero-actions { justify-content: center; }
   .brunetti-site .bhero-meta { justify-content: center; }
-  .brunetti-site .bhero-figwrap { order: 2; width: min(320px, 74vw); margin-inline: auto; }
+  .brunetti-site .bhero-figwrap { order: 2; width: min(320px, 74vw); margin-inline: auto; margin-bottom: 3rem; }
   /* Los chips flotantes se solapaban con el tag del retrato en pantallas chicas. */
   .brunetti-site .bhero-chip { display: none; }
   .brunetti-site .bhero-cue { display: none; }
@@ -1648,7 +1648,12 @@
   .brunetti-site .bteaser-inner { text-align: center; }
   .brunetti-site .bteaser-modchips { justify-content: center; }
   /* Acceso interno (barberos) sólo aparece dentro del menú móvil. */
-  .brunetti-site .nav-only-mobile { display: block; }
+  .brunetti-site .nav-only-mobile {
+    display: block;
+    border-radius: var(--pill);
+    border: 1px solid rgba(231, 200, 126, 0.45);
+    animation: bruAccesoGlow 2.4s ease-in-out infinite;
+  }
 }
 @media (max-width: 760px) {
   .brunetti-site .testimonials { grid-template-columns: 1fr; gap: 1.4rem; }
@@ -1700,9 +1705,253 @@
   .brunetti-site .location-info ul { padding-left: 0; list-style-position: inside; }
   .brunetti-site .footer-wrap { justify-items: center; text-align: center; }
   .brunetti-site .pillar .picon,
-  .brunetti-site .bserv .stag,
-  .brunetti-site .bsocial-ig { justify-content: center; }
+  .brunetti-site .bserv .stag { justify-content: center; }
+  .brunetti-site .bsocial-ig {
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    text-align: center;
+  }
+  .brunetti-site .bsocial-ig > span:last-child { text-align: center; display: block; }
+  .brunetti-site .bcontact-actions {
+    justify-content: center !important;
+    flex-wrap: wrap;
+  }
+  .brunetti-site .bcontact-actions .btn {
+    flex: 1;
+    min-width: 130px;
+    text-align: center;
+  }
   .brunetti-site .pillar { align-items: center; }
+}
+
+/* ============================================================
+   LÁMPARA HERO — Aceternity lamp-demo (CSS puro)
+   ============================================================ */
+@keyframes bruLampPulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+@keyframes bruLampBeam {
+  0%, 100% { transform: translateX(-50%) scaleX(1); opacity: 0.85; }
+  50% { transform: translateX(-50%) scaleX(1.06); opacity: 1; }
+}
+
+.brunetti-site .bhero-lamp-wrap {
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(920px, 100%);
+  height: 580px;
+  z-index: 0;
+  overflow: visible;
+}
+.brunetti-site .bhero-lamp-dot {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fffbe8;
+  box-shadow:
+    0 0 10px 5px rgba(231, 200, 126, 0.95),
+    0 0 30px 14px rgba(231, 200, 126, 0.55),
+    0 0 60px 28px rgba(231, 200, 126, 0.2);
+  animation: bruLampPulse 3.6s ease-in-out infinite;
+}
+.brunetti-site .bhero-lamp-bar {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 55%;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(231, 200, 126, 0.55) 18%,
+    var(--gold-bright) 34%,
+    #fffbe8 50%,
+    var(--gold-bright) 66%,
+    rgba(231, 200, 126, 0.55) 82%,
+    transparent 100%);
+  box-shadow:
+    0 0 16px 4px rgba(231, 200, 126, 0.9),
+    0 0 44px 12px rgba(231, 200, 126, 0.5),
+    0 0 90px 28px rgba(231, 200, 126, 0.18);
+  animation: bruLampBeam 3.6s ease-in-out infinite;
+}
+.brunetti-site .bhero-lamp-cone {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 88%;
+  height: 540px;
+  background: conic-gradient(
+    from 270deg at 50% 0%,
+    transparent 27%,
+    rgba(231, 200, 126, 0.06) 35%,
+    rgba(231, 200, 126, 0.13) 50%,
+    rgba(231, 200, 126, 0.06) 65%,
+    transparent 73%
+  );
+  mask-image: linear-gradient(to bottom, black 0%, rgba(0,0,0,0.5) 45%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, rgba(0,0,0,0.5) 45%, transparent 100%);
+  animation: bruLampPulse 3.6s ease-in-out infinite;
+}
+
+/* ============================================================
+   BLOBS DE FONDO ANIMADOS — Aceternity background-gradient-animation
+   ============================================================ */
+@keyframes bruBlob1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(5vw, 4vh) scale(1.08); }
+  66% { transform: translate(-3vw, 8vh) scale(0.93); }
+}
+@keyframes bruBlob2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-7vw, -5vh) scale(0.92); }
+  66% { transform: translate(4vw, 3vh) scale(1.1); }
+}
+@keyframes bruBlob3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(3vw, -6vh) scale(1.06); }
+  66% { transform: translate(-5vw, 2vh) scale(0.96); }
+}
+
+.brunetti-site .bg-blobs {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.brunetti-site .bg-blob {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+}
+.brunetti-site .bg-blob-1 {
+  width: 65vw;
+  height: 65vw;
+  top: -15vh;
+  left: -12vw;
+  background: radial-gradient(circle, rgba(231, 200, 126, 0.22) 0%, rgba(154, 123, 52, 0.1) 50%, transparent 70%);
+  filter: blur(72px);
+  animation: bruBlob1 20s ease-in-out infinite;
+}
+.brunetti-site .bg-blob-2 {
+  width: 55vw;
+  height: 55vw;
+  top: 25vh;
+  right: -12vw;
+  background: radial-gradient(circle, rgba(214, 178, 102, 0.18) 0%, rgba(231, 200, 126, 0.08) 50%, transparent 70%);
+  filter: blur(62px);
+  animation: bruBlob2 24s ease-in-out infinite 3s;
+}
+.brunetti-site .bg-blob-3 {
+  width: 60vw;
+  height: 60vw;
+  bottom: 5vh;
+  left: 15vw;
+  background: radial-gradient(circle, rgba(154, 123, 52, 0.15) 0%, rgba(214, 178, 102, 0.07) 50%, transparent 70%);
+  filter: blur(78px);
+  animation: bruBlob3 28s ease-in-out infinite 6s;
+}
+
+/* ============================================================
+   GLOWING BORDERS — Aceternity glowing-effect-demo (CSS puro)
+   ============================================================ */
+@keyframes bruGlowBorder {
+  0%, 100% { box-shadow: 0 0 10px 1px rgba(231, 200, 126, 0.1), var(--g-drop, none); }
+  50% { box-shadow: 0 0 26px 6px rgba(231, 200, 126, 0.32), 0 0 52px 12px rgba(231, 200, 126, 0.1), var(--g-drop, none); }
+}
+.brunetti-site .pillar {
+  animation: bruGlowBorder 4s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 0.55s);
+}
+.brunetti-site .bserv.featured {
+  animation: bruGlowBorder 3.6s ease-in-out infinite 0.4s;
+}
+
+/* ============================================================
+   GLOW DORADO — tarjeta Instagram
+   ============================================================ */
+@keyframes bruIgGlow {
+  0%, 100% {
+    box-shadow: 0 0 10px 2px rgba(231, 200, 126, 0.18), 0 4px 20px rgba(0,0,0,0.3);
+    border-color: rgba(231, 200, 126, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 28px 8px rgba(231, 200, 126, 0.48), 0 0 56px 16px rgba(231, 200, 126, 0.16), 0 4px 20px rgba(0,0,0,0.3);
+    border-color: rgba(231, 200, 126, 0.72);
+  }
+}
+.brunetti-site .bsocial-ig {
+  animation: bruIgGlow 3.6s ease-in-out infinite;
+}
+
+/* ============================================================
+   GLOW ANIMADO — Acceso barberos en nav móvil
+   ============================================================ */
+@keyframes bruAccesoGlow {
+  0%, 100% {
+    color: var(--gold-bright);
+    text-shadow: 0 0 6px rgba(231, 200, 126, 0.4), 0 0 18px rgba(231, 200, 126, 0.2);
+    box-shadow: 0 0 8px rgba(231, 200, 126, 0.15), inset 0 0 6px rgba(231, 200, 126, 0.05);
+    border-color: rgba(231, 200, 126, 0.35);
+  }
+  50% {
+    color: #fffbe8;
+    text-shadow: 0 0 14px rgba(231, 200, 126, 0.9), 0 0 32px rgba(231, 200, 126, 0.5), 0 0 56px rgba(231, 200, 126, 0.22);
+    box-shadow: 0 0 18px rgba(231, 200, 126, 0.42), 0 0 38px rgba(231, 200, 126, 0.18), inset 0 0 14px rgba(231, 200, 126, 0.08);
+    border-color: rgba(231, 200, 126, 0.8);
+  }
+}
+
+/* ============================================================
+   BOTÓN FLOTANTE DE RESERVA — siempre visible en móvil
+   ============================================================ */
+.brunetti-site .bfloat-reserve {
+  display: none;
+}
+@media (max-width: 860px) {
+  .brunetti-site .bfloat-reserve {
+    display: flex;
+    position: fixed;
+    bottom: 1.4rem;
+    right: 1.2rem;
+    z-index: 990;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.72rem 1.3rem;
+    border-radius: var(--pill);
+    background: linear-gradient(160deg, #f4d897 0%, #d8a94a 55%, #b88e34 100%);
+    color: #1c1606;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    border: 1px solid var(--gold-bright);
+    box-shadow: 0 4px 22px rgba(0,0,0,0.55), 0 0 20px rgba(231, 200, 126, 0.3);
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    animation: bruGlowBorder 3s ease-in-out infinite;
+  }
+  .brunetti-site .bfloat-reserve:active { transform: scale(0.95); }
+  .brunetti-site .bfloat-reserve svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
 }
 
 /* ============================================================
