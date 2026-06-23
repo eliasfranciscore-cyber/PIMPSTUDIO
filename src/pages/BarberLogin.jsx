@@ -3,6 +3,21 @@ import { useNavigate } from 'react-router-dom'
 import { Emblem, Icon } from '../components/ui.jsx'
 import { BARBERS } from '../data.js'
 
+const MAX_ATTEMPTS = 3
+const LOCKOUT_MS = 15 * 60 * 1000 // 15 minutos
+
+function getLockout() {
+  try {
+    return JSON.parse(localStorage.getItem("ps_login_lockout") || "null")
+  } catch { return null }
+}
+function setLockout(data) {
+  localStorage.setItem("ps_login_lockout", JSON.stringify(data))
+}
+function clearLockout() {
+  localStorage.removeItem("ps_login_lockout")
+}
+
 export default function BarberLogin() {
   const navigate = useNavigate()
   const [username, setUsername] = useState("")
@@ -10,9 +25,39 @@ export default function BarberLogin() {
   const [showPass, setShowPass] = useState(false)
   const [err, setErr] = useState("")
   const [loading, setLoading] = useState(false)
+  const [lockedUntil, setLockedUntil] = useState(() => {
+    const lk = getLockout()
+    if (lk && lk.until > Date.now()) return lk.until
+    if (lk) clearLockout()
+    return null
+  })
+  const [attempts, setAttempts] = useState(() => getLockout()?.attempts || 0)
+
+  // countdown timer para mostrar minutos restantes del bloqueo
+  React.useEffect(() => {
+    if (!lockedUntil) return
+    const iv = setInterval(() => {
+      if (Date.now() >= lockedUntil) { clearLockout(); setLockedUntil(null); setAttempts(0); setErr("") }
+    }, 5000)
+    return () => clearInterval(iv)
+  }, [lockedUntil])
+
+  const recordFailure = () => {
+    const next = attempts + 1
+    setAttempts(next)
+    if (next >= MAX_ATTEMPTS) {
+      const until = Date.now() + LOCKOUT_MS
+      setLockout({ attempts: next, until })
+      setLockedUntil(until)
+    } else {
+      setLockout({ attempts: next, until: 0 })
+    }
+    return next
+  }
 
   const submit = async (e) => {
     e.preventDefault()
+    if (lockedUntil && Date.now() < lockedUntil) return
     if (!username.trim() || password.length < 8) { setErr("Ingresa tu usuario y contraseña (mínimo 8 caracteres)."); return }
     setErr("")
     setLoading(true)
@@ -24,11 +69,17 @@ export default function BarberLogin() {
       })
       const data = await res.json()
       if (data.ok) {
+        clearLockout()
         localStorage.setItem("ps_barber", JSON.stringify(data.barber))
         localStorage.setItem("ps_barber_token", data.token || "")
         navigate("/panel")
       } else {
-        setErr(data.error || "Usuario o contraseña incorrectos")
+        const n = recordFailure()
+        if (n >= MAX_ATTEMPTS) {
+          setErr(`Demasiados intentos fallidos. Panel bloqueado por 15 minutos.`)
+        } else {
+          setErr(`${data.error || "Usuario o contraseña incorrectos"} (${MAX_ATTEMPTS - n} intento${MAX_ATTEMPTS - n === 1 ? "" : "s"} restante${MAX_ATTEMPTS - n === 1 ? "" : "s"})`)
+        }
       }
     } catch {
       // Fallback local para desarrollo (Vite no sirve serverless functions).
@@ -38,6 +89,7 @@ export default function BarberLogin() {
           b.code === username.trim().toLowerCase() || b.name.toLowerCase() === username.trim().toLowerCase()
         ) || BARBERS[0]
         if (devBarber && password.length >= 8) {
+          clearLockout()
           localStorage.setItem("ps_barber", JSON.stringify({ ...devBarber, admin: true }))
           localStorage.setItem("ps_barber_token", "dev-token")
           navigate("/panel")
@@ -45,7 +97,12 @@ export default function BarberLogin() {
           return
         }
       }
-      setErr("No se pudo conectar. Revisa tu conexión e inténtalo nuevamente.")
+      const n = recordFailure()
+      if (n >= MAX_ATTEMPTS) {
+        setErr("Demasiados intentos fallidos. Panel bloqueado por 15 minutos.")
+      } else {
+        setErr(`No se pudo conectar. Revisa tu conexión. (${MAX_ATTEMPTS - n} intento${MAX_ATTEMPTS - n === 1 ? "" : "s"} restante${MAX_ATTEMPTS - n === 1 ? "" : "s"})`)
+      }
     } finally {
       setLoading(false)
     }
@@ -105,9 +162,26 @@ export default function BarberLogin() {
                   </button>
                 </div>
               </div>
-              {err && <div className="barber-login-error"><Icon name="bell" size={14} /> {err}</div>}
-              <button className="btn btn-gold btn-block" type="submit" style={{ opacity: loading ? 0.7 : 1 }}>
-                {loading ? "Entrando…" : "Entrar al panel"} {!loading && <Icon name="arrowRight" size={15} />}
+              {(err || lockedUntil) && (
+                <div className="barber-login-error">
+                  <Icon name="bell" size={14} />
+                  {lockedUntil && Date.now() < lockedUntil
+                    ? `Panel bloqueado por intentos fallidos. Reintenta en ${Math.ceil((lockedUntil - Date.now()) / 60000)} min.`
+                    : err}
+                </div>
+              )}
+              <button
+                className="btn btn-gold btn-block"
+                type="submit"
+                disabled={loading || !!(lockedUntil && Date.now() < lockedUntil)}
+                style={{ opacity: (loading || (lockedUntil && Date.now() < lockedUntil)) ? 0.45 : 1 }}
+              >
+                {loading
+                  ? "Verificando…"
+                  : lockedUntil && Date.now() < lockedUntil
+                    ? `Bloqueado · ${Math.ceil((lockedUntil - Date.now()) / 60000)} min restantes`
+                    : "Entrar al panel"}
+                {!loading && !(lockedUntil && Date.now() < lockedUntil) && <Icon name="arrowRight" size={15} />}
               </button>
             </form>
             <div className="barber-login-links">

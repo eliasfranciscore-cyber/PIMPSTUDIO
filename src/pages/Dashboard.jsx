@@ -16,6 +16,7 @@ import {
 } from '../push.js'
 
 const AGENDA_SLOTS = ["09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00"]
+const SESSION_TIMEOUT_MS = 30 * 60 * 1000 // 30 min sin actividad → cerrar sesión
 const DAY_LABELS = ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"]
 
 function getSvcIcon(svc) {
@@ -170,7 +171,28 @@ export default function Dashboard() {
     fetch("/api/expenses", { headers }).then((r) => r.json()).then((data) => { if (data.expenses?.length) setExpenses(data.expenses) }).catch(() => {})
   }, [])
 
-  const logout = () => { localStorage.removeItem("ps_barber"); localStorage.removeItem("ps_barber_token"); navigate("/") }
+  const logout = (reason = "") => {
+    localStorage.removeItem("ps_barber")
+    localStorage.removeItem("ps_barber_token")
+    localStorage.removeItem("ps_last_act")
+    navigate("/ingreso", reason ? { state: { msg: reason } } : undefined)
+  }
+
+  // Timeout de sesión por inactividad: 30 min sin interacción → logout automático
+  useEffect(() => {
+    const touch = () => localStorage.setItem("ps_last_act", String(Date.now()))
+    touch()
+    const events = ["mousemove", "keydown", "click", "touchstart", "scroll"]
+    events.forEach((ev) => window.addEventListener(ev, touch, { passive: true }))
+    const iv = setInterval(() => {
+      const last = Number(localStorage.getItem("ps_last_act") || 0)
+      if (last && Date.now() - last > SESSION_TIMEOUT_MS) logout("Tu sesión expiró por inactividad.")
+    }, 60_000)
+    return () => {
+      events.forEach((ev) => window.removeEventListener(ev, touch))
+      clearInterval(iv)
+    }
+  }, [])
   const weekDays = buildWeek(weekOffset)
 
   function authHeaders(extra = {}) {
