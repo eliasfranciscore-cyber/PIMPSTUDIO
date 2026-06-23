@@ -684,15 +684,21 @@
 }
 .brunetti-site #visagismo .bwrap { position: relative; z-index: 1; }
 
-/* Línea decorativa dorada bajo el heading */
+/* Línea decorativa dorada bajo el heading — full width con fade simétrico */
 .brunetti-site #visagismo .bhead::after {
   content: "";
   display: block;
-  width: 64px;
+  width: 100%;
   height: 2px;
   margin-top: 1.4rem;
-  background: linear-gradient(90deg, var(--gold-bright), var(--gold), transparent);
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--gold-bright) 20%,
+    #fffbe8 50%,
+    var(--gold-bright) 80%,
+    transparent 100%);
   border-radius: 2px;
+  box-shadow: 0 0 14px 3px rgba(231, 200, 126, 0.45);
 }
 
 .brunetti-site .visagismo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
@@ -1805,6 +1811,86 @@
 }
 
 /* ============================================================
+   LÁMPARA DE SECCIÓN — spotlight para #sobre y #cursos-teaser
+   ============================================================ */
+.brunetti-site .bsec-lamp-wrap {
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(720px, 100%);
+  height: 400px;
+  z-index: 0;
+  overflow: visible;
+}
+.brunetti-site .bsec-lamp-dot {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fffbe8;
+  box-shadow:
+    0 0 8px 4px rgba(231, 200, 126, 0.95),
+    0 0 24px 10px rgba(231, 200, 126, 0.52),
+    0 0 50px 22px rgba(231, 200, 126, 0.18);
+  animation: bruLampPulse 4s ease-in-out infinite 1.2s;
+}
+.brunetti-site .bsec-lamp-bar {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 48%;
+  height: 1.5px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(231, 200, 126, 0.5) 18%,
+    var(--gold-bright) 34%,
+    #fffbe8 50%,
+    var(--gold-bright) 66%,
+    rgba(231, 200, 126, 0.5) 82%,
+    transparent 100%);
+  box-shadow:
+    0 0 12px 3px rgba(231, 200, 126, 0.85),
+    0 0 36px 10px rgba(231, 200, 126, 0.38);
+  animation: bruLampBeam 4s ease-in-out infinite 1.2s;
+}
+.brunetti-site .bsec-lamp-cone {
+  position: absolute;
+  top: 1.5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 380px;
+  background: conic-gradient(
+    from 270deg at 50% 0%,
+    transparent 28%,
+    rgba(231, 200, 126, 0.04) 36%,
+    rgba(231, 200, 126, 0.1) 50%,
+    rgba(231, 200, 126, 0.04) 64%,
+    transparent 72%
+  );
+  mask-image: linear-gradient(to bottom, black 0%, rgba(0,0,0,0.35) 55%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, rgba(0,0,0,0.35) 55%, transparent 100%);
+  animation: bruLampPulse 4s ease-in-out infinite 1.2s;
+}
+/* El bwrap dentro de las secciones con lámpara queda sobre el cono */
+.brunetti-site #sobre .bwrap,
+.brunetti-site #cursos-teaser .bwrap { position: relative; z-index: 1; }
+
+/* ============================================================
+   FOTO HERO — cursor pointer al ser link */
+.brunetti-site .bhero-fig-link {
+  display: block;
+  overflow: hidden;
+  border-radius: inherit;
+  text-decoration: none;
+}
+
+/* ============================================================
    BLOBS DE FONDO ANIMADOS — Aceternity background-gradient-animation
    ============================================================ */
 @keyframes bruBlob1 {
@@ -1924,28 +2010,31 @@
     display: flex;
     position: fixed;
     bottom: 1.4rem;
-    right: 1.2rem;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
     z-index: 990;
     align-items: center;
-    gap: 0.45rem;
-    padding: 0.72rem 1.3rem;
+    gap: 0.55rem;
+    padding: 0.95rem 2.4rem;
     border-radius: var(--pill);
     background: linear-gradient(160deg, #f4d897 0%, #d8a94a 55%, #b88e34 100%);
     color: #1c1606;
-    font-size: 0.78rem;
+    font-size: 0.88rem;
     font-weight: 700;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     border: 1px solid var(--gold-bright);
-    box-shadow: 0 4px 22px rgba(0,0,0,0.55), 0 0 20px rgba(231, 200, 126, 0.3);
+    box-shadow: 0 6px 28px rgba(0,0,0,0.6), 0 0 28px rgba(231, 200, 126, 0.38);
     cursor: pointer;
     text-decoration: none;
+    white-space: nowrap;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
     animation: bruGlowBorder 3s ease-in-out infinite;
   }
-  .brunetti-site .bfloat-reserve:active { transform: scale(0.95); }
+  .brunetti-site .bfloat-reserve:active { transform: translateX(-50%) scale(0.95); }
   .brunetti-site .bfloat-reserve svg {
-    width: 14px;
-    height: 14px;
+    width: 17px;
+    height: 17px;
     stroke: currentColor;
     fill: none;
     stroke-width: 2.2;

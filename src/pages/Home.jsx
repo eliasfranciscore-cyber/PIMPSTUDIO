@@ -220,7 +220,9 @@ export default function Home() {
 
             <div className="bhero-figwrap" data-parallax>
               <div className="bhero-figure" data-tilt>
-                <img src="/assets/bruno-hero.jpg" alt="Bruno Herrera, Brunetti — visagista" />
+                <a className="bhero-fig-link" href="https://instagram.com/brunetticutz" target="_blank" rel="noopener noreferrer" aria-label="Ver Instagram de @brunetticutz">
+                  <img src="/assets/bruno-hero.jpg" alt="Bruno Herrera, Brunetti — visagista" />
+                </a>
                 <div className="fig-tag">
                   <b>Bruno Herrera</b>
                   <span>@brunetticutz</span>
@@ -273,6 +275,11 @@ export default function Home() {
 
         {/* ============ SOBRE BRUNO ============ */}
         <section id="sobre" className="bsection">
+          <div className="bsec-lamp-wrap" aria-hidden="true">
+            <div className="bsec-lamp-dot" />
+            <div className="bsec-lamp-bar" />
+            <div className="bsec-lamp-cone" />
+          </div>
           <div className="bwrap babout">
             <figure className="babout-figure" data-reveal="left">
               <img src="/assets/workshop-2026.jpg" alt="Bruno Herrera con su comunidad de barberos" />
@@ -368,6 +375,11 @@ export default function Home() {
 
         {/* ============ CURSOS TEASER ============ */}
         <section className="bsection" id="cursos-teaser">
+          <div className="bsec-lamp-wrap" aria-hidden="true">
+            <div className="bsec-lamp-dot" />
+            <div className="bsec-lamp-bar" />
+            <div className="bsec-lamp-cone" />
+          </div>
           <div className="bwrap">
             <div className="bteaser" data-reveal="scale">
               <div className="bteaser-bg"><img src="/assets/workshop-2026.jpg" alt="Workshop Brunetti con su comunidad de barberos" /></div>
