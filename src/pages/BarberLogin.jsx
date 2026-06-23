@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Emblem, Icon } from '../components/ui.jsx'
+import { BARBERS } from '../data.js'
 
 export default function BarberLogin() {
   const navigate = useNavigate()
@@ -30,6 +31,20 @@ export default function BarberLogin() {
         setErr(data.error || "Usuario o contraseña incorrectos")
       }
     } catch {
+      // Fallback local para desarrollo (Vite no sirve serverless functions).
+      // Credenciales: usuario = code del barbero | contraseña = 8+ caracteres.
+      if (import.meta.env.DEV) {
+        const devBarber = BARBERS.find((b) =>
+          b.code === username.trim().toLowerCase() || b.name.toLowerCase() === username.trim().toLowerCase()
+        ) || BARBERS[0]
+        if (devBarber && password.length >= 8) {
+          localStorage.setItem("ps_barber", JSON.stringify({ ...devBarber, admin: true }))
+          localStorage.setItem("ps_barber_token", "dev-token")
+          navigate("/panel")
+          setLoading(false)
+          return
+        }
+      }
       setErr("No se pudo conectar. Revisa tu conexión e inténtalo nuevamente.")
     } finally {
       setLoading(false)

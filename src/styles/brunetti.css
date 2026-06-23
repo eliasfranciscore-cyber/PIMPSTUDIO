@@ -179,19 +179,20 @@
 .brunetti-site .site-nav {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.1rem;
 }
 .brunetti-site .site-nav a:not(.btn-top),
 .brunetti-site .site-nav button {
   color: var(--ink-2);
   text-decoration: none;
-  font-size: 0.86rem;
-  letter-spacing: 0.04em;
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
   background: none;
   border: 0;
   cursor: pointer;
   border-radius: var(--pill);
-  padding: 0.4rem 0.7rem;
+  padding: 0.4rem 0.52rem;
+  white-space: nowrap;
   transition: background 0.2s ease, color 0.2s ease;
   font-family: inherit;
 }
@@ -391,8 +392,9 @@
   margin: 0;
   font-weight: 700;
   line-height: 0.9;
-  font-size: clamp(3.4rem, 11vw, 8.5rem);
+  font-size: clamp(2.4rem, 11vw, 8.5rem);
   letter-spacing: 0.01em;
+  white-space: nowrap;
   background: linear-gradient(180deg, #ffffff 28%, #f0d49a 66%, #c9a35b 100%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -661,6 +663,38 @@
 /* ============================================================
    VISAGISMO
    ============================================================ */
+
+/* Efecto lámpara de techo — spot de luz cálida sobre la sección */
+.brunetti-site #visagismo {
+  overflow: hidden;
+}
+.brunetti-site #visagismo::before {
+  content: "";
+  position: absolute;
+  top: -30%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60vw;
+  height: 60vw;
+  max-width: 700px;
+  max-height: 700px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(201,163,91,0.18) 0%, rgba(201,163,91,0.06) 40%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+.brunetti-site #visagismo .bwrap { position: relative; z-index: 1; }
+
+/* Línea decorativa dorada bajo el heading */
+.brunetti-site #visagismo .bhead::after {
+  content: "";
+  display: block;
+  width: 64px;
+  height: 2px;
+  margin-top: 1.4rem;
+  background: linear-gradient(90deg, var(--gold-bright), var(--gold), transparent);
+  border-radius: 2px;
+}
+
 .brunetti-site .visagismo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
 .brunetti-site .visagismo-grid .pillar:first-child { grid-column: span 2; }
 .brunetti-site .pillar {
@@ -697,20 +731,43 @@
   pointer-events: none;
 }
 .brunetti-site .pillar:hover::before { opacity: 1; }
-.brunetti-site .pillar .num { font-size: 0.78rem; letter-spacing: 0.2em; color: var(--gold); font-weight: 600; }
+.brunetti-site .pillar .num {
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  color: var(--gold);
+  font-weight: 700;
+  text-transform: uppercase;
+}
 .brunetti-site .pillar .picon {
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
   display: grid;
   place-items: center;
-  background: var(--g-tint);
+  background: linear-gradient(150deg, rgba(201,163,91,0.18), rgba(201,163,91,0.06));
   border: 1px solid var(--gold-soft);
   margin-bottom: auto;
+  box-shadow: 0 0 18px rgba(201,163,91,0.18), inset 0 1px 0 rgba(255,255,255,0.12);
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.brunetti-site .pillar:hover .picon {
+  border-color: var(--gold-edge);
+  box-shadow: 0 0 28px rgba(201,163,91,0.32), inset 0 1px 0 rgba(255,255,255,0.18);
 }
 .brunetti-site .pillar .picon svg { width: 24px; height: 24px; stroke: var(--gold-bright); fill: none; stroke-width: 1.6; }
-.brunetti-site .pillar h3 { margin: 1.1rem 0 0.5rem; font-size: 1.25rem; font-weight: 600; color: var(--ink); }
-.brunetti-site .pillar p { margin: 0; color: var(--ink-2); font-size: 0.94rem; line-height: 1.5; }
+.brunetti-site .pillar h3 { margin: 1.1rem 0 0.5rem; font-size: 1.2rem; font-weight: 600; color: var(--ink); line-height: 1.2; }
+.brunetti-site .pillar p { margin: 0; color: var(--ink-2); font-size: 0.9rem; line-height: 1.55; }
+/* Primer pilar: decoración de lámpara-glow interna */
+.brunetti-site .visagismo-grid .pillar:first-child::after {
+  content: "";
+  position: absolute;
+  bottom: -20%;
+  right: -10%;
+  width: 55%;
+  height: 130%;
+  background: radial-gradient(ellipse at 80% 80%, rgba(201,163,91,0.12) 0%, transparent 65%);
+  pointer-events: none;
+}
 
 /* ============================================================
    SOBRE BRUNO
@@ -724,7 +781,7 @@
   box-shadow: var(--g-spec), var(--g-drop);
   aspect-ratio: 4 / 5;
 }
-.brunetti-site .babout-figure img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+.brunetti-site .babout-figure img { width: 100%; height: 100%; object-fit: cover; object-position: 62% 8%; }
 .brunetti-site .babout-figure .sig {
   position: absolute;
   left: 18px;
@@ -930,6 +987,51 @@
 .brunetti-site .bcontact-list svg { width: 20px; height: 20px; stroke: var(--gold-bright); fill: none; stroke-width: 1.7; flex-shrink: 0; }
 .brunetti-site .bcontact-list a { color: inherit; text-decoration: none; }
 .brunetti-site .bcontact-list a:hover { color: var(--gold-bright); }
+/* Efecto lámpara sobre sección contacto */
+.brunetti-site #contacto {
+  overflow: hidden;
+}
+.brunetti-site #contacto::before {
+  content: "";
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: 50vw;
+  height: 50vw;
+  max-width: 560px;
+  max-height: 560px;
+  background: radial-gradient(ellipse at 80% 20%, rgba(201,163,91,0.14) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+.brunetti-site #contacto .bwrap { position: relative; z-index: 1; }
+
+/* Botón WhatsApp */
+.brunetti-site .bwa-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.9rem 1.4rem;
+  border-radius: var(--pill);
+  background: linear-gradient(135deg, #25d366, #128c5e);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.88rem;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+  transition: filter 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  box-shadow: 0 6px 22px rgba(37,211,102,0.28);
+}
+.brunetti-site .bwa-btn:hover {
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(37,211,102,0.36);
+}
+.brunetti-site .bwa-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; flex-shrink: 0; }
+
 .brunetti-site .bsocial { display: flex; flex-direction: column; gap: 1rem; justify-content: center; }
 .brunetti-site .bsocial-ig {
   display: flex;

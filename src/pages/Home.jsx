@@ -264,7 +264,7 @@ export default function Home() {
         <section id="sobre" className="bsection">
           <div className="bwrap babout">
             <figure className="babout-figure" data-reveal="left">
-              <img src="/assets/bruno-feature.jpg" alt="Bruno Herrera en el estudio rodeado de su comunidad" />
+              <img src="/assets/workshop-2026.jpg" alt="Bruno Herrera con su comunidad de barberos" />
               <figcaption className="sig">Bruno Herrera · Brunetti</figcaption>
             </figure>
             <div className="babout-body" data-reveal="right">
@@ -432,6 +432,10 @@ export default function Home() {
                 </div>
               </div>
               <div className="bsocial" data-reveal="right">
+                <a className="bwa-btn" href="https://wa.me/56912345678?text=Hola%20Bruno%2C%20quiero%20agendar%20una%20hora." target="_blank" rel="noopener noreferrer">
+                  <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" /></svg>
+                  Escríbele por WhatsApp
+                </a>
                 <a className="bsocial-ig" href="https://instagram.com/brunetticutz" target="_blank" rel="noopener noreferrer">
                   <span className="ig-ic">
                     <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none" /></svg>

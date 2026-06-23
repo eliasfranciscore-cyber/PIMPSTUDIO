@@ -13,11 +13,13 @@ import './SiteNav.css'
    - Reservar: en workshop "Reservar asiento" (→ formulario #inscribir);
      en el resto "Reservar hora en la agenda" (→ /login). */
 const NAV = [
+  ["inicio",    "Inicio"],
+  ["visagismo", "Visagismo"],
+  ["sobre",     "Sobre Bruno"],
   ["servicios", "Servicios"],
-  ["barberos", "Barberos"],
-  ["workshop", "Workshop"],
-  ["nosotros", "Nosotros"],
-  ["ubicacion", "Ubicación"],
+  ["cursos",    "Cursos"],
+  ["workshop",  "Workshop"],
+  ["contacto",  "Contacto"],
 ]
 
 export default function SiteNav({ onSection, scrolled: scrolledProp }) {
@@ -49,6 +51,8 @@ export default function SiteNav({ onSection, scrolled: scrolledProp }) {
   const handleNav = (id) => {
     setMenuOpen(false)
     if (id === "workshop") navigate("/workshop")
+    else if (id === "cursos") navigate("/cursos")
+    else if (id === "inicio") { navigate("/"); window.scrollTo({ top: 0, behavior: "smooth" }) }
     else goSection(id)
   }
 

@@ -239,15 +239,11 @@ export default function Dashboard() {
   // Preferencia personal de visibilidad (config → módulos visibles).
   const personalNav = accessibleNav.filter(([id]) => ALWAYS.includes(id) || navSettings[id] !== false)
   // ── Modo "solo Brunetti" ──────────────────────────────────────────────
-  // Por ahora la app interna es exclusivamente para gestionar las HORAS de Bruno.
-  // El resto de módulos (resumen multi-barbero, finanzas, clientes, servicios,
-  // gastos, marketing, equipo) queda INACTIVO pero el código se conserva para
-  // reactivarlo a futuro bajo solicitud. Para volver al panel completo: BRUNETTI_ONLY = false.
+  // BRUNETTI_ONLY = true oculta la sección "Equipo" en Config (gestión multi-barbero).
+  // Todos los demás módulos (Finanzas, Clientes, Servicios, etc.) siguen visibles.
+  // Para reactivar Equipo: BRUNETTI_ONLY = false.
   const BRUNETTI_ONLY = true
-  const BRUNETTI_ONLY_TABS = ["agenda", "reservas", "config"]
-  const visibleNav = BRUNETTI_ONLY
-    ? personalNav.filter(([id]) => BRUNETTI_ONLY_TABS.includes(id))
-    : personalNav
+  const visibleNav = personalNav
   // Atajos del dock: los 4 elegidos, sólo si son accesibles/visibles.
   const dockItems = dockShortcuts.map((id) => visibleNav.find((n) => n[0] === id)).filter(Boolean).slice(0, 4)
 
