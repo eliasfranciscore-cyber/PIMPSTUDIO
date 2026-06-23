@@ -11,11 +11,11 @@ export function Emblem({ size = 46 }) {
   )
 }
 
-export function Brandmark({ size = 44, sub = "Barber Studio", onClick }) {
+export function Brandmark({ size = 44, sub = "Barber Studio", label = "PIMP STUDIO", onClick }) {
   return (
     <div className="brandmark" onClick={onClick} style={{ cursor: onClick ? "pointer" : "default" }}>
       <Emblem size={size} />
-      <span className="wordmark">PIMP STUDIO<small>{sub}</small></span>
+      <span className="wordmark">{label}<small>{sub}</small></span>
     </div>
   )
 }

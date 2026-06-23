@@ -72,7 +72,12 @@ export default function SiteNav({ onSection, scrolled: scrolledProp }) {
   return (
     <React.Fragment>
       <header className={`home-nav ${scrolled || menuOpen ? "is-scrolled" : ""}`}>
-        <Brandmark size={38} onClick={() => navigate("/")} />
+        <Brandmark
+          size={38}
+          label={isWorkshop ? "BRUNETTI" : "PIMP STUDIO"}
+          sub={isWorkshop ? "Workshop 2026" : "Barber Studio"}
+          onClick={() => navigate("/")}
+        />
         <nav className="home-nav-links">
           {NAV.map(([id, label]) => (
             <button

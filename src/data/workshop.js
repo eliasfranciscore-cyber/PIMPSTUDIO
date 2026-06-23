@@ -166,7 +166,7 @@ export const WORKSHOP = {
     dateLabel: WK_ED.label,
     dateLong: WK_ED.long,
     location: "Viña del Mar",
-    handle: "@pimpstudiochile",
+    handle: "@brunetticutz",
     whatsapp: "+56 9 0000 0000",
     priceNow: 97000,
     priceWas: 184000,

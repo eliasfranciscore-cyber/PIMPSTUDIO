@@ -234,6 +234,11 @@ function QuoteBlock() {
 function FeatureRow({ data, reversed }) {
   return (
     <section className="wks-section">
+      <div className="wks-lamp-wrap" aria-hidden="true">
+        <div className="wks-lamp-dot" />
+        <div className="wks-lamp-bar" />
+        <div className="wks-lamp-cone" />
+      </div>
       <div className="wks-container">
         <Reveal className={`wks-feature ${reversed ? "is-rev" : ""}`}>
           <div className="wks-feature-media">
@@ -444,7 +449,7 @@ function Register({ formRef }) {
   return (
     <section className="wks-section" id="inscribir" ref={formRef}>
       <div className="wks-container">
-        <Reveal className="wks-head">
+        <Reveal className="wks-head is-center">
           <span className="wks-eyebrow">Únete al cambio</span>
           <h2 className="wks-h2">Escribe tu propia historia. Reserva tu cupo.</h2>
           <hr className="wks-rule" />
@@ -523,7 +528,7 @@ function Faq() {
   return (
     <section className="wks-section wks-section-alt">
       <div className="wks-container">
-        <Reveal className="wks-head">
+        <Reveal className="wks-head is-center">
           <span className="wks-eyebrow">¿Alguna duda?</span>
           <h2 className="wks-h2">Hablemos ahora y despejemos el camino.</h2>
           <hr className="wks-rule" />
@@ -562,7 +567,7 @@ function Footer({ onReserve }) {
         <div className="wks-footer-contact">
           <span className="wks-eyebrow" style={{ marginBottom: "0.4rem" }}>Hablemos</span>
           <a href={`https://wa.me/${m.whatsapp.replace(/[^\d]/g, "")}`}><Icon name="whatsapp" size={18} color="var(--wk-gold-lt)" /> WhatsApp directo</a>
-          <a href="https://www.instagram.com/pimpstudiochile/" target="_blank" rel="noopener noreferrer"><Icon name="instagram" size={18} color="var(--wk-gold-lt)" /> {m.handle}</a>
+          <a href="https://www.instagram.com/brunetticutz/" target="_blank" rel="noopener noreferrer"><Icon name="instagram" size={18} color="var(--wk-gold-lt)" /> {m.handle}</a>
           <a><Icon name="pin" size={18} color="var(--wk-gold-lt)" /> {m.location}</a>
         </div>
       </div>
