@@ -128,7 +128,7 @@ export default function DashboardResumen({ metrics = {}, bookings = [], barbers 
         </div>
 
         <div className="card psn-panel span-5">
-          <div className="psn-panel-head"><h3 className="font-display">Ranking barberos</h3><span style={{ fontSize: '.74rem', color: 'var(--muted)' }}>Esta semana</span></div>
+          <div className="psn-panel-head"><h3 className="font-display">Mis ventas de la semana</h3><span style={{ fontSize: '.74rem', color: 'var(--muted)' }}>Esta semana</span></div>
           <div style={{ display: 'grid', gap: '.75rem' }}>
             {ranking.map((r, i) => {
               const b = barbers.find((x) => Number(x.id) === Number(r.id)) || barberById(r.id) || {}
@@ -203,23 +203,6 @@ export default function DashboardResumen({ metrics = {}, bookings = [], barbers 
           </div>
         </div>
 
-        <div className="card psn-panel span-12">
-          <div className="psn-panel-head"><h3 className="font-display">Equipo de hoy</h3><span className="chip">{activeBarbers.length} activos · {Math.max(0, barbers.length - activeBarbers.length)} libres</span></div>
-          <div className="psn-team">
-            {barbers.map((b) => {
-              const on = b.active !== false
-              return (
-                <div key={b.id} className={`psn-team-chip ${on ? '' : 'off'}`}>
-                  <img src={b.photo || LOGO} alt={b.short || b.name} onError={(e) => { if (e.currentTarget.src !== window.location.origin + LOGO) e.currentTarget.src = LOGO }} />
-                  <div style={{ minWidth: 0 }}>
-                    <div className="nm">{b.short || b.name}</div>
-                    <div className="st"><i />{on ? 'En turno' : 'Libre'}</div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
       </div>
     </div>
   )

@@ -388,7 +388,9 @@ export default function Home() {
                 <h2>Aprende visagismo y barbería con Bruno</h2>
                 <p>Un programa pensado para barberos que quieren elevar su técnica, su imagen y su negocio. Teoría, práctica y dirección de estilo aplicables desde el primer día.</p>
                 <div className="bteaser-modchips">
-                  {[1, 2, 3, 4, 5, 6].map((n) => <span key={n}>Módulo {n}</span>)}
+                  <span>6 módulos completos</span>
+                  <span>Teoría + práctica</span>
+                  <span>Certificado</span>
                 </div>
                 <a className="btn btn-primary" onClick={goCursos}>VER CURSO &amp; INSCRIBIRME</a>
               </div>
@@ -434,6 +436,11 @@ export default function Home() {
 
         {/* ============ CONTACTO ============ */}
         <section id="contacto" className="bsection">
+          <div className="bsec-lamp-wrap" aria-hidden="true">
+            <div className="bsec-lamp-dot" />
+            <div className="bsec-lamp-bar" />
+            <div className="bsec-lamp-cone" />
+          </div>
           <div className="bwrap">
             <div className="bhead center" data-reveal>
               <p className="kicker">Hablemos</p>

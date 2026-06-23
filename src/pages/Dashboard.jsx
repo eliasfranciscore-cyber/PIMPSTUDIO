@@ -95,6 +95,7 @@ export default function Dashboard() {
   const [expenses, setExpenses] = useState(EXPENSES)
   const [serviceDraft, setServiceDraft] = useState({ name: "", price: "", min: 60, cat: "general", desc: "", tne: false })
   const [expenseDraft, setExpenseDraft] = useState({ date: new Date().toISOString().slice(0, 10), category: "Insumos", detail: "", amount: "" })
+  const [expenseOpen, setExpenseOpen] = useState(false)
   const [barberDraft, setBarberDraft] = useState({ name: "", code: "", role: "Barbero", tier: "general", pin: "1234", canViewFinance: false, canManageTeam: false, canEditServices: false, canManageBlocks: true })
   // Preferencias de navegación (persisten por dispositivo): qué módulos se ven y
   // qué 4 atajos van en el dock. Se aplican al nav/dock reales.
@@ -266,6 +267,7 @@ export default function Dashboard() {
     const json = res ? await res.json().catch(() => ({})) : {}
     setExpenses((items) => [json.expense || { ...payload, id: Date.now() }, ...items])
     setExpenseDraft({ date: new Date().toISOString().slice(0, 10), category: "Insumos", detail: "", amount: "" })
+    setExpenseOpen(false)
   }
 
   const saveBarber = async (payload) => {
@@ -596,15 +598,9 @@ export default function Dashboard() {
               <Stat icon="wallet" label="Gastos mes" value={CLP(expenses.reduce((sum, item) => sum + Number(item.amount || 0), 0))} accent />
               <Stat icon="chart" label="Registros" value={expenses.length} />
             </div>
-            <Panel title="Ingresar gasto">
-              <div className="admin-form-grid">
-                <input className="input" type="date" value={expenseDraft.date} onChange={(e) => setExpenseDraft({ ...expenseDraft, date: e.target.value })} />
-                <input className="input" placeholder="Categoria" value={expenseDraft.category} onChange={(e) => setExpenseDraft({ ...expenseDraft, category: e.target.value })} />
-                <input className="input" placeholder="Detalle" value={expenseDraft.detail} onChange={(e) => setExpenseDraft({ ...expenseDraft, detail: e.target.value })} />
-                <input className="input" placeholder="Monto" inputMode="numeric" value={expenseDraft.amount} onChange={(e) => setExpenseDraft({ ...expenseDraft, amount: e.target.value.replace(/\D/g, "") })} />
-                <button className="btn btn-gold btn-block" onClick={saveExpense}><Icon name="check" size={15} /> Registrar</button>
-              </div>
-            </Panel>
+            <button className="btn btn-gold" style={{ justifySelf: "start", display: "flex", alignItems: "center", gap: ".5rem" }} onClick={() => setExpenseOpen(true)}>
+              <Icon name="wallet" size={16} /> Ingresar gasto
+            </button>
             <Panel title="Ultimos gastos">
               <div style={{ display: "grid", gap: ".55rem" }}>
                 {expenses.map((expense) => (
@@ -616,6 +612,32 @@ export default function Dashboard() {
                 ))}
               </div>
             </Panel>
+          </div>
+        )}
+
+        {/* MODAL INGRESAR GASTO */}
+        {expenseOpen && (
+          <div style={{ position: "fixed", inset: 0, zIndex: 1200, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }} onClick={() => setExpenseOpen(false)}>
+            <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)" }} />
+            <div className="card" style={{ position: "relative", width: "100%", maxWidth: 420, padding: "1.6rem", display: "grid", gap: "1.1rem", zIndex: 1 }} onClick={(e) => e.stopPropagation()}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <h3 className="font-display" style={{ margin: 0, fontSize: "1.1rem" }}>Ingresar gasto</h3>
+                <button style={{ background: "none", border: 0, color: "var(--muted)", cursor: "pointer", padding: ".3rem" }} onClick={() => setExpenseOpen(false)} aria-label="Cerrar">
+                  <Icon name="close" size={18} />
+                </button>
+              </div>
+              <div className="admin-form-grid">
+                <input className="input" type="date" value={expenseDraft.date} onChange={(e) => setExpenseDraft({ ...expenseDraft, date: e.target.value })} />
+                <select className="input" value={expenseDraft.category} onChange={(e) => setExpenseDraft({ ...expenseDraft, category: e.target.value })}>
+                  {["Insumos", "Equipamiento", "Arriendo", "Marketing", "Personal", "Servicios", "Otros"].map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+                <input className="input" placeholder="Detalle del gasto" value={expenseDraft.detail} onChange={(e) => setExpenseDraft({ ...expenseDraft, detail: e.target.value })} />
+                <input className="input" placeholder="Monto" inputMode="numeric" value={expenseDraft.amount} onChange={(e) => setExpenseDraft({ ...expenseDraft, amount: e.target.value.replace(/\D/g, "") })} />
+                <button className="btn btn-gold btn-block" onClick={saveExpense}><Icon name="check" size={15} /> Registrar</button>
+              </div>
+            </div>
           </div>
         )}
 
