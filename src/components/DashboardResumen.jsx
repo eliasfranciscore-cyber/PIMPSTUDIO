@@ -56,6 +56,96 @@ function Bars({ data }) {
   )
 }
 
+function getSvcIconByName(name) {
+  const n = (name || '').toLowerCase()
+  if (n.includes('asesor') || n.includes('visag') || n.includes('imagen')) return 'user'
+  if (n.includes('quim') || n.includes('color') || n.includes('platin')) return 'spark'
+  if (n.includes('fade') || n.includes('degra')) return 'trend'
+  return 'scissors'
+}
+
+function OccupancyRing({ pct = 0 }) {
+  const r = 38, circ = 2 * Math.PI * r
+  const [loaded, setLoaded] = React.useState(false)
+  React.useEffect(() => { const t = setTimeout(() => setLoaded(true), 220); return () => clearTimeout(t) }, [])
+  const dash = (Math.min(pct, 100) / 100) * circ
+  return (
+    <svg width="96" height="96" viewBox="0 0 96 96" style={{ overflow: 'visible', flexShrink: 0 }}>
+      <defs>
+        <linearGradient id="rGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#9a7b34" />
+          <stop offset="100%" stopColor="#e9d7a0" />
+        </linearGradient>
+      </defs>
+      <circle cx="48" cy="48" r={r} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="10" />
+      <circle cx="48" cy="48" r={r} fill="none"
+        stroke="url(#rGrad)" strokeWidth="10" strokeLinecap="round"
+        strokeDasharray={`${loaded ? dash : 0} ${circ}`}
+        transform="rotate(-90 48 48)"
+        style={{ transition: 'stroke-dasharray 1.4s cubic-bezier(.2,.7,.3,1)' }}
+      />
+      <text x="48" y="45" textAnchor="middle" fontSize="17" fontWeight="700" fontFamily="var(--font-display)" fill="var(--gold-lt)">{pct}%</text>
+      <text x="48" y="59" textAnchor="middle" fontSize="8.5" fill="var(--muted)">ocupación</text>
+    </svg>
+  )
+}
+
+function PeakHours({ data = [], bookings = [] }) {
+  const hourData = React.useMemo(() => {
+    const valid = bookings.filter((b) => b.status !== 'cancelada' && b.time)
+    if (!valid.length) return data
+    const map = {}
+    valid.forEach((b) => { const h = String(b.time).slice(0, 2).replace(/^0/, ''); map[h] = (map[h] || 0) + 1 })
+    return Object.keys(map).sort((a, b) => Number(a) - Number(b)).map((h) => ({ h, v: map[h] }))
+  }, [bookings, data])
+  const max = Math.max(1, ...hourData.map((d) => d.v))
+  const peak = hourData.reduce((p, d) => d.v > (p?.v ?? -1) ? d : p, null)
+  return (
+    <div>
+      <div className="psn-peak">
+        {hourData.map((d) => (
+          <div key={d.h} className="psn-peak-col">
+            <div className="psn-peak-track">
+              <div className="psn-peak-fill" style={{ height: `${(d.v / max) * 100}%`, background: d.h === peak?.h ? 'var(--gold-grad)' : 'rgba(255,255,255,0.13)' }} />
+            </div>
+            <span className="psn-peak-lbl">{d.h}</span>
+          </div>
+        ))}
+      </div>
+      {peak && <div style={{ fontSize: '.73rem', color: 'var(--muted)', marginTop: '.6rem', display: 'flex', alignItems: 'center', gap: '.35rem' }}>
+        <Icon name="trend" size={13} />
+        Hora pico: <strong style={{ color: 'var(--gold-lt)' }}>{peak.h}:00</strong> · {peak.v} reservas
+      </div>}
+    </div>
+  )
+}
+
+function TopSvc({ data = [], bookings = [] }) {
+  const live = React.useMemo(() => {
+    const valid = bookings.filter((b) => b.status !== 'cancelada')
+    if (!valid.length) return data
+    const map = {}
+    valid.forEach((b) => { const k = b.service || 'Servicio'; map[k] = map[k] || { name: k, count: 0, rev: 0 }; map[k].count++; map[k].rev += Number(b.price || 0) })
+    return Object.values(map).sort((a, b) => b.count - a.count).slice(0, 5)
+  }, [bookings, data])
+  const maxC = Math.max(1, ...live.map((s) => s.count))
+  return (
+    <div className="psn-top-svc">
+      {live.map((s) => (
+        <div key={s.name} className="psn-top-svc-row">
+          <div className="psn-top-svc-ic"><Icon name={getSvcIconByName(s.name)} size={14} /></div>
+          <div className="psn-top-svc-bar">
+            <div className="nm">{s.name}</div>
+            <div className="track"><div className="fill" style={{ width: `${(s.count / maxC) * 100}%` }} /></div>
+          </div>
+          <div className="cnt"><div>{s.count}</div><div style={{ color: 'var(--muted)', fontSize: '.68rem' }}>{CLPk(s.rev)}</div></div>
+        </div>
+      ))}
+      {!live.length && <div style={{ color: 'var(--muted)', fontSize: '.84rem' }}>Sin datos aún.</div>}
+    </div>
+  )
+}
+
 export default function DashboardResumen({ metrics = {}, bookings = [], barbers = [], expenses = [] }) {
   const m = metrics
   const todayKey = new Date().toISOString().slice(0, 10)
@@ -201,6 +291,33 @@ export default function DashboardResumen({ metrics = {}, bookings = [], barbers 
               ))}
             </div>
           </div>
+        </div>
+
+        <div className="card psn-panel span-5">
+          <div className="psn-panel-head"><h3 className="font-display">Ocupación</h3><span className="chip">{m.occupancy ?? 0}% hoy</span></div>
+          <div className="psn-ring-wrap">
+            <OccupancyRing pct={m.occupancy ?? 0} />
+            <div className="psn-ring-stats">
+              <div className="psn-ring-stat">
+                <div className="lbl">Retención</div>
+                <div className="val">{m.retention ?? 0}%</div>
+              </div>
+              <div className="psn-ring-stat">
+                <div className="lbl">Margen neto</div>
+                <div className="val">{m.netMarginPct ?? 0}%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="card psn-panel span-7">
+          <div className="psn-panel-head"><h3 className="font-display">Servicios más pedidos</h3><span className="chip chip-gold"><Icon name="scissors" size={12} /> Top 5</span></div>
+          <TopSvc data={m.topServices ?? []} bookings={bookings} />
+        </div>
+
+        <div className="card psn-panel span-12">
+          <div className="psn-panel-head"><h3 className="font-display">Horas pico</h3><span style={{ fontSize: '.73rem', color: 'var(--muted)' }}>Distribución de reservas por hora</span></div>
+          <PeakHours data={m.peakHours ?? []} bookings={bookings} />
         </div>
 
       </div>

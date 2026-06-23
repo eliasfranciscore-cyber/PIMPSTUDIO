@@ -18,6 +18,15 @@ import {
 const AGENDA_SLOTS = ["09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00"]
 const DAY_LABELS = ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"]
 
+function getSvcIcon(svc) {
+  const n = ((svc.name || '') + ' ' + (svc.cat || '')).toLowerCase()
+  if (n.includes('asesor') || n.includes('visag') || n.includes('imagen')) return 'user'
+  if (n.includes('barba') || n.includes('beard')) return 'cut'
+  if (n.includes('quim') || n.includes('color') || n.includes('platin')) return 'spark'
+  if (n.includes('fade') || n.includes('degra')) return 'trend'
+  return 'scissors'
+}
+
 function isoDate(date) {
   return date.toISOString().slice(0, 10)
 }
@@ -96,6 +105,8 @@ export default function Dashboard() {
   const [serviceDraft, setServiceDraft] = useState({ name: "", price: "", min: 60, cat: "general", desc: "", tne: false })
   const [expenseDraft, setExpenseDraft] = useState({ date: new Date().toISOString().slice(0, 10), category: "Insumos", detail: "", amount: "" })
   const [expenseOpen, setExpenseOpen] = useState(false)
+  const [serviceOpen, setServiceOpen] = useState(false)
+  const [editSvcId, setEditSvcId] = useState(null)
   const [barberDraft, setBarberDraft] = useState({ name: "", code: "", role: "Barbero", tier: "general", pin: "1234", canViewFinance: false, canManageTeam: false, canEditServices: false, canManageBlocks: true })
   // Preferencias de navegación (persisten por dispositivo): qué módulos se ven y
   // qué 4 atajos van en el dock. Se aplican al nav/dock reales.
@@ -561,31 +572,35 @@ export default function Dashboard() {
         {/* SERVICIOS */}
         {tab === "servicios" && (
           <div className="animate-in" style={{ display: "grid", gap: "1.1rem" }}>
-            <Panel title="Nuevo servicio" action={<span className="chip">Impacta la web publica</span>}>
-              <div className="admin-form-grid">
-                <input className="input" placeholder="Nombre" value={serviceDraft.name} onChange={(e) => setServiceDraft({ ...serviceDraft, name: e.target.value })} />
-                <input className="input" placeholder="Precio" inputMode="numeric" value={serviceDraft.price} onChange={(e) => setServiceDraft({ ...serviceDraft, price: e.target.value.replace(/\D/g, "") })} />
-                <input className="input" placeholder="Minutos" inputMode="numeric" value={serviceDraft.min} onChange={(e) => setServiceDraft({ ...serviceDraft, min: e.target.value.replace(/\D/g, "") })} />
-                <select className="input" value={serviceDraft.cat} onChange={(e) => setServiceDraft({ ...serviceDraft, cat: e.target.value })}>
-                  <option value="general">General</option>
-                  <option value="premium">Premium</option>
-                  <option value="quimico">Quimico</option>
-                </select>
-                <input className="input" placeholder="Descripcion" value={serviceDraft.desc} onChange={(e) => setServiceDraft({ ...serviceDraft, desc: e.target.value })} />
-                <button className="btn btn-gold btn-block" onClick={() => saveService()}><Icon name="check" size={15} /> Crear</button>
-              </div>
-            </Panel>
-            <Panel title="Servicios publicados">
-              <div style={{ display: "grid", gap: ".55rem" }}>
-                {services.map((service) => (
-                  <div key={service.id} className="admin-row service-row">
-                    <input className="input" value={service.name} onChange={(e) => setServices((items) => items.map((item) => item.id === service.id ? { ...item, name: e.target.value } : item))} />
-                    <input className="input" inputMode="numeric" value={service.price} onChange={(e) => setServices((items) => items.map((item) => item.id === service.id ? { ...item, price: e.target.value.replace(/\D/g, "") } : item))} />
-                    <input className="input" inputMode="numeric" value={service.min} onChange={(e) => setServices((items) => items.map((item) => item.id === service.id ? { ...item, min: e.target.value.replace(/\D/g, "") } : item))} />
-                    <button className={service.active === false ? "chip" : "chip chip-gold"} onClick={() => saveService({ ...service, active: service.active === false })}>{service.active === false ? "Oculto" : "Publicado"}</button>
-                    <button className="btn btn-dark btn-sm" onClick={() => saveService(service)}>Guardar</button>
-                  </div>
-                ))}
+            <button className="btn btn-gold btn-block" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: ".5rem" }} onClick={() => setServiceOpen(true)}>
+              <Icon name="spark" size={16} /> Nuevo servicio
+            </button>
+            <Panel title="Servicios publicados" action={<span className="chip chip-gold">{services.filter((s) => s.active !== false).length} activos</span>}>
+              <div className="svc-grid">
+                {services.map((svc) => {
+                  const isEditing = editSvcId === svc.id
+                  return (
+                    <div key={svc.id} className={`svc-card ${isEditing ? "is-open" : ""}`} onClick={() => !isEditing && setEditSvcId(svc.id)}>
+                      <div className="svc-card-ic"><Icon name={getSvcIcon(svc)} size={20} /></div>
+                      <div className="svc-card-name">{svc.name}</div>
+                      <div className="svc-card-price">{CLP(svc.price)}</div>
+                      <div className="svc-card-meta"><Icon name="clock" size={11} /> {svc.min} min · {svc.cat}</div>
+                      <span className={svc.active === false ? "chip" : "chip chip-gold"} style={{ fontSize: ".68rem" }}>{svc.active === false ? "Oculto" : "Publicado"}</span>
+                      {isEditing && (
+                        <div className="svc-card-edit" onClick={(e) => e.stopPropagation()}>
+                          <input className="input" value={svc.name} onChange={(e) => setServices((items) => items.map((item) => item.id === svc.id ? { ...item, name: e.target.value } : item))} />
+                          <input className="input" inputMode="numeric" placeholder="Precio" value={svc.price} onChange={(e) => setServices((items) => items.map((item) => item.id === svc.id ? { ...item, price: e.target.value.replace(/\D/g, "") } : item))} />
+                          <input className="input" inputMode="numeric" placeholder="Minutos" value={svc.min} onChange={(e) => setServices((items) => items.map((item) => item.id === svc.id ? { ...item, min: e.target.value.replace(/\D/g, "") } : item))} />
+                          <div style={{ display: "flex", gap: ".5rem" }}>
+                            <button className={svc.active === false ? "chip" : "chip chip-gold"} onClick={() => saveService({ ...svc, active: svc.active === false })}>{svc.active === false ? "Oculto" : "Activo"}</button>
+                            <button className="btn btn-gold btn-sm" style={{ flex: 1 }} onClick={() => { saveService(svc); setEditSvcId(null) }}><Icon name="check" size={14} /> Guardar</button>
+                            <button className="btn btn-dark btn-sm" onClick={() => setEditSvcId(null)}><Icon name="close" size={14} /></button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
               </div>
             </Panel>
           </div>
@@ -598,7 +613,7 @@ export default function Dashboard() {
               <Stat icon="wallet" label="Gastos mes" value={CLP(expenses.reduce((sum, item) => sum + Number(item.amount || 0), 0))} accent />
               <Stat icon="chart" label="Registros" value={expenses.length} />
             </div>
-            <button className="btn btn-gold" style={{ justifySelf: "start", display: "flex", alignItems: "center", gap: ".5rem" }} onClick={() => setExpenseOpen(true)}>
+            <button className="btn btn-gold btn-block" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: ".5rem" }} onClick={() => setExpenseOpen(true)}>
               <Icon name="wallet" size={16} /> Ingresar gasto
             </button>
             <Panel title="Ultimos gastos">
@@ -636,6 +651,34 @@ export default function Dashboard() {
                 <input className="input" placeholder="Detalle del gasto" value={expenseDraft.detail} onChange={(e) => setExpenseDraft({ ...expenseDraft, detail: e.target.value })} />
                 <input className="input" placeholder="Monto" inputMode="numeric" value={expenseDraft.amount} onChange={(e) => setExpenseDraft({ ...expenseDraft, amount: e.target.value.replace(/\D/g, "") })} />
                 <button className="btn btn-gold btn-block" onClick={saveExpense}><Icon name="check" size={15} /> Registrar</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL NUEVO SERVICIO */}
+        {serviceOpen && (
+          <div style={{ position: "fixed", inset: 0, zIndex: 1200, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }} onClick={() => setServiceOpen(false)}>
+            <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)" }} />
+            <div className="card" style={{ position: "relative", width: "100%", maxWidth: 420, padding: "1.6rem", display: "grid", gap: "1.1rem", zIndex: 1 }} onClick={(e) => e.stopPropagation()}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <h3 className="font-display" style={{ margin: 0, fontSize: "1.1rem" }}>Nuevo servicio</h3>
+                <button style={{ background: "none", border: 0, color: "var(--muted)", cursor: "pointer", padding: ".3rem" }} onClick={() => setServiceOpen(false)} aria-label="Cerrar">
+                  <Icon name="close" size={18} />
+                </button>
+              </div>
+              <span className="chip" style={{ justifySelf: "start" }}>Impacta la web pública</span>
+              <div className="admin-form-grid">
+                <input className="input" placeholder="Nombre del servicio" value={serviceDraft.name} onChange={(e) => setServiceDraft({ ...serviceDraft, name: e.target.value })} />
+                <input className="input" placeholder="Precio (CLP)" inputMode="numeric" value={serviceDraft.price} onChange={(e) => setServiceDraft({ ...serviceDraft, price: e.target.value.replace(/\D/g, "") })} />
+                <input className="input" placeholder="Minutos" inputMode="numeric" value={serviceDraft.min} onChange={(e) => setServiceDraft({ ...serviceDraft, min: e.target.value.replace(/\D/g, "") })} />
+                <select className="input" value={serviceDraft.cat} onChange={(e) => setServiceDraft({ ...serviceDraft, cat: e.target.value })}>
+                  <option value="general">General</option>
+                  <option value="premium">Premium</option>
+                  <option value="quimico">Quimico</option>
+                </select>
+                <input className="input" placeholder="Descripción" value={serviceDraft.desc} onChange={(e) => setServiceDraft({ ...serviceDraft, desc: e.target.value })} />
+                <button className="btn btn-gold btn-block" onClick={() => { saveService(); setServiceOpen(false) }}><Icon name="check" size={15} /> Crear servicio</button>
               </div>
             </div>
           </div>

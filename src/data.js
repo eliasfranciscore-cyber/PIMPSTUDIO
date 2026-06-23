@@ -115,6 +115,20 @@ export const METRICS = {
     { name: "Pack Corte + Barba",  uses: 38, status: "activa" },
     { name: "1ª visita -15%",      uses: 21, status: "activa" },
   ],
+  topServices: [
+    { name: "Corte clásico",   count: 89, rev: 1441000 },
+    { name: "Corte + Barba",   count: 52, rev: 1248000 },
+    { name: "Fade premium",    count: 31, rev: 868000  },
+    { name: "Barba perfilada", count: 21, rev: 378000  },
+    { name: "Asesoría imagen", count: 11, rev: 352000  },
+  ],
+  peakHours: [
+    { h: "9",  v: 2 }, { h: "10", v: 5 }, { h: "11", v: 9  }, { h: "12", v: 12 },
+    { h: "13", v: 8 }, { h: "14", v: 6 }, { h: "15", v: 7  }, { h: "16", v: 11 },
+    { h: "17", v: 14 }, { h: "18", v: 10 }, { h: "19", v: 4 },
+  ],
+  retention: 74,
+  netMarginPct: 68,
 }
 
 export function CLP(n) { return "$" + Number(n || 0).toLocaleString("es-CL") }
