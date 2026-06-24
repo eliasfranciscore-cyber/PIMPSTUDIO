@@ -100,9 +100,9 @@
     "semantic_hash": "4823209915fb9ecf3e78b302d0415d37"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/App.jsx": {
-    "mtime": 1782279217.7518008,
-    "ast_hash": "424cbea0f245dfc870a476a990c9831c",
-    "semantic_hash": "424cbea0f245dfc870a476a990c9831c"
+    "mtime": 1782330245.5651886,
+    "ast_hash": "d1aafbb642e79a329bf4cf21500f8662",
+    "semantic_hash": "d1aafbb642e79a329bf4cf21500f8662"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/bookingsStore.js": {
     "mtime": 1781607407.027913,
@@ -150,9 +150,9 @@
     "semantic_hash": "f4691291bcb1e191a1c15ac40fbca255"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/components/SiteNav.jsx": {
-    "mtime": 1782281744.304359,
-    "ast_hash": "687bc262d9387d93d421e510aa15e7a5",
-    "semantic_hash": "687bc262d9387d93d421e510aa15e7a5"
+    "mtime": 1782330298.1170988,
+    "ast_hash": "ed1f393fad99d6d37fc741f6a71cab2a",
+    "semantic_hash": "ed1f393fad99d6d37fc741f6a71cab2a"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/components/brunetti.jsx": {
     "mtime": 1782154356.105052,
@@ -200,14 +200,14 @@
     "semantic_hash": "1b93d4717e2b097176c17f73eab5fcdf"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/pages/Booking.jsx": {
-    "mtime": 1782154820.3480713,
-    "ast_hash": "ee81eea66bf01959fd17df460f5ce484",
-    "semantic_hash": "ee81eea66bf01959fd17df460f5ce484"
+    "mtime": 1782330042.3310094,
+    "ast_hash": "6d5763c7a3592a249255e323c6b4f5bc",
+    "semantic_hash": "6d5763c7a3592a249255e323c6b4f5bc"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/pages/Cursos.jsx": {
-    "mtime": 1782280356.0885167,
-    "ast_hash": "955a2d98590ccb54a126a4dee01cfb41",
-    "semantic_hash": "955a2d98590ccb54a126a4dee01cfb41"
+    "mtime": 1782330091.2924917,
+    "ast_hash": "447190bd7a163bcc34544ba7c5691cef",
+    "semantic_hash": "447190bd7a163bcc34544ba7c5691cef"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/pages/Dashboard.jsx": {
     "mtime": 1782279269.8980396,
@@ -215,14 +215,14 @@
     "semantic_hash": "807216b25513d6db2fd0192b8470c72c"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/pages/Home.jsx": {
-    "mtime": 1782311510.956107,
-    "ast_hash": "213b4e5d588b54d844af7d4121059292",
-    "semantic_hash": "213b4e5d588b54d844af7d4121059292"
+    "mtime": 1782330324.6833196,
+    "ast_hash": "237d26e5ef1f5e92706b3351e663ba32",
+    "semantic_hash": "237d26e5ef1f5e92706b3351e663ba32"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/pages/Login.jsx": {
-    "mtime": 1782264487.0728812,
-    "ast_hash": "b4ce29cd7d5764c188dedd01dc474f41",
-    "semantic_hash": "b4ce29cd7d5764c188dedd01dc474f41"
+    "mtime": 1782330076.7279267,
+    "ast_hash": "61423707271a059b9925830747ca0f12",
+    "semantic_hash": "61423707271a059b9925830747ca0f12"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/pages/Workshop.jsx": {
     "mtime": 1782266886.5086973,
@@ -478,5 +478,15 @@
     "mtime": 1782279430.8716242,
     "ast_hash": "6edd4fa9d06d78f15382180067dcda54",
     "semantic_hash": "6edd4fa9d06d78f15382180067dcda54"
+  },
+  "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/data/estilo.js": {
+    "mtime": 1782330173.315837,
+    "ast_hash": "9a34688e684fdf1305c7d0ce500a8682",
+    "semantic_hash": "9a34688e684fdf1305c7d0ce500a8682"
+  },
+  "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/pages/EncuentraEstilo.jsx": {
+    "mtime": 1782330232.2339044,
+    "ast_hash": "a2007f9857501faa3b50e54543066372",
+    "semantic_hash": "a2007f9857501faa3b50e54543066372"
   }
 }
