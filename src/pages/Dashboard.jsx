@@ -335,7 +335,7 @@ export default function Dashboard() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
     a.href = url
-    a.download = `pimpstudio-${name}-${new Date().toISOString().slice(0, 10)}.csv`
+    a.download = `brunetti-${name}-${new Date().toISOString().slice(0, 10)}.csv`
     document.body.appendChild(a); a.click(); a.remove()
     setTimeout(() => URL.revokeObjectURL(url), 1000)
   }
@@ -864,7 +864,7 @@ function PushCard({ barber }) {
 
   const test = async () => {
     const ok = await notifyLocal({
-      title: "PIMP STUDIO",
+      title: "Brunetti",
       body: `Prueba de notificación para ${barber?.name || "ti"}.`,
     })
     setMsg(ok ? "Notificación de prueba enviada." : "Activa primero las notificaciones para probar.")
@@ -922,7 +922,7 @@ function ConfigPanel({ brunettiOnly, barber, barbers, admin, canManageTeam, barb
   const sections = brunettiOnly ? CFG_SECTIONS.filter((s) => s.id !== "equipo") : CFG_SECTIONS
   const [teamModal, setTeamModal] = useState(null) // null=cerrado; {barber:null}=crear; {barber:obj}=editar
   const [biz, setBiz] = useState(() => {
-    try { return { name: "PIMP STUDIO", address: "Maipú, Santiago", phone: "+56 9 1234 5678", waPhone: "+56 9 1234 5678", ...JSON.parse(localStorage.getItem("ps_biz") || "{}") } } catch { return { name: "PIMP STUDIO", address: "Maipú, Santiago", phone: "+56 9 1234 5678", waPhone: "+56 9 1234 5678" } }
+    try { return { name: "Brunetti Barber Studio", address: "Maipú, Santiago", phone: "+56 9 1234 5678", waPhone: "+56 9 1234 5678", ...JSON.parse(localStorage.getItem("ps_biz") || "{}") } } catch { return { name: "Brunetti Barber Studio", address: "Maipú, Santiago", phone: "+56 9 1234 5678", waPhone: "+56 9 1234 5678" } }
   })
   const [bizSaved, setBizSaved] = useState("")
   const saveBiz = () => {
@@ -1320,7 +1320,7 @@ function ConfigPanel({ brunettiOnly, barber, barbers, admin, canManageTeam, barb
           <div style={{ display: "grid", gap: "1.4rem" }}>
             <div className="cfg-card" style={{ textAlign: "center", padding: "2rem 1.5rem" }}>
               <span className="pimp-mark" style={{ width: 72, height: 72, margin: "0 auto 1rem", display: "block" }} />
-              <h3 className="font-display" style={{ margin: "0 0 .3rem", fontSize: "1.4rem" }}>PIMP STUDIO</h3>
+              <h3 className="font-display" style={{ margin: "0 0 .3rem", fontSize: "1.4rem" }}>BRUNETTI</h3>
               <p style={{ margin: 0, color: "var(--muted)", fontSize: ".84rem" }}>Panel interno v2.0</p>
               <p style={{ margin: ".5rem 0 0", color: "var(--muted-2)", fontSize: ".78rem" }}>Barberia Premium · Maipu, Santiago</p>
             </div>
@@ -1407,7 +1407,7 @@ function DashboardTopbar({ title, barber, onLogout, tab, setTab, nav, notifCount
         <span className="pimp-mark" aria-hidden="true" />
         <div className="dashboard-topbar-title">
           <strong>{title}</strong>
-          <small>PIMP STUDIO</small>
+          <small>Brunetti</small>
         </div>
       </div>
       <div className="dashboard-topbar-actions">

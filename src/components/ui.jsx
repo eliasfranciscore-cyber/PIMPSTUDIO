@@ -5,13 +5,13 @@ export function Emblem({ size = 46 }) {
     <span
       className="pimp-mark"
       style={{ width: size, height: size }}
-      aria-label="PIMP STUDIO"
+      aria-label="Brunetti"
       role="img"
     />
   )
 }
 
-export function Brandmark({ size = 44, sub = "Barber Studio", label = "PIMP STUDIO", onClick }) {
+export function Brandmark({ size = 44, sub = "Barber Studio", label = "BRUNETTI", onClick }) {
   return (
     <div className="brandmark" onClick={onClick} style={{ cursor: onClick ? "pointer" : "default" }}>
       <Emblem size={size} />

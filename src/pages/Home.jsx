@@ -44,7 +44,7 @@ const SERVICES = [
 const CARDS = [
   { cat: 'Visagismo', title: 'Asesoría de Imagen Visagista', img: '/assets/bruno-feature.jpg', body: 'Una consulta personalizada con Bruno Herrera donde analizamos tu fisonomía, estilo de vida y objetivos para definir el corte y la imagen que realmente te representan. No es solo un corte: es una dirección de estilo.' },
   { cat: 'Corte', title: 'Corte a Medida', img: '/assets/gallery-1.jpg', body: 'Corte de precisión ejecutado con técnicas avanzadas y lectura del rostro. Definición limpia, transiciones cuidadas y un acabado pensado para favorecer tus rasgos.' },
-  { cat: 'Corte + Barba', title: 'Perfilado de Barba', img: '/assets/gallery-2.png', body: 'Diseño y perfilado de barba con navaja y productos premium. Definimos líneas, simetría y textura para complementar tu rostro y tu corte.' },
+  { cat: 'Corte + Barba', title: 'Perfilado de Barba', img: '/assets/gallery-2.jpg', body: 'Diseño y perfilado de barba con navaja y productos premium. Definimos líneas, simetría y textura para complementar tu rostro y tu corte.' },
   { cat: 'Transformación', title: 'Cambio de Imagen', img: '/assets/gallery-3.jpg', body: 'Un cambio integral de imagen pensado para elevar cómo te ves y cómo te sientes, con recomendaciones de mantenimiento y estilo a futuro.' },
   { cat: 'Formación', title: 'Curso Profesional', img: '/assets/workshop-2026.jpg', body: 'Programa de 6 módulos para barberos que quieren elevar su técnica, su imagen y su negocio. Visagismo, técnica, marca personal y contenido aplicables desde el primer día.' },
   { cat: 'Marca personal', title: 'Contenido de Marca', img: '/assets/bruno-portrait.jpg', body: 'Asesoría de imagen pensada para cámara y redes: una identidad visual reconocible que potencia tu marca personal como creador o figura pública.' },
@@ -221,7 +221,7 @@ export default function Home() {
             <div className="bhero-figwrap" data-parallax>
               <div className="bhero-figure" data-tilt>
                 <a className="bhero-fig-link" href="https://instagram.com/brunetticutz" target="_blank" rel="noopener noreferrer" aria-label="Ver Instagram de @brunetticutz">
-                  <img src="/assets/bruno-hero.jpg" alt="Bruno Herrera, Brunetti — visagista" />
+                  <img src="/assets/bruno-hero.jpg" alt="Bruno Herrera, Brunetti — visagista" fetchpriority="high" decoding="async" />
                 </a>
                 <div className="fig-tag">
                   <b>Bruno Herrera</b>
@@ -282,7 +282,7 @@ export default function Home() {
           </div>
           <div className="bwrap babout">
             <figure className="babout-figure" data-reveal="left">
-              <img src="/assets/workshop-2026.jpg" alt="Bruno Herrera con su comunidad de barberos" />
+              <img src="/assets/workshop-2026.jpg" alt="Bruno Herrera con su comunidad de barberos" loading="lazy" decoding="async" />
               <figcaption className="sig">Bruno Herrera · Brunetti</figcaption>
             </figure>
             <div className="babout-body" data-reveal="right">
@@ -334,8 +334,8 @@ export default function Home() {
           </div>
           <div className="compare" data-reveal="scale">
             <div className="cmp-frame" id="compare-frame">
-              <img className="cmp-img cmp-after" src="/assets/gallery-3.jpg" alt="Después del corte" />
-              <img className="cmp-img cmp-before" src="/assets/gallery-1.jpg" alt="Antes del corte" />
+              <img className="cmp-img cmp-after" src="/assets/gallery-3.jpg" alt="Después del corte" loading="lazy" decoding="async" />
+              <img className="cmp-img cmp-before" src="/assets/gallery-1.jpg" alt="Antes del corte" loading="lazy" decoding="async" />
               <span className="cmp-tag before">Antes</span>
               <span className="cmp-tag after">Después</span>
               <div className="cmp-divider" />
@@ -382,7 +382,7 @@ export default function Home() {
           </div>
           <div className="bwrap">
             <div className="bteaser" data-reveal="scale">
-              <div className="bteaser-bg"><img src="/assets/workshop-2026.jpg" alt="Workshop Brunetti con su comunidad de barberos" /></div>
+              <div className="bteaser-bg"><img src="/assets/workshop-2026.jpg" alt="Workshop Brunetti con su comunidad de barberos" loading="lazy" decoding="async" /></div>
               <div className="bteaser-inner">
                 <p className="kicker">Formación profesional</p>
                 <h2>Aprende visagismo y barbería con Bruno</h2>

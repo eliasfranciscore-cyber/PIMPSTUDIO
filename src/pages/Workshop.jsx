@@ -129,6 +129,7 @@ function Hero({ onReserve }) {
       <div className="wks-hero-inner">
         <div className="wks-container wks-hero-grid">
           <div>
+            <img className="wks-hero-logo" src="/assets/ascension-logo.webp" alt="ASCENSIÓN" />
             <div className="wks-hero-kicker">
               <span className="wks-chip"><Icon name="scissors" size={13} /> Edición barbería premium</span>
               <span className="wks-eyebrow">{m.kicker}</span>
@@ -152,7 +153,6 @@ function Hero({ onReserve }) {
             <div className="wks-card-row">
               <div className="wks-date-badge">
                 <b>{m.dateLabel}</b>
-                <span>{m.location}</span>
               </div>
               <span className="wks-chip"><Icon name="pin" size={12} /> Cupos 20</span>
             </div>
@@ -213,7 +213,7 @@ function QuoteBlock() {
             “El mejor barbero del mundo no sirve de nada si nadie sabe que existe. Tu técnica es el 50%,{" "}
             <span className="q">tu visibilidad es el otro 50%.</span>”
           </blockquote>
-          <cite>PIMP STUDIO · Marca personal</cite>
+          <cite>Brunetti · Marca personal</cite>
         </div>
         <div className={`wks-5050 ${seen ? "is-in" : ""}`}>
           <div className="wks-5050-row">
@@ -409,7 +409,7 @@ function Pricing({ onReserve }) {
             </div>
           </div>
           <div className="wks-pricing-foot">
-            <p className="wks-pricing-note" style={{ margin: 0 }}>{m.dateLong} · {m.location}</p>
+            <p className="wks-pricing-note" style={{ margin: 0 }}>{m.dateLong}</p>
             <button className="wks-btn wks-btn-gold" onClick={onReserve}>
               <Icon name="calendar" size={16} /> Reservar ahora
             </button>
@@ -422,7 +422,7 @@ function Pricing({ onReserve }) {
 
 /* ============================================================ REGISTER */
 function Register({ formRef }) {
-  const [form, setForm] = useState({ name: "", phone: "", email: "", edition: "23 de agosto · Viña del Mar" });
+  const [form, setForm] = useState({ name: "", phone: "", email: "", edition: "23 de agosto" });
   const [errors, setErrors] = useState({});
   const [sent, setSent] = useState(false);
   const m = WK.meta;
@@ -458,7 +458,6 @@ function Register({ formRef }) {
           <aside className="wks-form-aside">
             <div className="wks-summary-row"><span>Workshop</span><b>Contenido que Vende</b></div>
             <div className="wks-summary-row"><span>Fecha</span><b>{m.dateLabel}</b></div>
-            <div className="wks-summary-row"><span>Lugar</span><b>{m.location}</b></div>
             <div className="wks-summary-row"><span>Cupos</span><b>{m.seatsTotal - m.seatsTaken} disponibles</b></div>
             <div className="wks-summary-total">
               <div><span style={{ color: "var(--wk-muted)", fontSize: "0.8rem" }}>Inversión total</span>
@@ -504,7 +503,7 @@ function Register({ formRef }) {
               <div className="wks-field">
                 <label>Edición</label>
                 <select value={form.edition} onChange={set("edition")}>
-                  <option>23 de agosto · Viña del Mar</option>
+                  <option>23 de agosto</option>
                   <option>Próxima edición · lista de espera</option>
                 </select>
               </div>
@@ -554,26 +553,52 @@ function Faq() {
 /* ============================================================ FOOTER */
 function Footer({ onReserve }) {
   const m = WK.meta;
+  const links = [
+    ["transformar", "Transformación"],
+    ["programa", "Programa"],
+    ["cronograma", "Cronograma"],
+    ["precio", "Inversión"],
+    ["inscribir", "Inscripción"],
+  ];
   return (
     <footer className="wks-footer">
-      <div className="wks-container wks-footer-grid">
-        <div style={{ display: "grid", gap: "1.2rem" }}>
-          <span className="wks-eyebrow">Únete al cambio</span>
-          <h2>Escribe tu<br />propia historia.</h2>
-          <div className="wks-hero-actions" style={{ marginTop: "0.4rem" }}>
-            <button className="wks-btn wks-btn-gold" onClick={onReserve}><Icon name="calendar" size={16} /> Inscríbete ahora</button>
+      <div className="wks-footer-wide">
+        <div className="wks-footer-cols">
+          <div className="wks-footer-brand">
+            <img className="wks-footer-logo" src="/assets/ascension-logo.webp" alt="ASCENSIÓN" />
+            <p className="wks-footer-tag">
+              Workshop de marca personal para barberos. Convierte tu técnica en visibilidad,
+              y tu visibilidad en agenda real.
+            </p>
+            <button className="wks-btn wks-btn-gold" onClick={onReserve}>
+              <Icon name="calendar" size={16} /> Inscríbete ahora
+            </button>
+          </div>
+
+          <nav className="wks-footer-col">
+            <span className="wks-eyebrow">Explora</span>
+            {links.map(([id, label]) => (
+              <button key={id} type="button" className="wks-footer-link" onClick={() => smoothTo(id)}>
+                {label}
+              </button>
+            ))}
+          </nav>
+
+          <div className="wks-footer-col">
+            <span className="wks-eyebrow">Hablemos</span>
+            <a className="wks-footer-link" href={`https://wa.me/${m.whatsapp.replace(/[^\d]/g, "")}`}>
+              <Icon name="whatsapp" size={16} color="var(--wk-gold-lt)" /> WhatsApp directo
+            </a>
+            <a className="wks-footer-link" href="https://www.instagram.com/brunetticutz/" target="_blank" rel="noopener noreferrer">
+              <Icon name="instagram" size={16} color="var(--wk-gold-lt)" /> {m.handle}
+            </a>
           </div>
         </div>
-        <div className="wks-footer-contact">
-          <span className="wks-eyebrow" style={{ marginBottom: "0.4rem" }}>Hablemos</span>
-          <a href={`https://wa.me/${m.whatsapp.replace(/[^\d]/g, "")}`}><Icon name="whatsapp" size={18} color="var(--wk-gold-lt)" /> WhatsApp directo</a>
-          <a href="https://www.instagram.com/brunetticutz/" target="_blank" rel="noopener noreferrer"><Icon name="instagram" size={18} color="var(--wk-gold-lt)" /> {m.handle}</a>
-          <a><Icon name="pin" size={18} color="var(--wk-gold-lt)" /> {m.location}</a>
+
+        <div className="wks-footer-bottom">
+          <span>© 2026 ASCENSIÓN · por Brunetti</span>
+          <span>Edición barbería premium · {m.dateLabel}</span>
         </div>
-      </div>
-      <div className="wks-container wks-footer-bottom">
-        <span>© 2026 PIMP STUDIO · Workshop Contenido que Vende</span>
-        <span>Edición barbería premium · {m.dateLabel}</span>
       </div>
     </footer>
   );

@@ -28,12 +28,12 @@ const FILTER_MAP = { Pendientes: 'pendiente', Confirmadas: 'confirmada', 'En cur
 function waLink(bk, barberShort, status) {
   const first = (bk.client || 'Hola').split(' ')[0]
   const msgs = {
-    confirmada: `Hola ${first}, te confirmamos tu hora en PIMP STUDIO el ${bk.date} a las ${bk.time} con ${barberShort}. ¡Te esperamos! 💈`,
-    'en curso': `Hola ${first}, te esperamos en PIMP STUDIO, tu hora de las ${bk.time} con ${barberShort} está por comenzar.`,
-    completada: `Hola ${first}, ¡gracias por tu visita a PIMP STUDIO! Esperamos que te haya gustado el resultado. Te esperamos pronto. 💈`,
-    reagendar: `Hola ${first}, necesitamos reagendar tu hora del ${bk.date} (${bk.time}) en PIMP STUDIO. ¿Qué día te acomoda?`,
+    confirmada: `Hola ${first}, te confirmamos tu hora en Brunetti el ${bk.date} a las ${bk.time} con ${barberShort}. ¡Te esperamos! 💈`,
+    'en curso': `Hola ${first}, te esperamos en Brunetti, tu hora de las ${bk.time} con ${barberShort} está por comenzar.`,
+    completada: `Hola ${first}, ¡gracias por tu visita a Brunetti! Esperamos que te haya gustado el resultado. Te esperamos pronto. 💈`,
+    reagendar: `Hola ${first}, necesitamos reagendar tu hora del ${bk.date} (${bk.time}) en Brunetti. ¿Qué día te acomoda?`,
     cancelada: `Hola ${first}, lamentamos avisarte que tu hora del ${bk.date} a las ${bk.time} fue cancelada. Escríbenos para reagendar.`,
-    default: `Hola ${first}, te escribimos de PIMP STUDIO por tu reserva del ${bk.date} a las ${bk.time}.`,
+    default: `Hola ${first}, te escribimos de Brunetti por tu reserva del ${bk.date} a las ${bk.time}.`,
   }
   const phone = String(bk.phone || '').replace(/\D/g, '')
   return `https://wa.me/56${phone}?text=${encodeURIComponent(msgs[status] || msgs.default)}`

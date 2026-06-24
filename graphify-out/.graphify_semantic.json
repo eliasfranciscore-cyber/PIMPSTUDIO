@@ -1,0 +1,14 @@
+{
+  "nodes": [
+    {"id":"index_html","label":"App HTML Shell (Brunetti)","file_type":"document","source_file":"index.html","source_location":null,"source_url":null,"captured_at":null,"author":null,"contributor":null,"rationale":"SPA shell. Meta title/og y apple-mobile-web-app-title migrados de PIMP STUDIO a Brunetti; canonical/og:url apuntan al dominio nuevo."},
+    {"id":"concept_brunetticutz_domain","label":"brunetticutz.cl (dominio principal)","file_type":"concept","source_file":"index.html","source_location":null,"source_url":"https://brunetticutz.cl/","captured_at":null,"author":null,"contributor":null,"rationale":"Dominio nuevo del sitio. canonical y og:url apuntan a https://brunetticutz.cl durante la migracion desde pimpstudio.cl (que redirige 301 al nuevo). Configurado en Vercel + nameservers en nic.cl."},
+    {"id":"web_index","label":"Legacy PIMP STUDIO static landing","file_type":"document","source_file":"web/index.html","source_location":null,"source_url":null,"captured_at":null,"author":null,"contributor":null,"rationale":"Sitio estatico antiguo (no se despliega; outputDirectory es dist del build Vite)."}
+  ],
+  "edges": [
+    {"source":"index_html","target":"concept_brunetticutz_domain","relation":"references","confidence":"EXTRACTED","confidence_score":1.0,"source_file":"index.html","source_location":null,"weight":1.0},
+    {"source":"index_html","target":"pwa_pimp_studio","relation":"references","confidence":"EXTRACTED","confidence_score":1.0,"source_file":"index.html","source_location":null,"weight":1.0}
+  ],
+  "hyperedges": [],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

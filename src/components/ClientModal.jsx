@@ -33,7 +33,7 @@ export default function ClientModal({ client, history = [], barbers = [], startE
 
   const first = (client.name || '').split(' ')[0] || 'Hola'
   const phoneDigits = String(client.phone || '').replace(/\D/g, '')
-  const waHref = `https://wa.me/56${phoneDigits}?text=${encodeURIComponent(`Hola ${first}, te escribimos de PIMP STUDIO 💈`)}`
+  const waHref = `https://wa.me/56${phoneDigits}?text=${encodeURIComponent(`Hola ${first}, te escribimos de Brunetti 💈`)}`
   const totalSpent = client.totalSpent || history.reduce((s, h) => s + Number(h.price || 0), 0)
   const visits = client.visits || history.length
 

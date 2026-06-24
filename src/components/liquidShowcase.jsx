@@ -172,7 +172,7 @@ export function ImageCompare({ beforeSrc, afterSrc, beforeLabel = "Antes", after
     <section className="feature-section compare-section" id="sec-transformaciones">
       <div className="feature-head">
         <p className="kicker">Antes / Después</p>
-        <h2 className="font-display">La transformación PIMP</h2>
+        <h2 className="font-display">La transformación Brunetti</h2>
         <p>Arrastra el control para ver el cambio. Así se ve la diferencia de un trabajo bien hecho.</p>
       </div>
       <div className="compare">

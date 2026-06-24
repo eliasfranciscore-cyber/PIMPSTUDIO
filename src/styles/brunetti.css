@@ -390,10 +390,11 @@
 }
 .brunetti-site .bhero-name {
   margin: 0;
-  font-weight: 700;
-  line-height: 0.9;
-  font-size: clamp(2.4rem, 11vw, 8.5rem);
-  letter-spacing: 0.01em;
+  font-family: "Pirata One", "Sora", serif;
+  font-weight: 400;
+  line-height: 0.92;
+  font-size: clamp(3rem, 13vw, 9.5rem);
+  letter-spacing: 0.04em;
   white-space: nowrap;
   background: linear-gradient(180deg, #ffffff 28%, #f0d49a 66%, #c9a35b 100%);
   -webkit-background-clip: text;

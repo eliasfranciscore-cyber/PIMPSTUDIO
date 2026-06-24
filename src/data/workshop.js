@@ -9,7 +9,7 @@ export const TESTIMONIALS = [
     quote: "Llegué sin saber qué corte me quedaba y salí con el mejor look de mi vida. La asesoría visagista de Brunetti es otro nivel.",
     name: "Matías Fuentes",
     role: "Cliente Brunetti Experience",
-    img: "/assets/gallery-2.png",
+    img: "/assets/gallery-2.jpg",
   },
   {
     quote: "El fade más limpio que me han hecho en Maipú. Ambiente premium, atención impecable y siempre puntuales con la hora reservada.",
@@ -29,7 +29,7 @@ export const FEATURE_CARDS = [
   {
     cat: "Brunetti Experience",
     title: "Asesoría de imagen visagista",
-    img: "/assets/gallery-2.png",
+    img: "/assets/gallery-2.jpg",
     body: "Una consulta personalizada donde analizamos rostro, estilo de vida y objetivos para definir una dirección visual coherente, no solo un corte.",
   },
   {
@@ -47,7 +47,7 @@ export const FEATURE_CARDS = [
   {
     cat: "Experiencia",
     title: "Detalle de barba",
-    img: "/assets/gallery-2.png",
+    img: "/assets/gallery-2.jpg",
     body: "Perfilado de barba, simetría y líneas bien construidas para complementar el corte y reforzar la presencia del cliente.",
   },
   {
@@ -104,7 +104,7 @@ export const WORKSHOP_DATES = [
   {
     title: "Edición Maipú · Intensivo presencial",
     date: "Sábado 28 de junio · 09:30 a 13:30",
-    location: "PIMP STUDIO, Monumento 1750 Local C",
+    location: "Brunetti Barber Studio, Monumento 1750 Local C",
     seats: "20 cupos",
     price: "$97.000",
   },
@@ -281,7 +281,7 @@ export const WORKSHOP = {
   ],
 
   give: [
-    { b: "Certificado", s: "Validación oficial de tu formación PIMP STUDIO." },
+    { b: "Certificado", s: "Validación oficial de tu formación Brunetti." },
     { b: "Comunidad VIP", s: "Acceso al grupo privado de WhatsApp para seguimiento." },
     { b: "Toolkit", s: "5 templates de CapCut de alto CTR, listos para usar." },
   ],

@@ -112,7 +112,7 @@ export default function BarberLogin() {
     <div className="barber-login-shell">
       <div className="barber-login-card">
         <div className="barber-login-visual">
-          <img src="/assets/gallery-2.png" alt="PIMP STUDIO interior" />
+          <img src="/assets/gallery-2.jpg" alt="Brunetti interior" />
           <div className="barber-login-overlay" />
           <div className="barber-login-copy">
             <span className="eyebrow">Acceso Brunetti</span>

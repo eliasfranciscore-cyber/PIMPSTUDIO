@@ -20,9 +20,9 @@ self.addEventListener("push", (event) => {
   try {
     data = event.data ? event.data.json() : {};
   } catch {
-    data = { title: "PIMP STUDIO", body: event.data ? event.data.text() : "" };
+    data = { title: "Brunetti", body: event.data ? event.data.text() : "" };
   }
-  const title = data.title || "PIMP STUDIO";
+  const title = data.title || "Brunetti";
   const options = {
     body: data.body || "Tienes una nueva reserva.",
     icon: "/assets/pimp-studio-logo.jpg",
@@ -39,7 +39,7 @@ self.addEventListener("push", (event) => {
 self.addEventListener("message", (event) => {
   const msg = event.data || {};
   if (msg.type === "ps-notify") {
-    const title = msg.title || "PIMP STUDIO";
+    const title = msg.title || "Brunetti";
     self.registration.showNotification(title, {
       body: msg.body || "",
       icon: "/assets/pimp-studio-logo.jpg",

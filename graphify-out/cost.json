@@ -5,8 +5,35 @@
       "input_tokens": 0,
       "output_tokens": 0,
       "files": 94
+    },
+    {
+      "date": "2026-06-23T19:37:22.282183+00:00",
+      "input_tokens": 12700,
+      "output_tokens": 4600,
+      "files": 94
+    },
+    {
+      "date": "2026-06-24T01:17:22.814317+00:00",
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "files": 7,
+      "note": "incremental --update: domain migration meta"
+    },
+    {
+      "date": "2026-06-24T01:31:04.630655+00:00",
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "files": 11,
+      "note": "incremental --update: deep rebrand PIMP STUDIO->Brunetti (code-only AST)"
+    },
+    {
+      "date": "2026-06-24T02:50:50.172412+00:00",
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "files": 2,
+      "note": "workshop ASCENSIÓN repalette+footer (code-only AST)"
     }
   ],
-  "total_input_tokens": 0,
-  "total_output_tokens": 0
+  "total_input_tokens": 12700,
+  "total_output_tokens": 4600
 }

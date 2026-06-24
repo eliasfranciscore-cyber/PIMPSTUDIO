@@ -5,9 +5,9 @@
     "semantic_hash": "13d552e9d6e18a8c558c5ad407e91708"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/.claude/settings.local.json": {
-    "mtime": 1781674376.3302944,
-    "ast_hash": "6a7b96f4826bf080f4f8a20ee24dfdc7",
-    "semantic_hash": "6a7b96f4826bf080f4f8a20ee24dfdc7"
+    "mtime": 1782243773.5166516,
+    "ast_hash": "51050d16db5096d6e9b594cdf9bf1868",
+    "semantic_hash": "51050d16db5096d6e9b594cdf9bf1868"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/api/_auth.js": {
     "mtime": 1781238119.306988,
@@ -80,9 +80,9 @@
     "semantic_hash": "72dde00c3823372a082e7c245f482744"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/public/sw.js": {
-    "mtime": 1781558022.6908135,
-    "ast_hash": "fb4ce4c276faa1ebcc6b80a1bd3c0c77",
-    "semantic_hash": "fb4ce4c276faa1ebcc6b80a1bd3c0c77"
+    "mtime": 1782264500.786632,
+    "ast_hash": "544fcc7f6c81847758aca7b5a306e7f0",
+    "semantic_hash": "544fcc7f6c81847758aca7b5a306e7f0"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/scripts/exportar_pdf.sh": {
     "mtime": 1781237386.744873,
@@ -120,14 +120,14 @@
     "semantic_hash": "b8baf870791352a85cf36d45660fcde1"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/components/BookingsInbox.jsx": {
-    "mtime": 1782158005.484296,
-    "ast_hash": "e2a09d28d3977bfc4982bb5b1f70ea79",
-    "semantic_hash": "e2a09d28d3977bfc4982bb5b1f70ea79"
+    "mtime": 1782264477.9025054,
+    "ast_hash": "1f963e09e68986d11013f5dd4b871a71",
+    "semantic_hash": "1f963e09e68986d11013f5dd4b871a71"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/components/ClientModal.jsx": {
-    "mtime": 1781684558.455566,
-    "ast_hash": "876372e0a9a08167a694f41cc6d24014",
-    "semantic_hash": "876372e0a9a08167a694f41cc6d24014"
+    "mtime": 1782264478.8319077,
+    "ast_hash": "29ad3edc81d0444c32187d7bc47a7e08",
+    "semantic_hash": "29ad3edc81d0444c32187d7bc47a7e08"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/components/DashboardResumen.jsx": {
     "mtime": 1782188581.8189366,
@@ -150,9 +150,9 @@
     "semantic_hash": "f4691291bcb1e191a1c15ac40fbca255"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/components/SiteNav.jsx": {
-    "mtime": 1782187066.7710178,
-    "ast_hash": "ff6e3b8448a877b5e99e91ed6e0201ff",
-    "semantic_hash": "ff6e3b8448a877b5e99e91ed6e0201ff"
+    "mtime": 1782264484.4420002,
+    "ast_hash": "a7e2104875d1001495ce0d255facaf7c",
+    "semantic_hash": "a7e2104875d1001495ce0d255facaf7c"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/components/brunetti.jsx": {
     "mtime": 1782154356.105052,
@@ -160,9 +160,9 @@
     "semantic_hash": "f0dc379eab527389a2a9b330aee5311a"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/components/liquidShowcase.jsx": {
-    "mtime": 1781297556.4661727,
-    "ast_hash": "e3ba3e0c7226885c5875fadeaff02844",
-    "semantic_hash": "e3ba3e0c7226885c5875fadeaff02844"
+    "mtime": 1782264480.2079496,
+    "ast_hash": "c1fa5ced9e51247af9eb135be69b91ae",
+    "semantic_hash": "c1fa5ced9e51247af9eb135be69b91ae"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/components/theme.jsx": {
     "mtime": 1781323987.1097183,
@@ -170,9 +170,9 @@
     "semantic_hash": "11a52ad382304732a327b1cc21ec146d"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/components/ui.jsx": {
-    "mtime": 1782187055.7670548,
-    "ast_hash": "56ad1813d15acc4c07290c7632fe7c63",
-    "semantic_hash": "56ad1813d15acc4c07290c7632fe7c63"
+    "mtime": 1782264476.567599,
+    "ast_hash": "d51e8e66df1a87db7972d6968c97a89a",
+    "semantic_hash": "d51e8e66df1a87db7972d6968c97a89a"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/data.js": {
     "mtime": 1782188503.6721983,
@@ -180,9 +180,9 @@
     "semantic_hash": "844f566e5d1ec110bdccce7ed0ba4911"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/data/workshop.js": {
-    "mtime": 1782187065.1799445,
-    "ast_hash": "1721ca641acf71f73c957650892b8fd7",
-    "semantic_hash": "1721ca641acf71f73c957650892b8fd7"
+    "mtime": 1782264483.0500875,
+    "ast_hash": "ae186d334443c05da2b7e46d37989d2f",
+    "semantic_hash": "ae186d334443c05da2b7e46d37989d2f"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/main.jsx": {
     "mtime": 1782154312.896384,
@@ -195,9 +195,9 @@
     "semantic_hash": "3190a9a3943b014ce8a82fcb5ab30312"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/pages/BarberLogin.jsx": {
-    "mtime": 1782212787.3859386,
-    "ast_hash": "89b5426caefcb8f0771bcab32ab9ef0c",
-    "semantic_hash": "89b5426caefcb8f0771bcab32ab9ef0c"
+    "mtime": 1782264485.9924064,
+    "ast_hash": "1b93d4717e2b097176c17f73eab5fcdf",
+    "semantic_hash": "1b93d4717e2b097176c17f73eab5fcdf"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/pages/Booking.jsx": {
     "mtime": 1782154820.3480713,
@@ -210,24 +210,24 @@
     "semantic_hash": "2ef35fc55ed36592b973e3b43354fe62"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/pages/Dashboard.jsx": {
-    "mtime": 1782212834.8584785,
-    "ast_hash": "2cf0930305170478c7281f91e00f1eb6",
-    "semantic_hash": "2cf0930305170478c7281f91e00f1eb6"
+    "mtime": 1782264499.9195075,
+    "ast_hash": "a2ee90efc566a31a13afa621e9560697",
+    "semantic_hash": "a2ee90efc566a31a13afa621e9560697"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/pages/Home.jsx": {
-    "mtime": 1782186710.456469,
-    "ast_hash": "48f76d4b6ce20aaa92e264232dcbc8b2",
-    "semantic_hash": "48f76d4b6ce20aaa92e264232dcbc8b2"
+    "mtime": 1782247999.0220656,
+    "ast_hash": "60129ba3326ef2a3f7f95702e8791bcf",
+    "semantic_hash": "60129ba3326ef2a3f7f95702e8791bcf"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/pages/Login.jsx": {
-    "mtime": 1781318728.075504,
-    "ast_hash": "a0d5683d0650615781765d23eb94bccb",
-    "semantic_hash": "a0d5683d0650615781765d23eb94bccb"
+    "mtime": 1782264487.0728812,
+    "ast_hash": "b4ce29cd7d5764c188dedd01dc474f41",
+    "semantic_hash": "b4ce29cd7d5764c188dedd01dc474f41"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/pages/Workshop.jsx": {
-    "mtime": 1782187081.4825635,
-    "ast_hash": "3c2f27e30fe44b84285dc9cd9ed76901",
-    "semantic_hash": "3c2f27e30fe44b84285dc9cd9ed76901"
+    "mtime": 1782266886.5086973,
+    "ast_hash": "126eb44ed832f14f536a7b21797ce22c",
+    "semantic_hash": "126eb44ed832f14f536a7b21797ce22c"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/push.js": {
     "mtime": 1781558057.0722811,
@@ -240,9 +240,9 @@
     "semantic_hash": "cbb50b821e1260c29d97f8e4e06e6334"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/vite.config.js": {
-    "mtime": 1781318436.5978649,
-    "ast_hash": "140a69675bff1ec4659cdf360b6f5c02",
-    "semantic_hash": "140a69675bff1ec4659cdf360b6f5c02"
+    "mtime": 1782247963.8169465,
+    "ast_hash": "1cfb3f9496c4839c35113f7e4010e15c",
+    "semantic_hash": "1cfb3f9496c4839c35113f7e4010e15c"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/web/app.js": {
     "mtime": 1781237386.7608192,
@@ -295,9 +295,9 @@
     "semantic_hash": "7ed957e25ddcb80644ca7dcb1b76eaa6"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/index.html": {
-    "mtime": 1781682029.61237,
-    "ast_hash": "26c3981d4d73331fb28cdc2ba996558f",
-    "semantic_hash": "26c3981d4d73331fb28cdc2ba996558f"
+    "mtime": 1782263551.1472132,
+    "ast_hash": "880c5bd5999f9445131997b08df44331",
+    "semantic_hash": "880c5bd5999f9445131997b08df44331"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/knowledge/empresa.md": {
     "mtime": 1781237386.6631923,
@@ -370,9 +370,9 @@
     "semantic_hash": "36f1fbbd469b04d2a707d9104b0e7615"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/web/index.html": {
-    "mtime": 1781237386.8341877,
-    "ast_hash": "2567707f2dddf8630180e166dba531a5",
-    "semantic_hash": "2567707f2dddf8630180e166dba531a5"
+    "mtime": 1782247919.01691,
+    "ast_hash": "8845e80cb7d47bf88a5bb95b985a4dfe",
+    "semantic_hash": "8845e80cb7d47bf88a5bb95b985a4dfe"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/web/ingreso.html": {
     "mtime": 1781237386.834392,
@@ -405,34 +405,29 @@
     "semantic_hash": "9c247082de8ce6758ba4fc6e9353fc5f"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/public/assets/bruno-feature.jpg": {
-    "mtime": 1782139429.15118,
-    "ast_hash": "7be20a827e5d73136c07311dfb9098cf",
-    "semantic_hash": "7be20a827e5d73136c07311dfb9098cf"
+    "mtime": 1782247880.9094892,
+    "ast_hash": "bf4f84590a72ef4cab009aeeecfea752",
+    "semantic_hash": "bf4f84590a72ef4cab009aeeecfea752"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/public/assets/bruno-hero.jpg": {
-    "mtime": 1782139429.0821967,
-    "ast_hash": "0525c6245d1a9751fa88fdc67af9c19c",
-    "semantic_hash": "0525c6245d1a9751fa88fdc67af9c19c"
+    "mtime": 1782247881.1513495,
+    "ast_hash": "d9d57586ddf8f282d00acd22e08bb0e3",
+    "semantic_hash": "d9d57586ddf8f282d00acd22e08bb0e3"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/public/assets/bruno-portrait.jpg": {
-    "mtime": 1782139429.2275448,
-    "ast_hash": "6c9999e0b5c13edb4c340024389b61ee",
-    "semantic_hash": "6c9999e0b5c13edb4c340024389b61ee"
+    "mtime": 1782247881.0130842,
+    "ast_hash": "7975f82cd588fc1d4673644e7078a861",
+    "semantic_hash": "7975f82cd588fc1d4673644e7078a861"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/public/assets/gallery-1.jpg": {
-    "mtime": 1781237386.6907089,
-    "ast_hash": "7b30c6bce4f8a82e6711ead4109f47e0",
-    "semantic_hash": "7b30c6bce4f8a82e6711ead4109f47e0"
-  },
-  "/Users/elija/Projects/PIMPSTUDIO-desarrollo/public/assets/gallery-2.png": {
-    "mtime": 1781237386.7268226,
-    "ast_hash": "a6f4c0c9c172c026b613ebc356e12ea8",
-    "semantic_hash": "a6f4c0c9c172c026b613ebc356e12ea8"
+    "mtime": 1782247880.752939,
+    "ast_hash": "54b32db7691a3f7734d47062f3b16257",
+    "semantic_hash": "54b32db7691a3f7734d47062f3b16257"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/public/assets/gallery-3.jpg": {
-    "mtime": 1781237386.7361486,
-    "ast_hash": "7bc4c6891c8a0717187ed321c4bb6f9a",
-    "semantic_hash": "7bc4c6891c8a0717187ed321c4bb6f9a"
+    "mtime": 1782247880.8492568,
+    "ast_hash": "ad97ffe68c8200540d04556348414fa2",
+    "semantic_hash": "ad97ffe68c8200540d04556348414fa2"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/public/assets/pimp-studio-logo.jpg": {
     "mtime": 1781237386.7434607,
@@ -445,28 +440,38 @@
     "semantic_hash": "271d134b3865677f3971c6b3a2e50893"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/public/assets/workshop-2026.jpg": {
-    "mtime": 1782139429.339523,
-    "ast_hash": "02686755574f9c8c4abe6caf2ea149c4",
-    "semantic_hash": "02686755574f9c8c4abe6caf2ea149c4"
+    "mtime": 1782247881.0478268,
+    "ast_hash": "64f620d8c20743f118463fe4710ac170",
+    "semantic_hash": "64f620d8c20743f118463fe4710ac170"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/web/assets/gallery-1.jpg": {
-    "mtime": 1781237386.7992475,
-    "ast_hash": "7b30c6bce4f8a82e6711ead4109f47e0",
-    "semantic_hash": "7b30c6bce4f8a82e6711ead4109f47e0"
-  },
-  "/Users/elija/Projects/PIMPSTUDIO-desarrollo/web/assets/gallery-2.png": {
-    "mtime": 1781237386.8202603,
-    "ast_hash": "a6f4c0c9c172c026b613ebc356e12ea8",
-    "semantic_hash": "a6f4c0c9c172c026b613ebc356e12ea8"
+    "mtime": 1782247930.4669194,
+    "ast_hash": "54b32db7691a3f7734d47062f3b16257",
+    "semantic_hash": "54b32db7691a3f7734d47062f3b16257"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/web/assets/gallery-3.jpg": {
-    "mtime": 1781237386.8297894,
-    "ast_hash": "7bc4c6891c8a0717187ed321c4bb6f9a",
-    "semantic_hash": "7bc4c6891c8a0717187ed321c4bb6f9a"
+    "mtime": 1782247930.4780843,
+    "ast_hash": "ad97ffe68c8200540d04556348414fa2",
+    "semantic_hash": "ad97ffe68c8200540d04556348414fa2"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/web/assets/pimp-studio-logo.jpg": {
-    "mtime": 1781237386.8318565,
+    "mtime": 1782247930.4841714,
     "ast_hash": "c685d8656fe24042572176e9de7b4aaf",
     "semantic_hash": "c685d8656fe24042572176e9de7b4aaf"
+  },
+  "/Users/elija/Projects/PIMPSTUDIO-desarrollo/public/assets/gallery-2.jpg": {
+    "mtime": 1782247881.2079039,
+    "ast_hash": "fb85ad37bd129fa2e4f3b8b8ad71bc07",
+    "semantic_hash": "fb85ad37bd129fa2e4f3b8b8ad71bc07"
+  },
+  "/Users/elija/Projects/PIMPSTUDIO-desarrollo/web/assets/gallery-2.jpg": {
+    "mtime": 1782247930.4712665,
+    "ast_hash": "fb85ad37bd129fa2e4f3b8b8ad71bc07",
+    "semantic_hash": "fb85ad37bd129fa2e4f3b8b8ad71bc07"
+  },
+  "/Users/elija/Projects/PIMPSTUDIO-desarrollo/public/assets/ascension-logo.webp": {
+    "mtime": 1782266143.130733,
+    "ast_hash": "d92f129e84b5e9e80434860b71f1df2d",
+    "semantic_hash": "d92f129e84b5e9e80434860b71f1df2d"
   }
 }

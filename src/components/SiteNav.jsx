@@ -74,7 +74,7 @@ export default function SiteNav({ onSection, scrolled: scrolledProp }) {
       <header className={`home-nav ${scrolled || menuOpen ? "is-scrolled" : ""}`}>
         <Brandmark
           size={38}
-          label={isWorkshop ? "BRUNETTI" : "PIMP STUDIO"}
+          label="BRUNETTI"
           sub={isWorkshop ? "Workshop 2026" : "Barber Studio"}
           onClick={() => navigate("/")}
         />
