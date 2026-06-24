@@ -121,7 +121,7 @@ export default function Booking() {
   return (
     <MobileScreen>
       <div style={{ padding: "0.5rem 1.2rem 0.9rem", display: "flex", alignItems: "center", gap: ".8rem" }}>
-        <button onClick={() => (step > 1 ? setStep(step - 1) : navigate("/"))} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid var(--hair)", borderRadius: 999, width: 38, height: 38, display: "grid", placeItems: "center", color: "var(--ink)", flexShrink: 0 }}>
+        <button onClick={() => (step > 1 ? setStep(step - 1) : navigate("/"))} style={{ background: "var(--fill-soft)", border: "1px solid var(--hair)", borderRadius: 999, width: 38, height: 38, display: "grid", placeItems: "center", color: "var(--ink)", flexShrink: 0 }}>
           <Icon name="arrowLeft" size={17} />
         </button>
         <div style={{ flex: 1 }}>
@@ -133,7 +133,7 @@ export default function Booking() {
 
       <div style={{ padding: "0 1.2rem 1rem", display: "flex", gap: ".4rem" }}>
         {steps.map((_, i) => (
-          <div key={i} style={{ flex: 1, height: 4, borderRadius: 99, background: (i + 1) <= step ? "var(--gold-grad)" : "rgba(255,255,255,0.08)", transition: "background .4s" }} />
+          <div key={i} style={{ flex: 1, height: 4, borderRadius: 99, background: (i + 1) <= step ? "var(--gold-grad)" : "var(--fill-track)", transition: "background .4s" }} />
         ))}
       </div>
 
@@ -188,13 +188,13 @@ export default function Booking() {
                   type="button"
                   onClick={() => setServiceId(s.id)}
                   style={{
-                    border: serviceId === s.id ? "2px solid var(--gold-line)" : "1px solid rgba(255,255,255,0.1)",
+                    border: serviceId === s.id ? "2px solid var(--gold-line)" : "1px solid var(--hair-2)",
                     padding: ".7rem",
                     display: "grid",
                     gap: ".3rem",
                     cursor: "pointer",
                     textAlign: "center",
-                    background: serviceId === s.id ? "linear-gradient(135deg, rgba(214, 188, 70, 0.15), rgba(214, 188, 70, 0.05))" : "rgba(0,0,0,0.3)",
+                    background: serviceId === s.id ? "linear-gradient(135deg, rgba(214, 188, 70, 0.15), rgba(214, 188, 70, 0.05))" : "var(--fill-card)",
                     transition: "all .2s",
                     borderRadius: "12px",
                     width: "100%",
@@ -245,8 +245,8 @@ export default function Booking() {
                     return (
                       <button key={i} disabled={disabled} onClick={() => { setDateKey(k); setSlot(null) }} className="booking-cal-day" style={{
                         aspectRatio: "1", borderRadius: 6, border: sel ? "0" : "1px solid transparent",
-                        background: sel ? "var(--gold-grad)" : disabled ? "transparent" : "rgba(255,255,255,0.03)",
-                        color: sel ? "#1a1407" : disabled ? "var(--muted-2)" : "var(--ink)",
+                        background: sel ? "var(--gold-grad)" : disabled ? "transparent" : "var(--fill-softer)",
+                        color: sel ? "var(--on-gold)" : disabled ? "var(--muted-2)" : "var(--ink)",
                         fontSize: ".65rem", fontWeight: sel ? 700 : 400, cursor: disabled ? "default" : "pointer",
                         opacity: disabled ? .35 : 1, transition: "all .15s", padding: 0
                       }}>{d}</button>
@@ -272,8 +272,8 @@ export default function Booking() {
                             <button key={t} disabled={taken} onClick={() => setSlot(t)} className="booking-slot" style={{
                               padding: ".4rem 0", borderRadius: 6, fontSize: ".7rem", fontWeight: sel ? 700 : 400,
                               border: sel ? "0" : "1px solid var(--hair-2)",
-                              background: sel ? "var(--gold-grad)" : taken ? "rgba(255,255,255,0.02)" : "rgba(255,255,255,0.04)",
-                              color: sel ? "#1a1407" : taken ? "var(--muted-2)" : "var(--ink)",
+                              background: sel ? "var(--gold-grad)" : taken ? "var(--fill-faint)" : "var(--fill-soft)",
+                              color: sel ? "var(--on-gold)" : taken ? "var(--muted-2)" : "var(--ink)",
                               textDecoration: taken ? "line-through" : "none", cursor: taken ? "default" : "pointer",
                               opacity: taken ? .45 : 1, transition: "all .15s",
                             }}>{t}</button>
@@ -291,7 +291,7 @@ export default function Booking() {
         {/* PASO 3 — CONFIRMADO */}
         {step === 3 && (
           <div className="animate-scale" style={{ display: "grid", justifyItems: "center", gap: ".7rem", textAlign: "center", padding: "1rem 0", maxWidth: "600px", margin: "0 auto" }}>
-            <div style={{ width: 60, height: 60, borderRadius: 999, background: "var(--gold-grad)", display: "grid", placeItems: "center", color: "#1a1407", boxShadow: "var(--shadow-gold)" }}>
+            <div style={{ width: 60, height: 60, borderRadius: 999, background: "var(--gold-grad)", display: "grid", placeItems: "center", color: "var(--on-gold)", boxShadow: "var(--shadow-gold)" }}>
               <Icon name="check" size={32} stroke={2.4} />
             </div>
             <div>

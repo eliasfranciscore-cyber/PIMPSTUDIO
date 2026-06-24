@@ -276,7 +276,7 @@ export default function Cursos() {
                   <textarea id="f-msg" name="message" placeholder="Cuéntale a Bruno tu objetivo..." value={form.message} onChange={onChange} />
                 </div>
                 {!done && <button className="btn btn-primary" type="submit">UNIRME A LA LISTA DE ESPERA</button>}
-                {error && <p className="enroll-note" style={{ color: '#fda4af' }}>Revisa los campos requeridos.</p>}
+                {error && <p className="enroll-note" style={{ color: '#e11d48' }}>Revisa los campos requeridos.</p>}
                 <div className={`enroll-success${done ? ' show' : ''}`}>
                   <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4" /><circle cx="12" cy="12" r="9" /></svg>
                   <span><b>¡Listo!</b> Quedaste en la lista de espera. Bruno te contactará pronto.</span>

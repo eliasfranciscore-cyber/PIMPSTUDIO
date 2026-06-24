@@ -68,11 +68,11 @@ export default function Login() {
         </div>
 
         <div className="card animate-up" style={{ padding: "1.3rem", display: "grid", gap: "1rem", animationDelay: ".08s" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: ".4rem", background: "rgba(0,0,0,0.4)", padding: 4, borderRadius: 999, border: "1px solid var(--hair)" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: ".4rem", background: "var(--fill-track)", padding: 4, borderRadius: 999, border: "1px solid var(--hair)" }}>
             {[["login", "Ingresar"], ["register", "Registrarme"]].map(([m, l]) => (
               <button key={m} onClick={() => { setMode(m); setErr("") }} className="font-display" style={{
                 border: 0, borderRadius: 999, padding: ".6rem", fontSize: ".78rem", letterSpacing: ".08em", textTransform: "uppercase", fontWeight: 600,
-                background: mode === m ? "var(--gold-grad)" : "transparent", color: mode === m ? "#1a1407" : "var(--muted)", transition: "all .25s",
+                background: mode === m ? "var(--gold-grad)" : "transparent", color: mode === m ? "var(--on-gold)" : "var(--muted)", transition: "all .25s",
               }}>{l}</button>
             ))}
           </div>
@@ -92,7 +92,7 @@ export default function Login() {
             )}
             <div className="field">
               <label>Número de teléfono</label>
-              <div style={{ display: "flex", alignItems: "center", gap: ".5rem", background: "rgba(0,0,0,0.5)", border: "1px solid var(--hair-2)", borderRadius: 8, padding: "0 .8rem" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: ".5rem", background: "var(--fill-card)", border: "1px solid var(--hair-2)", borderRadius: 8, padding: "0 .8rem" }}>
                 <span style={{ color: "var(--muted)", fontSize: ".95rem", borderRight: "1px solid var(--hair)", paddingRight: ".6rem" }}>🇨🇱 +56</span>
                 <input value={phone} onChange={(e) => setPhone(fmtPhone(e.target.value))} placeholder="9 1234 5678" inputMode="numeric"
                   style={{ flex: 1, background: "transparent", border: 0, color: "var(--ink)", padding: ".85rem 0", fontSize: "1.05rem", letterSpacing: ".06em", outline: "none" }} />

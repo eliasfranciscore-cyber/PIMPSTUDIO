@@ -1,0 +1,327 @@
+/* ============================================================
+   ENCUENTRA TU ESTILO — Brunetti
+   Editorial premium (base del workshop) con FOTOS A COLOR + dorado.
+   Soporta tema claro premium cálido vía [data-theme="light"].
+   Scope: .ete
+   ============================================================ */
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@300;400;500;600&family=Bebas+Neue&display=swap");
+
+.ete {
+  /* dorado de la marca */
+  --gold: #c9a35b;
+  --gold-lt: #e7c87e;
+  --gold-dp: #9a7b34;
+  --gold-line: rgba(201, 163, 91, 0.40);
+  --gold-glow: rgba(201, 163, 91, 0.18);
+  --gold-grad: linear-gradient(135deg, #f0d8a2 0%, #d7af63 46%, #9a7b34 100%);
+
+  /* neutros (tema oscuro por defecto) */
+  --ink: #f6f5f3;
+  --ink-soft: #cbc8c2;
+  --muted: #8f8c85;
+  --muted-2: #65635d;
+  --bg: #0a0a09;
+  --bg-1: #0e0e0c;
+  --panel: #141312;
+  --panel-2: #1b1a17;
+  --hair: rgba(255, 255, 255, 0.09);
+  --hair-2: rgba(255, 255, 255, 0.16);
+  --on-gold: #1c1606;
+  --photo-filter: none;
+  --shadow: 0 30px 70px -34px rgba(0, 0, 0, 0.9);
+  --shadow-gold: 0 18px 44px -20px rgba(201, 163, 91, 0.42);
+
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-body: "Sora", system-ui, sans-serif;
+  --font-mega: "Bebas Neue", "Space Grotesk", sans-serif;
+  --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
+
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  position: relative;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+.ete *, .ete *::before, .ete *::after { box-sizing: border-box; }
+.ete img { display: block; max-width: 100%; }
+.ete a { color: inherit; text-decoration: none; }
+.ete button { font: inherit; cursor: pointer; }
+.ete ::selection { background: rgba(201, 163, 91, 0.32); color: #fff; }
+
+/* ---- TEMA CLARO premium cálido ---- */
+.ete[data-theme="light"] {
+  --ink: #211d15;
+  --ink-soft: #4a443a;
+  --muted: #7a7264;
+  --muted-2: #9a9183;
+  --bg: #f7f3ea;
+  --bg-1: #f1ebdd;
+  --panel: #fffdf8;
+  --panel-2: #f4eee1;
+  --hair: rgba(40, 33, 18, 0.12);
+  --hair-2: rgba(40, 33, 18, 0.20);
+  --gold: #927029;
+  --gold-lt: #8a6a22;
+  --gold-dp: #6f5519;
+  --gold-line: rgba(160, 124, 46, 0.40);
+  --gold-glow: rgba(160, 124, 46, 0.16);
+  --gold-grad: linear-gradient(135deg, #d8b25f 0%, #b6892f 50%, #8a6a22 100%);
+  --on-gold: #fffdf6;
+  --shadow: 0 24px 60px -34px rgba(80, 60, 20, 0.30);
+  --shadow-gold: 0 18px 44px -22px rgba(160, 124, 46, 0.40);
+}
+
+/* ============================================================
+   PRIMITIVOS
+   ============================================================ */
+.ete-shell { position: relative; z-index: 1; }
+.ete-wrap { width: min(1180px, 100%); margin-inline: auto; padding-inline: clamp(1.1rem, 4vw, 2.4rem); }
+.ete-eyebrow {
+  font-family: var(--font-display);
+  text-transform: uppercase; letter-spacing: 0.34em; font-size: 0.7rem; font-weight: 500;
+  color: var(--gold); display: inline-flex; align-items: center; gap: 0.6rem;
+}
+.ete-eyebrow::before { content: ""; width: 26px; height: 1px; background: var(--gold-line); }
+.ete-eyebrow.is-center::after { content: ""; width: 26px; height: 1px; background: var(--gold-line); }
+.ete-h2 {
+  font-family: var(--font-display); margin: 0; font-weight: 600;
+  font-size: clamp(2rem, 4.6vw, 3.5rem); line-height: 1.02; letter-spacing: -0.025em; text-wrap: balance;
+}
+.ete-lead { margin: 0; color: var(--ink-soft); line-height: 1.7; font-size: clamp(1rem, 1.3vw, 1.12rem); }
+.ete-gold-text {
+  background: var(--gold-grad); -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.ete-rule { width: 56px; height: 2px; background: var(--gold-grad); border: 0; }
+
+/* botones */
+.ete-btn {
+  font-family: var(--font-display); display: inline-flex; align-items: center; justify-content: center; gap: 0.55rem;
+  padding: 0.95rem 1.6rem; min-height: 50px; letter-spacing: 0.14em; text-transform: uppercase;
+  font-size: 0.76rem; font-weight: 600; border: 1px solid transparent; border-radius: 999px;
+  position: relative; overflow: hidden; white-space: nowrap;
+  transition: transform .25s var(--ease), box-shadow .25s, background .25s, border-color .25s, color .25s;
+}
+.ete-btn:active { transform: translateY(1px) scale(0.99); }
+.ete-btn-gold { background: var(--gold-grad); color: var(--on-gold); box-shadow: var(--shadow-gold); }
+.ete-btn-gold:hover { transform: translateY(-2px); box-shadow: 0 24px 52px -18px rgba(201,163,91,0.6); }
+.ete-btn-gold::before {
+  content: ""; position: absolute; inset: 0 -150%;
+  background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.45) 50%, transparent 70%);
+  transform: translateX(-60%); transition: transform .7s ease;
+}
+.ete-btn-gold:hover::before { transform: translateX(60%); }
+.ete-btn-ghost { background: transparent; border-color: var(--hair-2); color: var(--ink); }
+.ete-btn-ghost:hover { border-color: var(--gold-line); color: var(--gold-lt); background: var(--gold-glow); }
+.ete-btn-sm { padding: 0.6rem 1.05rem; min-height: 40px; font-size: 0.68rem; }
+
+.ete-chip {
+  display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.4rem 0.85rem; border-radius: 999px;
+  border: 1px solid var(--gold-line); color: var(--gold-lt); background: var(--gold-glow);
+  font-family: var(--font-display); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+}
+
+/* imagen con placeholder de respaldo */
+.ete-img { position: relative; overflow: hidden; background: var(--panel-2); }
+.ete-img img {
+  width: 100%; height: 100%; object-fit: cover; filter: var(--photo-filter);
+  transition: transform .9s var(--ease), filter .5s ease, opacity .6s ease;
+}
+.ete-img.is-failed img { display: none; }
+.ete-img.is-failed::after {
+  content: attr(data-label); position: absolute; inset: 0; display: grid; place-items: center;
+  text-align: center; padding: 1rem;
+  font-family: var(--font-display); font-size: 0.66rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted-2);
+}
+.ete-img.is-failed {
+  background:
+    repeating-linear-gradient(135deg, rgba(201,163,91,0.06) 0 2px, transparent 2px 12px),
+    linear-gradient(160deg, var(--panel-2), var(--panel));
+}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+.ete-nav {
+  position: sticky; top: 0; z-index: 60; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: 0.8rem clamp(1.1rem, 4vw, 2.4rem); border-bottom: 1px solid transparent;
+  transition: background .35s ease, border-color .35s ease, backdrop-filter .35s ease;
+}
+.ete-nav.is-stuck {
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  border-bottom-color: var(--hair); backdrop-filter: blur(16px);
+}
+.ete-brand { display: inline-flex; align-items: center; gap: 0.7rem; }
+.ete-brand img { width: 38px; height: 38px; border-radius: 999px; object-fit: cover; border: 1.5px solid var(--gold-line); }
+.ete-brand b { font-family: var(--font-display); font-weight: 600; letter-spacing: 0.3em; font-size: 0.86rem; }
+.ete-brand b small { display: block; font-size: 0.5rem; letter-spacing: 0.28em; color: var(--muted); margin-top: 2px; }
+.ete-nav-links { display: none; align-items: center; gap: clamp(0.6rem, 1.6vw, 1.6rem); }
+.ete-nav-links a { color: var(--ink-soft); font-size: 0.82rem; letter-spacing: 0.03em; transition: color .2s; }
+.ete-nav-links a:hover { color: var(--gold-lt); }
+.ete-nav-right { display: flex; align-items: center; gap: 0.6rem; }
+.ete-theme-btn {
+  width: 42px; height: 42px; border-radius: 999px; display: grid; place-items: center;
+  border: 1px solid var(--hair-2); background: transparent; color: var(--ink); transition: border-color .2s, color .2s, background .2s;
+}
+.ete-theme-btn:hover { border-color: var(--gold-line); color: var(--gold-lt); }
+.ete-theme-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+@media (min-width: 880px) { .ete-nav-links { display: flex; } }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.ete-hero { position: relative; min-height: clamp(560px, 92vh, 900px); display: grid; align-items: end; isolation: isolate; }
+.ete-hero-media { position: absolute; inset: 0; z-index: -2; }
+.ete-hero-media img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 35%; filter: var(--photo-filter) brightness(0.74); }
+.ete-hero-overlay {
+  position: absolute; inset: 0; z-index: -1;
+  background:
+    radial-gradient(820px 560px at 82% 8%, rgba(201,163,91,0.18), transparent 58%),
+    linear-gradient(180deg, color-mix(in srgb, var(--bg) 30%, transparent) 0%, color-mix(in srgb, var(--bg) 35%, transparent) 38%, var(--bg) 100%);
+}
+.ete-hero-inner { padding-block: clamp(5rem, 11vw, 8rem) clamp(2.6rem, 5vw, 4rem); width: 100%; }
+.ete-hero-kicker { display: flex; flex-wrap: wrap; gap: 0.7rem; align-items: center; margin-bottom: 1.4rem; }
+.ete-hero h1 {
+  font-family: var(--font-mega); margin: 0; font-weight: 400;
+  font-size: clamp(3.6rem, 13vw, 11rem); line-height: 0.84; letter-spacing: 0.01em; text-transform: uppercase;
+}
+.ete-hero h1 .l2 { display: block; color: transparent; -webkit-text-stroke: 1.4px var(--gold-lt); }
+@supports not (-webkit-text-stroke: 1px) { .ete-hero h1 .l2 { color: var(--gold-lt); } }
+.ete-hero-sub { margin: 1.4rem 0 0; max-width: 46ch; color: var(--ink-soft); font-size: clamp(1rem, 1.5vw, 1.18rem); line-height: 1.6; }
+.ete-hero-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.9rem; }
+.ete-hero-stats { display: flex; flex-wrap: wrap; gap: clamp(1.4rem, 4vw, 3rem); margin-top: 2.4rem; }
+.ete-hero-stats .s b { font-family: var(--font-display); display: block; font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 600; color: var(--gold-lt); line-height: 1; }
+.ete-hero-stats .s span { display: block; margin-top: 0.4rem; font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+
+/* ============================================================
+   SECCIÓN
+   ============================================================ */
+.ete-section { padding-block: clamp(3.6rem, 8vw, 6.4rem); position: relative; }
+.ete-section-alt { background: var(--bg-1); border-block: 1px solid var(--hair); }
+.ete-head { display: grid; gap: 0.9rem; max-width: 760px; margin-bottom: clamp(2rem, 4vw, 3.2rem); }
+.ete-head.is-center { margin-inline: auto; justify-items: center; text-align: center; }
+
+/* ============================================================
+   VISAGISMO WORKFLOW
+   ============================================================ */
+.ete-vis-steps { display: flex; gap: 0.6rem; margin-bottom: 1.6rem; flex-wrap: wrap; }
+.ete-step-pill { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-display); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.ete-step-pill b { width: 24px; height: 24px; border-radius: 999px; display: grid; place-items: center; border: 1px solid var(--hair-2); font-size: 0.74rem; color: var(--ink-soft); }
+.ete-step-pill.is-active { color: var(--gold-lt); }
+.ete-step-pill.is-active b { background: var(--gold-grad); color: var(--on-gold); border-color: transparent; }
+
+.ete-shape-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+@media (min-width: 620px) { .ete-shape-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 980px) { .ete-shape-grid { grid-template-columns: repeat(6, 1fr); } }
+.ete-shape {
+  display: grid; gap: 0.5rem; justify-items: center; text-align: center; padding: 1.1rem 0.8rem 1rem;
+  border: 1px solid var(--hair); border-radius: 16px; background: var(--panel); color: var(--ink-soft);
+  transition: border-color .3s, background .3s, transform .3s, box-shadow .3s;
+}
+.ete-shape:hover { transform: translateY(-3px); border-color: var(--hair-2); }
+.ete-shape.is-active { border-color: var(--gold-line); background: var(--gold-glow); box-shadow: var(--shadow-gold); }
+.ete-shape svg { width: 46px; height: 56px; }
+.ete-shape svg path { fill: none; stroke: var(--muted); stroke-width: 3; transition: stroke .3s; }
+.ete-shape:hover svg path { stroke: var(--ink-soft); }
+.ete-shape.is-active svg path { stroke: var(--gold-lt); }
+.ete-shape .nm { font-family: var(--font-display); font-weight: 600; font-size: 0.95rem; color: var(--ink); }
+.ete-shape .tg { font-size: 0.7rem; color: var(--muted); line-height: 1.3; }
+
+/* panel de resultado */
+.ete-result {
+  margin-top: 1.6rem; border: 1px solid var(--gold-line); border-radius: 22px; overflow: hidden;
+  background: var(--panel); box-shadow: var(--shadow); animation: eteFade .5s ease both;
+}
+@keyframes eteFade { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.ete-result-top { display: grid; grid-template-columns: 1fr; gap: 0; }
+@media (min-width: 880px) { .ete-result-top { grid-template-columns: 0.95fr 1.05fr; } }
+.ete-result-diag { padding: clamp(1.5rem, 3vw, 2.4rem); display: grid; gap: 1.1rem; align-content: center; }
+.ete-result-diag h3 { font-family: var(--font-display); margin: 0; font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 600; }
+.ete-result-diag .diag { margin: 0; color: var(--ink-soft); line-height: 1.65; }
+.ete-traits { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.ete-goal { display: flex; gap: 0.7rem; align-items: flex-start; padding: 0.9rem 1rem; border-radius: 12px; background: var(--gold-glow); border: 1px solid var(--gold-line); }
+.ete-goal .ic { color: var(--gold-lt); flex-shrink: 0; margin-top: 1px; }
+.ete-goal b { font-family: var(--font-display); color: var(--ink); }
+.ete-goal span { color: var(--ink-soft); }
+.ete-result-figure { position: relative; min-height: 280px; }
+.ete-result-figure .ete-img { position: absolute; inset: 0; }
+.ete-result-figure .tag { position: absolute; left: 1rem; bottom: 1rem; z-index: 2; }
+
+.ete-best { padding: clamp(1.4rem, 3vw, 2.2rem); border-top: 1px solid var(--hair); }
+.ete-best-label { font-family: var(--font-display); font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin: 0 0 1rem; }
+.ete-best-grid { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+@media (min-width: 720px) { .ete-best-grid { grid-template-columns: repeat(3, 1fr); } }
+.ete-cut { border: 1px solid var(--hair); border-radius: 16px; overflow: hidden; background: var(--panel-2); transition: transform .35s var(--ease), border-color .35s; }
+.ete-cut:hover { transform: translateY(-4px); border-color: var(--gold-line); }
+.ete-cut:hover .ete-img img { transform: scale(1.06); }
+.ete-cut .ete-img { aspect-ratio: 4/5; }
+.ete-cut-body { padding: 1rem 1.1rem 1.2rem; display: grid; gap: 0.35rem; }
+.ete-cut-body h4 { font-family: var(--font-display); margin: 0; font-size: 1.08rem; font-weight: 600; }
+.ete-cut-body p { margin: 0; color: var(--muted); font-size: 0.86rem; line-height: 1.5; }
+.ete-avoid { margin: 1.2rem 0 0; display: flex; gap: 0.7rem; align-items: flex-start; color: var(--muted); font-size: 0.9rem; }
+.ete-avoid .ic { color: var(--gold); flex-shrink: 0; margin-top: 1px; }
+.ete-avoid b { color: var(--ink-soft); font-family: var(--font-display); }
+
+.ete-empty {
+  margin-top: 1.6rem; border: 1px dashed var(--gold-line); border-radius: 20px; padding: clamp(2rem, 5vw, 3.4rem);
+  text-align: center; color: var(--muted); background: var(--gold-glow);
+}
+.ete-empty svg { width: 40px; height: 40px; stroke: var(--gold); fill: none; stroke-width: 1.5; margin-bottom: 0.8rem; }
+
+/* ============================================================
+   GALERÍA
+   ============================================================ */
+.ete-filters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.8rem; }
+.ete-filter {
+  font-family: var(--font-display); font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.55rem 1.05rem; border-radius: 999px; border: 1px solid var(--hair-2); background: transparent; color: var(--ink-soft);
+  transition: border-color .25s, background .25s, color .25s;
+}
+.ete-filter:hover { border-color: var(--gold-line); color: var(--gold-lt); }
+.ete-filter.is-active { background: var(--gold-grad); color: var(--on-gold); border-color: transparent; }
+.ete-gallery { display: grid; gap: 1rem; grid-template-columns: repeat(2, 1fr); }
+@media (min-width: 720px) { .ete-gallery { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1040px) { .ete-gallery.is-comfy { grid-template-columns: repeat(4, 1fr); } }
+.ete-gcard { position: relative; border-radius: 16px; overflow: hidden; border: 1px solid var(--hair); background: var(--panel); transition: transform .35s var(--ease), border-color .35s; }
+.ete-gcard:hover { transform: translateY(-4px); border-color: var(--gold-line); }
+.ete-gcard .ete-img { aspect-ratio: 4/5; }
+.ete-gcard:hover .ete-img img { transform: scale(1.07); }
+.ete-gcard-cat { position: absolute; top: 0.8rem; left: 0.8rem; z-index: 2; font-family: var(--font-display); font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold-lt); background: color-mix(in srgb, var(--bg) 70%, transparent); border: 1px solid var(--gold-line); border-radius: 999px; padding: 0.25rem 0.6rem; backdrop-filter: blur(6px); }
+.ete-gcard-body { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; padding: 1.4rem 1rem 0.9rem; background: linear-gradient(to top, rgba(0,0,0,0.82), transparent); }
+.ete-gcard-body h4 { font-family: var(--font-display); margin: 0; font-size: 1.02rem; font-weight: 600; color: #fff; }
+.ete-gcard-body p { margin: 0.1rem 0 0; font-size: 0.78rem; color: rgba(255,255,255,0.74); }
+
+/* ============================================================
+   CTA band
+   ============================================================ */
+.ete-cta { position: relative; overflow: hidden; }
+.ete-cta-bg { position: absolute; inset: 0; z-index: -2; }
+.ete-cta-bg img { width: 100%; height: 100%; object-fit: cover; filter: var(--photo-filter) brightness(0.4); }
+.ete-cta::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, color-mix(in srgb, var(--bg) 78%, transparent), color-mix(in srgb, var(--bg) 90%, transparent)); }
+.ete-cta-card { max-width: 760px; margin-inline: auto; text-align: center; display: grid; gap: 1.4rem; justify-items: center; }
+.ete-cta-card h2 { font-family: var(--font-display); margin: 0; font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 600; letter-spacing: -0.02em; line-height: 1.04; text-wrap: balance; }
+.ete-cta-card p { margin: 0; color: var(--ink-soft); line-height: 1.6; max-width: 50ch; }
+.ete-cta-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.ete-footer { border-top: 1px solid var(--hair); background: var(--bg-1); }
+.ete-footer-grid { display: flex; flex-wrap: wrap; gap: 1.4rem; justify-content: space-between; align-items: center; padding-block: clamp(2rem, 5vw, 3rem); }
+.ete-footer .ete-brand b { letter-spacing: 0.3em; }
+.ete-footer-links { display: flex; flex-wrap: wrap; gap: 1.2rem; }
+.ete-footer-links a { color: var(--muted); font-size: 0.85rem; transition: color .2s; }
+.ete-footer-links a:hover { color: var(--gold-lt); }
+.ete-footer-bottom { border-top: 1px solid var(--hair); padding-block: 1.1rem; color: var(--muted-2); font-size: 0.76rem; text-align: center; }
+
+/* ============================================================
+   REVEAL
+   ============================================================ */
+.ete-reveal { opacity: 0; transform: translateY(18px); transition: transform .8s var(--ease), opacity .8s ease; }
+.ete-reveal.is-in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .ete-reveal { opacity: 1 !important; transform: none !important; transition: none; }
+  .ete-img img { transition: none; }
+}

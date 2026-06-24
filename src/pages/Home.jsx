@@ -77,6 +77,7 @@ export default function Home() {
   const bookService = (id) => { try { localStorage.setItem('ps_pending_service', String(id)) } catch (e) {} navigate('/reservar') }
   const goCursos = () => navigate('/cursos')
   const goWorkshop = () => navigate('/workshop')
+  const goStyle = () => navigate('/style')
 
   const navTo = (id) => { setMenuOpen(false); scrollToId(id) }
 
@@ -252,6 +253,26 @@ export default function Home() {
                   </div>
                 </article>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ============ ENCUENTRA TU ESTILO (teaser → /style) ============ */}
+        <section className="bsection" id="estilo-teaser">
+          <div className="bwrap">
+            <div className="bteaser" data-reveal="scale">
+              <div className="bteaser-bg"><img src="/assets/bruno-feature.jpg" alt="Asesoría de visagismo Brunetti" loading="lazy" decoding="async" /></div>
+              <div className="bteaser-inner">
+                <p className="kicker">Nuevo · Visagismo interactivo</p>
+                <h2>Encuentra tu estilo según tu rostro</h2>
+                <p>Haz tu autodiagnóstico de visagismo: elige la forma de tu rostro y descubre los cortes que más te favorecen. Luego explora la galería de estilos de Bruno.</p>
+                <div className="bteaser-modchips">
+                  <span>6 formas de rostro</span>
+                  <span>Cortes recomendados</span>
+                  <span>Galería filtrable</span>
+                </div>
+                <a className="btn btn-primary" onClick={goStyle}>ENCUENTRA TU ESTILO</a>
+              </div>
             </div>
           </div>
         </section>
@@ -466,6 +487,7 @@ export default function Home() {
         links={[
           [() => navTo('visagismo'), 'Visagismo'],
           [() => navTo('servicios'), 'Servicios'],
+          [goStyle, 'Encuentra tu estilo'],
           [goCursos, 'Cursos'],
           [goWorkshop, 'Workshop'],
           [() => navTo('contacto'), 'Contacto'],

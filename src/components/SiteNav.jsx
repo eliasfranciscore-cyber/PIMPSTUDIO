@@ -17,6 +17,7 @@ const NAV = [
   ["visagismo", "Visagismo"],
   ["sobre",     "Sobre Bruno"],
   ["servicios", "Servicios"],
+  ["style",     "Tu estilo"],
   ["cursos",    "Cursos"],
   ["workshop",  "Workshop"],
   ["contacto",  "Contacto"],
@@ -27,6 +28,7 @@ export default function SiteNav({ onSection, scrolled: scrolledProp }) {
   const location = useLocation()
   const isHome = location.pathname === "/"
   const isWorkshop = location.pathname === "/workshop"
+  const isStyle = location.pathname === "/style"
   const [scrolledWin, setScrolledWin] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -52,6 +54,7 @@ export default function SiteNav({ onSection, scrolled: scrolledProp }) {
     setMenuOpen(false)
     if (id === "workshop") navigate("/workshop")
     else if (id === "cursos") navigate("/cursos")
+    else if (id === "style") navigate("/style")
     else if (id === "inicio") { navigate("/"); window.scrollTo({ top: 0, behavior: "smooth" }) }
     else goSection(id)
   }
@@ -84,7 +87,7 @@ export default function SiteNav({ onSection, scrolled: scrolledProp }) {
               key={id}
               onClick={() => handleNav(id)}
               className="nav-link"
-              style={id === "workshop" && isWorkshop ? { color: "var(--gold)" } : undefined}
+              style={(id === "workshop" && isWorkshop) || (id === "style" && isStyle) ? { color: "var(--gold)" } : undefined}
             >
               {label}
             </button>
@@ -114,7 +117,7 @@ export default function SiteNav({ onSection, scrolled: scrolledProp }) {
             key={id}
             role="menuitem"
             onClick={() => handleNav(id)}
-            className={id === "workshop" && isWorkshop ? "is-active" : ""}
+            className={(id === "workshop" && isWorkshop) || (id === "style" && isStyle) ? "is-active" : ""}
           >
             {label}
           </button>

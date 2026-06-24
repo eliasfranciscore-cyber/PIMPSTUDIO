@@ -2276,6 +2276,12 @@
   --wk-muted-2: #8a847d;
   --wk-hair: rgba(0, 0, 0, 0.08);
   --wk-hair-2: rgba(0, 0, 0, 0.14);
+  /* El morado claro (#b483f3) es ilegible sobre crema: los acentos/textos de
+     workshop usan un morado PROFUNDO en claro (incluye el SiteNav dentro de
+     .wks, que re-mapea --gold* a morado). Los degradados de botón se quedan. */
+  --wk-gold-lt: #6b28b8;
+  --gold-lt: #6b28b8;
+  --gold-bright: #6b28b8;
 }
 [data-theme="light"] .wks-hero-overlay {
   background:
@@ -2342,3 +2348,25 @@
 .brunetti-site .course-level .cl-n { font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.72rem; color: var(--gold-bright); }
 .brunetti-site .course-level .cl-s { font-size: 0.92rem; color: var(--ink); }
 .brunetti-site .course-level-desc { text-align: center; color: var(--ink-2, var(--muted)); margin: 0 auto 1.4rem; max-width: 60ch; }
+
+/* ============================================================
+   MODO CLARO — DORADO PROFUNDO (tonos del paquete)
+   El dorado pálido (#e7c87e/#c9a14e) es casi ilegible sobre crema, por eso
+   en claro todos los acentos/textos dorados pasan a un dorado profundo y los
+   botones dorados usan un degradado más oscuro con tinta blanca (--on-gold).
+   Este bloque va al FINAL del último CSS importado (brunetti.css) para ganar
+   por orden de fuente sobre los :root de brunetti.css, y aplica GLOBAL:
+   landing, cursos, workshop, reserva/login y el módulo /style.
+   ============================================================ */
+[data-theme="light"] {
+  --gold: #927029;
+  --gold-lt: #8a6a22;
+  --gold-bright: #8a6a22;
+  --gold-deep: #6f5519;
+  --gold-grad: linear-gradient(135deg, #d8b25f 0%, #b6892f 50%, #8a6a22 100%);
+  --on-gold: #fffdf6;
+  --gold-edge: rgba(160, 124, 46, 0.45);
+  --gold-soft: rgba(160, 124, 46, 0.14);
+  --gold-glow: rgba(160, 124, 46, 0.18);
+  --gold-line: rgba(160, 124, 46, 0.40);
+}
