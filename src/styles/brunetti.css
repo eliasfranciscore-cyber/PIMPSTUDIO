@@ -2168,7 +2168,9 @@
 .float-theme-toggle.is-dark .ftt-knob { transform: translateX(0); }
 .float-theme-toggle.is-light .ftt-knob { transform: translateX(32px); }
 @media (max-width: 900px) {
-  .float-theme-toggle { bottom: calc(5.4rem + env(safe-area-inset-bottom, 0px)); }
+  .float-theme-toggle { bottom: calc(6.4rem + env(safe-area-inset-bottom, 0px)); z-index: 66; }
+  /* Espacio para que la barra fija de Reservar (móvil) no tape el contenido/footer */
+  .brunetti-site { padding-bottom: calc(5.6rem + env(safe-area-inset-bottom, 0px)); }
 }
 
 /* ============================================================
@@ -2198,6 +2200,12 @@
    titulares (los degradados blanco→color pasan a sólido oscuro para
    que se lean). Los acentos de color de cada módulo se conservan.
    ============================================================ */
+/* Voltear tinta secundaria (si no, --ink-2/--ink-3 quedan claros e ilegibles en claro) */
+[data-theme="light"] .brunetti-site,
+[data-theme="light"] .wks {
+  --ink-2: rgba(26, 24, 23, 0.74);
+  --ink-3: rgba(26, 24, 23, 0.54);
+}
 /* Fondo del sitio brunetti */
 [data-theme="light"] .brunetti-site::before {
   background:
@@ -2207,15 +2215,29 @@
 }
 [data-theme="light"] .brunetti-site::after { opacity: 0.02; }
 /* Titulares con degradado (blanco→dorado/color) → sólido oscuro legible */
+/* Titulares sobre fondo CLARO → sólido oscuro legible */
 [data-theme="light"] .brunetti-site h1,
 [data-theme="light"] .brunetti-site h2,
 [data-theme="light"] .brunetti-site h3,
 [data-theme="light"] .brunetti-site .bhero-name span,
-[data-theme="light"] .brunetti-site .course-hero h1,
+[data-theme="light"] .brunetti-site .gm-word,
 [data-theme="light"] .brunetti-site .bhead h2 {
   background: none !important;
   -webkit-text-fill-color: currentColor;
   color: #1c1a17;
+}
+/* Zonas SOBRE FOTO oscura (hero de Cursos y teaser de cursos en Home):
+   el texto se queda CLARO aunque el tema sea claro. */
+[data-theme="light"] .brunetti-site .course-hero h1,
+[data-theme="light"] .brunetti-site .bteaser-inner h2 {
+  background: none !important;
+  -webkit-text-fill-color: #ffffff;
+  color: #ffffff;
+}
+[data-theme="light"] .brunetti-site .course-hero .sub,
+[data-theme="light"] .brunetti-site .bteaser-inner p,
+[data-theme="light"] .brunetti-site .bteaser-inner .kicker {
+  color: rgba(245, 244, 242, 0.92) !important;
 }
 /* Tarjetas "glass" (tinte blanco) → tinte oscuro sutil para que tengan cuerpo */
 [data-theme="light"] .brunetti-site .pillar,

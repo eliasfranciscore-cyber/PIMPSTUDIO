@@ -6,7 +6,7 @@ import React, { useEffect, useRef } from 'react'
    Adaptado a JSX puro (sin shadcn/Tailwind). Respeta
    prefers-reduced-motion.
    ============================================================ */
-export default function GooeyText({ texts = ['Brunetti', 'Cutz'], morphTime = 1, cooldownTime = 2.6 }) {
+export default function GooeyText({ texts = ['Brunetti', 'Cutz'], morphTime = 0.75, cooldownTime = 3.4 }) {
   const t1Ref = useRef(null)
   const t2Ref = useRef(null)
 

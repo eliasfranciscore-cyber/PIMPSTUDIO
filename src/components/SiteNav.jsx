@@ -56,7 +56,7 @@ export default function SiteNav({ onSection, scrolled: scrolledProp }) {
     else goSection(id)
   }
 
-  const reserveLabel = isWorkshop ? "Reservar asiento" : "Reservar hora en la agenda"
+  const reserveLabel = isWorkshop ? "Reservar asiento" : "Reservar hora"
   const reserve = () => {
     setMenuOpen(false)
     if (isWorkshop) {

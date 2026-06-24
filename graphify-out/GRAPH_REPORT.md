@@ -5,7 +5,7 @@
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 418 nodes · 646 edges · 33 communities (21 shown, 12 thin omitted)
+- 418 nodes · 645 edges · 33 communities (21 shown, 12 thin omitted)
 - Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 26 edges (avg confidence: 0.84)
 - Token cost: 0 input · 0 output
 
@@ -79,20 +79,20 @@ Cohesion: 0.10
 Nodes (32): b64url(), BARBER_PROFILES, fallbackLogin(), fallbackPasswords(), handleChangePassword(), handleLogin(), handler(), isAdmin() (+24 more)
 
 ### Community 2 - "Workshop Data & Content"
-Cohesion: 0.08
-Nodes (13): ALL_MODULE_IDS, emptyBarber, MODULES, PERMS, NAV, Brandmark(), Emblem(), Icon() (+5 more)
-
-### Community 3 - "Barber Profile & Inbox"
 Cohesion: 0.11
 Nodes (20): AGENDA_SLOTS, buildWeek(), CFG_SECTIONS, ConfigPanel(), Dashboard(), DAY_LABELS, isStrongPassword(), authHeaders() (+12 more)
+
+### Community 3 - "Barber Profile & Inbox"
+Cohesion: 0.09
+Nodes (11): ALL_MODULE_IDS, emptyBarber, MODULES, PERMS, Emblem(), Icon(), ICONS, MobileScreen() (+3 more)
 
 ### Community 4 - "Barber Permissions Modal"
 Cohesion: 0.13
 Nodes (29): addAppointment(), boot(), digitsOnly(), ensureSeedData(), escapeHtml(), FIGMA_BARBERS, FIGMA_SERVICES, formatCLP() (+21 more)
 
 ### Community 5 - "Booking & Account Pages"
-Cohesion: 0.11
-Nodes (15): scrollToId(), useBrunettiFx(), GooeyText(), ICONS, ModuleFooter(), INCLUDES, LEVELS, MODULES (+7 more)
+Cohesion: 0.08
+Nodes (18): scrollToId(), useBrunettiFx(), GooeyText(), ICONS, ModuleFooter(), NAV, SiteNav(), Brandmark() (+10 more)
 
 ### Community 6 - "Vanilla App Logic"
 Cohesion: 0.12
@@ -150,12 +150,12 @@ Nodes (3): Propuesta Comercial Demo, Transcripcion Demo Cliente, Propuesta Comer
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Icon()` connect `Workshop Data & Content` to `Auth & API Layer`, `Barber Profile & Inbox`?**
-  _High betweenness centrality (0.034) - this node is a cross-community bridge._
-- **Why does `ThemeProvider()` connect `Brand Photography Assets` to `Barber Profile & Inbox`?**
-  _High betweenness centrality (0.028) - this node is a cross-community bridge._
-- **Why does `CLP()` connect `Auth & API Layer` to `Barber Profile & Inbox`, `Vercel Deploy Config`?**
-  _High betweenness centrality (0.023) - this node is a cross-community bridge._
+- **Why does `Icon()` connect `Barber Profile & Inbox` to `Auth & API Layer`, `Workshop Data & Content`, `Booking & Account Pages`?**
+  _High betweenness centrality (0.049) - this node is a cross-community bridge._
+- **Why does `CLP()` connect `Auth & API Layer` to `Workshop Data & Content`, `Vercel Deploy Config`?**
+  _High betweenness centrality (0.022) - this node is a cross-community bridge._
+- **Why does `barberById()` connect `Auth & API Layer` to `Workshop Data & Content`, `Vercel Deploy Config`?**
+  _High betweenness centrality (0.020) - this node is a cross-community bridge._
 - **What connects `BARBER_PROFILES`, `ALL_SLOTS`, `STATIC_BARBERS` to the rest of the system?**
   _118 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Auth & API Layer` be split into smaller, more focused modules?**
@@ -163,4 +163,4 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `UI Theme & Dashboard` be split into smaller, more focused modules?**
   _Cohesion score 0.0975609756097561 - nodes in this community are weakly interconnected._
 - **Should `Workshop Data & Content` be split into smaller, more focused modules?**
-  _Cohesion score 0.0773109243697479 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.10695187165775401 - nodes in this community are weakly interconnected._
