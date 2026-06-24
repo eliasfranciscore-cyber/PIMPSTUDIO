@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { useBrunettiFx, scrollToId, BrunettiFooter } from '../components/brunetti.jsx'
+import { useBrunettiFx, scrollToId } from '../components/brunetti.jsx'
+import SiteNav from '../components/SiteNav.jsx'
+import ModuleFooter from '../components/ModuleFooter.jsx'
+import GooeyText from '../components/GooeyText.jsx'
 
 /* ============================================================
    BRUNETTI — Landing de marca personal (Bruno Herrera)
@@ -170,26 +173,7 @@ export default function Home() {
         <div className="bg-blob bg-blob-3" />
       </div>
 
-      <header className="site-header">
-        <div className="nav-wrap">
-          <a className="brand" href="/" onClick={(e) => { e.preventDefault(); navTo('hero') }}>
-            <img src="/assets/pimp-studio-logo.jpg" alt="Brunetti" className="brand-logo" />
-            <span className="brand-name">BRUNETTI</span>
-          </a>
-          <button className="menu-toggle" aria-label="Abrir menú" onClick={() => setMenuOpen((v) => !v)}>☰</button>
-          <nav className={`site-nav${menuOpen ? ' is-open' : ''}`}>
-            <a onClick={() => navTo('hero')}>Inicio</a>
-            <a onClick={() => navTo('visagismo')}>Visagismo</a>
-            <a onClick={() => navTo('sobre')}>Sobre Bruno</a>
-            <a onClick={() => navTo('servicios')}>Servicios</a>
-            <a onClick={() => { setMenuOpen(false); goCursos() }}>Cursos</a>
-            <a onClick={() => { setMenuOpen(false); goWorkshop() }}>Workshop</a>
-            <a onClick={() => navTo('contacto')}>Contacto</a>
-            <a className="nav-only-mobile" onClick={() => { setMenuOpen(false); navigate('/ingreso') }}>Acceso barberos</a>
-            <a className="btn-top" onClick={() => { setMenuOpen(false); goReserve() }}>RESERVAR</a>
-          </nav>
-        </div>
-      </header>
+      <SiteNav onSection={navTo} />
 
       <main>
         {/* ============ HERO ============ */}
@@ -202,8 +186,8 @@ export default function Home() {
           <div className="bhero-grid">
             <div className="bhero-text">
               <span className="bhero-kicker"><span className="dot" />Visagista · Barbería Premium · Maipú</span>
-              <h1 className="bhero-name" aria-label="Brunetti">
-                {NAME.map((c, i) => <span key={i} style={{ '--l': i }}>{c}</span>)}
+              <h1 className="bhero-name bhero-morph" aria-label="Brunetti">
+                <GooeyText texts={['Brunetti', 'Cutz']} />
               </h1>
               <p className="bhero-role">Bruno Herrera — <b>director de imagen &amp; visagista</b></p>
               <p className="bhero-sub">No es solo un corte: es leer tu rostro, tu estilo de vida y tu identidad para diseñar la imagen que realmente te representa. Técnica de precisión, dirección de estilo y una experiencia pensada al detalle.</p>
@@ -436,11 +420,6 @@ export default function Home() {
 
         {/* ============ CONTACTO ============ */}
         <section id="contacto" className="bsection">
-          <div className="bsec-lamp-wrap" aria-hidden="true">
-            <div className="bsec-lamp-dot" />
-            <div className="bsec-lamp-bar" />
-            <div className="bsec-lamp-cone" />
-          </div>
           <div className="bwrap">
             <div className="bhead center" data-reveal>
               <p className="kicker">Hablemos</p>
@@ -451,7 +430,6 @@ export default function Home() {
               <div className="bcard" data-reveal="left">
                 <h3>Brunetti Studio</h3>
                 <ul className="bcontact-list">
-                  <li><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>Monumento 1750 Local C, Maipú</li>
                   <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>Lunes a Sábado · 10:00 – 20:00</li>
                   <li><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8.1 9.5a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z" /></svg><a href="tel:+56912345678">(+56) 9 1234 5678</a></li>
                   <li><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M22 6l-10 7L2 6" /></svg><a href="mailto:hola@brunetti.cl">hola@brunetti.cl</a></li>
@@ -483,40 +461,19 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ============ UBICACIÓN ============ */}
-        <section id="location" className="section">
-          <div className="container">
-            <div className="section-head" data-reveal>
-              <h2>UBICACIÓN Y CÓMO LLEGAR</h2>
-              <div className="section-line" />
-              <p>Encuéntranos en Maipú con acceso directo desde Metro Plaza de Maipú</p>
-            </div>
-            <div className="location-grid">
-              <article className="location-card" data-reveal="left">
-                <iframe className="map-frame" title="Mapa Brunetti Studio - Monumento 1750 Local C, Maipú" loading="lazy" allowFullScreen referrerPolicy="no-referrer-when-downgrade"
-                  src="https://www.google.com/maps?q=Monumento+1750+Local+C,+Maip%C3%BA,+Santiago,+Chile&output=embed" />
-                <div className="location-actions">
-                  <a className="btn btn-primary" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query=Monumento+1750+Local+C,+Maip%C3%BA,+Santiago,+Chile">ABRIR EN GOOGLE MAPS</a>
-                  <a className="btn btn-ghost" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/dir/?api=1&origin=Metro+Plaza+de+Maip%C3%BA&destination=Monumento+1750+Local+C,+Maip%C3%BA,+Santiago,+Chile&travelmode=walking">RUTA DESDE METRO</a>
-                </div>
-              </article>
-              <article className="location-card location-info" data-reveal="right">
-                <h3>Datos de Llegada</h3>
-                <ul>
-                  <li>Dirección: Monumento 1750 Local C, Maipú.</li>
-                  <li>Metro más cercano: Plaza de Maipú (L5).</li>
-                  <li>Tiempo caminando desde Metro Plaza de Maipú: aprox. 3 a 6 minutos.</li>
-                  <li>Distancia referencial: alrededor de 170 a 430 metros.</li>
-                  <li>Zona de referencia: entorno Plaza Monumento / centro de Maipú.</li>
-                </ul>
-                <p className="location-note">Referencia de caminata basada en paradas cercanas reportadas para el eje Monumento - Plaza de Maipú.</p>
-              </article>
-            </div>
-          </div>
-        </section>
       </main>
 
-      <BrunettiFooter rightSlot={<button className="barber-access" onClick={() => navigate('/ingreso')}>Acceso barberos</button>} />
+      <ModuleFooter
+        links={[
+          [() => navTo('visagismo'), 'Visagismo'],
+          [() => navTo('servicios'), 'Servicios'],
+          [goCursos, 'Cursos'],
+          [goWorkshop, 'Workshop'],
+          [() => navTo('contacto'), 'Contacto'],
+        ]}
+        onPrimary={goReserve}
+        primaryLabel="Reservar hora"
+      />
 
       {/* Botón flotante de reserva — siempre visible en móvil */}
       <a className="bfloat-reserve" onClick={goReserve} aria-label="Reservar hora">

@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useBrunettiFx, scrollToId, BrunettiFooter } from '../components/brunetti.jsx'
+import { useBrunettiFx, scrollToId } from '../components/brunetti.jsx'
+import SiteNav from '../components/SiteNav.jsx'
+import ModuleFooter from '../components/ModuleFooter.jsx'
 
 /* ============================================================
    CURSOS BRUNETTI — Formación en visagismo & barbería
@@ -78,11 +80,28 @@ const INCLUDES = [
   { b: 'Crecimiento & negocio', s: 'Mentalidad y orden para profesionalizar tu servicio.', icon: (<path d="M12 2l2.4 7.4H22l-6 4.4 2.3 7.2-6.3-4.6L5.7 21l2.3-7.2-6-4.4h7.6z" />) },
 ]
 
+/* Un solo Curso Brunetti con 4 niveles. El nivel 1 trae el temario
+   completo; los niveles 2–4 quedan como placeholders listos para llenar. */
+const PLACEHOLDER_MODULES = [
+  { t: 'Módulo por definir', d: 'Contenido en preparación para este nivel.', lessons: [['Lección por definir', '00:00']] },
+  { t: 'Módulo por definir', d: 'Contenido en preparación para este nivel.', lessons: [['Lección por definir', '00:00']] },
+  { t: 'Módulo por definir', d: 'Contenido en preparación para este nivel.', lessons: [['Lección por definir', '00:00']] },
+  { t: 'Módulo por definir', d: 'Contenido en preparación para este nivel.', lessons: [['Lección por definir', '00:00']] },
+]
+const LEVELS = [
+  { key: 'fundamentos', name: 'Nivel 1', sub: 'Fundamentos', desc: 'Visagismo, técnica base y lectura de rostro — el método completo de Bruno Herrera.', modules: MODULES },
+  { key: 'intermedio', name: 'Nivel 2', sub: 'Intermedio', desc: 'Profundización en técnica de precisión y dirección de estilo. (Contenido por definir.)', modules: PLACEHOLDER_MODULES },
+  { key: 'avanzado', name: 'Nivel 3', sub: 'Avanzado', desc: 'Transformación integral de imagen y casos reales de alto nivel. (Contenido por definir.)', modules: PLACEHOLDER_MODULES },
+  { key: 'master', name: 'Nivel 4', sub: 'Máster', desc: 'Marca personal, negocio y mentoría avanzada para barberos. (Contenido por definir.)', modules: PLACEHOLDER_MODULES },
+]
+
 export default function Cursos() {
   const navigate = useNavigate()
   const rootRef = useRef(null)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [level, setLevel] = useState(0)
   const [openIdx, setOpenIdx] = useState(0)
+  const activeLevel = LEVELS[level]
   const [form, setForm] = useState({ name: '', phone: '', email: '', level: '', message: '' })
   const [error, setError] = useState(false)
   const [done, setDone] = useState(false)
@@ -112,25 +131,7 @@ export default function Cursos() {
 
   return (
     <div className="brunetti-site cursos-page" ref={rootRef}>
-      <header className="site-header">
-        <div className="nav-wrap">
-          <a className="brand" href="/" onClick={(e) => { e.preventDefault(); navigate('/') }}>
-            <img src="/assets/pimp-studio-logo.jpg" alt="Brunetti" className="brand-logo" />
-            <span className="brand-name">BRUNETTI</span>
-          </a>
-          <button className="menu-toggle" aria-label="Abrir menú" onClick={() => setMenuOpen((v) => !v)}>☰</button>
-          <nav className={`site-nav${menuOpen ? ' is-open' : ''}`}>
-            <a onClick={() => goHomeSection('hero')}>Inicio</a>
-            <a onClick={() => goHomeSection('visagismo')}>Visagismo</a>
-            <a onClick={() => goHomeSection('servicios')}>Servicios</a>
-            <a onClick={() => { setMenuOpen(false); navigate('/cursos') }}>Cursos</a>
-            <a onClick={() => { setMenuOpen(false); navigate('/workshop') }}>Workshop</a>
-            <a onClick={() => goAnchor('curriculum')}>Programa</a>
-            <a className="nav-only-mobile" onClick={() => { setMenuOpen(false); navigate('/ingreso') }}>Acceso barberos</a>
-            <a className="btn-top" onClick={() => goAnchor('inscripcion')}>INSCRIBIRME</a>
-          </nav>
-        </div>
-      </header>
+      <SiteNav />
 
       <main>
         {/* ============ HERO ============ */}
@@ -176,12 +177,21 @@ export default function Cursos() {
         <section className="bsection wk-alt" id="curriculum">
           <div className="bwrap">
             <div className="bhead center" data-reveal>
-              <p className="kicker">Programa · 6 módulos</p>
+              <p className="kicker">Programa · 4 niveles</p>
               <h2>El temario completo</h2>
-              <p>Toca cada módulo para ver sus lecciones. El contenido en video se entrega a través del material compartido del curso.</p>
+              <p>Elige el nivel del Curso Brunetti. Toca cada módulo para ver sus lecciones.</p>
             </div>
+            <div className="course-levels" data-reveal>
+              {LEVELS.map((lv, i) => (
+                <button key={lv.key} type="button" className={`course-level${i === level ? ' is-active' : ''}`} onClick={() => { setLevel(i); setOpenIdx(0) }}>
+                  <span className="cl-n">{lv.name}</span>
+                  <span className="cl-s">{lv.sub}</span>
+                </button>
+              ))}
+            </div>
+            <p className="course-level-desc" data-reveal>{activeLevel.desc}</p>
             <div className="modules">
-              {MODULES.map((m, i) => {
+              {activeLevel.modules.map((m, i) => {
                 const num = (i + 1 < 10 ? '0' : '') + (i + 1)
                 const open = openIdx === i
                 return (
@@ -277,7 +287,17 @@ export default function Cursos() {
         </section>
       </main>
 
-      <BrunettiFooter rightSlot={<a className="barber-access" onClick={() => navigate('/', { state: { section: 'contacto' } })} style={{ cursor: 'pointer' }}>Contacto</a>} />
+      <ModuleFooter
+        links={[
+          [() => goAnchor('curriculum'), 'Programa'],
+          [() => goAnchor('inscripcion'), 'Inscripción'],
+          [() => goHomeSection('visagismo'), 'Visagismo'],
+          [() => navigate('/workshop'), 'Workshop'],
+          [() => goHomeSection('contacto'), 'Contacto'],
+        ]}
+        onPrimary={() => goAnchor('inscripcion')}
+        primaryLabel="Inscribirme"
+      />
     </div>
   )
 }

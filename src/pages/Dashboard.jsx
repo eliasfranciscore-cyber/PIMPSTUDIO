@@ -401,7 +401,6 @@ export default function Dashboard() {
   if (!barber) return null
 
   return (
-    <ThemeProvider>
     <DashboardShell
       tab={tab}
       setTab={setTab}
@@ -770,7 +769,6 @@ export default function Dashboard() {
         )}
       </main>
     </DashboardShell>
-    </ThemeProvider>
   )
 }
 

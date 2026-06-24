@@ -707,8 +707,8 @@
 .brunetti-site .pillar {
   position: relative;
   overflow: hidden;
-  padding: 1.6rem;
-  min-height: 220px;
+  padding: 1.3rem 1.35rem;
+  min-height: 168px;
   border-radius: var(--g-radius);
   background: linear-gradient(150deg, var(--g-tint-strong), var(--g-tint-soft));
   -webkit-backdrop-filter: blur(var(--g-blur)) saturate(180%);
@@ -755,26 +755,18 @@
   border: 1px solid var(--gold-soft);
   margin-bottom: auto;
   box-shadow: 0 0 18px rgba(201,163,91,0.18), inset 0 1px 0 rgba(255,255,255,0.12);
-  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.35s var(--ease-out);
 }
 .brunetti-site .pillar:hover .picon {
   border-color: var(--gold-edge);
   box-shadow: 0 0 28px rgba(201,163,91,0.32), inset 0 1px 0 rgba(255,255,255,0.18);
+  transform: translateY(-2px) scale(1.06) rotate(-3deg);
 }
 .brunetti-site .pillar .picon svg { width: 24px; height: 24px; stroke: var(--gold-bright); fill: none; stroke-width: 1.6; }
 .brunetti-site .pillar h3 { margin: 1.1rem 0 0.5rem; font-size: 1.2rem; font-weight: 600; color: var(--ink); line-height: 1.2; }
 .brunetti-site .pillar p { margin: 0; color: var(--ink-2); font-size: 0.9rem; line-height: 1.55; }
 /* Primer pilar: decoración de lámpara-glow interna */
-.brunetti-site .visagismo-grid .pillar:first-child::after {
-  content: "";
-  position: absolute;
-  bottom: -20%;
-  right: -10%;
-  width: 55%;
-  height: 130%;
-  background: radial-gradient(ellipse at 80% 80%, rgba(201,163,91,0.12) 0%, transparent 65%);
-  pointer-events: none;
-}
+/* (glow interno removido: se veía cortado por overflow:hidden de la card) */
 
 /* ============================================================
    SOBRE BRUNO
@@ -2138,3 +2130,180 @@
   .cursos-page .course-hero { padding-inline: max(1.25rem, calc((100vw - var(--b-maxw)) / 2)); }
   .cursos-page .course-hero-inner { margin: 0; max-width: 660px; }
 }
+
+/* ============================================================
+   TOGGLE FLOTANTE modo claro/oscuro (pill, global)
+   ============================================================ */
+.float-theme-toggle {
+  position: fixed;
+  left: 1rem;
+  bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+  z-index: 1200;
+  padding: 4px;
+  border-radius: 999px;
+  cursor: pointer;
+  border: 1px solid var(--hair-2, rgba(255, 255, 255, 0.16));
+  background: var(--pop-bg, rgba(20, 20, 18, 0.92));
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  transition: background .3s, border-color .3s;
+  line-height: 0;
+}
+.float-theme-toggle:hover { border-color: var(--gold-edge, var(--gold-line)); }
+.ftt-track { position: relative; display: block; width: 56px; height: 24px; }
+.ftt-side {
+  position: absolute; top: 0; width: 24px; height: 24px;
+  display: grid; place-items: center;
+  color: var(--ink, #f6f5f3); opacity: 0.45;
+}
+.ftt-side-moon { left: 0; }
+.ftt-side-sun { right: 0; }
+.ftt-knob {
+  position: absolute; top: 0; left: 0; width: 24px; height: 24px;
+  border-radius: 999px; display: grid; place-items: center; z-index: 2;
+  background: var(--gold-grad, #c9a14e); color: var(--on-gold, #1a1407);
+  transition: transform .3s cubic-bezier(.2, .7, .3, 1);
+}
+.float-theme-toggle.is-dark .ftt-knob { transform: translateX(0); }
+.float-theme-toggle.is-light .ftt-knob { transform: translateX(32px); }
+@media (max-width: 900px) {
+  .float-theme-toggle { bottom: calc(5.4rem + env(safe-area-inset-bottom, 0px)); }
+}
+
+/* ============================================================
+   FOOTER COMPARTIDO (.mfooter) — estilo workshop, color por módulo
+   (dorado en Home, azul en /cursos vía variables --gold*).
+   ============================================================ */
+.mfooter { border-top: 1px solid var(--hair); background: var(--bg-1, rgba(255, 255, 255, 0.02)); position: relative; z-index: 1; }
+.mfooter-wide { width: min(1320px, 100%); margin-inline: auto; padding-inline: clamp(1.1rem, 4vw, 2.6rem); }
+.mfooter-cols { display: grid; gap: clamp(1.8rem, 4vw, 3rem); grid-template-columns: 1fr; padding-block: clamp(2.6rem, 6vw, 4.4rem); }
+@media (min-width: 760px) { .mfooter-cols { grid-template-columns: 1.7fr 1fr 1fr; align-items: start; } }
+.mfooter-brand { display: grid; gap: 1.05rem; justify-items: start; }
+.mfooter-word { display: inline-flex; align-items: center; gap: 0.7rem; font-family: var(--font-display, "Sora", sans-serif); font-weight: 700; letter-spacing: 0.18em; font-size: 1.05rem; color: var(--ink); }
+.mfooter-logo-mark { width: 42px; height: 42px; border-radius: 999px; object-fit: cover; border: 1.5px solid var(--gold-edge, var(--gold-line)); }
+.mfooter-tag { margin: 0; color: var(--ink-2, var(--muted)); font-size: 0.95rem; line-height: 1.6; max-width: 46ch; }
+.mfooter-cta { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.85rem 1.5rem; border-radius: var(--pill, 999px); border: 1px solid var(--gold-bright); background: var(--gold-grad); color: var(--on-gold); font-family: var(--font-display, "Sora", sans-serif); font-weight: 600; letter-spacing: 0.06em; font-size: 0.82rem; cursor: pointer; box-shadow: var(--g-spec, none), 0 8px 22px rgba(0, 0, 0, 0.32); transition: transform .2s, box-shadow .2s; }
+.mfooter-cta:hover { transform: translateY(-1px); box-shadow: var(--g-spec, none), 0 12px 30px rgba(0, 0, 0, 0.42); }
+.mfooter-col { display: grid; gap: 0.8rem; align-content: start; }
+.mfooter-h { font-family: var(--font-display, "Sora", sans-serif); text-transform: uppercase; letter-spacing: 0.24em; font-size: 0.7rem; color: var(--gold-bright); }
+.mfooter-link { background: none; border: 0; padding: 0; text-align: left; cursor: pointer; display: inline-flex; align-items: center; gap: 0.55rem; color: var(--ink-2, var(--ink-soft)); font-family: var(--font-body, "Sora", sans-serif); font-size: 0.92rem; transition: color .2s; }
+.mfooter-link:hover { color: var(--gold-bright); }
+.mfooter-bottom { border-top: 1px solid var(--hair); padding-block: 1.2rem; display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: space-between; color: var(--muted-2, var(--muted)); font-size: 0.76rem; }
+@media (max-width: 759px) { .mfooter-brand, .mfooter-col { justify-items: center; text-align: center; } .mfooter-word, .mfooter-link { justify-content: center; } }
+
+/* ============================================================
+   MODO CLARO — sitio público (.brunetti-site / .cursos-page / .wks).
+   El sitio se diseñó oscuro; en claro volteamos fondo, tarjetas y
+   titulares (los degradados blanco→color pasan a sólido oscuro para
+   que se lean). Los acentos de color de cada módulo se conservan.
+   ============================================================ */
+/* Fondo del sitio brunetti */
+[data-theme="light"] .brunetti-site::before {
+  background:
+    radial-gradient(58vw 58vw at 12% -8%, color-mix(in oklch, var(--amb-cool) 12%, transparent), transparent 60%),
+    radial-gradient(50vw 50vw at 105% 8%, color-mix(in oklch, var(--amb-warm) 9%, transparent), transparent 58%),
+    linear-gradient(180deg, #faf8f2 0%, #f3efe6 55%, #ece7db 100%);
+}
+[data-theme="light"] .brunetti-site::after { opacity: 0.02; }
+/* Titulares con degradado (blanco→dorado/color) → sólido oscuro legible */
+[data-theme="light"] .brunetti-site h1,
+[data-theme="light"] .brunetti-site h2,
+[data-theme="light"] .brunetti-site h3,
+[data-theme="light"] .brunetti-site .bhero-name span,
+[data-theme="light"] .brunetti-site .course-hero h1,
+[data-theme="light"] .brunetti-site .bhead h2 {
+  background: none !important;
+  -webkit-text-fill-color: currentColor;
+  color: #1c1a17;
+}
+/* Tarjetas "glass" (tinte blanco) → tinte oscuro sutil para que tengan cuerpo */
+[data-theme="light"] .brunetti-site .pillar,
+[data-theme="light"] .brunetti-site .bserv,
+[data-theme="light"] .brunetti-site .bcard,
+[data-theme="light"] .brunetti-site .ac-card,
+[data-theme="light"] .brunetti-site .course-stats .cst,
+[data-theme="light"] .brunetti-site .module,
+[data-theme="light"] .brunetti-site .include,
+[data-theme="light"] .brunetti-site .enroll-aside,
+[data-theme="light"] .brunetti-site .enroll-form,
+[data-theme="light"] .brunetti-site .bteaser-inner,
+[data-theme="light"] .brunetti-site .tm-body,
+[data-theme="light"] .mfooter { background: rgba(0, 0, 0, 0.035); }
+[data-theme="light"] .brunetti-site .pillar,
+[data-theme="light"] .brunetti-site .bserv,
+[data-theme="light"] .brunetti-site .bcard,
+[data-theme="light"] .brunetti-site .ac-card,
+[data-theme="light"] .brunetti-site .module,
+[data-theme="light"] .brunetti-site .enroll-form { border-color: rgba(0, 0, 0, 0.10); }
+[data-theme="light"] .brunetti-site .bhero-sub,
+[data-theme="light"] .brunetti-site .bhero-role,
+[data-theme="light"] .brunetti-site .bsection p,
+[data-theme="light"] .brunetti-site .pillar p,
+[data-theme="light"] .brunetti-site .bserv .desc { color: #3a3633; }
+[data-theme="light"] .brunetti-site .bmarquee { border-color: rgba(0, 0, 0, 0.08); }
+
+/* WORKSHOP en claro: basta voltear sus tokens --wk-* (todo el módulo los usa). */
+[data-theme="light"] .wks {
+  --wk-bg: #f4f1ea;
+  --wk-bg-1: #efeae0;
+  --wk-panel: #ffffff;
+  --wk-panel-2: #f6f2ea;
+  --wk-ink: #1a1817;
+  --wk-ink-soft: #3a3633;
+  --wk-muted: #6b6660;
+  --wk-muted-2: #8a847d;
+  --wk-hair: rgba(0, 0, 0, 0.08);
+  --wk-hair-2: rgba(0, 0, 0, 0.14);
+}
+[data-theme="light"] .wks-hero-overlay {
+  background:
+    radial-gradient(820px 560px at 80% 12%, var(--wk-gold-glow), transparent 60%),
+    linear-gradient(180deg, rgba(250, 248, 242, 0.35) 0%, rgba(250, 248, 242, 0.5) 40%, rgba(250, 248, 242, 0.96) 100%);
+}
+[data-theme="light"] .wks-hero-media img { filter: grayscale(100%) contrast(1.05) brightness(1.02); }
+
+/* Botones de la sección Contacto: mismo ancho (simétricos) */
+.brunetti-site .bcontact-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.brunetti-site .bcontact-actions .btn { flex: 1 1 0; min-width: 150px; justify-content: center; }
+
+/* ============================================================
+   Hero GOOEY morph (Brunetti ↔ Cutz)
+   ============================================================ */
+.brunetti-site .bhero-name.bhero-morph { display: inline-block; min-height: 0.92em; }
+.gm-wrap { display: inline-block; }
+.gm-svg { position: absolute; width: 0; height: 0; }
+.gm-stage { position: relative; display: inline-block; filter: url(#gm-goo); }
+.gm-word {
+  display: block;
+  white-space: nowrap;
+  background: linear-gradient(180deg, #ffffff 28%, #f0d49a 66%, #c9a35b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  will-change: filter, opacity;
+}
+.gm-word + .gm-word { position: absolute; top: 0; left: 0; right: 0; }
+[data-theme="light"] .brunetti-site .gm-word {
+  background: none !important;
+  -webkit-text-fill-color: currentColor;
+  color: #1c1a17;
+}
+
+/* ============================================================
+   CURSOS — selector de 4 niveles
+   ============================================================ */
+.brunetti-site .course-levels { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem; margin-bottom: 1.1rem; }
+@media (max-width: 640px) { .brunetti-site .course-levels { grid-template-columns: repeat(2, 1fr); } }
+.brunetti-site .course-level {
+  display: grid; gap: 0.15rem; text-align: center;
+  padding: 0.85rem 0.6rem; border-radius: 14px; cursor: pointer;
+  background: rgba(255, 255, 255, 0.02); border: 1px solid var(--g-edge);
+  color: var(--ink-soft); transition: border-color .25s, background .25s, transform .25s;
+  font-family: var(--font-display, "Sora", sans-serif);
+}
+.brunetti-site .course-level:hover { transform: translateY(-2px); border-color: var(--gold-edge); }
+.brunetti-site .course-level.is-active { border-color: var(--gold-bright); background: var(--gold-soft); }
+.brunetti-site .course-level .cl-n { font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.72rem; color: var(--gold-bright); }
+.brunetti-site .course-level .cl-s { font-size: 0.92rem; color: var(--ink); }
+.brunetti-site .course-level-desc { text-align: center; color: var(--ink-2, var(--muted)); margin: 0 auto 1.4rem; max-width: 60ch; }
