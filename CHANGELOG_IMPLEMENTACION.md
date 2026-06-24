@@ -2,6 +2,27 @@
 
 Este archivo registra el avance funcional de la rama `desarrollo` para que cualquier computador o agente pueda retomar la tarea sin depender del historial de chat.
 
+## 2026-06-24 - Hero Brunetti sin efecto gooey + modo claro pulido en todos los módulos
+
+### Resumen
+Se eliminó el efecto de morphing "gooey" del nombre del hero (quedaba ilegible mid-transición, p. ej. "Bnto") y se reordenó el hero para que **Brunetti** vaya arriba y el kicker *Visagista · Barbería Premium · Maipú* debajo. Se hizo una pasada completa de **modo claro** corrigiendo todos los bloques oscuros hardcodeados, textos sin contraste y el `theme-color` de iOS.
+
+### Cambios principales
+
+- **Hero (`src/pages/Home.jsx`)**: se quitó `GooeyText` (componente eliminado) y se renderiza "Brunetti" estático con la animación limpia letra-por-letra (`bruLetterUp`). Nuevo orden: nombre → kicker → rol → subtítulo. `NAME` ahora es `'Brunetti'` (case mixto para Pirata One).
+- **CSS gooey muerto eliminado** en `src/styles/brunetti.css` (`.gm-*`, `.bhero-morph`, filtro `#gm-goo`).
+- **Modo claro — contraste de textos**: `--ink-2`/`--ink-3` reforzados (0.82 / 0.62) para que checklists, descripciones y metadatos se lean bien sobre fondo claro.
+- **Modo claro — Cursos hero (sobre foto oscura)**: el botón ghost "VER PROGRAMA" y los indicadores `course-stats` (MÓDULOS/LECCIONES) ahora se quedan claros para no perderse sobre la foto.
+- **Modo claro — Workshop**: superficies con fondo oscuro hardcodeado (que no usaban tokens) se vuelven claras: `.wks-panel` (tarjetas de precio/contenido), inputs y `<select>` del formulario (antes bloques negros ilegibles), `.wks-cd-cell`, barra de cupos, `.wks-success` y botones ghost.
+- **iOS — `theme-color` dinámico** (`index.html` + `src/components/theme.jsx`): se reemplazaron los dos `<meta theme-color>` basados en `prefers-color-scheme` por uno único sincronizado por JS con `data-theme` (toggle / hora de Santiago). Así las barras superior/inferior de iOS dejan de pintarse con el color del tema contrario.
+
+### Archivos modificados
+- `src/pages/Home.jsx`, `src/components/theme.jsx`, `src/styles/brunetti.css`, `index.html`
+- `src/components/GooeyText.jsx` (eliminado)
+
+### Verificación realizada
+- `npm run build` limpio. Verificado en preview (móvil 375px) en modo claro y oscuro: Home (orden hero + nombre sin gooey), Cursos (ghost + indicadores sobre foto), Workshop (panel de precio y formulario claros). Deploy a producción.
+
 ## 2026-06-22 - Marca personal Brunetti (un solo barbero) + módulo Cursos + panel interno solo-Brunetti
 
 ### Resumen

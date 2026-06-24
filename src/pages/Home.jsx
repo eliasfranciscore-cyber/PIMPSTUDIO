@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useBrunettiFx, scrollToId } from '../components/brunetti.jsx'
 import SiteNav from '../components/SiteNav.jsx'
 import ModuleFooter from '../components/ModuleFooter.jsx'
-import GooeyText from '../components/GooeyText.jsx'
 
 /* ============================================================
    BRUNETTI — Landing de marca personal (Bruno Herrera)
@@ -60,7 +59,7 @@ const TESTIMONIALS = [
   { quote: 'Atención impecable de principio a fin. El estudio se siente premium y la hora reservada siempre se respeta.', name: 'Felipe Carrasco', role: 'Cliente frecuente', img: '/assets/bruno-portrait.jpg' },
 ]
 
-const NAME = 'BRUNETTI'.split('')
+const NAME = 'Brunetti'.split('')
 
 export default function Home() {
   const navigate = useNavigate()
@@ -185,10 +184,10 @@ export default function Home() {
           </div>
           <div className="bhero-grid">
             <div className="bhero-text">
-              <span className="bhero-kicker"><span className="dot" />Visagista · Barbería Premium · Maipú</span>
-              <h1 className="bhero-name bhero-morph" aria-label="Brunetti">
-                <GooeyText texts={['Brunetti', 'Cutz']} />
+              <h1 className="bhero-name" aria-label="Brunetti">
+                {NAME.map((ch, i) => (<span key={i} style={{ '--l': i }}>{ch}</span>))}
               </h1>
+              <span className="bhero-kicker"><span className="dot" />Visagista · Barbería Premium · Maipú</span>
               <p className="bhero-role">Bruno Herrera — <b>director de imagen &amp; visagista</b></p>
               <p className="bhero-sub">No es solo un corte: es leer tu rostro, tu estilo de vida y tu identidad para diseñar la imagen que realmente te representa. Técnica de precisión, dirección de estilo y una experiencia pensada al detalle.</p>
               <div className="bhero-actions">

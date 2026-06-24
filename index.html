@@ -26,8 +26,11 @@
     <meta property="og:url" content="https://brunetticutz.cl/" />
     <meta property="og:title" content="Brunetti · Barbería Premium" />
     <meta property="og:description" content="Reserva tu cita en segundos. Visagismo, cortes y experiencia premium en Maipú, Santiago." />
-    <meta name="theme-color" content="#080807" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#f6f5f3" media="(prefers-color-scheme: light)" />
+    <!-- theme-color único y dinámico: lo sincroniza el JS con data-theme (NO con
+         prefers-color-scheme), porque el tema real lo decide el toggle / la hora
+         de Santiago. Así iOS no pinta las barras sup/inf con el color del tema
+         contrario al que se ve en pantalla. -->
+    <meta name="theme-color" content="#080807" />
     <script>
       // Tema inicial sin flash: respeta elección manual; si no, hora de Santiago (claro de día, oscuro de noche).
       (function () {
@@ -39,6 +42,8 @@
             t = (h >= 7 && h < 19) ? 'light' : 'dark';
           }
           document.documentElement.setAttribute('data-theme', t);
+          var m = document.querySelector('meta[name="theme-color"]');
+          if (m) m.setAttribute('content', t === 'light' ? '#f6f5f3' : '#080807');
         } catch (e) { document.documentElement.setAttribute('data-theme', 'dark'); }
       })();
     </script>

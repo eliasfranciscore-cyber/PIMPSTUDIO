@@ -2203,8 +2203,8 @@
 /* Voltear tinta secundaria (si no, --ink-2/--ink-3 quedan claros e ilegibles en claro) */
 [data-theme="light"] .brunetti-site,
 [data-theme="light"] .wks {
-  --ink-2: rgba(26, 24, 23, 0.74);
-  --ink-3: rgba(26, 24, 23, 0.54);
+  --ink-2: rgba(26, 24, 23, 0.82);
+  --ink-3: rgba(26, 24, 23, 0.62);
 }
 /* Fondo del sitio brunetti */
 [data-theme="light"] .brunetti-site::before {
@@ -2220,7 +2220,6 @@
 [data-theme="light"] .brunetti-site h2,
 [data-theme="light"] .brunetti-site h3,
 [data-theme="light"] .brunetti-site .bhero-name span,
-[data-theme="light"] .brunetti-site .gm-word,
 [data-theme="light"] .brunetti-site .bhead h2 {
   background: none !important;
   -webkit-text-fill-color: currentColor;
@@ -2285,32 +2284,46 @@
 }
 [data-theme="light"] .wks-hero-media img { filter: grayscale(100%) contrast(1.05) brightness(1.02); }
 
+/* --- CURSOS: el hero va SOBRE foto oscura → en claro el botón ghost y los
+   indicadores (course-stats) se quedan claros para no perderse. --- */
+[data-theme="light"] .brunetti-site .course-hero .btn-ghost {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.30);
+  color: #ffffff;
+}
+[data-theme="light"] .brunetti-site .course-hero .btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.20);
+  border-color: rgba(255, 255, 255, 0.46);
+}
+[data-theme="light"] .brunetti-site .course-hero .course-stats .cst {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+[data-theme="light"] .brunetti-site .course-hero .course-stats .cst span {
+  color: rgba(245, 244, 242, 0.85);
+}
+/* Checklist de la card de inscripción: contraste sólido en claro */
+[data-theme="light"] .brunetti-site .bcontact-list li { color: #2a2723; }
+
+/* --- WORKSHOP: superficies con fondo oscuro hardcodeado (no usan tokens) →
+   se vuelven claras en modo claro para que no queden como bloques negros. --- */
+[data-theme="light"] .wks .wks-panel { background: var(--wk-panel); }
+[data-theme="light"] .wks .wks-field input,
+[data-theme="light"] .wks .wks-field select { background: #ffffff; color: var(--wk-ink); }
+[data-theme="light"] .wks .wks-field input:focus,
+[data-theme="light"] .wks .wks-field select:focus { background: #ffffff; }
+[data-theme="light"] .wks .wks-field input::placeholder { color: var(--wk-muted); }
+[data-theme="light"] .wks .wks-cd-cell { background: rgba(0, 0, 0, 0.04); }
+[data-theme="light"] .wks .wks-cupos-bar { background: rgba(0, 0, 0, 0.08); }
+[data-theme="light"] .wks .wks-success {
+  background: linear-gradient(170deg, rgba(136, 56, 216, 0.10), rgba(255, 255, 255, 0.92));
+}
+[data-theme="light"] .wks .wks-btn-ghost { color: var(--wk-ink-soft); }
+[data-theme="light"] .wks .wks-btn-ghost:hover { color: var(--wk-gold-lt); background: rgba(136, 56, 216, 0.10); }
+
 /* Botones de la sección Contacto: mismo ancho (simétricos) */
 .brunetti-site .bcontact-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
 .brunetti-site .bcontact-actions .btn { flex: 1 1 0; min-width: 150px; justify-content: center; }
-
-/* ============================================================
-   Hero GOOEY morph (Brunetti ↔ Cutz)
-   ============================================================ */
-.brunetti-site .bhero-name.bhero-morph { display: inline-block; min-height: 0.92em; }
-.gm-wrap { display: inline-block; }
-.gm-svg { position: absolute; width: 0; height: 0; }
-.gm-stage { position: relative; display: inline-block; filter: url(#gm-goo); }
-.gm-word {
-  display: block;
-  white-space: nowrap;
-  background: linear-gradient(180deg, #ffffff 28%, #f0d49a 66%, #c9a35b 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  will-change: filter, opacity;
-}
-.gm-word + .gm-word { position: absolute; top: 0; left: 0; right: 0; }
-[data-theme="light"] .brunetti-site .gm-word {
-  background: none !important;
-  -webkit-text-fill-color: currentColor;
-  color: #1c1a17;
-}
 
 /* ============================================================
    CURSOS — selector de 4 niveles

@@ -40,6 +40,10 @@ export function ThemeProvider({ children }) {
   // Aplica el tema al documento y persiste.
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
+    // Sincroniza el theme-color de iOS con el tema REAL (no con prefers-color-scheme),
+    // si no las barras superior/inferior quedan del color del tema contrario.
+    const meta = document.querySelector('meta[name="theme-color"]')
+    if (meta) meta.setAttribute('content', theme === 'light' ? '#f6f5f3' : '#080807')
     try { localStorage.setItem('ps_theme', theme) } catch {}
   }, [theme])
 
