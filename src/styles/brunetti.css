@@ -2085,3 +2085,56 @@
   .brunetti-site [data-reveal] { opacity: 1 !important; transform: none !important; }
   .brunetti-site .bmarquee-track { animation: none !important; }
 }
+
+/* ============================================================
+   CURSOS — paleta AZUL #0B129E (scope .cursos-page).
+   Misma lógica que el workshop: se reemplaza el dorado por azul
+   conservando efectos, sombras y degradados con el color nuevo.
+   Solo afecta /cursos; la landing comparte .brunetti-site y sigue dorada.
+   #0B129E es oscuro, así que se deriva un tono claro (#6B74F0) para
+   textos/íconos/acentos (como el morado claro del workshop).
+   ============================================================ */
+.brunetti-site.cursos-page {
+  --gold: #0b129e;
+  --gold-lt: #6b74f0;
+  --gold-bright: #6b74f0;
+  --gold-deep: #070a66;
+  --gold-dp: #070a66;
+  --gold-edge: rgba(107, 116, 240, 0.45);
+  --gold-soft: rgba(107, 116, 240, 0.14);
+  --gold-line: rgba(11, 18, 158, 0.40);
+  --gold-glow: rgba(107, 116, 240, 0.20);
+  --gold-grad: linear-gradient(135deg, #6b74f0 0%, #0b129e 50%, #070a66 100%);
+  --shadow-gold: 0 16px 40px -18px rgba(11, 18, 158, 0.55);
+  --on-gold: #ffffff;
+}
+/* Degradados de texto dorados hardcodeados → blanco→azul */
+.cursos-page .course-hero h1 {
+  background: linear-gradient(180deg, #fff 28%, #5660e6 64%, #0b129e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.cursos-page .bhead h2 {
+  background: linear-gradient(180deg, #fff 35%, #6b74f0);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+/* Glow radial del hero (dorado) → azul */
+.cursos-page .course-hero::after {
+  background:
+    radial-gradient(60vw 50vw at 70% 10%, rgba(43, 51, 201, 0.22), transparent 60%),
+    linear-gradient(to right, rgba(6, 6, 8, 0.95) 20%, rgba(6, 6, 8, 0.7) 55%, rgba(6, 6, 8, 0.55) 100%),
+    linear-gradient(to top, rgba(6, 6, 8, 0.9), transparent 60%);
+}
+/* Botón primario :hover (degradado dorado hardcodeado) → azul */
+.cursos-page .btn-primary:hover {
+  background: linear-gradient(180deg, #3a44d6 0%, #0b129e 55%, #070a66 100%);
+  box-shadow: var(--g-spec), 0 12px 30px rgba(0, 0, 0, 0.5), 0 6px 22px rgba(11, 18, 158, 0.4);
+}
+/* Hero: contenido alineado a la izquierda (antes centrado) — solo desktop */
+@media (min-width: 861px) {
+  .cursos-page .course-hero { padding-inline: max(1.25rem, calc((100vw - var(--b-maxw)) / 2)); }
+  .cursos-page .course-hero-inner { margin: 0; max-width: 660px; }
+}

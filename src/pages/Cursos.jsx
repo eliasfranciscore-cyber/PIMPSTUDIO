@@ -111,7 +111,7 @@ export default function Cursos() {
   }
 
   return (
-    <div className="brunetti-site" ref={rootRef}>
+    <div className="brunetti-site cursos-page" ref={rootRef}>
       <header className="site-header">
         <div className="nav-wrap">
           <a className="brand" href="/" onClick={(e) => { e.preventDefault(); navigate('/') }}>
