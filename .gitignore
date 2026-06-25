@@ -1,7 +1,16 @@
-.vercel
+# Dependencias y build
 node_modules
 dist
-.DS_Store
+
+# Vercel / entorno / secretos
+.vercel
 .env
-*.local
 .env*
+*.local
+
+# Sistema
+.DS_Store
+
+# Archivos movidos a desuso: se conservan en disco para referencia,
+# pero NO se versionan ni se despliegan.
+Archivos en desuso/

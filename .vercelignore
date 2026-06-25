@@ -1,12 +1,14 @@
+# Solo se despliega lo necesario: src/, api/, public/, index.html, vite.config.js,
+# package.json y vercel.json. Todo lo demás se excluye para subidas más rápidas.
 .git
+.claude
 node_modules
-.docs
+dist
 .DS_Store
-docs
-inbox
-skills
-/data
-server.js
-README.md
 *.log
-*.db
+Archivos en desuso
+graphify-out
+db
+README.md
+CHANGELOG_IMPLEMENTACION.md
+IMPLEMENTATION_PLAN.md
