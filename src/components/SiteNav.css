@@ -68,7 +68,8 @@
 }
 
 /* Menú desplegable (sheet) — sólo móvil.
-   Backdrop oscuro fijo independiente del tema: texto siempre blanco. */
+   Por defecto (oscuro) usa panel oscuro + texto blanco; en modo claro se
+   re-mapea más abajo a fondo crema + tinta oscura para seguir el tema. */
 .site-nav-sheet {
   position: fixed;
   top: calc(env(safe-area-inset-top, 0px) + 74px);
@@ -113,6 +114,18 @@
 .site-nav-sheet button:last-child { border-bottom: 0; }
 /* Activo: en cursos/workshop toma el color de acento del módulo */
 .site-nav-sheet button.is-active { color: var(--gold); }
+
+/* Modo claro: el sheet sigue el tema — fondo crema translúcido + tinta oscura,
+   no el panel oscuro fijo. (data-theme vive en <html>, ancestro del sheet.) */
+[data-theme="light"] .site-nav-sheet {
+  background: rgba(255, 253, 248, 0.86);
+  border-color: rgba(40, 33, 18, 0.14);
+  box-shadow: 0 26px 60px -24px rgba(60, 40, 8, 0.28);
+}
+[data-theme="light"] .site-nav-sheet button {
+  color: var(--ink);
+  border-bottom-color: rgba(40, 33, 18, 0.08);
+}
 /* Acceso barberos */
 .site-nav-sheet .site-nav-sheet-barber {
   display: flex;

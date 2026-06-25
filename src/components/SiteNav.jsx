@@ -95,7 +95,7 @@ export default function SiteNav({ onSection, scrolled: scrolledProp }) {
             </button>
           ))}
           <button className="btn btn-ghost btn-sm site-nav-barber-desktop" onClick={() => navigate("/ingreso")}>
-            <Icon name="key" size={14} /> Acceso
+            <Icon name="key" size={14} /> Acceso interno
           </button>
           <button className="btn btn-gold btn-sm site-nav-reserve-desktop" onClick={() => navigate("/login")}>
             <Icon name="calendar" size={14} /> Reservar
@@ -129,7 +129,7 @@ export default function SiteNav({ onSection, scrolled: scrolledProp }) {
           className="site-nav-sheet-barber"
           onClick={() => { setMenuOpen(false); navigate("/ingreso") }}
         >
-          <Icon name="key" size={15} /> Acceso barberos
+          <Icon name="key" size={15} /> Acceso interno
         </button>
       </div>
 

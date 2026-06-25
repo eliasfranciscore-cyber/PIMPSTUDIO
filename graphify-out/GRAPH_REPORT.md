@@ -1,60 +1,61 @@
 # Graph Report - .  (2026-06-24)
 
 ## Corpus Check
-- 1 files · ~166,853 words
+- 8 files · ~180,485 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 431 nodes · 652 edges · 36 communities (21 shown, 15 thin omitted)
-- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 25 edges (avg confidence: 0.85)
+- 473 nodes · 730 edges · 37 communities (22 shown, 15 thin omitted)
+- Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 39 edges (avg confidence: 0.86)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
-- [[_COMMUNITY_Community 0|Community 0]]
-- [[_COMMUNITY_Community 1|Community 1]]
-- [[_COMMUNITY_Community 2|Community 2]]
-- [[_COMMUNITY_Community 3|Community 3]]
-- [[_COMMUNITY_Community 4|Community 4]]
-- [[_COMMUNITY_Community 5|Community 5]]
-- [[_COMMUNITY_Community 6|Community 6]]
-- [[_COMMUNITY_Community 7|Community 7]]
-- [[_COMMUNITY_Community 8|Community 8]]
-- [[_COMMUNITY_Community 9|Community 9]]
-- [[_COMMUNITY_Community 10|Community 10]]
-- [[_COMMUNITY_Community 11|Community 11]]
-- [[_COMMUNITY_Community 12|Community 12]]
-- [[_COMMUNITY_Community 13|Community 13]]
-- [[_COMMUNITY_Community 14|Community 14]]
-- [[_COMMUNITY_Community 15|Community 15]]
-- [[_COMMUNITY_Community 16|Community 16]]
-- [[_COMMUNITY_Community 17|Community 17]]
-- [[_COMMUNITY_Community 18|Community 18]]
-- [[_COMMUNITY_Community 19|Community 19]]
-- [[_COMMUNITY_Community 21|Community 21]]
-- [[_COMMUNITY_Community 22|Community 22]]
-- [[_COMMUNITY_Community 23|Community 23]]
-- [[_COMMUNITY_Community 24|Community 24]]
-- [[_COMMUNITY_Community 25|Community 25]]
-- [[_COMMUNITY_Community 26|Community 26]]
-- [[_COMMUNITY_Community 27|Community 27]]
-- [[_COMMUNITY_Community 28|Community 28]]
-- [[_COMMUNITY_Community 29|Community 29]]
-- [[_COMMUNITY_Community 30|Community 30]]
-- [[_COMMUNITY_Community 31|Community 31]]
-- [[_COMMUNITY_Community 34|Community 34]]
-- [[_COMMUNITY_Community 35|Community 35]]
+- [[_COMMUNITY_Client & Barber UI Components|Client & Barber UI Components]]
+- [[_COMMUNITY_Enrollment API & Data|Enrollment API & Data]]
+- [[_COMMUNITY_Authentication System|Authentication System]]
+- [[_COMMUNITY_Dashboard & Analytics|Dashboard & Analytics]]
+- [[_COMMUNITY_Site Theme & Changelog|Site Theme & Changelog]]
+- [[_COMMUNITY_Barber Module Config|Barber Module Config]]
+- [[_COMMUNITY_Booking App Core|Booking App Core]]
+- [[_COMMUNITY_Project Dependencies|Project Dependencies]]
+- [[_COMMUNITY_Agent Knowledge Base|Agent Knowledge Base]]
+- [[_COMMUNITY_Estilo Module Data|Estilo Module Data]]
+- [[_COMMUNITY_Brand & Auth Patterns|Brand & Auth Patterns]]
+- [[_COMMUNITY_Local Dev Server|Local Dev Server]]
+- [[_COMMUNITY_Workshop Module Data|Workshop Module Data]]
+- [[_COMMUNITY_Bookings Inbox|Bookings Inbox]]
+- [[_COMMUNITY_Hero Photo Assets|Hero Photo Assets]]
+- [[_COMMUNITY_Estilo Teaser Photo|Estilo Teaser Photo]]
+- [[_COMMUNITY_Client Registration API|Client Registration API]]
+- [[_COMMUNITY_Vercel Config|Vercel Config]]
+- [[_COMMUNITY_Module Footer Component|Module Footer Component]]
+- [[_COMMUNITY_Proposal Generator Script|Proposal Generator Script]]
+- [[_COMMUNITY_Commercial Proposal Docs|Commercial Proposal Docs]]
+- [[_COMMUNITY_Gallery Image 1|Gallery Image 1]]
+- [[_COMMUNITY_Gallery Image 2|Gallery Image 2]]
+- [[_COMMUNITY_Gallery Image 3|Gallery Image 3]]
+- [[_COMMUNITY_Brand Logo Assets|Brand Logo Assets]]
+- [[_COMMUNITY_SiteNav Navigation Helpers|SiteNav Navigation Helpers]]
+- [[_COMMUNITY_Brunetti CSS & Plan|Brunetti CSS & Plan]]
+- [[_COMMUNITY_PDF Export Script|PDF Export Script]]
+- [[_COMMUNITY_Static HTML Pages|Static HTML Pages]]
+- [[_COMMUNITY_Bruno Feature Photo|Bruno Feature Photo]]
+- [[_COMMUNITY_Bruno Portrait Photo|Bruno Portrait Photo]]
+- [[_COMMUNITY_Workshop Promo Photo|Workshop Promo Photo]]
+- [[_COMMUNITY_Admin Client Page|Admin Client Page]]
+- [[_COMMUNITY_Legacy Landing Page|Legacy Landing Page]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `requireInternal()` - 18 edges
+1. `requireInternal()` - 19 edges
 2. `Icon()` - 11 edges
 3. `CLP()` - 10 edges
-4. `enablePush()` - 9 edges
-5. `ELIJA Agente Personal de Trabajo README` - 9 edges
-6. `barberById()` - 8 edges
-7. `PIMP STUDIO Logo (JPG, used as brand header/footer image)` - 8 edges
-8. `ThemeProvider()` - 8 edges
-9. `readLocalBookings()` - 7 edges
-10. `readJson()` - 7 edges
+4. `handler()` - 10 edges
+5. `Dashboard()` - 10 edges
+6. `Workshop()` - 10 edges
+7. `enablePush()` - 9 edges
+8. `ELIJA Agente Personal de Trabajo README` - 9 edges
+9. `Home()` - 9 edges
+10. `Hero Photo: Brunetti Barber in Action` - 9 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `index.html theme bootstrap script` --semantically_similar_to--> `santiagoHour()`  [INFERRED] [semantically similar]
@@ -71,99 +72,108 @@
 ## Import Cycles
 - None detected.
 
-## Communities (36 total, 15 thin omitted)
+## Hyperedges (group relationships)
+- **Enrollment Data Flow: Cursos + Workshop → API → Dashboard** — pages_cursos_onsubmit, pages_workshop_register, api_enrollments_handler, pages_dashboard_enrollmentspanel [EXTRACTED 1.00]
+- **SiteNav shared across all public pages (Home, Cursos, Workshop)** — components_sitenav_sitenav, pages_home_home, pages_cursos_cursos, pages_workshop_workshop [EXTRACTED 1.00]
+- **Dashboard authenticated API calls pattern (authHeaders + fetch + fallback)** — pages_dashboard_authheaders, pages_dashboard_saveservice, pages_dashboard_saveexpense, pages_dashboard_savebarber [EXTRACTED 1.00]
 
-### Community 0 - "Community 0"
+## Communities (37 total, 15 thin omitted)
+
+### Community 0 - "Client & Barber UI Components"
 Cohesion: 0.06
-Nodes (30): Bars(), CAT_COLORS, DashboardResumen(), STATUS_DOT, TopSvc(), GlareCard(), Icon(), PATHS (+22 more)
+Nodes (39): Bars(), CAT_COLORS, DashboardResumen(), STATUS_DOT, TopSvc(), GlareCard(), Icon(), PATHS (+31 more)
 
-### Community 1 - "Community 1"
+### Community 1 - "Enrollment API & Data"
+Cohesion: 0.05
+Nodes (41): cleanPhone helper, cleanPhone(), DEMO, handler(), neon (NeonDB serverless SQL), requireInternal auth guard, sendJson(), scrollToId() (+33 more)
+
+### Community 2 - "Authentication System"
 Cohesion: 0.10
 Nodes (32): b64url(), BARBER_PROFILES, fallbackLogin(), fallbackPasswords(), handleChangePassword(), handleLogin(), handler(), isAdmin() (+24 more)
 
-### Community 2 - "Community 2"
-Cohesion: 0.06
-Nodes (24): FEATURE_CARDS, TESTIMONIALS, WK_BASE, WK_DIAS, WK_ED, WK_MESES, WORKSHOP, WORKSHOP_DATES (+16 more)
+### Community 3 - "Dashboard & Analytics"
+Cohesion: 0.09
+Nodes (28): AGENDA_SLOTS, authHeaders function, buildWeek(), CFG_SECTIONS, ConfigPanel(), Dashboard(), DAY_LABELS, exportCSV function (+20 more)
 
-### Community 3 - "Community 3"
-Cohesion: 0.11
-Nodes (20): AGENDA_SLOTS, buildWeek(), CFG_SECTIONS, ConfigPanel(), Dashboard(), DAY_LABELS, isStrongPassword(), authHeaders() (+12 more)
-
-### Community 4 - "Community 4"
+### Community 4 - "Site Theme & Changelog"
 Cohesion: 0.09
 Nodes (25): CHANGELOG de implementación, Brunetti single-barber rebrand, Hero gooey-effect removal, Light-mode polish pass, autoTheme(), iOS dynamic theme-color sync, FloatingThemeToggle(), Santiago-hour automatic theme (+17 more)
 
-### Community 5 - "Community 5"
+### Community 5 - "Barber Module Config"
 Cohesion: 0.08
 Nodes (11): ALL_MODULE_IDS, emptyBarber, MODULES, PERMS, Emblem(), Icon(), ICONS, MobileScreen() (+3 more)
 
-### Community 6 - "Community 6"
+### Community 6 - "Booking App Core"
 Cohesion: 0.13
 Nodes (29): addAppointment(), boot(), digitsOnly(), ensureSeedData(), escapeHtml(), FIGMA_BARBERS, FIGMA_SERVICES, formatCLP() (+21 more)
 
-### Community 7 - "Community 7"
-Cohesion: 0.12
-Nodes (14): scrollToId(), useBrunettiFx(), NAV, SiteNav(), Brandmark(), INCLUDES, LEVELS, MODULES (+6 more)
-
-### Community 8 - "Community 8"
+### Community 7 - "Project Dependencies"
 Cohesion: 0.10
 Nodes (20): dependencies, @neondatabase/serverless, react, react-dom, react-router-dom, @vercel/analytics, web-push, devDependencies (+12 more)
 
-### Community 9 - "Community 9"
+### Community 8 - "Agent Knowledge Base"
 Cohesion: 0.22
 Nodes (17): Identidad del Agente ELIJA, Availability Slots and Block Management, Online Booking Reservation Flow, ELIJA Personal Work Agent, Conocimiento de la Empresa, Roadmap de Integraciones, Sistema Operativo de ELIJA, Priority Matrix P1 P2 P3 (+9 more)
 
-### Community 10 - "Community 10"
+### Community 9 - "Estilo Module Data"
 Cohesion: 0.15
 Nodes (6): FACE_SHAPES, GALLERY, GALLERY_CATS, u(), Reveal(), useReveal()
 
-### Community 11 - "Community 11"
+### Community 10 - "Brand & Auth Patterns"
 Cohesion: 0.24
 Nodes (16): PIMP STUDIO Logo (JPG, used as brand header/footer image), Admin Key Authentication (shared internal password pattern), Barber Availability Management (barber sets available slots per day), Barber Authentication Flow (username/password, sets active barber session), Dual Authentication System (client auth via phone vs barber/admin auth via username+password), Phone Number as Client Identity (celular = ID de cliente), Manual Slot Blocking (admin blocks time slots per barber per day), TNE Discount (20% for Tarjeta Nacional Estudiantil, non-Bruno services) (+8 more)
 
-### Community 12 - "Community 12"
+### Community 11 - "Local Dev Server"
 Cohesion: 0.15
 Nodes (14): fs, handleLocalRegisterClient(), http, LOCAL_CLIENTS_FILE, MIME, normalizePath(), path, PORT (+6 more)
 
-### Community 13 - "Community 13"
+### Community 12 - "Workshop Module Data"
+Cohesion: 0.13
+Nodes (13): FEATURE_CARDS, TESTIMONIALS, WK_BASE, WK_DIAS, WK_ED, WK_MESES, WORKSHOP, WORKSHOP_DATES (+5 more)
+
+### Community 13 - "Bookings Inbox"
 Cohesion: 0.23
 Nodes (9): FILTER_MAP, FILTERS, initialsOf(), ResCard(), ResModal(), resolveBarber(), STATUS_LABEL, STATUS_OPTIONS (+1 more)
 
-### Community 14 - "Community 14"
-Cohesion: 0.44
-Nodes (9): withLocalAppts(), addLocalBooking(), cancelKeyOf(), cancelLocalBooking(), isCancelled(), mergeBookings(), readCancelledKeys(), readLocalBookings() (+1 more)
+### Community 14 - "Hero Photo Assets"
+Cohesion: 0.29
+Nodes (11): Background text: 'El cliente...' (partially visible), Barber (Bruno Brunetti), Dark patterned barber cape, Client in barber cape receiving haircut, Green barber comb (tool), Context: live demo or barbering course/event, Lapel/headset microphone worn by barber, Hero Photo: Brunetti Barber in Action (+3 more)
 
-### Community 16 - "Community 16"
+### Community 15 - "Estilo Teaser Photo"
+Cohesion: 0.29
+Nodes (10): Barber / Instructor (PIMP & STUDIOS branded, tattooed, glasses, mic), Barbershop / studio interior with white brick wall, Client seated in barber chair wearing cape, Haircut / styling service in progress, estilo-teaser.jpg (style module teaser image), PIMP & STUDIOS brand logo (on barber shirt), Mood: professional, focused, editorial photography, Ring light (professional studio lighting behind barber) (+2 more)
+
+### Community 17 - "Vercel Config"
 Cohesion: 0.40
 Nodes (4): buildCommand, framework, outputDirectory, rewrites
 
-### Community 18 - "Community 18"
+### Community 19 - "Proposal Generator Script"
 Cohesion: 0.83
 Nodes (3): extraer_contexto(), main(), sugerir_alcance()
 
-### Community 19 - "Community 19"
+### Community 20 - "Commercial Proposal Docs"
 Cohesion: 0.67
 Nodes (3): Propuesta Comercial Demo, Transcripcion Demo Cliente, Propuesta Comercial Base Template
 
 ## Knowledge Gaps
-- **120 isolated node(s):** `BARBER_PROFILES`, `ALL_SLOTS`, `STATIC_BARBERS`, `DEMO_BOOKINGS`, `DEMO_CLIENTS` (+115 more)
+- **128 isolated node(s):** `BARBER_PROFILES`, `ALL_SLOTS`, `STATIC_BARBERS`, `DEMO_BOOKINGS`, `DEMO_CLIENTS` (+123 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **15 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Icon()` connect `Community 5` to `Community 0`, `Community 3`, `Community 14`, `Community 7`?**
-  _High betweenness centrality (0.055) - this node is a cross-community bridge._
-- **Why does `useTheme()` connect `Community 4` to `Community 10`, `Community 3`?**
-  _High betweenness centrality (0.035) - this node is a cross-community bridge._
-- **Why does `ThemeProvider()` connect `Community 4` to `Community 3`?**
-  _High betweenness centrality (0.033) - this node is a cross-community bridge._
+- **Why does `EnrollmentsPanel()` connect `Enrollment API & Data` to `Dashboard & Analytics`?**
+  _High betweenness centrality (0.109) - this node is a cross-community bridge._
+- **Why does `requireInternal()` connect `Authentication System` to `Enrollment API & Data`?**
+  _High betweenness centrality (0.099) - this node is a cross-community bridge._
 - **What connects `BARBER_PROFILES`, `ALL_SLOTS`, `STATIC_BARBERS` to the rest of the system?**
-  _122 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.06294326241134751 - nodes in this community are weakly interconnected._
-- **Should `Community 1` be split into smaller, more focused modules?**
+  _130 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `Client & Barber UI Components` be split into smaller, more focused modules?**
+  _Cohesion score 0.05961426066627703 - nodes in this community are weakly interconnected._
+- **Should `Enrollment API & Data` be split into smaller, more focused modules?**
+  _Cohesion score 0.05384150030248034 - nodes in this community are weakly interconnected._
+- **Should `Authentication System` be split into smaller, more focused modules?**
   _Cohesion score 0.0975609756097561 - nodes in this community are weakly interconnected._
-- **Should `Community 2` be split into smaller, more focused modules?**
-  _Cohesion score 0.06342780026990553 - nodes in this community are weakly interconnected._
+- **Should `Dashboard & Analytics` be split into smaller, more focused modules?**
+  _Cohesion score 0.08780487804878048 - nodes in this community are weakly interconnected._

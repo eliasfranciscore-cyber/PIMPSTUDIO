@@ -2352,6 +2352,25 @@
 [data-theme="light"] .wks .wks-btn-ghost { color: var(--wk-ink-soft); }
 [data-theme="light"] .wks .wks-btn-ghost:hover { color: var(--wk-gold-lt); background: rgba(136, 56, 216, 0.10); }
 
+/* La card del hero (fecha + contador + precio) conserva su fondo OSCURO en
+   modo claro, así que su contenido debe ir en claro fijo (si no, los números
+   quedaban oscuros sobre fondo oscuro = invisibles). Mantener oscuro, letras
+   blancas. Más específico que `.wks .wks-cd-cell`, así que gana. */
+[data-theme="light"] .wks .wks-hero-card .wks-cd-cell {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+[data-theme="light"] .wks .wks-hero-card .wks-cd-cell b,
+[data-theme="light"] .wks .wks-hero-card .wks-date-badge b { color: #f6f5f3; }
+[data-theme="light"] .wks .wks-hero-card .wks-cd-cell span,
+[data-theme="light"] .wks .wks-hero-card .wks-date-badge span,
+[data-theme="light"] .wks .wks-hero-card .wks-price-was { color: rgba(246, 245, 243, 0.62); }
+[data-theme="light"] .wks .wks-hero-card .wks-price-now { color: #c9a0f5; }
+[data-theme="light"] .wks .wks-hero-card .wks-chip {
+  color: #c9a0f5;
+  border-color: rgba(180, 131, 243, 0.42);
+}
+
 /* Botones de la sección Contacto: mismo ancho (simétricos) */
 .brunetti-site .bcontact-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
 .brunetti-site .bcontact-actions .btn { flex: 1 1 0; min-width: 150px; justify-content: center; }

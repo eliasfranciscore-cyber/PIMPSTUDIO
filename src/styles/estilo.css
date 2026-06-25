@@ -195,6 +195,9 @@
 .ete-hero-stats .s b { font-family: var(--font-display); display: block; font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 600; color: var(--gold-lt); line-height: 1; }
 .ete-hero-stats .s span { display: block; margin-top: 0.4rem; font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
 
+/* CTA de "Cortes recomendados": dos botones, mismo ancho en escritorio */
+.ete-best-cta { margin-top: 1.6rem; display: flex; gap: 0.8rem; flex-wrap: wrap; }
+
 @media (max-width: 879px) {
   .ete-hero-inner { text-align: center; }
   .ete-hero-kicker { justify-content: center; }
@@ -202,6 +205,15 @@
   .ete-hero-sub { margin-inline: auto; text-align: center; }
   .ete-hero-actions { justify-content: center; }
   .ete-hero-stats { justify-content: center; }
+
+  /* Filtros de galería centrados en móvil */
+  .ete-filters { justify-content: center; }
+
+  /* CTA recomendados: apilados, centrados y mismo ancho */
+  .ete-best-cta { flex-direction: column; align-items: stretch; }
+  .ete-best-cta .ete-btn { width: 100%; }
+  /* "con Bruno" se oculta en móvil → "Reservar asesoría" */
+  .ete-hide-mobile { display: none; }
 }
 
 /* ============================================================

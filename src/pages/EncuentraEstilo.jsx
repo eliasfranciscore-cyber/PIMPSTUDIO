@@ -198,8 +198,8 @@ function Visagismo({ onReserveService }) {
                 <span className="ic"><Icon name="alert" size={18} /></span>
                 <span><b>Evita: </b>{shape.avoid}</span>
               </p>
-              <div style={{ marginTop: '1.6rem', display: 'flex', gap: '0.8rem', flexWrap: 'wrap' }}>
-                <button className="ete-btn ete-btn-gold" type="button" onClick={() => onReserveService(10)}>Reservar asesoría con Bruno <Icon name="arrow" size={16} /></button>
+              <div className="ete-best-cta">
+                <button className="ete-btn ete-btn-gold" type="button" onClick={() => onReserveService(10)}>Reservar asesoría<span className="ete-hide-mobile">&nbsp;con Bruno</span> <Icon name="arrow" size={16} /></button>
                 <button className="ete-btn ete-btn-ghost" type="button" onClick={() => smoothScroll('galeria')}>Ver más estilos</button>
               </div>
             </div>
