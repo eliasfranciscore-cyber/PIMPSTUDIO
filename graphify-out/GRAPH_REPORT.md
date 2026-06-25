@@ -1,11 +1,11 @@
 # Graph Report - .  (2026-06-24)
 
 ## Corpus Check
-- 8 files · ~166,983 words
+- 1 files · ~166,853 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 433 nodes · 657 edges · 35 communities (20 shown, 15 thin omitted)
+- 431 nodes · 652 edges · 36 communities (21 shown, 15 thin omitted)
 - Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 25 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
@@ -29,7 +29,7 @@
 - [[_COMMUNITY_Community 16|Community 16]]
 - [[_COMMUNITY_Community 17|Community 17]]
 - [[_COMMUNITY_Community 18|Community 18]]
-- [[_COMMUNITY_Community 20|Community 20]]
+- [[_COMMUNITY_Community 19|Community 19]]
 - [[_COMMUNITY_Community 21|Community 21]]
 - [[_COMMUNITY_Community 22|Community 22]]
 - [[_COMMUNITY_Community 23|Community 23]]
@@ -40,8 +40,9 @@
 - [[_COMMUNITY_Community 28|Community 28]]
 - [[_COMMUNITY_Community 29|Community 29]]
 - [[_COMMUNITY_Community 30|Community 30]]
-- [[_COMMUNITY_Community 33|Community 33]]
+- [[_COMMUNITY_Community 31|Community 31]]
 - [[_COMMUNITY_Community 34|Community 34]]
+- [[_COMMUNITY_Community 35|Community 35]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `requireInternal()` - 18 edges
@@ -70,11 +71,11 @@
 ## Import Cycles
 - None detected.
 
-## Communities (35 total, 15 thin omitted)
+## Communities (36 total, 15 thin omitted)
 
 ### Community 0 - "Community 0"
-Cohesion: 0.05
-Nodes (39): FILTER_MAP, FILTERS, initialsOf(), ResCard(), ResModal(), resolveBarber(), STATUS_LABEL, STATUS_OPTIONS (+31 more)
+Cohesion: 0.06
+Nodes (30): Bars(), CAT_COLORS, DashboardResumen(), STATUS_DOT, TopSvc(), GlareCard(), Icon(), PATHS (+22 more)
 
 ### Community 1 - "Community 1"
 Cohesion: 0.10
@@ -109,12 +110,12 @@ Cohesion: 0.10
 Nodes (20): dependencies, @neondatabase/serverless, react, react-dom, react-router-dom, @vercel/analytics, web-push, devDependencies (+12 more)
 
 ### Community 9 - "Community 9"
-Cohesion: 0.15
-Nodes (8): FACE_SHAPES, GALLERY, GALLERY_CATS, u(), CtaBand(), Hero(), Reveal(), useReveal()
-
-### Community 10 - "Community 10"
 Cohesion: 0.22
 Nodes (17): Identidad del Agente ELIJA, Availability Slots and Block Management, Online Booking Reservation Flow, ELIJA Personal Work Agent, Conocimiento de la Empresa, Roadmap de Integraciones, Sistema Operativo de ELIJA, Priority Matrix P1 P2 P3 (+9 more)
+
+### Community 10 - "Community 10"
+Cohesion: 0.15
+Nodes (6): FACE_SHAPES, GALLERY, GALLERY_CATS, u(), Reveal(), useReveal()
 
 ### Community 11 - "Community 11"
 Cohesion: 0.24
@@ -125,18 +126,22 @@ Cohesion: 0.15
 Nodes (14): fs, handleLocalRegisterClient(), http, LOCAL_CLIENTS_FILE, MIME, normalizePath(), path, PORT (+6 more)
 
 ### Community 13 - "Community 13"
+Cohesion: 0.23
+Nodes (9): FILTER_MAP, FILTERS, initialsOf(), ResCard(), ResModal(), resolveBarber(), STATUS_LABEL, STATUS_OPTIONS (+1 more)
+
+### Community 14 - "Community 14"
 Cohesion: 0.44
 Nodes (9): withLocalAppts(), addLocalBooking(), cancelKeyOf(), cancelLocalBooking(), isCancelled(), mergeBookings(), readCancelledKeys(), readLocalBookings() (+1 more)
 
-### Community 15 - "Community 15"
+### Community 16 - "Community 16"
 Cohesion: 0.40
 Nodes (4): buildCommand, framework, outputDirectory, rewrites
 
-### Community 17 - "Community 17"
+### Community 18 - "Community 18"
 Cohesion: 0.83
 Nodes (3): extraer_contexto(), main(), sugerir_alcance()
 
-### Community 18 - "Community 18"
+### Community 19 - "Community 19"
 Cohesion: 0.67
 Nodes (3): Propuesta Comercial Demo, Transcripcion Demo Cliente, Propuesta Comercial Base Template
 
@@ -148,16 +153,16 @@ Nodes (3): Propuesta Comercial Demo, Transcripcion Demo Cliente, Propuesta Comer
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Icon()` connect `Community 5` to `Community 0`, `Community 3`, `Community 13`, `Community 7`?**
+- **Why does `Icon()` connect `Community 5` to `Community 0`, `Community 3`, `Community 14`, `Community 7`?**
   _High betweenness centrality (0.055) - this node is a cross-community bridge._
-- **Why does `useTheme()` connect `Community 4` to `Community 9`, `Community 3`?**
-  _High betweenness centrality (0.039) - this node is a cross-community bridge._
+- **Why does `useTheme()` connect `Community 4` to `Community 10`, `Community 3`?**
+  _High betweenness centrality (0.035) - this node is a cross-community bridge._
 - **Why does `ThemeProvider()` connect `Community 4` to `Community 3`?**
-  _High betweenness centrality (0.032) - this node is a cross-community bridge._
+  _High betweenness centrality (0.033) - this node is a cross-community bridge._
 - **What connects `BARBER_PROFILES`, `ALL_SLOTS`, `STATIC_BARBERS` to the rest of the system?**
   _122 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.05028248587570622 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06294326241134751 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
   _Cohesion score 0.0975609756097561 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**

@@ -169,7 +169,7 @@
       "source_file": "api/auth-login.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 19,
+      "community": 20,
       "norm_label": "auth-login.js",
       "id": "api_auth_login"
     },
@@ -179,7 +179,7 @@
       "source_file": "api/auth-login.js",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 19,
+      "community": 20,
       "norm_label": "handler()",
       "id": "api_auth_login_handler"
     },
@@ -409,7 +409,7 @@
       "source_file": "api/register-client.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 14,
+      "community": 15,
       "norm_label": "register-client.js",
       "id": "api_register_client"
     },
@@ -419,7 +419,7 @@
       "source_file": "api/register-client.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 14,
+      "community": 15,
       "norm_label": "{ put }",
       "id": "api_register_client_put"
     },
@@ -429,7 +429,7 @@
       "source_file": "api/register-client.js",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 14,
+      "community": 15,
       "norm_label": "readbody()",
       "id": "api_register_client_readbody"
     },
@@ -439,7 +439,7 @@
       "source_file": "api/register-client.js",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 14,
+      "community": 15,
       "norm_label": "sendjson()",
       "id": "api_register_client_sendjson"
     },
@@ -449,7 +449,7 @@
       "source_file": "api/register-client.js",
       "source_location": "L18",
       "_origin": "ast",
-      "community": 14,
+      "community": 15,
       "norm_label": "putclientrecord()",
       "id": "api_register_client_putclientrecord"
     },
@@ -703,7 +703,7 @@
         "kind": "file"
       },
       "_origin": "ast",
-      "community": 25,
+      "community": 26,
       "norm_label": "exportar_pdf.sh",
       "id": "scripts_exportar_pdf"
     },
@@ -717,7 +717,7 @@
         "kind": "bash_entrypoint"
       },
       "_origin": "ast",
-      "community": 25,
+      "community": 26,
       "norm_label": "exportar_pdf.sh script",
       "id": "users_elija_projects_pimpstudio_desarrollo_scripts_exportar_pdf_sh__entry"
     },
@@ -727,7 +727,7 @@
       "source_file": "scripts/generar_propuesta_desde_transcripcion.py",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 17,
+      "community": 18,
       "norm_label": "generar_propuesta_desde_transcripcion.py",
       "id": "scripts_generar_propuesta_desde_transcripcion"
     },
@@ -737,7 +737,7 @@
       "source_file": "scripts/generar_propuesta_desde_transcripcion.py",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 17,
+      "community": 18,
       "norm_label": "extraer_contexto()",
       "id": "scripts_generar_propuesta_desde_transcripcion_extraer_contexto"
     },
@@ -747,7 +747,7 @@
       "source_file": "scripts/generar_propuesta_desde_transcripcion.py",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 17,
+      "community": 18,
       "norm_label": "sugerir_alcance()",
       "id": "scripts_generar_propuesta_desde_transcripcion_sugerir_alcance"
     },
@@ -757,7 +757,7 @@
       "source_file": "scripts/generar_propuesta_desde_transcripcion.py",
       "source_location": "L36",
       "_origin": "ast",
-      "community": 17,
+      "community": 18,
       "norm_label": "main()",
       "id": "scripts_generar_propuesta_desde_transcripcion_main"
     },
@@ -927,7 +927,7 @@
       "source_file": "src/bookingsStore.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 13,
+      "community": 14,
       "norm_label": "bookingsstore.js",
       "id": "src_bookingsstore"
     },
@@ -937,7 +937,7 @@
       "source_file": "src/bookingsStore.js",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 13,
+      "community": 14,
       "norm_label": "readlocalbookings()",
       "id": "src_bookingsstore_readlocalbookings"
     },
@@ -947,7 +947,7 @@
       "source_file": "src/bookingsStore.js",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 13,
+      "community": 14,
       "norm_label": "cancelkeyof()",
       "id": "src_bookingsstore_cancelkeyof"
     },
@@ -957,7 +957,7 @@
       "source_file": "src/bookingsStore.js",
       "source_location": "L18",
       "_origin": "ast",
-      "community": 13,
+      "community": 14,
       "norm_label": "readcancelledkeys()",
       "id": "src_bookingsstore_readcancelledkeys"
     },
@@ -967,7 +967,7 @@
       "source_file": "src/bookingsStore.js",
       "source_location": "L22",
       "_origin": "ast",
-      "community": 13,
+      "community": 14,
       "norm_label": "iscancelled()",
       "id": "src_bookingsstore_iscancelled"
     },
@@ -977,7 +977,7 @@
       "source_file": "src/bookingsStore.js",
       "source_location": "L28",
       "_origin": "ast",
-      "community": 13,
+      "community": 14,
       "norm_label": "cancellocalbooking()",
       "id": "src_bookingsstore_cancellocalbooking"
     },
@@ -987,7 +987,7 @@
       "source_file": "src/bookingsStore.js",
       "source_location": "L39",
       "_origin": "ast",
-      "community": 13,
+      "community": 14,
       "norm_label": "writelocalbookings()",
       "id": "src_bookingsstore_writelocalbookings"
     },
@@ -997,7 +997,7 @@
       "source_file": "src/bookingsStore.js",
       "source_location": "L43",
       "_origin": "ast",
-      "community": 13,
+      "community": 14,
       "norm_label": "addlocalbooking()",
       "id": "src_bookingsstore_addlocalbooking"
     },
@@ -1007,7 +1007,7 @@
       "source_file": "src/bookingsStore.js",
       "source_location": "L67",
       "_origin": "ast",
-      "community": 13,
+      "community": 14,
       "norm_label": "mergebookings()",
       "id": "src_bookingsstore_mergebookings"
     },
@@ -1547,7 +1547,7 @@
       "source_file": "src/pages/Account.jsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 13,
+      "community": 14,
       "norm_label": "account.jsx",
       "id": "pages_account"
     },
@@ -1557,7 +1557,7 @@
       "source_file": "src/pages/Account.jsx",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 13,
+      "community": 14,
       "norm_label": "withlocalappts()",
       "id": "pages_account_withlocalappts"
     },
@@ -1717,7 +1717,7 @@
       "source_file": "vercel.json",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 15,
+      "community": 16,
       "norm_label": "vercel.json",
       "id": "vercel"
     },
@@ -1727,7 +1727,7 @@
       "source_file": "vercel.json",
       "source_location": "L2",
       "_origin": "ast",
-      "community": 15,
+      "community": 16,
       "norm_label": "buildcommand",
       "id": "vercel_buildcommand"
     },
@@ -1737,7 +1737,7 @@
       "source_file": "vercel.json",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 15,
+      "community": 16,
       "norm_label": "outputdirectory",
       "id": "vercel_outputdirectory"
     },
@@ -1747,7 +1747,7 @@
       "source_file": "vercel.json",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 15,
+      "community": 16,
       "norm_label": "framework",
       "id": "vercel_framework"
     },
@@ -1757,7 +1757,7 @@
       "source_file": "vercel.json",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 15,
+      "community": 16,
       "norm_label": "rewrites",
       "id": "vercel_rewrites"
     },
@@ -2080,7 +2080,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 24,
+      "community": 25,
       "norm_label": "plan de implementacion rediseno brunetti",
       "id": "implementation_plan"
     },
@@ -2093,7 +2093,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 9,
       "norm_label": "elija agente personal de trabajo readme",
       "id": "readme"
     },
@@ -2106,7 +2106,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 9,
       "norm_label": "identidad del agente elija",
       "id": "agent_identity"
     },
@@ -2119,7 +2119,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 9,
       "norm_label": "roadmap de integraciones",
       "id": "integrations_roadmap"
     },
@@ -2132,7 +2132,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 9,
       "norm_label": "sistema operativo de elija",
       "id": "operating_system"
     },
@@ -2145,7 +2145,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 9,
       "norm_label": "alcance funcional plataforma web barberia",
       "id": "project_scope"
     },
@@ -2158,7 +2158,7 @@
       "captured_at": "2026-04-06",
       "author": null,
       "contributor": null,
-      "community": 18,
+      "community": 19,
       "norm_label": "propuesta comercial demo",
       "id": "inbox_propuesta_demo"
     },
@@ -2171,7 +2171,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 18,
+      "community": 19,
       "norm_label": "transcripcion demo cliente",
       "id": "inbox_transcripcion_demo"
     },
@@ -2184,7 +2184,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 9,
       "norm_label": "conocimiento de la empresa",
       "id": "empresa_conocimiento"
     },
@@ -2197,7 +2197,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 9,
       "norm_label": "skill agenda y calendario elija",
       "id": "skills_agenda_calendario"
     },
@@ -2210,7 +2210,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 9,
       "norm_label": "skill correo elija",
       "id": "skills_correo"
     },
@@ -2223,7 +2223,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 9,
       "norm_label": "skill pendientes y seguimiento elija",
       "id": "skills_pendientes"
     },
@@ -2236,7 +2236,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 9,
       "norm_label": "skill web profesional elija",
       "id": "skills_web_profesional"
     },
@@ -2249,7 +2249,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 18,
+      "community": 19,
       "norm_label": "propuesta comercial base template",
       "id": "templates_propuesta_base"
     },
@@ -2262,7 +2262,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 9,
       "norm_label": "pagina html barberos",
       "id": "web_barberos"
     },
@@ -2275,7 +2275,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 9,
       "norm_label": "pagina html booking reserva",
       "id": "web_booking"
     },
@@ -2288,7 +2288,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 9,
       "norm_label": "pagina html cliente reserva y perfil",
       "id": "web_cliente"
     },
@@ -2301,7 +2301,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 33,
+      "community": 34,
       "norm_label": "pagina html gestion clientes admin",
       "id": "web_clientes"
     },
@@ -2314,7 +2314,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 26,
+      "community": 27,
       "norm_label": "pagina html contacto y newsletter",
       "id": "web_contacto"
     },
@@ -2327,7 +2327,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 26,
+      "community": 27,
       "norm_label": "pagina html cursos youtube",
       "id": "web_cursos"
     },
@@ -2340,7 +2340,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 9,
       "norm_label": "elija personal work agent",
       "id": "elija_agent"
     },
@@ -2353,7 +2353,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 9,
       "norm_label": "online booking reservation flow",
       "id": "booking_flow"
     },
@@ -2366,7 +2366,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 9,
       "norm_label": "availability slots and block management",
       "id": "availability_slots"
     },
@@ -2379,7 +2379,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 24,
+      "community": 25,
       "norm_label": "css scoped under brunetti-site class",
       "id": "css_scope_brunetti"
     },
@@ -2392,7 +2392,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 9,
       "norm_label": "priority matrix p1 p2 p3",
       "id": "priority_matrix"
     },
@@ -2496,7 +2496,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 23,
+      "community": 24,
       "norm_label": "pimp studio logo svg (white mask on white background)",
       "id": "assets_pimp_studio_logo_svg"
     },
@@ -2509,7 +2509,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 23,
+      "community": 24,
       "norm_label": "pimp studio circular monogram mark (ps initials, gold gradient)",
       "id": "assets_pimp_studio_mark_svg"
     },
@@ -2535,7 +2535,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 20,
+      "community": 21,
       "norm_label": "gallery image 1 (barbershop work/style photo)",
       "id": "assets_gallery_1_jpg"
     },
@@ -2548,7 +2548,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 21,
+      "community": 22,
       "norm_label": "gallery image 2 (barbershop work/style photo)",
       "id": "assets_gallery_2_png"
     },
@@ -2561,7 +2561,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 22,
+      "community": 23,
       "norm_label": "gallery image 3 (barbershop work/style photo)",
       "id": "assets_gallery_3_jpg"
     },
@@ -2574,7 +2574,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 28,
+      "community": 29,
       "norm_label": "bruno herrera hero photo (barber, main promotional image)",
       "id": "assets_bruno_hero_jpg"
     },
@@ -2587,7 +2587,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 27,
+      "community": 28,
       "norm_label": "bruno herrera feature photo (brunetti experience section)",
       "id": "assets_bruno_feature_jpg"
     },
@@ -2600,7 +2600,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 29,
+      "community": 30,
       "norm_label": "bruno herrera portrait photo",
       "id": "assets_bruno_portrait_jpg"
     },
@@ -2613,7 +2613,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 30,
+      "community": 31,
       "norm_label": "workshop 2026 photo (barbershop workshop/course promo image)",
       "id": "assets_workshop_2026_jpg"
     },
@@ -2730,7 +2730,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 20,
+      "community": 21,
       "norm_label": "gallery image 1 (web/assets copy)",
       "id": "web_assets_gallery_1_jpg"
     },
@@ -2743,7 +2743,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 21,
+      "community": 22,
       "norm_label": "gallery image 2 (web/assets copy)",
       "id": "web_assets_gallery_2_png"
     },
@@ -2756,7 +2756,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 22,
+      "community": 23,
       "norm_label": "gallery image 3 (web/assets copy)",
       "id": "web_assets_gallery_3_jpg"
     },
@@ -2766,7 +2766,7 @@
       "source_file": "vite.config.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 32,
+      "community": 33,
       "norm_label": "vite.config.js",
       "id": "vite_config"
     },
@@ -2780,7 +2780,7 @@
       "author": null,
       "contributor": null,
       "rationale": "Sitio estatico antiguo (no se despliega; outputDirectory es dist del build Vite).",
-      "community": 34,
+      "community": 35,
       "norm_label": "legacy pimp studio static landing",
       "id": "web_index"
     },
@@ -2790,7 +2790,7 @@
       "source_file": "public/sw.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 31,
+      "community": 32,
       "norm_label": "sw.js",
       "id": "public_sw"
     },
@@ -2800,7 +2800,7 @@
       "source_file": "src/components/BookingsInbox.jsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 0,
+      "community": 13,
       "norm_label": "bookingsinbox.jsx",
       "id": "components_bookingsinbox"
     },
@@ -2810,7 +2810,7 @@
       "source_file": "src/components/BookingsInbox.jsx",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 0,
+      "community": 13,
       "norm_label": "status_label",
       "id": "components_bookingsinbox_status_label"
     },
@@ -2820,7 +2820,7 @@
       "source_file": "src/components/BookingsInbox.jsx",
       "source_location": "L24",
       "_origin": "ast",
-      "community": 0,
+      "community": 13,
       "norm_label": "status_options",
       "id": "components_bookingsinbox_status_options"
     },
@@ -2830,7 +2830,7 @@
       "source_file": "src/components/BookingsInbox.jsx",
       "source_location": "L25",
       "_origin": "ast",
-      "community": 0,
+      "community": 13,
       "norm_label": "filters",
       "id": "components_bookingsinbox_filters"
     },
@@ -2840,7 +2840,7 @@
       "source_file": "src/components/BookingsInbox.jsx",
       "source_location": "L26",
       "_origin": "ast",
-      "community": 0,
+      "community": 13,
       "norm_label": "filter_map",
       "id": "components_bookingsinbox_filter_map"
     },
@@ -2850,7 +2850,7 @@
       "source_file": "src/components/BookingsInbox.jsx",
       "source_location": "L28",
       "_origin": "ast",
-      "community": 0,
+      "community": 13,
       "norm_label": "walink()",
       "id": "components_bookingsinbox_walink"
     },
@@ -2860,7 +2860,7 @@
       "source_file": "src/components/BookingsInbox.jsx",
       "source_location": "L42",
       "_origin": "ast",
-      "community": 0,
+      "community": 13,
       "norm_label": "resolvebarber()",
       "id": "components_bookingsinbox_resolvebarber"
     },
@@ -2870,7 +2870,7 @@
       "source_file": "src/components/BookingsInbox.jsx",
       "source_location": "L43",
       "_origin": "ast",
-      "community": 0,
+      "community": 13,
       "norm_label": "initialsof()",
       "id": "components_bookingsinbox_initialsof"
     },
@@ -2880,7 +2880,7 @@
       "source_file": "src/components/BookingsInbox.jsx",
       "source_location": "L46",
       "_origin": "ast",
-      "community": 0,
+      "community": 13,
       "norm_label": "rescard()",
       "id": "components_bookingsinbox_rescard"
     },
@@ -2890,7 +2890,7 @@
       "source_file": "src/components/BookingsInbox.jsx",
       "source_location": "L88",
       "_origin": "ast",
-      "community": 0,
+      "community": 13,
       "norm_label": "resmodal()",
       "id": "components_bookingsinbox_resmodal"
     },
@@ -2900,7 +2900,7 @@
       "source_file": "src/components/BookingsInbox.jsx",
       "source_location": "L152",
       "_origin": "ast",
-      "community": 0,
+      "community": 13,
       "norm_label": "confirmcancel()",
       "id": "components_bookingsinbox_confirmcancel"
     },
@@ -2910,7 +2910,7 @@
       "source_file": "src/components/BookingsInbox.jsx",
       "source_location": "L170",
       "_origin": "ast",
-      "community": 0,
+      "community": 13,
       "norm_label": "bookingsinbox()",
       "id": "components_bookingsinbox_bookingsinbox"
     },
@@ -3540,7 +3540,7 @@
       "source_file": "src/components/ModuleFooter.jsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 16,
+      "community": 17,
       "norm_label": "modulefooter.jsx",
       "id": "components_modulefooter"
     },
@@ -3550,7 +3550,7 @@
       "source_file": "src/components/ModuleFooter.jsx",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 16,
+      "community": 17,
       "norm_label": "icons",
       "id": "components_modulefooter_icons"
     },
@@ -3560,7 +3560,7 @@
       "source_file": "src/components/ModuleFooter.jsx",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 16,
+      "community": 17,
       "norm_label": "ic()",
       "id": "components_modulefooter_ic"
     },
@@ -3570,7 +3570,7 @@
       "source_file": "src/components/ModuleFooter.jsx",
       "source_location": "L24",
       "_origin": "ast",
-      "community": 16,
+      "community": 17,
       "norm_label": "modulefooter()",
       "id": "components_modulefooter_modulefooter"
     },
@@ -3984,9 +3984,9 @@
       "source_file": "src/App.jsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_app",
       "community": 4,
-      "norm_label": "app.jsx"
+      "norm_label": "app.jsx",
+      "id": "src_app"
     },
     {
       "label": "Login",
@@ -3994,9 +3994,9 @@
       "source_file": "src/App.jsx",
       "source_location": "L8",
       "_origin": "ast",
-      "id": "src_app_login",
       "community": 4,
-      "norm_label": "login"
+      "norm_label": "login",
+      "id": "src_app_login"
     },
     {
       "label": "Booking",
@@ -4004,9 +4004,9 @@
       "source_file": "src/App.jsx",
       "source_location": "L9",
       "_origin": "ast",
-      "id": "src_app_booking",
       "community": 4,
-      "norm_label": "booking"
+      "norm_label": "booking",
+      "id": "src_app_booking"
     },
     {
       "label": "Account",
@@ -4014,9 +4014,9 @@
       "source_file": "src/App.jsx",
       "source_location": "L10",
       "_origin": "ast",
-      "id": "src_app_account",
       "community": 4,
-      "norm_label": "account"
+      "norm_label": "account",
+      "id": "src_app_account"
     },
     {
       "label": "BarberLogin",
@@ -4024,9 +4024,9 @@
       "source_file": "src/App.jsx",
       "source_location": "L11",
       "_origin": "ast",
-      "id": "src_app_barberlogin",
       "community": 4,
-      "norm_label": "barberlogin"
+      "norm_label": "barberlogin",
+      "id": "src_app_barberlogin"
     },
     {
       "label": "Dashboard",
@@ -4034,9 +4034,9 @@
       "source_file": "src/App.jsx",
       "source_location": "L12",
       "_origin": "ast",
-      "id": "src_app_dashboard",
       "community": 4,
-      "norm_label": "dashboard"
+      "norm_label": "dashboard",
+      "id": "src_app_dashboard"
     },
     {
       "label": "Workshop",
@@ -4044,9 +4044,9 @@
       "source_file": "src/App.jsx",
       "source_location": "L13",
       "_origin": "ast",
-      "id": "src_app_workshop",
       "community": 4,
-      "norm_label": "workshop"
+      "norm_label": "workshop",
+      "id": "src_app_workshop"
     },
     {
       "label": "Cursos",
@@ -4054,9 +4054,9 @@
       "source_file": "src/App.jsx",
       "source_location": "L14",
       "_origin": "ast",
-      "id": "src_app_cursos",
       "community": 4,
-      "norm_label": "cursos"
+      "norm_label": "cursos",
+      "id": "src_app_cursos"
     },
     {
       "label": "EncuentraEstilo",
@@ -4064,9 +4064,9 @@
       "source_file": "src/App.jsx",
       "source_location": "L15",
       "_origin": "ast",
-      "id": "src_app_encuentraestilo",
       "community": 4,
-      "norm_label": "encuentraestilo"
+      "norm_label": "encuentraestilo",
+      "id": "src_app_encuentraestilo"
     },
     {
       "label": "RouteFallback()",
@@ -4074,9 +4074,9 @@
       "source_file": "src/App.jsx",
       "source_location": "L17",
       "_origin": "ast",
-      "id": "src_app_routefallback",
       "community": 4,
-      "norm_label": "routefallback()"
+      "norm_label": "routefallback()",
+      "id": "src_app_routefallback"
     },
     {
       "label": "App()",
@@ -4084,9 +4084,9 @@
       "source_file": "src/App.jsx",
       "source_location": "L25",
       "_origin": "ast",
-      "id": "src_app_app",
       "community": 4,
-      "norm_label": "app()"
+      "norm_label": "app()",
+      "id": "src_app_app"
     },
     {
       "label": "SiteNav.jsx",
@@ -4094,9 +4094,9 @@
       "source_file": "src/components/SiteNav.jsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "components_sitenav",
       "community": 7,
-      "norm_label": "sitenav.jsx"
+      "norm_label": "sitenav.jsx",
+      "id": "components_sitenav"
     },
     {
       "label": "NAV",
@@ -4104,9 +4104,9 @@
       "source_file": "src/components/SiteNav.jsx",
       "source_location": "L15",
       "_origin": "ast",
-      "id": "components_sitenav_nav",
       "community": 7,
-      "norm_label": "nav"
+      "norm_label": "nav",
+      "id": "components_sitenav_nav"
     },
     {
       "label": "SiteNav()",
@@ -4114,9 +4114,9 @@
       "source_file": "src/components/SiteNav.jsx",
       "source_location": "L26",
       "_origin": "ast",
-      "id": "components_sitenav_sitenav",
       "community": 7,
-      "norm_label": "sitenav()"
+      "norm_label": "sitenav()",
+      "id": "components_sitenav_sitenav"
     },
     {
       "label": "estilo.js",
@@ -4124,9 +4124,9 @@
       "source_file": "src/data/estilo.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "data_estilo",
-      "community": 9,
-      "norm_label": "estilo.js"
+      "community": 10,
+      "norm_label": "estilo.js",
+      "id": "data_estilo"
     },
     {
       "label": "u()",
@@ -4134,9 +4134,9 @@
       "source_file": "src/data/estilo.js",
       "source_location": "L10",
       "_origin": "ast",
-      "id": "data_estilo_u",
-      "community": 9,
-      "norm_label": "u()"
+      "community": 10,
+      "norm_label": "u()",
+      "id": "data_estilo_u"
     },
     {
       "label": "FACE_SHAPES",
@@ -4144,9 +4144,9 @@
       "source_file": "src/data/estilo.js",
       "source_location": "L15",
       "_origin": "ast",
-      "id": "data_estilo_face_shapes",
-      "community": 9,
-      "norm_label": "face_shapes"
+      "community": 10,
+      "norm_label": "face_shapes",
+      "id": "data_estilo_face_shapes"
     },
     {
       "label": "GALLERY_CATS",
@@ -4154,9 +4154,9 @@
       "source_file": "src/data/estilo.js",
       "source_location": "L115",
       "_origin": "ast",
-      "id": "data_estilo_gallery_cats",
-      "community": 9,
-      "norm_label": "gallery_cats"
+      "community": 10,
+      "norm_label": "gallery_cats",
+      "id": "data_estilo_gallery_cats"
     },
     {
       "label": "GALLERY",
@@ -4164,9 +4164,9 @@
       "source_file": "src/data/estilo.js",
       "source_location": "L116",
       "_origin": "ast",
-      "id": "data_estilo_gallery",
-      "community": 9,
-      "norm_label": "gallery"
+      "community": 10,
+      "norm_label": "gallery",
+      "id": "data_estilo_gallery"
     },
     {
       "label": "Booking.jsx",
@@ -4174,9 +4174,9 @@
       "source_file": "src/pages/Booking.jsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "pages_booking",
       "community": 0,
-      "norm_label": "booking.jsx"
+      "norm_label": "booking.jsx",
+      "id": "pages_booking"
     },
     {
       "label": "ALL_BOOKING_SLOTS",
@@ -4184,9 +4184,9 @@
       "source_file": "src/pages/Booking.jsx",
       "source_location": "L8",
       "_origin": "ast",
-      "id": "pages_booking_all_booking_slots",
       "community": 0,
-      "norm_label": "all_booking_slots"
+      "norm_label": "all_booking_slots",
+      "id": "pages_booking_all_booking_slots"
     },
     {
       "label": "localBlockKey()",
@@ -4194,9 +4194,9 @@
       "source_file": "src/pages/Booking.jsx",
       "source_location": "L10",
       "_origin": "ast",
-      "id": "pages_booking_localblockkey",
       "community": 0,
-      "norm_label": "localblockkey()"
+      "norm_label": "localblockkey()",
+      "id": "pages_booking_localblockkey"
     },
     {
       "label": "readLocalBlocks()",
@@ -4204,9 +4204,9 @@
       "source_file": "src/pages/Booking.jsx",
       "source_location": "L14",
       "_origin": "ast",
-      "id": "pages_booking_readlocalblocks",
       "community": 0,
-      "norm_label": "readlocalblocks()"
+      "norm_label": "readlocalblocks()",
+      "id": "pages_booking_readlocalblocks"
     },
     {
       "label": "Booking()",
@@ -4214,9 +4214,9 @@
       "source_file": "src/pages/Booking.jsx",
       "source_location": "L18",
       "_origin": "ast",
-      "id": "pages_booking_booking",
       "community": 0,
-      "norm_label": "booking()"
+      "norm_label": "booking()",
+      "id": "pages_booking_booking"
     },
     {
       "label": "Cursos.jsx",
@@ -4224,9 +4224,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "pages_cursos",
       "community": 7,
-      "norm_label": "cursos.jsx"
+      "norm_label": "cursos.jsx",
+      "id": "pages_cursos"
     },
     {
       "label": "MODULES",
@@ -4234,9 +4234,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L13",
       "_origin": "ast",
-      "id": "pages_cursos_modules",
       "community": 7,
-      "norm_label": "modules"
+      "norm_label": "modules",
+      "id": "pages_cursos_modules"
     },
     {
       "label": "INCLUDES",
@@ -4244,9 +4244,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L76",
       "_origin": "ast",
-      "id": "pages_cursos_includes",
       "community": 7,
-      "norm_label": "includes"
+      "norm_label": "includes",
+      "id": "pages_cursos_includes"
     },
     {
       "label": "PLACEHOLDER_MODULES",
@@ -4254,9 +4254,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L85",
       "_origin": "ast",
-      "id": "pages_cursos_placeholder_modules",
       "community": 7,
-      "norm_label": "placeholder_modules"
+      "norm_label": "placeholder_modules",
+      "id": "pages_cursos_placeholder_modules"
     },
     {
       "label": "LEVELS",
@@ -4264,9 +4264,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L91",
       "_origin": "ast",
-      "id": "pages_cursos_levels",
       "community": 7,
-      "norm_label": "levels"
+      "norm_label": "levels",
+      "id": "pages_cursos_levels"
     },
     {
       "label": "Cursos()",
@@ -4274,9 +4274,119 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L98",
       "_origin": "ast",
-      "id": "pages_cursos_cursos",
       "community": 7,
-      "norm_label": "cursos()"
+      "norm_label": "cursos()",
+      "id": "pages_cursos_cursos"
+    },
+    {
+      "label": "Home.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "home.jsx",
+      "id": "pages_home"
+    },
+    {
+      "label": "PILLARS",
+      "file_type": "code",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L12",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "pillars",
+      "id": "pages_home_pillars"
+    },
+    {
+      "label": "SERVICES",
+      "file_type": "code",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L40",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "services",
+      "id": "pages_home_services"
+    },
+    {
+      "label": "CARDS",
+      "file_type": "code",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L46",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "cards",
+      "id": "pages_home_cards"
+    },
+    {
+      "label": "TESTIMONIALS",
+      "file_type": "code",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L55",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "testimonials",
+      "id": "pages_home_testimonials"
+    },
+    {
+      "label": "NAME",
+      "file_type": "code",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L62",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "name",
+      "id": "pages_home_name"
+    },
+    {
+      "label": "Home()",
+      "file_type": "code",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L64",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "home()",
+      "id": "pages_home_home"
+    },
+    {
+      "label": "TmWord()",
+      "file_type": "code",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L523",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "tmword()",
+      "id": "pages_home_tmword"
+    },
+    {
+      "label": "Login.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/Login.jsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "login.jsx",
+      "id": "pages_login"
+    },
+    {
+      "label": "fmtPhone()",
+      "file_type": "code",
+      "source_file": "src/pages/Login.jsx",
+      "source_location": "L5",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "fmtphone()",
+      "id": "pages_login_fmtphone"
+    },
+    {
+      "label": "Login()",
+      "file_type": "code",
+      "source_file": "src/pages/Login.jsx",
+      "source_location": "L12",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "login()",
+      "id": "pages_login_login"
     },
     {
       "label": "EncuentraEstilo.jsx",
@@ -4285,248 +4395,118 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "pages_encuentraestilo",
-      "community": 9,
+      "community": 10,
       "norm_label": "encuentraestilo.jsx"
     },
     {
       "label": "Icon()",
       "file_type": "code",
       "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L19",
+      "source_location": "L24",
       "_origin": "ast",
       "id": "pages_encuentraestilo_icon",
-      "community": 9,
+      "community": 10,
       "norm_label": "icon()"
     },
     {
       "label": "SmartImg()",
       "file_type": "code",
       "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L34",
+      "source_location": "L39",
       "_origin": "ast",
       "id": "pages_encuentraestilo_smartimg",
-      "community": 9,
+      "community": 10,
       "norm_label": "smartimg()"
     },
     {
       "label": "FaceGlyph()",
       "file_type": "code",
       "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L44",
+      "source_location": "L49",
       "_origin": "ast",
       "id": "pages_encuentraestilo_faceglyph",
-      "community": 9,
+      "community": 10,
       "norm_label": "faceglyph()"
     },
     {
       "label": "useReveal()",
       "file_type": "code",
       "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L49",
+      "source_location": "L54",
       "_origin": "ast",
       "id": "pages_encuentraestilo_usereveal",
-      "community": 9,
+      "community": 10,
       "norm_label": "usereveal()"
     },
     {
       "label": "Reveal()",
       "file_type": "code",
       "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L66",
+      "source_location": "L71",
       "_origin": "ast",
       "id": "pages_encuentraestilo_reveal",
-      "community": 9,
+      "community": 10,
       "norm_label": "reveal()"
     },
     {
       "label": "smoothScroll()",
       "file_type": "code",
       "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L71",
+      "source_location": "L76",
       "_origin": "ast",
       "id": "pages_encuentraestilo_smoothscroll",
-      "community": 9,
+      "community": 10,
       "norm_label": "smoothscroll()"
-    },
-    {
-      "label": "Nav()",
-      "file_type": "code",
-      "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L80",
-      "_origin": "ast",
-      "id": "pages_encuentraestilo_nav",
-      "community": 9,
-      "norm_label": "nav()"
     },
     {
       "label": "Hero()",
       "file_type": "code",
       "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L107",
+      "source_location": "L85",
       "_origin": "ast",
       "id": "pages_encuentraestilo_hero",
-      "community": 9,
+      "community": 10,
       "norm_label": "hero()"
     },
     {
       "label": "Visagismo()",
       "file_type": "code",
       "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L142",
+      "source_location": "L120",
       "_origin": "ast",
       "id": "pages_encuentraestilo_visagismo",
-      "community": 9,
+      "community": 10,
       "norm_label": "visagismo()"
     },
     {
       "label": "Galeria()",
       "file_type": "code",
       "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L236",
+      "source_location": "L214",
       "_origin": "ast",
       "id": "pages_encuentraestilo_galeria",
-      "community": 9,
+      "community": 10,
       "norm_label": "galeria()"
     },
     {
       "label": "CtaBand()",
       "file_type": "code",
       "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L278",
+      "source_location": "L256",
       "_origin": "ast",
       "id": "pages_encuentraestilo_ctaband",
-      "community": 9,
+      "community": 10,
       "norm_label": "ctaband()"
-    },
-    {
-      "label": "Footer()",
-      "file_type": "code",
-      "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L305",
-      "_origin": "ast",
-      "id": "pages_encuentraestilo_footer",
-      "community": 9,
-      "norm_label": "footer()"
     },
     {
       "label": "EncuentraEstilo()",
       "file_type": "code",
       "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L329",
+      "source_location": "L283",
       "_origin": "ast",
       "id": "pages_encuentraestilo_encuentraestilo",
-      "community": 9,
+      "community": 10,
       "norm_label": "encuentraestilo()"
-    },
-    {
-      "label": "Home.jsx",
-      "file_type": "code",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "pages_home",
-      "community": 7,
-      "norm_label": "home.jsx"
-    },
-    {
-      "label": "PILLARS",
-      "file_type": "code",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L12",
-      "_origin": "ast",
-      "id": "pages_home_pillars",
-      "community": 7,
-      "norm_label": "pillars"
-    },
-    {
-      "label": "SERVICES",
-      "file_type": "code",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L40",
-      "_origin": "ast",
-      "id": "pages_home_services",
-      "community": 7,
-      "norm_label": "services"
-    },
-    {
-      "label": "CARDS",
-      "file_type": "code",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L46",
-      "_origin": "ast",
-      "id": "pages_home_cards",
-      "community": 7,
-      "norm_label": "cards"
-    },
-    {
-      "label": "TESTIMONIALS",
-      "file_type": "code",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L55",
-      "_origin": "ast",
-      "id": "pages_home_testimonials",
-      "community": 7,
-      "norm_label": "testimonials"
-    },
-    {
-      "label": "NAME",
-      "file_type": "code",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L62",
-      "_origin": "ast",
-      "id": "pages_home_name",
-      "community": 7,
-      "norm_label": "name"
-    },
-    {
-      "label": "Home()",
-      "file_type": "code",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L64",
-      "_origin": "ast",
-      "id": "pages_home_home",
-      "community": 4,
-      "norm_label": "home()"
-    },
-    {
-      "label": "TmWord()",
-      "file_type": "code",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L523",
-      "_origin": "ast",
-      "id": "pages_home_tmword",
-      "community": 7,
-      "norm_label": "tmword()"
-    },
-    {
-      "label": "Login.jsx",
-      "file_type": "code",
-      "source_file": "src/pages/Login.jsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "pages_login",
-      "community": 5,
-      "norm_label": "login.jsx"
-    },
-    {
-      "label": "fmtPhone()",
-      "file_type": "code",
-      "source_file": "src/pages/Login.jsx",
-      "source_location": "L5",
-      "_origin": "ast",
-      "id": "pages_login_fmtphone",
-      "community": 5,
-      "norm_label": "fmtphone()"
-    },
-    {
-      "label": "Login()",
-      "file_type": "code",
-      "source_file": "src/pages/Login.jsx",
-      "source_location": "L12",
-      "_origin": "ast",
-      "id": "pages_login_login",
-      "community": 5,
-      "norm_label": "login()"
     }
   ],
   "links": [
@@ -6136,9 +6116,9 @@
       "source_file": "src/pages/Booking.jsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_booking",
-      "target": "src_bookingsstore_addlocalbooking",
-      "confidence_score": 1.0
+      "target": "src_bookingsstore_addlocalbooking"
     },
     {
       "relation": "imports",
@@ -6525,9 +6505,9 @@
       "source_file": "src/pages/Booking.jsx",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_booking",
-      "target": "components_glarecard_glarecard",
-      "confidence_score": 1.0
+      "target": "components_glarecard_glarecard"
     },
     {
       "relation": "contains",
@@ -6629,9 +6609,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_cursos",
-      "target": "components_brunetti_usebrunettifx",
-      "confidence_score": 1.0
+      "target": "components_brunetti_usebrunettifx"
     },
     {
       "relation": "imports",
@@ -6640,9 +6620,9 @@
       "source_file": "src/pages/Home.jsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_home",
-      "target": "components_brunetti_usebrunettifx",
-      "confidence_score": 1.0
+      "target": "components_brunetti_usebrunettifx"
     },
     {
       "relation": "imports",
@@ -6651,9 +6631,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_cursos",
-      "target": "components_brunetti_scrolltoid",
-      "confidence_score": 1.0
+      "target": "components_brunetti_scrolltoid"
     },
     {
       "relation": "imports",
@@ -6662,9 +6642,9 @@
       "source_file": "src/pages/Home.jsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_home",
-      "target": "components_brunetti_scrolltoid",
-      "confidence_score": 1.0
+      "target": "components_brunetti_scrolltoid"
     },
     {
       "relation": "imports_from",
@@ -6895,9 +6875,9 @@
       "source_file": "src/pages/Booking.jsx",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_booking",
-      "target": "src_data_barbers",
-      "confidence_score": 1.0
+      "target": "src_data_barbers"
     },
     {
       "relation": "imports",
@@ -6917,9 +6897,9 @@
       "source_file": "src/pages/Booking.jsx",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_booking",
-      "target": "src_data_services",
-      "confidence_score": 1.0
+      "target": "src_data_services"
     },
     {
       "relation": "imports",
@@ -6961,9 +6941,9 @@
       "source_file": "src/pages/Booking.jsx",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_booking",
-      "target": "src_data_service_barbers",
-      "confidence_score": 1.0
+      "target": "src_data_service_barbers"
     },
     {
       "relation": "imports",
@@ -6972,9 +6952,9 @@
       "source_file": "src/pages/Booking.jsx",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_booking",
-      "target": "src_data_slot_groups",
-      "confidence_score": 1.0
+      "target": "src_data_slot_groups"
     },
     {
       "relation": "imports",
@@ -6983,9 +6963,9 @@
       "source_file": "src/pages/Booking.jsx",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_booking",
-      "target": "src_data_days_es",
-      "confidence_score": 1.0
+      "target": "src_data_days_es"
     },
     {
       "relation": "imports",
@@ -7005,9 +6985,9 @@
       "source_file": "src/pages/Booking.jsx",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_booking",
-      "target": "src_data_months_es",
-      "confidence_score": 1.0
+      "target": "src_data_months_es"
     },
     {
       "relation": "imports",
@@ -7016,9 +6996,9 @@
       "source_file": "src/pages/Booking.jsx",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_booking",
-      "target": "src_data_slotstate",
-      "confidence_score": 1.0
+      "target": "src_data_slotstate"
     },
     {
       "relation": "imports",
@@ -7104,9 +7084,9 @@
       "source_file": "src/pages/Booking.jsx",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_booking",
-      "target": "src_data_clp",
-      "confidence_score": 1.0
+      "target": "src_data_clp"
     },
     {
       "relation": "imports",
@@ -7181,9 +7161,9 @@
       "source_file": "src/pages/Booking.jsx",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_booking",
-      "target": "src_data_barberbyid",
-      "confidence_score": 1.0
+      "target": "src_data_barberbyid"
     },
     {
       "relation": "imports",
@@ -7203,9 +7183,9 @@
       "source_file": "src/pages/Booking.jsx",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_booking",
-      "target": "src_data_tne",
-      "confidence_score": 1.0
+      "target": "src_data_tne"
     },
     {
       "relation": "imports",
@@ -9481,9 +9461,9 @@
       "source_file": "src/pages/Booking.jsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_booking",
-      "target": "components_ui_emblem",
-      "confidence_score": 1.0
+      "target": "components_ui_emblem"
     },
     {
       "relation": "imports",
@@ -9492,9 +9472,9 @@
       "source_file": "src/pages/Login.jsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_login",
-      "target": "components_ui_emblem",
-      "confidence_score": 1.0
+      "target": "components_ui_emblem"
     },
     {
       "relation": "imports",
@@ -9503,9 +9483,9 @@
       "source_file": "src/components/SiteNav.jsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_sitenav",
-      "target": "components_ui_brandmark",
-      "confidence_score": 1.0
+      "target": "components_ui_brandmark"
     },
     {
       "relation": "imports",
@@ -9525,9 +9505,9 @@
       "source_file": "src/components/SiteNav.jsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_sitenav",
-      "target": "components_ui_icon",
-      "confidence_score": 1.0
+      "target": "components_ui_icon"
     },
     {
       "relation": "imports",
@@ -9547,9 +9527,9 @@
       "source_file": "src/pages/Booking.jsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_booking",
-      "target": "components_ui_icon",
-      "confidence_score": 1.0
+      "target": "components_ui_icon"
     },
     {
       "relation": "imports",
@@ -9569,9 +9549,9 @@
       "source_file": "src/pages/Login.jsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_login",
-      "target": "components_ui_icon",
-      "confidence_score": 1.0
+      "target": "components_ui_icon"
     },
     {
       "relation": "calls",
@@ -9602,9 +9582,9 @@
       "source_file": "src/pages/Booking.jsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_booking",
-      "target": "components_ui_mobilescreen",
-      "confidence_score": 1.0
+      "target": "components_ui_mobilescreen"
     },
     {
       "relation": "imports",
@@ -9613,9 +9593,9 @@
       "source_file": "src/pages/Login.jsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_login",
-      "target": "components_ui_mobilescreen",
-      "confidence_score": 1.0
+      "target": "components_ui_mobilescreen"
     },
     {
       "relation": "contains",
@@ -10602,9 +10582,9 @@
       "source_file": "src/App.jsx",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "components_theme_themeprovider",
-      "confidence_score": 1.0
+      "target": "components_theme_themeprovider"
     },
     {
       "relation": "calls",
@@ -10646,9 +10626,9 @@
       "source_file": "src/App.jsx",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "components_theme_floatingthemetoggle",
-      "confidence_score": 1.0
+      "target": "components_theme_floatingthemetoggle"
     },
     {
       "relation": "conceptually_related_to",
@@ -10737,9 +10717,9 @@
       "source_file": "src/App.jsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "pages_home",
-      "confidence_score": 1.0
+      "target": "pages_home"
     },
     {
       "relation": "imports",
@@ -10748,9 +10728,9 @@
       "source_file": "src/App.jsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "pages_home_home",
-      "confidence_score": 1.0
+      "target": "pages_home_home"
     },
     {
       "relation": "contains",
@@ -10758,9 +10738,9 @@
       "source_file": "src/App.jsx",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_account",
-      "confidence_score": 1.0
+      "target": "src_app_account"
     },
     {
       "relation": "contains",
@@ -10768,9 +10748,9 @@
       "source_file": "src/App.jsx",
       "source_location": "L25",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_app",
-      "confidence_score": 1.0
+      "target": "src_app_app"
     },
     {
       "relation": "contains",
@@ -10778,9 +10758,9 @@
       "source_file": "src/App.jsx",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_barberlogin",
-      "confidence_score": 1.0
+      "target": "src_app_barberlogin"
     },
     {
       "relation": "contains",
@@ -10788,9 +10768,9 @@
       "source_file": "src/App.jsx",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_booking",
-      "confidence_score": 1.0
+      "target": "src_app_booking"
     },
     {
       "relation": "contains",
@@ -10798,9 +10778,9 @@
       "source_file": "src/App.jsx",
       "source_location": "L14",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_cursos",
-      "confidence_score": 1.0
+      "target": "src_app_cursos"
     },
     {
       "relation": "contains",
@@ -10808,9 +10788,9 @@
       "source_file": "src/App.jsx",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_dashboard",
-      "confidence_score": 1.0
+      "target": "src_app_dashboard"
     },
     {
       "relation": "contains",
@@ -10818,9 +10798,9 @@
       "source_file": "src/App.jsx",
       "source_location": "L15",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_encuentraestilo",
-      "confidence_score": 1.0
+      "target": "src_app_encuentraestilo"
     },
     {
       "relation": "contains",
@@ -10828,9 +10808,9 @@
       "source_file": "src/App.jsx",
       "source_location": "L8",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_login",
-      "confidence_score": 1.0
+      "target": "src_app_login"
     },
     {
       "relation": "contains",
@@ -10838,9 +10818,9 @@
       "source_file": "src/App.jsx",
       "source_location": "L17",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_routefallback",
-      "confidence_score": 1.0
+      "target": "src_app_routefallback"
     },
     {
       "relation": "contains",
@@ -10848,9 +10828,9 @@
       "source_file": "src/App.jsx",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_workshop",
-      "confidence_score": 1.0
+      "target": "src_app_workshop"
     },
     {
       "relation": "contains",
@@ -10858,9 +10838,9 @@
       "source_file": "src/components/SiteNav.jsx",
       "source_location": "L15",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_sitenav",
-      "target": "components_sitenav_nav",
-      "confidence_score": 1.0
+      "target": "components_sitenav_nav"
     },
     {
       "relation": "contains",
@@ -10868,9 +10848,9 @@
       "source_file": "src/components/SiteNav.jsx",
       "source_location": "L26",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_sitenav",
-      "target": "components_sitenav_sitenav",
-      "confidence_score": 1.0
+      "target": "components_sitenav_sitenav"
     },
     {
       "relation": "imports_from",
@@ -10879,9 +10859,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_cursos",
-      "target": "components_sitenav",
-      "confidence_score": 1.0
+      "target": "components_sitenav"
     },
     {
       "relation": "imports_from",
@@ -10890,9 +10870,9 @@
       "source_file": "src/pages/Home.jsx",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_home",
-      "target": "components_sitenav",
-      "confidence_score": 1.0
+      "target": "components_sitenav"
     },
     {
       "relation": "imports",
@@ -10901,9 +10881,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_cursos",
-      "target": "components_sitenav_sitenav",
-      "confidence_score": 1.0
+      "target": "components_sitenav_sitenav"
     },
     {
       "relation": "imports",
@@ -10912,9 +10892,9 @@
       "source_file": "src/pages/Home.jsx",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_home",
-      "target": "components_sitenav_sitenav",
-      "confidence_score": 1.0
+      "target": "components_sitenav_sitenav"
     },
     {
       "relation": "contains",
@@ -10922,9 +10902,9 @@
       "source_file": "src/data/estilo.js",
       "source_location": "L15",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "data_estilo",
-      "target": "data_estilo_face_shapes",
-      "confidence_score": 1.0
+      "target": "data_estilo_face_shapes"
     },
     {
       "relation": "contains",
@@ -10932,9 +10912,9 @@
       "source_file": "src/data/estilo.js",
       "source_location": "L116",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "data_estilo",
-      "target": "data_estilo_gallery",
-      "confidence_score": 1.0
+      "target": "data_estilo_gallery"
     },
     {
       "relation": "contains",
@@ -10942,9 +10922,9 @@
       "source_file": "src/data/estilo.js",
       "source_location": "L115",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "data_estilo",
-      "target": "data_estilo_gallery_cats",
-      "confidence_score": 1.0
+      "target": "data_estilo_gallery_cats"
     },
     {
       "relation": "contains",
@@ -10952,51 +10932,18 @@
       "source_file": "src/data/estilo.js",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "data_estilo",
-      "target": "data_estilo_u",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L4",
-      "weight": 1.0,
-      "source": "pages_encuentraestilo",
-      "target": "data_estilo",
-      "confidence_score": 1.0
+      "target": "data_estilo_u"
     },
     {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L4",
+      "source_location": "L6",
       "weight": 1.0,
       "source": "pages_encuentraestilo",
-      "target": "data_estilo_u",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L282",
-      "weight": 1.0,
-      "source": "pages_encuentraestilo_ctaband",
-      "target": "data_estilo_u",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L111",
-      "weight": 1.0,
-      "source": "pages_encuentraestilo_hero",
       "target": "data_estilo_u",
       "confidence_score": 1.0
     },
@@ -11005,7 +10952,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L4",
+      "source_location": "L6",
       "weight": 1.0,
       "source": "pages_encuentraestilo",
       "target": "data_estilo_face_shapes",
@@ -11016,7 +10963,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L4",
+      "source_location": "L6",
       "weight": 1.0,
       "source": "pages_encuentraestilo",
       "target": "data_estilo_gallery_cats",
@@ -11027,7 +10974,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L4",
+      "source_location": "L6",
       "weight": 1.0,
       "source": "pages_encuentraestilo",
       "target": "data_estilo_gallery",
@@ -11039,9 +10986,9 @@
       "source_file": "src/pages/Booking.jsx",
       "source_location": "L8",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_booking",
-      "target": "pages_booking_all_booking_slots",
-      "confidence_score": 1.0
+      "target": "pages_booking_all_booking_slots"
     },
     {
       "relation": "contains",
@@ -11049,9 +10996,9 @@
       "source_file": "src/pages/Booking.jsx",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_booking",
-      "target": "pages_booking_booking",
-      "confidence_score": 1.0
+      "target": "pages_booking_booking"
     },
     {
       "relation": "contains",
@@ -11059,9 +11006,9 @@
       "source_file": "src/pages/Booking.jsx",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_booking",
-      "target": "pages_booking_localblockkey",
-      "confidence_score": 1.0
+      "target": "pages_booking_localblockkey"
     },
     {
       "relation": "contains",
@@ -11069,9 +11016,9 @@
       "source_file": "src/pages/Booking.jsx",
       "source_location": "L14",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_booking",
-      "target": "pages_booking_readlocalblocks",
-      "confidence_score": 1.0
+      "target": "pages_booking_readlocalblocks"
     },
     {
       "relation": "contains",
@@ -11079,9 +11026,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L98",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_cursos",
-      "target": "pages_cursos_cursos",
-      "confidence_score": 1.0
+      "target": "pages_cursos_cursos"
     },
     {
       "relation": "contains",
@@ -11089,9 +11036,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L76",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_cursos",
-      "target": "pages_cursos_includes",
-      "confidence_score": 1.0
+      "target": "pages_cursos_includes"
     },
     {
       "relation": "contains",
@@ -11099,9 +11046,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L91",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_cursos",
-      "target": "pages_cursos_levels",
-      "confidence_score": 1.0
+      "target": "pages_cursos_levels"
     },
     {
       "relation": "contains",
@@ -11109,9 +11056,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_cursos",
-      "target": "pages_cursos_modules",
-      "confidence_score": 1.0
+      "target": "pages_cursos_modules"
     },
     {
       "relation": "contains",
@@ -11119,15 +11066,105 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L85",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_cursos",
-      "target": "pages_cursos_placeholder_modules",
-      "confidence_score": 1.0
+      "target": "pages_cursos_placeholder_modules"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L46",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_home",
+      "target": "pages_home_cards"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L64",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_home",
+      "target": "pages_home_home"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L62",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_home",
+      "target": "pages_home_name"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_home",
+      "target": "pages_home_pillars"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L40",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_home",
+      "target": "pages_home_services"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L55",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_home",
+      "target": "pages_home_testimonials"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L523",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_home",
+      "target": "pages_home_tmword"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Login.jsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_login",
+      "target": "pages_login_fmtphone"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Login.jsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_login",
+      "target": "pages_login_login"
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L278",
+      "source_location": "L256",
       "weight": 1.0,
       "source": "pages_encuentraestilo",
       "target": "pages_encuentraestilo_ctaband",
@@ -11137,7 +11174,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L329",
+      "source_location": "L283",
       "weight": 1.0,
       "source": "pages_encuentraestilo",
       "target": "pages_encuentraestilo_encuentraestilo",
@@ -11147,7 +11184,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L44",
+      "source_location": "L49",
       "weight": 1.0,
       "source": "pages_encuentraestilo",
       "target": "pages_encuentraestilo_faceglyph",
@@ -11157,17 +11194,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L305",
-      "weight": 1.0,
-      "source": "pages_encuentraestilo",
-      "target": "pages_encuentraestilo_footer",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L236",
+      "source_location": "L214",
       "weight": 1.0,
       "source": "pages_encuentraestilo",
       "target": "pages_encuentraestilo_galeria",
@@ -11177,7 +11204,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L107",
+      "source_location": "L85",
       "weight": 1.0,
       "source": "pages_encuentraestilo",
       "target": "pages_encuentraestilo_hero",
@@ -11187,7 +11214,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L19",
+      "source_location": "L24",
       "weight": 1.0,
       "source": "pages_encuentraestilo",
       "target": "pages_encuentraestilo_icon",
@@ -11197,17 +11224,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L80",
-      "weight": 1.0,
-      "source": "pages_encuentraestilo",
-      "target": "pages_encuentraestilo_nav",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L66",
+      "source_location": "L71",
       "weight": 1.0,
       "source": "pages_encuentraestilo",
       "target": "pages_encuentraestilo_reveal",
@@ -11217,7 +11234,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L34",
+      "source_location": "L39",
       "weight": 1.0,
       "source": "pages_encuentraestilo",
       "target": "pages_encuentraestilo_smartimg",
@@ -11227,7 +11244,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L71",
+      "source_location": "L76",
       "weight": 1.0,
       "source": "pages_encuentraestilo",
       "target": "pages_encuentraestilo_smoothscroll",
@@ -11237,7 +11254,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L49",
+      "source_location": "L54",
       "weight": 1.0,
       "source": "pages_encuentraestilo",
       "target": "pages_encuentraestilo_usereveal",
@@ -11247,7 +11264,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L142",
+      "source_location": "L120",
       "weight": 1.0,
       "source": "pages_encuentraestilo",
       "target": "pages_encuentraestilo_visagismo",
@@ -11258,103 +11275,13 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/pages/EncuentraEstilo.jsx",
-      "source_location": "L67",
+      "source_location": "L72",
       "weight": 1.0,
       "source": "pages_encuentraestilo_reveal",
       "target": "pages_encuentraestilo_usereveal",
       "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L46",
-      "weight": 1.0,
-      "source": "pages_home",
-      "target": "pages_home_cards",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L64",
-      "weight": 1.0,
-      "source": "pages_home",
-      "target": "pages_home_home",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L62",
-      "weight": 1.0,
-      "source": "pages_home",
-      "target": "pages_home_name",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L12",
-      "weight": 1.0,
-      "source": "pages_home",
-      "target": "pages_home_pillars",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L40",
-      "weight": 1.0,
-      "source": "pages_home",
-      "target": "pages_home_services",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L55",
-      "weight": 1.0,
-      "source": "pages_home",
-      "target": "pages_home_testimonials",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L523",
-      "weight": 1.0,
-      "source": "pages_home",
-      "target": "pages_home_tmword",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Login.jsx",
-      "source_location": "L5",
-      "weight": 1.0,
-      "source": "pages_login",
-      "target": "pages_login_fmtphone",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Login.jsx",
-      "source_location": "L12",
-      "weight": 1.0,
-      "source": "pages_login",
-      "target": "pages_login_login",
-      "confidence_score": 1.0
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "d3c224c6d08d6f2a377209fb8f67eb8531b7dbd9"
+  "built_at_commit": "6d6e3039700f3d2113b2fdfb2dbf45cb0ca3aa34"
 }
