@@ -68,12 +68,18 @@ async function handleLogin(req, res) {
       return res.status(401).json({ error: "Usuario o contraseña incorrectos" })
     }
     const withAdmin = { ...barber, admin: isAdmin(barber) }
-    return res.json({ ok: true, barber: withAdmin, token: createSession(withAdmin) })
+    const token = createSession(withAdmin)
+    if (!token) return res.status(503).json({ error: "Autenticación no configurada en el servidor (PS_SESSION_SECRET)." })
+    return res.json({ ok: true, barber: withAdmin, token })
   } catch (err) {
     console.error("auth-barber DB error, usando respaldo:", err?.message || err)
     // Base de datos no disponible → respaldo por variable de entorno.
     const fb = fallbackLogin(username, secret)
-    if (fb) return res.json({ ok: true, barber: fb, token: createSession(fb) })
+    if (fb) {
+      const token = createSession(fb)
+      if (!token) return res.status(503).json({ error: "Autenticación no configurada en el servidor (PS_SESSION_SECRET)." })
+      return res.json({ ok: true, barber: fb, token })
+    }
     return res.status(401).json({ error: "Usuario o contraseña incorrectos" })
   }
 }

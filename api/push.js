@@ -20,7 +20,7 @@ async function getWebPush() {
     const pub = process.env.VAPID_PUBLIC_KEY
     const priv = process.env.VAPID_PRIVATE_KEY
     if (pub && priv) {
-      webpush.setVapidDetails(process.env.VAPID_SUBJECT || "mailto:pimpstudio@example.com", pub, priv)
+      webpush.setVapidDetails(process.env.VAPID_SUBJECT || "mailto:contacto@brunetticutz.cl", pub, priv)
       webpushModule = webpush
       return webpush
     }

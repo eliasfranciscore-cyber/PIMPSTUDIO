@@ -1,12 +1,22 @@
 import crypto from "crypto"
 
-const SECRET = process.env.PS_SESSION_SECRET || process.env.ADMIN_API_TOKEN || "pimpstudio-demo-secret"
+/* Secreto de firma de sesiones internas. SIN respaldo público: si no hay un
+   secreto fuerte configurado (PS_SESSION_SECRET o ADMIN_API_TOKEN, ≥16 chars),
+   el sistema falla CERRADO — no firma ni acepta ninguna sesión. Esto evita que
+   un token pueda forjarse con un secreto conocido del repositorio.
+   Configurar en producción: `vercel env add PS_SESSION_SECRET`. */
+const SECRET = process.env.PS_SESSION_SECRET || process.env.ADMIN_API_TOKEN || ""
+const HAS_SECRET = SECRET.length >= 16
+if (!HAS_SECRET && process.env.NODE_ENV === "production") {
+  console.error("[_auth] PS_SESSION_SECRET no configurado: las sesiones internas se rechazarán.")
+}
 
 function b64url(input) {
   return Buffer.from(input).toString("base64url")
 }
 
 function sign(payload) {
+  if (!HAS_SECRET) return null
   return crypto.createHmac("sha256", SECRET).update(payload).digest("base64url")
 }
 
@@ -20,7 +30,9 @@ export function createSession(barber) {
     admin: Boolean(barber.admin) || /brunetti|bruno|admin/i.test(`${barber.name || ""} ${barber.code || ""} ${barber.role || ""}`),
     iat: Date.now(),
   }))
-  return `${body}.${sign(body)}`
+  const mac = sign(body)
+  if (!mac) return null
+  return `${body}.${mac}`
 }
 
 export function readSession(req) {
@@ -28,7 +40,9 @@ export function readSession(req) {
   const token = String(header).replace(/^Bearer\s+/i, "")
   if (!token || !token.includes(".")) return null
   const [body, mac] = token.split(".")
-  if (sign(body) !== mac) return null
+  const expected = sign(body)
+  // Falla cerrado: sin secreto (expected === null) no se acepta ninguna sesión.
+  if (!expected || expected !== mac) return null
   try {
     const session = JSON.parse(Buffer.from(body, "base64url").toString("utf8"))
     if (!session?.name) return null
