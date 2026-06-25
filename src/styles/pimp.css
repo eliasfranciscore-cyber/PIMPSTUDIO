@@ -199,7 +199,10 @@ input, select, textarea { font: inherit; }
 .btn:active { transform: translateY(1px) scale(0.99); }
 .btn-gold {
   background: var(--gold-grad);
-  color: #1a1407;
+  /* --on-gold se voltea por tema y por módulo (dorado→oscuro, morado/azul→
+     blanco, claro→blanco). Antes era #1a1407 fijo → texto negro ilegible sobre
+     el morado de workshop, el azul de cursos y el dorado oscuro de modo claro. */
+  color: var(--on-gold);
   box-shadow: var(--shadow-gold);
 }
 .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 22px 48px -18px rgba(201, 161, 78, 0.55); }
@@ -1909,9 +1912,11 @@ select.input { text-overflow: ellipsis; }
   height: 62px;
   border-radius: 999px;
   background: linear-gradient(150deg, rgba(255,255,255,.14), rgba(255,255,255,.05));
-  border: 1px solid rgba(214, 178, 102, 0.35);
+  /* Borde del pill toma el acento del módulo: dorado en la landing, morado en
+     /workshop y azul en /cursos (vía --gold-edge re-mapeado por scope). */
+  border: 1px solid var(--gold-edge);
   backdrop-filter: blur(26px) saturate(180%);
-  box-shadow: var(--g-spec), 0 12px 38px rgba(0, 0, 0, 0.55), 0 0 24px rgba(201, 163, 91, 0.12);
+  box-shadow: var(--g-spec), 0 12px 38px rgba(0, 0, 0, 0.55), 0 0 24px var(--gold-glow);
   z-index: -1;
 }
 .workshop-topbar {
@@ -2016,6 +2021,11 @@ select.input { text-overflow: ellipsis; }
   --fill-soft: rgba(40,33,18,0.05);
   --fill-track: rgba(40,33,18,0.10);
   --fill-card: #fffdf8;
+  /* Fondo de la RAÍZ (<html>) en claro: el área segura del móvil (notch arriba,
+     home indicator abajo) muestra el fondo de html. En oscuro html es #080807;
+     sin esto, en claro quedaban "cuadros negros" arriba/abajo. Ahora es crema y
+     se funde con la página de borde a borde. */
+  background: var(--bg);
   color-scheme: light;
 }
 [data-theme="light"] body { background: var(--bg); color: var(--ink); }

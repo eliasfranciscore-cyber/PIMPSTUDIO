@@ -1593,7 +1593,16 @@
    RESPONSIVE
    ============================================================ */
 @media (max-width: 940px) {
-  .brunetti-site .bhero { padding-top: clamp(6rem, 16vh, 9rem); text-align: center; }
+  /* En móvil el hero alinea su contenido ARRIBA (no centrado): así el nombre
+     "Brunetti" queda justo bajo el navbar y no deja un hueco vacío encima.
+     min-height auto = el hero mide lo que su contenido (texto + retrato). */
+  .brunetti-site .bhero {
+    align-items: start;
+    min-height: auto;
+    padding-top: calc(5.5rem + env(safe-area-inset-top));
+    padding-bottom: clamp(2.5rem, 7vh, 4rem);
+    text-align: center;
+  }
   .brunetti-site .bhero-grid { grid-template-columns: 1fr; gap: 2rem; }
   /* Texto primero, retrato debajo; todo centrado en móvil. */
   .brunetti-site .bhero-text { text-align: center; }

@@ -168,4 +168,6 @@
 @media (max-width: 899px) {
   .home-scroll { padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px)); }
   .wks-shell { padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px)); }
+  /* /style: el botón flotante Reservar no debe tapar el footer compartido. */
+  .estilo-page .mfooter { padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px)); }
 }

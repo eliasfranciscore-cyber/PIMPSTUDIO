@@ -1,18 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTheme } from '../components/theme.jsx'
+import SiteNav from '../components/SiteNav.jsx'
+import ModuleFooter from '../components/ModuleFooter.jsx'
 import { FACE_SHAPES, GALLERY_CATS, GALLERY, u } from '../data/estilo.js'
 import '../styles/estilo.css'
 
 /* ============================================================
    ENCUENTRA TU ESTILO — Visagismo interactivo + galería
-   Port a React del módulo del paquete (eu/estilo.*). Scope .ete.
-   - El tema lo controla el toggle GLOBAL (FloatingThemeToggle):
-     reflejamos `theme` en data-theme del root .ete para activar
-     los tokens de modo claro premium definidos en estilo.css.
-   - Se omite el panel de Tweaks (solo para demos): foto a color,
-     densidad regular y dorado de marca por defecto.
-   - Reservar usa el flujo real: /reservar (+ ps_pending_service).
+   Port a React del módulo del paquete (eu/estilo.*). Contenido
+   scopeado bajo .ete (tokens premium propios), pero envuelto en
+   .brunetti-site para COMPARTIR el chrome del sitio:
+   - Nav global (SiteNav): mismo navbar + menú móvil para navegar
+     todo el proyecto + botón flotante "Reservar hora" en móvil.
+   - Footer global (ModuleFooter): mismo footer de Home/Cursos.
+   El tema lo controla el toggle GLOBAL (FloatingThemeToggle):
+   reflejamos `theme` en data-theme del root .ete para activar los
+   tokens de modo claro premium definidos en estilo.css.
+   Se omite el panel de Tweaks; reservar usa el flujo real /reservar.
    ============================================================ */
 
 /* ---- iconos (stroke) ---- */
@@ -74,33 +79,6 @@ function smoothScroll(id) {
   const top = el.getBoundingClientRect().top + window.scrollY - 64
   const reduce = 'matchMedia' in window && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   window.scrollTo({ top, behavior: reduce ? 'auto' : 'smooth' })
-}
-
-/* ---------- NAV ---------- */
-function Nav({ onReserve }) {
-  const [stuck, setStuck] = useState(false)
-  useEffect(() => {
-    const onScroll = () => setStuck(window.scrollY > 24)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-  return (
-    <nav className={'ete-nav' + (stuck ? ' is-stuck' : '')}>
-      <a className="ete-brand" href="/">
-        <img src="/assets/pimp-studio-logo.jpg" alt="Brunetti" onError={(e) => { e.target.style.display = 'none' }} />
-        <b>BRUNETTI<small>Encuentra tu estilo</small></b>
-      </a>
-      <div className="ete-nav-links">
-        <a href="/">Inicio</a>
-        <a href="#visagismo" onClick={(e) => { e.preventDefault(); smoothScroll('visagismo') }}>Visagismo</a>
-        <a href="#galeria" onClick={(e) => { e.preventDefault(); smoothScroll('galeria') }}>Galería</a>
-      </div>
-      <div className="ete-nav-right">
-        <button className="ete-btn ete-btn-gold ete-btn-sm" type="button" onClick={() => onReserve()}>Reservar</button>
-      </div>
-    </nav>
-  )
 }
 
 /* ---------- HERO ---------- */
@@ -301,30 +279,6 @@ function CtaBand({ onReserveService }) {
   )
 }
 
-/* ---------- FOOTER ---------- */
-function Footer({ onReserve }) {
-  const navigate = useNavigate()
-  return (
-    <footer className="ete-footer">
-      <div className="ete-wrap">
-        <div className="ete-footer-grid">
-          <a className="ete-brand" href="/">
-            <img src="/assets/pimp-studio-logo.jpg" alt="Brunetti" onError={(e) => { e.target.style.display = 'none' }} />
-            <b>BRUNETTI<small>Bruno Herrera · Visagista</small></b>
-          </a>
-          <div className="ete-footer-links">
-            <a href="/">Inicio</a>
-            <a href="/cursos" onClick={(e) => { e.preventDefault(); navigate('/cursos') }}>Cursos</a>
-            <a href="/reservar" onClick={(e) => { e.preventDefault(); onReserve() }}>Reservar</a>
-            <a href="https://instagram.com/brunetticutz" target="_blank" rel="noopener noreferrer">Instagram</a>
-          </div>
-        </div>
-      </div>
-      <div className="ete-footer-bottom">© 2026 Brunetti · Bruno Herrera. Encuentra tu estilo.</div>
-    </footer>
-  )
-}
-
 /* ---------- PÁGINA ---------- */
 export default function EncuentraEstilo() {
   const navigate = useNavigate()
@@ -337,15 +291,26 @@ export default function EncuentraEstilo() {
   }
 
   return (
-    <div className="ete" data-theme={theme}>
-      <div className="ete-shell">
-        <Nav onReserve={reserve} />
-        <Hero />
-        <Visagismo onReserveService={reserveService} />
-        <Galeria />
-        <CtaBand onReserveService={reserveService} />
-        <Footer onReserve={reserve} />
+    <div className="brunetti-site estilo-page">
+      <SiteNav />
+      <div className="ete" data-theme={theme}>
+        <div className="ete-shell">
+          <Hero />
+          <Visagismo onReserveService={reserveService} />
+          <Galeria />
+          <CtaBand onReserveService={reserveService} />
+        </div>
       </div>
+      <ModuleFooter
+        links={[
+          [() => smoothScroll('visagismo'), 'Visagismo'],
+          [() => smoothScroll('galeria'), 'Galería'],
+          [() => navigate('/cursos'), 'Cursos'],
+          [() => navigate('/workshop'), 'Workshop'],
+        ]}
+        onPrimary={reserve}
+        primaryLabel="Reservar hora"
+      />
     </div>
   )
 }
