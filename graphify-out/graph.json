@@ -3706,9 +3706,9 @@
       "source_file": "api/enrollments.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "api_enrollments",
       "community": 1,
-      "norm_label": "enrollments.js"
+      "norm_label": "enrollments.js",
+      "id": "api_enrollments"
     },
     {
       "label": "DEMO",
@@ -3716,9 +3716,9 @@
       "source_file": "api/enrollments.js",
       "source_location": "L19",
       "_origin": "ast",
-      "id": "api_enrollments_demo",
       "community": 1,
-      "norm_label": "demo"
+      "norm_label": "demo",
+      "id": "api_enrollments_demo"
     },
     {
       "label": "cleanPhone()",
@@ -3726,9 +3726,9 @@
       "source_file": "api/enrollments.js",
       "source_location": "L24",
       "_origin": "ast",
-      "id": "api_enrollments_cleanphone",
       "community": 1,
-      "norm_label": "cleanphone()"
+      "norm_label": "cleanphone()",
+      "id": "api_enrollments_cleanphone"
     },
     {
       "label": "sendJson()",
@@ -3736,9 +3736,9 @@
       "source_file": "api/enrollments.js",
       "source_location": "L25",
       "_origin": "ast",
-      "id": "api_enrollments_sendjson",
       "community": 1,
-      "norm_label": "sendjson()"
+      "norm_label": "sendjson()",
+      "id": "api_enrollments_sendjson"
     },
     {
       "label": "handler()",
@@ -3746,9 +3746,1169 @@
       "source_file": "api/enrollments.js",
       "source_location": "L27",
       "_origin": "ast",
-      "id": "api_enrollments_handler",
       "community": 1,
-      "norm_label": "handler()"
+      "norm_label": "handler()",
+      "id": "api_enrollments_handler"
+    },
+    {
+      "label": "App.jsx",
+      "file_type": "code",
+      "source_file": "src/App.jsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "app.jsx",
+      "id": "src_app"
+    },
+    {
+      "label": "isStandaloneLaunch()",
+      "file_type": "code",
+      "source_file": "src/App.jsx",
+      "source_location": "L13",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "isstandalonelaunch()",
+      "id": "src_app_isstandalonelaunch"
+    },
+    {
+      "label": "PWALaunchRouter()",
+      "file_type": "code",
+      "source_file": "src/App.jsx",
+      "source_location": "L19",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "pwalaunchrouter()",
+      "id": "src_app_pwalaunchrouter"
+    },
+    {
+      "label": "Login",
+      "file_type": "code",
+      "source_file": "src/App.jsx",
+      "source_location": "L36",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "login",
+      "id": "src_app_login"
+    },
+    {
+      "label": "Booking",
+      "file_type": "code",
+      "source_file": "src/App.jsx",
+      "source_location": "L37",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "booking",
+      "id": "src_app_booking"
+    },
+    {
+      "label": "Account",
+      "file_type": "code",
+      "source_file": "src/App.jsx",
+      "source_location": "L38",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "account",
+      "id": "src_app_account"
+    },
+    {
+      "label": "BarberLogin",
+      "file_type": "code",
+      "source_file": "src/App.jsx",
+      "source_location": "L39",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "barberlogin",
+      "id": "src_app_barberlogin"
+    },
+    {
+      "label": "Dashboard",
+      "file_type": "code",
+      "source_file": "src/App.jsx",
+      "source_location": "L40",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "dashboard",
+      "id": "src_app_dashboard"
+    },
+    {
+      "label": "Workshop",
+      "file_type": "code",
+      "source_file": "src/App.jsx",
+      "source_location": "L41",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "workshop",
+      "id": "src_app_workshop"
+    },
+    {
+      "label": "Cursos",
+      "file_type": "code",
+      "source_file": "src/App.jsx",
+      "source_location": "L42",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "cursos",
+      "id": "src_app_cursos"
+    },
+    {
+      "label": "EncuentraEstilo",
+      "file_type": "code",
+      "source_file": "src/App.jsx",
+      "source_location": "L43",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "encuentraestilo",
+      "id": "src_app_encuentraestilo"
+    },
+    {
+      "label": "RouteFallback()",
+      "file_type": "code",
+      "source_file": "src/App.jsx",
+      "source_location": "L45",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "routefallback()",
+      "id": "src_app_routefallback"
+    },
+    {
+      "label": "App()",
+      "file_type": "code",
+      "source_file": "src/App.jsx",
+      "source_location": "L53",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "app()",
+      "id": "src_app_app"
+    },
+    {
+      "label": "ModuleFooter.jsx",
+      "file_type": "code",
+      "source_file": "src/components/ModuleFooter.jsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "modulefooter.jsx",
+      "id": "components_modulefooter"
+    },
+    {
+      "label": "ICONS",
+      "file_type": "code",
+      "source_file": "src/components/ModuleFooter.jsx",
+      "source_location": "L11",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "icons",
+      "id": "components_modulefooter_icons"
+    },
+    {
+      "label": "Ic()",
+      "file_type": "code",
+      "source_file": "src/components/ModuleFooter.jsx",
+      "source_location": "L16",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "ic()",
+      "id": "components_modulefooter_ic"
+    },
+    {
+      "label": "ModuleFooter()",
+      "file_type": "code",
+      "source_file": "src/components/ModuleFooter.jsx",
+      "source_location": "L24",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "modulefooter()",
+      "id": "components_modulefooter_modulefooter"
+    },
+    {
+      "label": "brunetti.jsx",
+      "file_type": "code",
+      "source_file": "src/components/brunetti.jsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "brunetti.jsx",
+      "id": "components_brunetti"
+    },
+    {
+      "label": "useBrunettiFx()",
+      "file_type": "code",
+      "source_file": "src/components/brunetti.jsx",
+      "source_location": "L8",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "usebrunettifx()",
+      "id": "components_brunetti_usebrunettifx"
+    },
+    {
+      "label": "scrollToId()",
+      "file_type": "code",
+      "source_file": "src/components/brunetti.jsx",
+      "source_location": "L130",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "scrolltoid()",
+      "id": "components_brunetti_scrolltoid"
+    },
+    {
+      "label": "BrunettiFooter()",
+      "file_type": "code",
+      "source_file": "src/components/brunetti.jsx",
+      "source_location": "L137",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "brunettifooter()",
+      "id": "components_brunetti_brunettifooter"
+    },
+    {
+      "label": "ui.jsx",
+      "file_type": "code",
+      "source_file": "src/components/ui.jsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "ui.jsx",
+      "id": "components_ui"
+    },
+    {
+      "label": "Emblem()",
+      "file_type": "code",
+      "source_file": "src/components/ui.jsx",
+      "source_location": "L3",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "emblem()",
+      "id": "components_ui_emblem"
+    },
+    {
+      "label": "Brandmark()",
+      "file_type": "code",
+      "source_file": "src/components/ui.jsx",
+      "source_location": "L14",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "brandmark()",
+      "id": "components_ui_brandmark"
+    },
+    {
+      "label": "ICONS",
+      "file_type": "code",
+      "source_file": "src/components/ui.jsx",
+      "source_location": "L23",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "icons",
+      "id": "components_ui_icons"
+    },
+    {
+      "label": "Icon()",
+      "file_type": "code",
+      "source_file": "src/components/ui.jsx",
+      "source_location": "L50",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "icon()",
+      "id": "components_ui_icon"
+    },
+    {
+      "label": "useInView()",
+      "file_type": "code",
+      "source_file": "src/components/ui.jsx",
+      "source_location": "L59",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "useinview()",
+      "id": "components_ui_useinview"
+    },
+    {
+      "label": "Reveal()",
+      "file_type": "code",
+      "source_file": "src/components/ui.jsx",
+      "source_location": "L75",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "reveal()",
+      "id": "components_ui_reveal"
+    },
+    {
+      "label": "Stat()",
+      "file_type": "code",
+      "source_file": "src/components/ui.jsx",
+      "source_location": "L82",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "stat()",
+      "id": "components_ui_stat"
+    },
+    {
+      "label": "SectionHead()",
+      "file_type": "code",
+      "source_file": "src/components/ui.jsx",
+      "source_location": "L104",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "sectionhead()",
+      "id": "components_ui_sectionhead"
+    },
+    {
+      "label": "MobileScreen()",
+      "file_type": "code",
+      "source_file": "src/components/ui.jsx",
+      "source_location": "L115",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "mobilescreen()",
+      "id": "components_ui_mobilescreen"
+    },
+    {
+      "label": "StatusBar()",
+      "file_type": "code",
+      "source_file": "src/components/ui.jsx",
+      "source_location": "L130",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "statusbar()",
+      "id": "components_ui_statusbar"
+    },
+    {
+      "label": "workshop.js",
+      "file_type": "code",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "workshop.js",
+      "id": "data_workshop"
+    },
+    {
+      "label": "WORKSHOP_HIGHLIGHTS",
+      "file_type": "code",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "workshop_highlights",
+      "id": "data_workshop_workshop_highlights"
+    },
+    {
+      "label": "TESTIMONIALS",
+      "file_type": "code",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L7",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "testimonials",
+      "id": "data_workshop_testimonials"
+    },
+    {
+      "label": "FEATURE_CARDS",
+      "file_type": "code",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L28",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "feature_cards",
+      "id": "data_workshop_feature_cards"
+    },
+    {
+      "label": "WORKSHOP_MODULES",
+      "file_type": "code",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L61",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "workshop_modules",
+      "id": "data_workshop_workshop_modules"
+    },
+    {
+      "label": "WORKSHOP_TIMELINE",
+      "file_type": "code",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L88",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "workshop_timeline",
+      "id": "data_workshop_workshop_timeline"
+    },
+    {
+      "label": "WORKSHOP_INCLUDES",
+      "file_type": "code",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L96",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "workshop_includes",
+      "id": "data_workshop_workshop_includes"
+    },
+    {
+      "label": "WORKSHOP_DATES",
+      "file_type": "code",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L103",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "workshop_dates",
+      "id": "data_workshop_workshop_dates"
+    },
+    {
+      "label": "WORKSHOP_VIDEOS",
+      "file_type": "code",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L120",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "workshop_videos",
+      "id": "data_workshop_workshop_videos"
+    },
+    {
+      "label": "WK_BASE",
+      "file_type": "code",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L140",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "wk_base",
+      "id": "data_workshop_wk_base"
+    },
+    {
+      "label": "WK_MESES",
+      "file_type": "code",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L141",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "wk_meses",
+      "id": "data_workshop_wk_meses"
+    },
+    {
+      "label": "WK_DIAS",
+      "file_type": "code",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L142",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "wk_dias",
+      "id": "data_workshop_wk_dias"
+    },
+    {
+      "label": "wkEditionDate()",
+      "file_type": "code",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L143",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "wkeditiondate()",
+      "id": "data_workshop_wkeditiondate"
+    },
+    {
+      "label": "WK_ED",
+      "file_type": "code",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L156",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "wk_ed",
+      "id": "data_workshop_wk_ed"
+    },
+    {
+      "label": "WORKSHOP",
+      "file_type": "code",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L158",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "workshop",
+      "id": "data_workshop_workshop"
+    },
+    {
+      "label": "enrollmentsStore.js",
+      "file_type": "code",
+      "source_file": "src/enrollmentsStore.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "enrollmentsstore.js",
+      "id": "src_enrollmentsstore"
+    },
+    {
+      "label": "readLocalEnrollments()",
+      "file_type": "code",
+      "source_file": "src/enrollmentsStore.js",
+      "source_location": "L13",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "readlocalenrollments()",
+      "id": "src_enrollmentsstore_readlocalenrollments"
+    },
+    {
+      "label": "writeLocalEnrollments()",
+      "file_type": "code",
+      "source_file": "src/enrollmentsStore.js",
+      "source_location": "L17",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "writelocalenrollments()",
+      "id": "src_enrollmentsstore_writelocalenrollments"
+    },
+    {
+      "label": "addLocalEnrollment()",
+      "file_type": "code",
+      "source_file": "src/enrollmentsStore.js",
+      "source_location": "L22",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "addlocalenrollment()",
+      "id": "src_enrollmentsstore_addlocalenrollment"
+    },
+    {
+      "label": "mergeEnrollments()",
+      "file_type": "code",
+      "source_file": "src/enrollmentsStore.js",
+      "source_location": "L45",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "mergeenrollments()",
+      "id": "src_enrollmentsstore_mergeenrollments"
+    },
+    {
+      "label": "BarberLogin.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/BarberLogin.jsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "barberlogin.jsx",
+      "id": "pages_barberlogin"
+    },
+    {
+      "label": "getLockout()",
+      "file_type": "code",
+      "source_file": "src/pages/BarberLogin.jsx",
+      "source_location": "L9",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "getlockout()",
+      "id": "pages_barberlogin_getlockout"
+    },
+    {
+      "label": "setLockout()",
+      "file_type": "code",
+      "source_file": "src/pages/BarberLogin.jsx",
+      "source_location": "L14",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "setlockout()",
+      "id": "pages_barberlogin_setlockout"
+    },
+    {
+      "label": "clearLockout()",
+      "file_type": "code",
+      "source_file": "src/pages/BarberLogin.jsx",
+      "source_location": "L17",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "clearlockout()",
+      "id": "pages_barberlogin_clearlockout"
+    },
+    {
+      "label": "BarberLogin()",
+      "file_type": "code",
+      "source_file": "src/pages/BarberLogin.jsx",
+      "source_location": "L21",
+      "_origin": "ast",
+      "community": 3,
+      "norm_label": "barberlogin()",
+      "id": "pages_barberlogin_barberlogin"
+    },
+    {
+      "label": "Cursos.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/Cursos.jsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "cursos.jsx",
+      "id": "pages_cursos"
+    },
+    {
+      "label": "MODULES",
+      "file_type": "code",
+      "source_file": "src/pages/Cursos.jsx",
+      "source_location": "L14",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "modules",
+      "id": "pages_cursos_modules"
+    },
+    {
+      "label": "INCLUDES",
+      "file_type": "code",
+      "source_file": "src/pages/Cursos.jsx",
+      "source_location": "L77",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "includes",
+      "id": "pages_cursos_includes"
+    },
+    {
+      "label": "PLACEHOLDER_MODULES",
+      "file_type": "code",
+      "source_file": "src/pages/Cursos.jsx",
+      "source_location": "L86",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "placeholder_modules",
+      "id": "pages_cursos_placeholder_modules"
+    },
+    {
+      "label": "LEVELS",
+      "file_type": "code",
+      "source_file": "src/pages/Cursos.jsx",
+      "source_location": "L92",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "levels",
+      "id": "pages_cursos_levels"
+    },
+    {
+      "label": "Cursos()",
+      "file_type": "code",
+      "source_file": "src/pages/Cursos.jsx",
+      "source_location": "L99",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "cursos()",
+      "id": "pages_cursos_cursos"
+    },
+    {
+      "label": "Dashboard.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "dashboard.jsx",
+      "id": "pages_dashboard"
+    },
+    {
+      "label": "AGENDA_SLOTS",
+      "file_type": "code",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L19",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "agenda_slots",
+      "id": "pages_dashboard_agenda_slots"
+    },
+    {
+      "label": "DAY_LABELS",
+      "file_type": "code",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L21",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "day_labels",
+      "id": "pages_dashboard_day_labels"
+    },
+    {
+      "label": "getSvcIcon()",
+      "file_type": "code",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L23",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "getsvcicon()",
+      "id": "pages_dashboard_getsvcicon"
+    },
+    {
+      "label": "isoDate()",
+      "file_type": "code",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L32",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "isodate()",
+      "id": "pages_dashboard_isodate"
+    },
+    {
+      "label": "buildWeek()",
+      "file_type": "code",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L36",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "buildweek()",
+      "id": "pages_dashboard_buildweek"
+    },
+    {
+      "label": "localBlockKey()",
+      "file_type": "code",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L48",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "localblockkey()",
+      "id": "pages_dashboard_localblockkey"
+    },
+    {
+      "label": "readLocalBlocks()",
+      "file_type": "code",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L52",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "readlocalblocks()",
+      "id": "pages_dashboard_readlocalblocks"
+    },
+    {
+      "label": "writeLocalBlocks()",
+      "file_type": "code",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L56",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "writelocalblocks()",
+      "id": "pages_dashboard_writelocalblocks"
+    },
+    {
+      "label": "BarChart()",
+      "file_type": "code",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L60",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "barchart()",
+      "id": "pages_dashboard_barchart"
+    },
+    {
+      "label": "Panel()",
+      "file_type": "code",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L77",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "panel()",
+      "id": "pages_dashboard_panel"
+    },
+    {
+      "label": "Dashboard()",
+      "file_type": "code",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L89",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "dashboard()",
+      "id": "pages_dashboard_dashboard"
+    },
+    {
+      "label": "CFG_SECTIONS",
+      "file_type": "code",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L785",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "cfg_sections",
+      "id": "pages_dashboard_cfg_sections"
+    },
+    {
+      "label": "EnrollmentsPanel()",
+      "file_type": "code",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L803",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "enrollmentspanel()",
+      "id": "pages_dashboard_enrollmentspanel"
+    },
+    {
+      "label": "ConfigSwitch()",
+      "file_type": "code",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L881",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "configswitch()",
+      "id": "pages_dashboard_configswitch"
+    },
+    {
+      "label": "CfgRow()",
+      "file_type": "code",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L905",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "cfgrow()",
+      "id": "pages_dashboard_cfgrow"
+    },
+    {
+      "label": "PushCard()",
+      "file_type": "code",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L920",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "pushcard()",
+      "id": "pages_dashboard_pushcard"
+    },
+    {
+      "label": "isStrongPassword()",
+      "file_type": "code",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L1003",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "isstrongpassword()",
+      "id": "pages_dashboard_isstrongpassword"
+    },
+    {
+      "label": "ConfigPanel()",
+      "file_type": "code",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L1007",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "configpanel()",
+      "id": "pages_dashboard_configpanel"
+    },
+    {
+      "label": "DashboardShell()",
+      "file_type": "code",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L1442",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "dashboardshell()",
+      "id": "pages_dashboard_dashboardshell"
+    },
+    {
+      "label": "DashboardTopbar()",
+      "file_type": "code",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L1470",
+      "_origin": "ast",
+      "community": 4,
+      "norm_label": "dashboardtopbar()",
+      "id": "pages_dashboard_dashboardtopbar"
+    },
+    {
+      "label": "Home.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "home.jsx",
+      "id": "pages_home"
+    },
+    {
+      "label": "PILLARS",
+      "file_type": "code",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L12",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "pillars",
+      "id": "pages_home_pillars"
+    },
+    {
+      "label": "SERVICES",
+      "file_type": "code",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L40",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "services",
+      "id": "pages_home_services"
+    },
+    {
+      "label": "CARDS",
+      "file_type": "code",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L46",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "cards",
+      "id": "pages_home_cards"
+    },
+    {
+      "label": "TESTIMONIALS",
+      "file_type": "code",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L55",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "testimonials",
+      "id": "pages_home_testimonials"
+    },
+    {
+      "label": "NAME",
+      "file_type": "code",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L62",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "name",
+      "id": "pages_home_name"
+    },
+    {
+      "label": "Home()",
+      "file_type": "code",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L64",
+      "_origin": "ast",
+      "community": 5,
+      "norm_label": "home()",
+      "id": "pages_home_home"
+    },
+    {
+      "label": "TmWord()",
+      "file_type": "code",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L523",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "tmword()",
+      "id": "pages_home_tmword"
+    },
+    {
+      "label": "Workshop.jsx",
+      "file_type": "code",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "workshop.jsx",
+      "id": "pages_workshop"
+    },
+    {
+      "label": "WK_ICONS",
+      "file_type": "code",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L12",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "wk_icons",
+      "id": "pages_workshop_wk_icons"
+    },
+    {
+      "label": "Icon()",
+      "file_type": "code",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L33",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "icon()",
+      "id": "pages_workshop_icon"
+    },
+    {
+      "label": "useInView()",
+      "file_type": "code",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L42",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "useinview()",
+      "id": "pages_workshop_useinview"
+    },
+    {
+      "label": "Reveal()",
+      "file_type": "code",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L58",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "reveal()",
+      "id": "pages_workshop_reveal"
+    },
+    {
+      "label": "Bw()",
+      "file_type": "code",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L69",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "bw()",
+      "id": "pages_workshop_bw"
+    },
+    {
+      "label": "formatCLP()",
+      "file_type": "code",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L78",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "formatclp()",
+      "id": "pages_workshop_formatclp"
+    },
+    {
+      "label": "useScrolled()",
+      "file_type": "code",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L85",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "usescrolled()",
+      "id": "pages_workshop_usescrolled"
+    },
+    {
+      "label": "useCountdown()",
+      "file_type": "code",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L96",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "usecountdown()",
+      "id": "pages_workshop_usecountdown"
+    },
+    {
+      "label": "calc()",
+      "file_type": "code",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L104",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "calc()",
+      "id": "pages_workshop_calc"
+    },
+    {
+      "label": "smoothTo()",
+      "file_type": "code",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L114",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "smoothto()",
+      "id": "pages_workshop_smoothto"
+    },
+    {
+      "label": "Hero()",
+      "file_type": "code",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L120",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "hero()",
+      "id": "pages_workshop_hero"
+    },
+    {
+      "label": "Transform()",
+      "file_type": "code",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L179",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "transform()",
+      "id": "pages_workshop_transform"
+    },
+    {
+      "label": "QuoteBlock()",
+      "file_type": "code",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L206",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "quoteblock()",
+      "id": "pages_workshop_quoteblock"
+    },
+    {
+      "label": "FeatureRow()",
+      "file_type": "code",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L235",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "featurerow()",
+      "id": "pages_workshop_featurerow"
+    },
+    {
+      "label": "Programa()",
+      "file_type": "code",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L271",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "programa()",
+      "id": "pages_workshop_programa"
+    },
+    {
+      "label": "Cronograma()",
+      "file_type": "code",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L315",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "cronograma()",
+      "id": "pages_workshop_cronograma"
+    },
+    {
+      "label": "GiveKit()",
+      "file_type": "code",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L342",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "givekit()",
+      "id": "pages_workshop_givekit"
+    },
+    {
+      "label": "Pricing()",
+      "file_type": "code",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L380",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "pricing()",
+      "id": "pages_workshop_pricing"
+    },
+    {
+      "label": "Register()",
+      "file_type": "code",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L425",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "register()",
+      "id": "pages_workshop_register"
+    },
+    {
+      "label": "Faq()",
+      "file_type": "code",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L538",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "faq()",
+      "id": "pages_workshop_faq"
+    },
+    {
+      "label": "Footer()",
+      "file_type": "code",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L567",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "footer()",
+      "id": "pages_workshop_footer"
+    },
+    {
+      "label": "StickyCta()",
+      "file_type": "code",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L621",
+      "_origin": "ast",
+      "community": 2,
+      "norm_label": "stickycta()",
+      "id": "pages_workshop_stickycta"
+    },
+    {
+      "label": "Workshop()",
+      "file_type": "code",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L632",
+      "_origin": "ast",
+      "community": 7,
+      "norm_label": "workshop()",
+      "id": "pages_workshop_workshop"
     },
     {
       "label": "push.js",
@@ -3799,1166 +4959,6 @@
       "id": "api_push_handler",
       "community": 1,
       "norm_label": "handler()"
-    },
-    {
-      "label": "App.jsx",
-      "file_type": "code",
-      "source_file": "src/App.jsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "src_app",
-      "community": 5,
-      "norm_label": "app.jsx"
-    },
-    {
-      "label": "isStandaloneLaunch()",
-      "file_type": "code",
-      "source_file": "src/App.jsx",
-      "source_location": "L13",
-      "_origin": "ast",
-      "id": "src_app_isstandalonelaunch",
-      "community": 5,
-      "norm_label": "isstandalonelaunch()"
-    },
-    {
-      "label": "PWALaunchRouter()",
-      "file_type": "code",
-      "source_file": "src/App.jsx",
-      "source_location": "L19",
-      "_origin": "ast",
-      "id": "src_app_pwalaunchrouter",
-      "community": 5,
-      "norm_label": "pwalaunchrouter()"
-    },
-    {
-      "label": "Login",
-      "file_type": "code",
-      "source_file": "src/App.jsx",
-      "source_location": "L36",
-      "_origin": "ast",
-      "id": "src_app_login",
-      "community": 5,
-      "norm_label": "login"
-    },
-    {
-      "label": "Booking",
-      "file_type": "code",
-      "source_file": "src/App.jsx",
-      "source_location": "L37",
-      "_origin": "ast",
-      "id": "src_app_booking",
-      "community": 5,
-      "norm_label": "booking"
-    },
-    {
-      "label": "Account",
-      "file_type": "code",
-      "source_file": "src/App.jsx",
-      "source_location": "L38",
-      "_origin": "ast",
-      "id": "src_app_account",
-      "community": 5,
-      "norm_label": "account"
-    },
-    {
-      "label": "BarberLogin",
-      "file_type": "code",
-      "source_file": "src/App.jsx",
-      "source_location": "L39",
-      "_origin": "ast",
-      "id": "src_app_barberlogin",
-      "community": 5,
-      "norm_label": "barberlogin"
-    },
-    {
-      "label": "Dashboard",
-      "file_type": "code",
-      "source_file": "src/App.jsx",
-      "source_location": "L40",
-      "_origin": "ast",
-      "id": "src_app_dashboard",
-      "community": 5,
-      "norm_label": "dashboard"
-    },
-    {
-      "label": "Workshop",
-      "file_type": "code",
-      "source_file": "src/App.jsx",
-      "source_location": "L41",
-      "_origin": "ast",
-      "id": "src_app_workshop",
-      "community": 5,
-      "norm_label": "workshop"
-    },
-    {
-      "label": "Cursos",
-      "file_type": "code",
-      "source_file": "src/App.jsx",
-      "source_location": "L42",
-      "_origin": "ast",
-      "id": "src_app_cursos",
-      "community": 5,
-      "norm_label": "cursos"
-    },
-    {
-      "label": "EncuentraEstilo",
-      "file_type": "code",
-      "source_file": "src/App.jsx",
-      "source_location": "L43",
-      "_origin": "ast",
-      "id": "src_app_encuentraestilo",
-      "community": 5,
-      "norm_label": "encuentraestilo"
-    },
-    {
-      "label": "RouteFallback()",
-      "file_type": "code",
-      "source_file": "src/App.jsx",
-      "source_location": "L45",
-      "_origin": "ast",
-      "id": "src_app_routefallback",
-      "community": 5,
-      "norm_label": "routefallback()"
-    },
-    {
-      "label": "App()",
-      "file_type": "code",
-      "source_file": "src/App.jsx",
-      "source_location": "L53",
-      "_origin": "ast",
-      "id": "src_app_app",
-      "community": 5,
-      "norm_label": "app()"
-    },
-    {
-      "label": "ModuleFooter.jsx",
-      "file_type": "code",
-      "source_file": "src/components/ModuleFooter.jsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "components_modulefooter",
-      "community": 7,
-      "norm_label": "modulefooter.jsx"
-    },
-    {
-      "label": "ICONS",
-      "file_type": "code",
-      "source_file": "src/components/ModuleFooter.jsx",
-      "source_location": "L11",
-      "_origin": "ast",
-      "id": "components_modulefooter_icons",
-      "community": 7,
-      "norm_label": "icons"
-    },
-    {
-      "label": "Ic()",
-      "file_type": "code",
-      "source_file": "src/components/ModuleFooter.jsx",
-      "source_location": "L16",
-      "_origin": "ast",
-      "id": "components_modulefooter_ic",
-      "community": 7,
-      "norm_label": "ic()"
-    },
-    {
-      "label": "ModuleFooter()",
-      "file_type": "code",
-      "source_file": "src/components/ModuleFooter.jsx",
-      "source_location": "L24",
-      "_origin": "ast",
-      "id": "components_modulefooter_modulefooter",
-      "community": 7,
-      "norm_label": "modulefooter()"
-    },
-    {
-      "label": "brunetti.jsx",
-      "file_type": "code",
-      "source_file": "src/components/brunetti.jsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "components_brunetti",
-      "community": 7,
-      "norm_label": "brunetti.jsx"
-    },
-    {
-      "label": "useBrunettiFx()",
-      "file_type": "code",
-      "source_file": "src/components/brunetti.jsx",
-      "source_location": "L8",
-      "_origin": "ast",
-      "id": "components_brunetti_usebrunettifx",
-      "community": 7,
-      "norm_label": "usebrunettifx()"
-    },
-    {
-      "label": "scrollToId()",
-      "file_type": "code",
-      "source_file": "src/components/brunetti.jsx",
-      "source_location": "L130",
-      "_origin": "ast",
-      "id": "components_brunetti_scrolltoid",
-      "community": 7,
-      "norm_label": "scrolltoid()"
-    },
-    {
-      "label": "BrunettiFooter()",
-      "file_type": "code",
-      "source_file": "src/components/brunetti.jsx",
-      "source_location": "L137",
-      "_origin": "ast",
-      "id": "components_brunetti_brunettifooter",
-      "community": 7,
-      "norm_label": "brunettifooter()"
-    },
-    {
-      "label": "ui.jsx",
-      "file_type": "code",
-      "source_file": "src/components/ui.jsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "components_ui",
-      "community": 3,
-      "norm_label": "ui.jsx"
-    },
-    {
-      "label": "Emblem()",
-      "file_type": "code",
-      "source_file": "src/components/ui.jsx",
-      "source_location": "L3",
-      "_origin": "ast",
-      "id": "components_ui_emblem",
-      "community": 3,
-      "norm_label": "emblem()"
-    },
-    {
-      "label": "Brandmark()",
-      "file_type": "code",
-      "source_file": "src/components/ui.jsx",
-      "source_location": "L14",
-      "_origin": "ast",
-      "id": "components_ui_brandmark",
-      "community": 3,
-      "norm_label": "brandmark()"
-    },
-    {
-      "label": "ICONS",
-      "file_type": "code",
-      "source_file": "src/components/ui.jsx",
-      "source_location": "L23",
-      "_origin": "ast",
-      "id": "components_ui_icons",
-      "community": 3,
-      "norm_label": "icons"
-    },
-    {
-      "label": "Icon()",
-      "file_type": "code",
-      "source_file": "src/components/ui.jsx",
-      "source_location": "L50",
-      "_origin": "ast",
-      "id": "components_ui_icon",
-      "community": 3,
-      "norm_label": "icon()"
-    },
-    {
-      "label": "useInView()",
-      "file_type": "code",
-      "source_file": "src/components/ui.jsx",
-      "source_location": "L59",
-      "_origin": "ast",
-      "id": "components_ui_useinview",
-      "community": 3,
-      "norm_label": "useinview()"
-    },
-    {
-      "label": "Reveal()",
-      "file_type": "code",
-      "source_file": "src/components/ui.jsx",
-      "source_location": "L75",
-      "_origin": "ast",
-      "id": "components_ui_reveal",
-      "community": 3,
-      "norm_label": "reveal()"
-    },
-    {
-      "label": "Stat()",
-      "file_type": "code",
-      "source_file": "src/components/ui.jsx",
-      "source_location": "L82",
-      "_origin": "ast",
-      "id": "components_ui_stat",
-      "community": 3,
-      "norm_label": "stat()"
-    },
-    {
-      "label": "SectionHead()",
-      "file_type": "code",
-      "source_file": "src/components/ui.jsx",
-      "source_location": "L104",
-      "_origin": "ast",
-      "id": "components_ui_sectionhead",
-      "community": 3,
-      "norm_label": "sectionhead()"
-    },
-    {
-      "label": "MobileScreen()",
-      "file_type": "code",
-      "source_file": "src/components/ui.jsx",
-      "source_location": "L115",
-      "_origin": "ast",
-      "id": "components_ui_mobilescreen",
-      "community": 3,
-      "norm_label": "mobilescreen()"
-    },
-    {
-      "label": "StatusBar()",
-      "file_type": "code",
-      "source_file": "src/components/ui.jsx",
-      "source_location": "L130",
-      "_origin": "ast",
-      "id": "components_ui_statusbar",
-      "community": 3,
-      "norm_label": "statusbar()"
-    },
-    {
-      "label": "workshop.js",
-      "file_type": "code",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "data_workshop",
-      "community": 2,
-      "norm_label": "workshop.js"
-    },
-    {
-      "label": "WORKSHOP_HIGHLIGHTS",
-      "file_type": "code",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "data_workshop_workshop_highlights",
-      "community": 2,
-      "norm_label": "workshop_highlights"
-    },
-    {
-      "label": "TESTIMONIALS",
-      "file_type": "code",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L7",
-      "_origin": "ast",
-      "id": "data_workshop_testimonials",
-      "community": 2,
-      "norm_label": "testimonials"
-    },
-    {
-      "label": "FEATURE_CARDS",
-      "file_type": "code",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L28",
-      "_origin": "ast",
-      "id": "data_workshop_feature_cards",
-      "community": 2,
-      "norm_label": "feature_cards"
-    },
-    {
-      "label": "WORKSHOP_MODULES",
-      "file_type": "code",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L61",
-      "_origin": "ast",
-      "id": "data_workshop_workshop_modules",
-      "community": 2,
-      "norm_label": "workshop_modules"
-    },
-    {
-      "label": "WORKSHOP_TIMELINE",
-      "file_type": "code",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L88",
-      "_origin": "ast",
-      "id": "data_workshop_workshop_timeline",
-      "community": 2,
-      "norm_label": "workshop_timeline"
-    },
-    {
-      "label": "WORKSHOP_INCLUDES",
-      "file_type": "code",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L96",
-      "_origin": "ast",
-      "id": "data_workshop_workshop_includes",
-      "community": 2,
-      "norm_label": "workshop_includes"
-    },
-    {
-      "label": "WORKSHOP_DATES",
-      "file_type": "code",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L103",
-      "_origin": "ast",
-      "id": "data_workshop_workshop_dates",
-      "community": 2,
-      "norm_label": "workshop_dates"
-    },
-    {
-      "label": "WORKSHOP_VIDEOS",
-      "file_type": "code",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L120",
-      "_origin": "ast",
-      "id": "data_workshop_workshop_videos",
-      "community": 2,
-      "norm_label": "workshop_videos"
-    },
-    {
-      "label": "WK_BASE",
-      "file_type": "code",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L140",
-      "_origin": "ast",
-      "id": "data_workshop_wk_base",
-      "community": 2,
-      "norm_label": "wk_base"
-    },
-    {
-      "label": "WK_MESES",
-      "file_type": "code",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L141",
-      "_origin": "ast",
-      "id": "data_workshop_wk_meses",
-      "community": 2,
-      "norm_label": "wk_meses"
-    },
-    {
-      "label": "WK_DIAS",
-      "file_type": "code",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L142",
-      "_origin": "ast",
-      "id": "data_workshop_wk_dias",
-      "community": 2,
-      "norm_label": "wk_dias"
-    },
-    {
-      "label": "wkEditionDate()",
-      "file_type": "code",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L143",
-      "_origin": "ast",
-      "id": "data_workshop_wkeditiondate",
-      "community": 2,
-      "norm_label": "wkeditiondate()"
-    },
-    {
-      "label": "WK_ED",
-      "file_type": "code",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L156",
-      "_origin": "ast",
-      "id": "data_workshop_wk_ed",
-      "community": 2,
-      "norm_label": "wk_ed"
-    },
-    {
-      "label": "WORKSHOP",
-      "file_type": "code",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L158",
-      "_origin": "ast",
-      "id": "data_workshop_workshop",
-      "community": 2,
-      "norm_label": "workshop"
-    },
-    {
-      "label": "enrollmentsStore.js",
-      "file_type": "code",
-      "source_file": "src/enrollmentsStore.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "src_enrollmentsstore",
-      "community": 2,
-      "norm_label": "enrollmentsstore.js"
-    },
-    {
-      "label": "readLocalEnrollments()",
-      "file_type": "code",
-      "source_file": "src/enrollmentsStore.js",
-      "source_location": "L13",
-      "_origin": "ast",
-      "id": "src_enrollmentsstore_readlocalenrollments",
-      "community": 2,
-      "norm_label": "readlocalenrollments()"
-    },
-    {
-      "label": "writeLocalEnrollments()",
-      "file_type": "code",
-      "source_file": "src/enrollmentsStore.js",
-      "source_location": "L17",
-      "_origin": "ast",
-      "id": "src_enrollmentsstore_writelocalenrollments",
-      "community": 2,
-      "norm_label": "writelocalenrollments()"
-    },
-    {
-      "label": "addLocalEnrollment()",
-      "file_type": "code",
-      "source_file": "src/enrollmentsStore.js",
-      "source_location": "L22",
-      "_origin": "ast",
-      "id": "src_enrollmentsstore_addlocalenrollment",
-      "community": 2,
-      "norm_label": "addlocalenrollment()"
-    },
-    {
-      "label": "mergeEnrollments()",
-      "file_type": "code",
-      "source_file": "src/enrollmentsStore.js",
-      "source_location": "L45",
-      "_origin": "ast",
-      "id": "src_enrollmentsstore_mergeenrollments",
-      "community": 2,
-      "norm_label": "mergeenrollments()"
-    },
-    {
-      "label": "BarberLogin.jsx",
-      "file_type": "code",
-      "source_file": "src/pages/BarberLogin.jsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "pages_barberlogin",
-      "community": 3,
-      "norm_label": "barberlogin.jsx"
-    },
-    {
-      "label": "getLockout()",
-      "file_type": "code",
-      "source_file": "src/pages/BarberLogin.jsx",
-      "source_location": "L9",
-      "_origin": "ast",
-      "id": "pages_barberlogin_getlockout",
-      "community": 3,
-      "norm_label": "getlockout()"
-    },
-    {
-      "label": "setLockout()",
-      "file_type": "code",
-      "source_file": "src/pages/BarberLogin.jsx",
-      "source_location": "L14",
-      "_origin": "ast",
-      "id": "pages_barberlogin_setlockout",
-      "community": 3,
-      "norm_label": "setlockout()"
-    },
-    {
-      "label": "clearLockout()",
-      "file_type": "code",
-      "source_file": "src/pages/BarberLogin.jsx",
-      "source_location": "L17",
-      "_origin": "ast",
-      "id": "pages_barberlogin_clearlockout",
-      "community": 3,
-      "norm_label": "clearlockout()"
-    },
-    {
-      "label": "BarberLogin()",
-      "file_type": "code",
-      "source_file": "src/pages/BarberLogin.jsx",
-      "source_location": "L21",
-      "_origin": "ast",
-      "id": "pages_barberlogin_barberlogin",
-      "community": 3,
-      "norm_label": "barberlogin()"
-    },
-    {
-      "label": "Cursos.jsx",
-      "file_type": "code",
-      "source_file": "src/pages/Cursos.jsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "pages_cursos",
-      "community": 7,
-      "norm_label": "cursos.jsx"
-    },
-    {
-      "label": "MODULES",
-      "file_type": "code",
-      "source_file": "src/pages/Cursos.jsx",
-      "source_location": "L14",
-      "_origin": "ast",
-      "id": "pages_cursos_modules",
-      "community": 7,
-      "norm_label": "modules"
-    },
-    {
-      "label": "INCLUDES",
-      "file_type": "code",
-      "source_file": "src/pages/Cursos.jsx",
-      "source_location": "L77",
-      "_origin": "ast",
-      "id": "pages_cursos_includes",
-      "community": 7,
-      "norm_label": "includes"
-    },
-    {
-      "label": "PLACEHOLDER_MODULES",
-      "file_type": "code",
-      "source_file": "src/pages/Cursos.jsx",
-      "source_location": "L86",
-      "_origin": "ast",
-      "id": "pages_cursos_placeholder_modules",
-      "community": 7,
-      "norm_label": "placeholder_modules"
-    },
-    {
-      "label": "LEVELS",
-      "file_type": "code",
-      "source_file": "src/pages/Cursos.jsx",
-      "source_location": "L92",
-      "_origin": "ast",
-      "id": "pages_cursos_levels",
-      "community": 7,
-      "norm_label": "levels"
-    },
-    {
-      "label": "Cursos()",
-      "file_type": "code",
-      "source_file": "src/pages/Cursos.jsx",
-      "source_location": "L99",
-      "_origin": "ast",
-      "id": "pages_cursos_cursos",
-      "community": 7,
-      "norm_label": "cursos()"
-    },
-    {
-      "label": "Dashboard.jsx",
-      "file_type": "code",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "pages_dashboard",
-      "community": 4,
-      "norm_label": "dashboard.jsx"
-    },
-    {
-      "label": "AGENDA_SLOTS",
-      "file_type": "code",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L19",
-      "_origin": "ast",
-      "id": "pages_dashboard_agenda_slots",
-      "community": 4,
-      "norm_label": "agenda_slots"
-    },
-    {
-      "label": "DAY_LABELS",
-      "file_type": "code",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L21",
-      "_origin": "ast",
-      "id": "pages_dashboard_day_labels",
-      "community": 4,
-      "norm_label": "day_labels"
-    },
-    {
-      "label": "getSvcIcon()",
-      "file_type": "code",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L23",
-      "_origin": "ast",
-      "id": "pages_dashboard_getsvcicon",
-      "community": 4,
-      "norm_label": "getsvcicon()"
-    },
-    {
-      "label": "isoDate()",
-      "file_type": "code",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L32",
-      "_origin": "ast",
-      "id": "pages_dashboard_isodate",
-      "community": 4,
-      "norm_label": "isodate()"
-    },
-    {
-      "label": "buildWeek()",
-      "file_type": "code",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L36",
-      "_origin": "ast",
-      "id": "pages_dashboard_buildweek",
-      "community": 4,
-      "norm_label": "buildweek()"
-    },
-    {
-      "label": "localBlockKey()",
-      "file_type": "code",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L48",
-      "_origin": "ast",
-      "id": "pages_dashboard_localblockkey",
-      "community": 4,
-      "norm_label": "localblockkey()"
-    },
-    {
-      "label": "readLocalBlocks()",
-      "file_type": "code",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L52",
-      "_origin": "ast",
-      "id": "pages_dashboard_readlocalblocks",
-      "community": 4,
-      "norm_label": "readlocalblocks()"
-    },
-    {
-      "label": "writeLocalBlocks()",
-      "file_type": "code",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L56",
-      "_origin": "ast",
-      "id": "pages_dashboard_writelocalblocks",
-      "community": 4,
-      "norm_label": "writelocalblocks()"
-    },
-    {
-      "label": "BarChart()",
-      "file_type": "code",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L60",
-      "_origin": "ast",
-      "id": "pages_dashboard_barchart",
-      "community": 4,
-      "norm_label": "barchart()"
-    },
-    {
-      "label": "Panel()",
-      "file_type": "code",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L77",
-      "_origin": "ast",
-      "id": "pages_dashboard_panel",
-      "community": 4,
-      "norm_label": "panel()"
-    },
-    {
-      "label": "Dashboard()",
-      "file_type": "code",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L89",
-      "_origin": "ast",
-      "id": "pages_dashboard_dashboard",
-      "community": 4,
-      "norm_label": "dashboard()"
-    },
-    {
-      "label": "CFG_SECTIONS",
-      "file_type": "code",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L785",
-      "_origin": "ast",
-      "id": "pages_dashboard_cfg_sections",
-      "community": 4,
-      "norm_label": "cfg_sections"
-    },
-    {
-      "label": "EnrollmentsPanel()",
-      "file_type": "code",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L803",
-      "_origin": "ast",
-      "id": "pages_dashboard_enrollmentspanel",
-      "community": 2,
-      "norm_label": "enrollmentspanel()"
-    },
-    {
-      "label": "ConfigSwitch()",
-      "file_type": "code",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L881",
-      "_origin": "ast",
-      "id": "pages_dashboard_configswitch",
-      "community": 4,
-      "norm_label": "configswitch()"
-    },
-    {
-      "label": "CfgRow()",
-      "file_type": "code",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L905",
-      "_origin": "ast",
-      "id": "pages_dashboard_cfgrow",
-      "community": 4,
-      "norm_label": "cfgrow()"
-    },
-    {
-      "label": "PushCard()",
-      "file_type": "code",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L920",
-      "_origin": "ast",
-      "id": "pages_dashboard_pushcard",
-      "community": 4,
-      "norm_label": "pushcard()"
-    },
-    {
-      "label": "isStrongPassword()",
-      "file_type": "code",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L1003",
-      "_origin": "ast",
-      "id": "pages_dashboard_isstrongpassword",
-      "community": 4,
-      "norm_label": "isstrongpassword()"
-    },
-    {
-      "label": "ConfigPanel()",
-      "file_type": "code",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L1007",
-      "_origin": "ast",
-      "id": "pages_dashboard_configpanel",
-      "community": 4,
-      "norm_label": "configpanel()"
-    },
-    {
-      "label": "DashboardShell()",
-      "file_type": "code",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L1442",
-      "_origin": "ast",
-      "id": "pages_dashboard_dashboardshell",
-      "community": 4,
-      "norm_label": "dashboardshell()"
-    },
-    {
-      "label": "DashboardTopbar()",
-      "file_type": "code",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L1470",
-      "_origin": "ast",
-      "id": "pages_dashboard_dashboardtopbar",
-      "community": 4,
-      "norm_label": "dashboardtopbar()"
-    },
-    {
-      "label": "Home.jsx",
-      "file_type": "code",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "pages_home",
-      "community": 7,
-      "norm_label": "home.jsx"
-    },
-    {
-      "label": "PILLARS",
-      "file_type": "code",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L12",
-      "_origin": "ast",
-      "id": "pages_home_pillars",
-      "community": 7,
-      "norm_label": "pillars"
-    },
-    {
-      "label": "SERVICES",
-      "file_type": "code",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L40",
-      "_origin": "ast",
-      "id": "pages_home_services",
-      "community": 7,
-      "norm_label": "services"
-    },
-    {
-      "label": "CARDS",
-      "file_type": "code",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L46",
-      "_origin": "ast",
-      "id": "pages_home_cards",
-      "community": 7,
-      "norm_label": "cards"
-    },
-    {
-      "label": "TESTIMONIALS",
-      "file_type": "code",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L55",
-      "_origin": "ast",
-      "id": "pages_home_testimonials",
-      "community": 7,
-      "norm_label": "testimonials"
-    },
-    {
-      "label": "NAME",
-      "file_type": "code",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L62",
-      "_origin": "ast",
-      "id": "pages_home_name",
-      "community": 7,
-      "norm_label": "name"
-    },
-    {
-      "label": "Home()",
-      "file_type": "code",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L64",
-      "_origin": "ast",
-      "id": "pages_home_home",
-      "community": 5,
-      "norm_label": "home()"
-    },
-    {
-      "label": "TmWord()",
-      "file_type": "code",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L523",
-      "_origin": "ast",
-      "id": "pages_home_tmword",
-      "community": 7,
-      "norm_label": "tmword()"
-    },
-    {
-      "label": "Workshop.jsx",
-      "file_type": "code",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "pages_workshop",
-      "community": 2,
-      "norm_label": "workshop.jsx"
-    },
-    {
-      "label": "WK_ICONS",
-      "file_type": "code",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L12",
-      "_origin": "ast",
-      "id": "pages_workshop_wk_icons",
-      "community": 2,
-      "norm_label": "wk_icons"
-    },
-    {
-      "label": "Icon()",
-      "file_type": "code",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L33",
-      "_origin": "ast",
-      "id": "pages_workshop_icon",
-      "community": 2,
-      "norm_label": "icon()"
-    },
-    {
-      "label": "useInView()",
-      "file_type": "code",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L42",
-      "_origin": "ast",
-      "id": "pages_workshop_useinview",
-      "community": 2,
-      "norm_label": "useinview()"
-    },
-    {
-      "label": "Reveal()",
-      "file_type": "code",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L58",
-      "_origin": "ast",
-      "id": "pages_workshop_reveal",
-      "community": 2,
-      "norm_label": "reveal()"
-    },
-    {
-      "label": "Bw()",
-      "file_type": "code",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L69",
-      "_origin": "ast",
-      "id": "pages_workshop_bw",
-      "community": 2,
-      "norm_label": "bw()"
-    },
-    {
-      "label": "formatCLP()",
-      "file_type": "code",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L78",
-      "_origin": "ast",
-      "id": "pages_workshop_formatclp",
-      "community": 2,
-      "norm_label": "formatclp()"
-    },
-    {
-      "label": "useScrolled()",
-      "file_type": "code",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L85",
-      "_origin": "ast",
-      "id": "pages_workshop_usescrolled",
-      "community": 2,
-      "norm_label": "usescrolled()"
-    },
-    {
-      "label": "useCountdown()",
-      "file_type": "code",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L96",
-      "_origin": "ast",
-      "id": "pages_workshop_usecountdown",
-      "community": 2,
-      "norm_label": "usecountdown()"
-    },
-    {
-      "label": "calc()",
-      "file_type": "code",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L104",
-      "_origin": "ast",
-      "id": "pages_workshop_calc",
-      "community": 2,
-      "norm_label": "calc()"
-    },
-    {
-      "label": "smoothTo()",
-      "file_type": "code",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L114",
-      "_origin": "ast",
-      "id": "pages_workshop_smoothto",
-      "community": 2,
-      "norm_label": "smoothto()"
-    },
-    {
-      "label": "Hero()",
-      "file_type": "code",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L120",
-      "_origin": "ast",
-      "id": "pages_workshop_hero",
-      "community": 2,
-      "norm_label": "hero()"
-    },
-    {
-      "label": "Transform()",
-      "file_type": "code",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L179",
-      "_origin": "ast",
-      "id": "pages_workshop_transform",
-      "community": 2,
-      "norm_label": "transform()"
-    },
-    {
-      "label": "QuoteBlock()",
-      "file_type": "code",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L206",
-      "_origin": "ast",
-      "id": "pages_workshop_quoteblock",
-      "community": 2,
-      "norm_label": "quoteblock()"
-    },
-    {
-      "label": "FeatureRow()",
-      "file_type": "code",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L235",
-      "_origin": "ast",
-      "id": "pages_workshop_featurerow",
-      "community": 2,
-      "norm_label": "featurerow()"
-    },
-    {
-      "label": "Programa()",
-      "file_type": "code",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L271",
-      "_origin": "ast",
-      "id": "pages_workshop_programa",
-      "community": 2,
-      "norm_label": "programa()"
-    },
-    {
-      "label": "Cronograma()",
-      "file_type": "code",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L315",
-      "_origin": "ast",
-      "id": "pages_workshop_cronograma",
-      "community": 2,
-      "norm_label": "cronograma()"
-    },
-    {
-      "label": "GiveKit()",
-      "file_type": "code",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L342",
-      "_origin": "ast",
-      "id": "pages_workshop_givekit",
-      "community": 2,
-      "norm_label": "givekit()"
-    },
-    {
-      "label": "Pricing()",
-      "file_type": "code",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L380",
-      "_origin": "ast",
-      "id": "pages_workshop_pricing",
-      "community": 2,
-      "norm_label": "pricing()"
-    },
-    {
-      "label": "Register()",
-      "file_type": "code",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L425",
-      "_origin": "ast",
-      "id": "pages_workshop_register",
-      "community": 2,
-      "norm_label": "register()"
-    },
-    {
-      "label": "Faq()",
-      "file_type": "code",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L538",
-      "_origin": "ast",
-      "id": "pages_workshop_faq",
-      "community": 2,
-      "norm_label": "faq()"
-    },
-    {
-      "label": "Footer()",
-      "file_type": "code",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L567",
-      "_origin": "ast",
-      "id": "pages_workshop_footer",
-      "community": 2,
-      "norm_label": "footer()"
-    },
-    {
-      "label": "StickyCta()",
-      "file_type": "code",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L621",
-      "_origin": "ast",
-      "id": "pages_workshop_stickycta",
-      "community": 2,
-      "norm_label": "stickycta()"
-    },
-    {
-      "label": "Workshop()",
-      "file_type": "code",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L632",
-      "_origin": "ast",
-      "id": "pages_workshop_workshop",
-      "community": 7,
-      "norm_label": "workshop()"
     }
   ],
   "links": [
@@ -5962,9 +5962,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_bookingsstore_readlocalbookings",
-      "confidence_score": 1.0
+      "target": "src_bookingsstore_readlocalbookings"
     },
     {
       "relation": "calls",
@@ -6116,9 +6116,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_bookingsstore_mergebookings",
-      "confidence_score": 1.0
+      "target": "src_bookingsstore_mergebookings"
     },
     {
       "relation": "contains",
@@ -6779,9 +6779,9 @@
       "source_file": "src/pages/BarberLogin.jsx",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_barberlogin",
-      "target": "src_data_barbers",
-      "confidence_score": 1.0
+      "target": "src_data_barbers"
     },
     {
       "relation": "imports",
@@ -6801,9 +6801,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_data_barbers",
-      "confidence_score": 1.0
+      "target": "src_data_barbers"
     },
     {
       "relation": "imports",
@@ -6823,9 +6823,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_data_services",
-      "confidence_score": 1.0
+      "target": "src_data_services"
     },
     {
       "relation": "imports",
@@ -6834,9 +6834,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_data_clients",
-      "confidence_score": 1.0
+      "target": "src_data_clients"
     },
     {
       "relation": "imports",
@@ -6845,9 +6845,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_data_expenses",
-      "confidence_score": 1.0
+      "target": "src_data_expenses"
     },
     {
       "relation": "imports",
@@ -6922,9 +6922,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_data_today_bookings",
-      "confidence_score": 1.0
+      "target": "src_data_today_bookings"
     },
     {
       "relation": "imports",
@@ -6944,9 +6944,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_data_metrics",
-      "confidence_score": 1.0
+      "target": "src_data_metrics"
     },
     {
       "relation": "imports",
@@ -7010,9 +7010,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_data_clp",
-      "confidence_score": 1.0
+      "target": "src_data_clp"
     },
     {
       "relation": "imports",
@@ -7021,9 +7021,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_data_clpk",
-      "confidence_score": 1.0
+      "target": "src_data_clpk"
     },
     {
       "relation": "imports",
@@ -7087,9 +7087,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_data_barberbyid",
-      "confidence_score": 1.0
+      "target": "src_data_barberbyid"
     },
     {
       "relation": "imports",
@@ -7120,9 +7120,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_data_isadminuser",
-      "confidence_score": 1.0
+      "target": "src_data_isadminuser"
     },
     {
       "relation": "imports_from",
@@ -7347,9 +7347,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_push_isios",
-      "confidence_score": 1.0
+      "target": "src_push_isios"
     },
     {
       "relation": "calls",
@@ -7380,9 +7380,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_push_isstandalone",
-      "confidence_score": 1.0
+      "target": "src_push_isstandalone"
     },
     {
       "relation": "calls",
@@ -7413,9 +7413,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_push_pushsupported",
-      "confidence_score": 1.0
+      "target": "src_push_pushsupported"
     },
     {
       "relation": "calls",
@@ -7446,9 +7446,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_push_pushavailablehere",
-      "confidence_score": 1.0
+      "target": "src_push_pushavailablehere"
     },
     {
       "relation": "imports",
@@ -7457,9 +7457,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_push_permissionstate",
-      "confidence_score": 1.0
+      "target": "src_push_permissionstate"
     },
     {
       "relation": "calls",
@@ -7479,9 +7479,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_push_registerserviceworker",
-      "confidence_score": 1.0
+      "target": "src_push_registerserviceworker"
     },
     {
       "relation": "calls",
@@ -7556,9 +7556,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_push_enablepush",
-      "confidence_score": 1.0
+      "target": "src_push_enablepush"
     },
     {
       "relation": "imports",
@@ -7567,9 +7567,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_push_disablepush",
-      "confidence_score": 1.0
+      "target": "src_push_disablepush"
     },
     {
       "relation": "imports",
@@ -7578,9 +7578,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_push_pushenabledfor",
-      "confidence_score": 1.0
+      "target": "src_push_pushenabledfor"
     },
     {
       "relation": "calls",
@@ -7600,9 +7600,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_push_notifylocal",
-      "confidence_score": 1.0
+      "target": "src_push_notifylocal"
     },
     {
       "relation": "calls",
@@ -7622,9 +7622,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_push_notifybarberofbooking",
-      "confidence_score": 1.0
+      "target": "src_push_notifybarberofbooking"
     },
     {
       "relation": "contains",
@@ -9415,9 +9415,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "components_theme_themeprovider",
-      "confidence_score": 1.0
+      "target": "components_theme_themeprovider"
     },
     {
       "relation": "imports",
@@ -9426,9 +9426,9 @@
       "source_file": "src/App.jsx",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "components_theme_themeprovider",
-      "confidence_score": 1.0
+      "target": "components_theme_themeprovider"
     },
     {
       "relation": "calls",
@@ -9459,9 +9459,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "components_theme_usetheme",
-      "confidence_score": 1.0
+      "target": "components_theme_usetheme"
     },
     {
       "relation": "imports",
@@ -9481,9 +9481,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "components_theme_themetoggle",
-      "confidence_score": 1.0
+      "target": "components_theme_themetoggle"
     },
     {
       "relation": "imports",
@@ -9492,9 +9492,9 @@
       "source_file": "src/App.jsx",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "components_theme_floatingthemetoggle",
-      "confidence_score": 1.0
+      "target": "components_theme_floatingthemetoggle"
     },
     {
       "relation": "conceptually_related_to",
@@ -10435,9 +10435,9 @@
       "source_file": "api/enrollments.js",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_enrollments",
-      "target": "api_auth_requireinternal",
-      "confidence_score": 1.0
+      "target": "api_auth_requireinternal"
     },
     {
       "relation": "imports",
@@ -10696,9 +10696,9 @@
       "source_file": "api/enrollments.js",
       "source_location": "L24",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_enrollments",
-      "target": "api_enrollments_cleanphone",
-      "confidence_score": 1.0
+      "target": "api_enrollments_cleanphone"
     },
     {
       "relation": "contains",
@@ -10706,9 +10706,9 @@
       "source_file": "api/enrollments.js",
       "source_location": "L19",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_enrollments",
-      "target": "api_enrollments_demo",
-      "confidence_score": 1.0
+      "target": "api_enrollments_demo"
     },
     {
       "relation": "contains",
@@ -10716,9 +10716,9 @@
       "source_file": "api/enrollments.js",
       "source_location": "L27",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_enrollments",
-      "target": "api_enrollments_handler",
-      "confidence_score": 1.0
+      "target": "api_enrollments_handler"
     },
     {
       "relation": "contains",
@@ -10726,9 +10726,9 @@
       "source_file": "api/enrollments.js",
       "source_location": "L25",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_enrollments",
-      "target": "api_enrollments_sendjson",
-      "confidence_score": 1.0
+      "target": "api_enrollments_sendjson"
     },
     {
       "relation": "imports_from",
@@ -10737,9 +10737,9 @@
       "source_file": "api/enrollments.js",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_enrollments",
-      "target": "api_push",
-      "confidence_score": 1.0
+      "target": "api_push"
     },
     {
       "relation": "imports",
@@ -10748,9 +10748,9 @@
       "source_file": "api/enrollments.js",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_enrollments",
-      "target": "api_push_notifyall",
-      "confidence_score": 1.0
+      "target": "api_push_notifyall"
     },
     {
       "relation": "calls",
@@ -10759,9 +10759,9 @@
       "source_file": "api/enrollments.js",
       "source_location": "L65",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_enrollments_handler",
-      "target": "api_enrollments_cleanphone",
-      "confidence_score": 1.0
+      "target": "api_enrollments_cleanphone"
     },
     {
       "relation": "calls",
@@ -10770,9 +10770,9 @@
       "source_file": "api/enrollments.js",
       "source_location": "L38",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_enrollments_handler",
-      "target": "api_enrollments_sendjson",
-      "confidence_score": 1.0
+      "target": "api_enrollments_sendjson"
     },
     {
       "relation": "calls",
@@ -10784,6 +10784,1562 @@
       "weight": 1.0,
       "source": "api_enrollments_handler",
       "target": "api_push_notifyall"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app",
+      "target": "pages_home"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app",
+      "target": "pages_home_home"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.jsx",
+      "source_location": "L38",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app",
+      "target": "src_app_account"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.jsx",
+      "source_location": "L53",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app",
+      "target": "src_app_app"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.jsx",
+      "source_location": "L39",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app",
+      "target": "src_app_barberlogin"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.jsx",
+      "source_location": "L37",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app",
+      "target": "src_app_booking"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.jsx",
+      "source_location": "L42",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app",
+      "target": "src_app_cursos"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.jsx",
+      "source_location": "L40",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app",
+      "target": "src_app_dashboard"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.jsx",
+      "source_location": "L43",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app",
+      "target": "src_app_encuentraestilo"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.jsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app",
+      "target": "src_app_isstandalonelaunch"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.jsx",
+      "source_location": "L36",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app",
+      "target": "src_app_login"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.jsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app",
+      "target": "src_app_pwalaunchrouter"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.jsx",
+      "source_location": "L45",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app",
+      "target": "src_app_routefallback"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.jsx",
+      "source_location": "L41",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app",
+      "target": "src_app_workshop"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ModuleFooter.jsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_modulefooter",
+      "target": "components_modulefooter_ic"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ModuleFooter.jsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_modulefooter",
+      "target": "components_modulefooter_icons"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ModuleFooter.jsx",
+      "source_location": "L24",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_modulefooter",
+      "target": "components_modulefooter_modulefooter"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Cursos.jsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_cursos",
+      "target": "components_modulefooter"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_home",
+      "target": "components_modulefooter"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Cursos.jsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_cursos",
+      "target": "components_modulefooter_modulefooter"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_home",
+      "target": "components_modulefooter_modulefooter"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/brunetti.jsx",
+      "source_location": "L137",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_brunetti",
+      "target": "components_brunetti_brunettifooter"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/brunetti.jsx",
+      "source_location": "L130",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_brunetti",
+      "target": "components_brunetti_scrolltoid"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/brunetti.jsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_brunetti",
+      "target": "components_brunetti_usebrunettifx"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Cursos.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_cursos",
+      "target": "components_brunetti"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_home",
+      "target": "components_brunetti"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Cursos.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_cursos",
+      "target": "components_brunetti_usebrunettifx"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/pages/Cursos.jsx",
+      "source_location": "L110",
+      "weight": 1.0,
+      "source": "pages_cursos_cursos",
+      "target": "components_brunetti_usebrunettifx"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_home",
+      "target": "components_brunetti_usebrunettifx"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L74",
+      "weight": 1.0,
+      "source": "pages_home_home",
+      "target": "components_brunetti_usebrunettifx"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Cursos.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_cursos",
+      "target": "components_brunetti_scrolltoid"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_home",
+      "target": "components_brunetti_scrolltoid"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui.jsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_ui",
+      "target": "components_ui_brandmark"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_ui",
+      "target": "components_ui_emblem"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui.jsx",
+      "source_location": "L50",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_ui",
+      "target": "components_ui_icon"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui.jsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_ui",
+      "target": "components_ui_icons"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui.jsx",
+      "source_location": "L115",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_ui",
+      "target": "components_ui_mobilescreen"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui.jsx",
+      "source_location": "L75",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_ui",
+      "target": "components_ui_reveal"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui.jsx",
+      "source_location": "L104",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_ui",
+      "target": "components_ui_sectionhead"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui.jsx",
+      "source_location": "L82",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_ui",
+      "target": "components_ui_stat"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui.jsx",
+      "source_location": "L130",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_ui",
+      "target": "components_ui_statusbar"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui.jsx",
+      "source_location": "L59",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_ui",
+      "target": "components_ui_useinview"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/BarberLogin.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_barberlogin",
+      "target": "components_ui"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard",
+      "target": "components_ui"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/BarberLogin.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_barberlogin",
+      "target": "components_ui_emblem"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard",
+      "target": "components_ui_brandmark"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/BarberLogin.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_barberlogin",
+      "target": "components_ui_icon"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard",
+      "target": "components_ui_icon"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ui.jsx",
+      "source_location": "L76",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_ui_reveal",
+      "target": "components_ui_useinview"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard",
+      "target": "components_ui_stat"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L28",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "data_workshop",
+      "target": "data_workshop_feature_cards"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "data_workshop",
+      "target": "data_workshop_testimonials"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L140",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "data_workshop",
+      "target": "data_workshop_wk_base"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L142",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "data_workshop",
+      "target": "data_workshop_wk_dias"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L156",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "data_workshop",
+      "target": "data_workshop_wk_ed"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L141",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "data_workshop",
+      "target": "data_workshop_wk_meses"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L143",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "data_workshop",
+      "target": "data_workshop_wkeditiondate"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L158",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "data_workshop",
+      "target": "data_workshop_workshop"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L103",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "data_workshop",
+      "target": "data_workshop_workshop_dates"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "data_workshop",
+      "target": "data_workshop_workshop_highlights"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L96",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "data_workshop",
+      "target": "data_workshop_workshop_includes"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L61",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "data_workshop",
+      "target": "data_workshop_workshop_modules"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L88",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "data_workshop",
+      "target": "data_workshop_workshop_timeline"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/data/workshop.js",
+      "source_location": "L120",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "data_workshop",
+      "target": "data_workshop_workshop_videos"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop",
+      "target": "data_workshop"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop",
+      "target": "data_workshop_workshop"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Cursos.jsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_cursos",
+      "target": "src_enrollmentsstore"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard",
+      "target": "src_enrollmentsstore"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop",
+      "target": "src_enrollmentsstore"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/enrollmentsStore.js",
+      "source_location": "L22",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_enrollmentsstore",
+      "target": "src_enrollmentsstore_addlocalenrollment"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/enrollmentsStore.js",
+      "source_location": "L45",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_enrollmentsstore",
+      "target": "src_enrollmentsstore_mergeenrollments"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/enrollmentsStore.js",
+      "source_location": "L13",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_enrollmentsstore",
+      "target": "src_enrollmentsstore_readlocalenrollments"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/enrollmentsStore.js",
+      "source_location": "L17",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_enrollmentsstore",
+      "target": "src_enrollmentsstore_writelocalenrollments"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/enrollmentsStore.js",
+      "source_location": "L23",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_enrollmentsstore_addlocalenrollment",
+      "target": "src_enrollmentsstore_readlocalenrollments"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/enrollmentsStore.js",
+      "source_location": "L46",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_enrollmentsstore_mergeenrollments",
+      "target": "src_enrollmentsstore_readlocalenrollments"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/enrollmentsStore.js",
+      "source_location": "L39",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_enrollmentsstore_addlocalenrollment",
+      "target": "src_enrollmentsstore_writelocalenrollments"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Cursos.jsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_cursos",
+      "target": "src_enrollmentsstore_addlocalenrollment"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop",
+      "target": "src_enrollmentsstore_addlocalenrollment"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L450",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop_register",
+      "target": "src_enrollmentsstore_addlocalenrollment"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard",
+      "target": "src_enrollmentsstore_mergeenrollments"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L814",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard_enrollmentspanel",
+      "target": "src_enrollmentsstore_mergeenrollments"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/BarberLogin.jsx",
+      "source_location": "L21",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_barberlogin",
+      "target": "pages_barberlogin_barberlogin"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/BarberLogin.jsx",
+      "source_location": "L17",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_barberlogin",
+      "target": "pages_barberlogin_clearlockout"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/BarberLogin.jsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_barberlogin",
+      "target": "pages_barberlogin_getlockout"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/BarberLogin.jsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_barberlogin",
+      "target": "pages_barberlogin_setlockout"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Cursos.jsx",
+      "source_location": "L99",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_cursos",
+      "target": "pages_cursos_cursos"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Cursos.jsx",
+      "source_location": "L77",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_cursos",
+      "target": "pages_cursos_includes"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Cursos.jsx",
+      "source_location": "L92",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_cursos",
+      "target": "pages_cursos_levels"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Cursos.jsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_cursos",
+      "target": "pages_cursos_modules"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Cursos.jsx",
+      "source_location": "L86",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_cursos",
+      "target": "pages_cursos_placeholder_modules"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard",
+      "target": "pages_dashboard_agenda_slots"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L60",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard",
+      "target": "pages_dashboard_barchart"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L36",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard",
+      "target": "pages_dashboard_buildweek"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L785",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard",
+      "target": "pages_dashboard_cfg_sections"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L905",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard",
+      "target": "pages_dashboard_cfgrow"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L1007",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard",
+      "target": "pages_dashboard_configpanel"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L881",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard",
+      "target": "pages_dashboard_configswitch"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L89",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard",
+      "target": "pages_dashboard_dashboard"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L1442",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard",
+      "target": "pages_dashboard_dashboardshell"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L1470",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard",
+      "target": "pages_dashboard_dashboardtopbar"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L21",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard",
+      "target": "pages_dashboard_day_labels"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L803",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard",
+      "target": "pages_dashboard_enrollmentspanel"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard",
+      "target": "pages_dashboard_getsvcicon"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L32",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard",
+      "target": "pages_dashboard_isodate"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L1003",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard",
+      "target": "pages_dashboard_isstrongpassword"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L48",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard",
+      "target": "pages_dashboard_localblockkey"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L77",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard",
+      "target": "pages_dashboard_panel"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L920",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard",
+      "target": "pages_dashboard_pushcard"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L52",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard",
+      "target": "pages_dashboard_readlocalblocks"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L56",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard",
+      "target": "pages_dashboard_writelocalblocks"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L197",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard_dashboard",
+      "target": "pages_dashboard_buildweek"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Dashboard.jsx",
+      "source_location": "L1148",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_dashboard_configpanel",
+      "target": "pages_dashboard_isstrongpassword"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L46",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_home",
+      "target": "pages_home_cards"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L64",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_home",
+      "target": "pages_home_home"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L62",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_home",
+      "target": "pages_home_name"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_home",
+      "target": "pages_home_pillars"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L40",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_home",
+      "target": "pages_home_services"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L55",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_home",
+      "target": "pages_home_testimonials"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Home.jsx",
+      "source_location": "L523",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_home",
+      "target": "pages_home_tmword"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L69",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop",
+      "target": "pages_workshop_bw"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L104",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop",
+      "target": "pages_workshop_calc"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L315",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop",
+      "target": "pages_workshop_cronograma"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L538",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop",
+      "target": "pages_workshop_faq"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L235",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop",
+      "target": "pages_workshop_featurerow"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L567",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop",
+      "target": "pages_workshop_footer"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L78",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop",
+      "target": "pages_workshop_formatclp"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L342",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop",
+      "target": "pages_workshop_givekit"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L120",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop",
+      "target": "pages_workshop_hero"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L33",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop",
+      "target": "pages_workshop_icon"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L380",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop",
+      "target": "pages_workshop_pricing"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L271",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop",
+      "target": "pages_workshop_programa"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L206",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop",
+      "target": "pages_workshop_quoteblock"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L425",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop",
+      "target": "pages_workshop_register"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L58",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop",
+      "target": "pages_workshop_reveal"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L114",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop",
+      "target": "pages_workshop_smoothto"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L621",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop",
+      "target": "pages_workshop_stickycta"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L179",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop",
+      "target": "pages_workshop_transform"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L96",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop",
+      "target": "pages_workshop_usecountdown"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L42",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop",
+      "target": "pages_workshop_useinview"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L85",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop",
+      "target": "pages_workshop_usescrolled"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop",
+      "target": "pages_workshop_wk_icons"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L632",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop",
+      "target": "pages_workshop_workshop"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L381",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop_pricing",
+      "target": "pages_workshop_useinview"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L207",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop_quoteblock",
+      "target": "pages_workshop_useinview"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L59",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop_reveal",
+      "target": "pages_workshop_useinview"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L166",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop_hero",
+      "target": "pages_workshop_formatclp"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L397",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop_pricing",
+      "target": "pages_workshop_formatclp"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L478",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop_register",
+      "target": "pages_workshop_formatclp"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L625",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop_stickycta",
+      "target": "pages_workshop_formatclp"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L622",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop_stickycta",
+      "target": "pages_workshop_usescrolled"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/Workshop.jsx",
+      "source_location": "L121",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pages_workshop_hero",
+      "target": "pages_workshop_usecountdown"
     },
     {
       "relation": "contains",
@@ -10846,1564 +12402,8 @@
       "source": "api_push_notifybarber",
       "target": "api_push_getwebpush",
       "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/App.jsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "src_app",
-      "target": "pages_home",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/App.jsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "src_app",
-      "target": "pages_home_home",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/App.jsx",
-      "source_location": "L38",
-      "weight": 1.0,
-      "source": "src_app",
-      "target": "src_app_account",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/App.jsx",
-      "source_location": "L53",
-      "weight": 1.0,
-      "source": "src_app",
-      "target": "src_app_app",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/App.jsx",
-      "source_location": "L39",
-      "weight": 1.0,
-      "source": "src_app",
-      "target": "src_app_barberlogin",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/App.jsx",
-      "source_location": "L37",
-      "weight": 1.0,
-      "source": "src_app",
-      "target": "src_app_booking",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/App.jsx",
-      "source_location": "L42",
-      "weight": 1.0,
-      "source": "src_app",
-      "target": "src_app_cursos",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/App.jsx",
-      "source_location": "L40",
-      "weight": 1.0,
-      "source": "src_app",
-      "target": "src_app_dashboard",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/App.jsx",
-      "source_location": "L43",
-      "weight": 1.0,
-      "source": "src_app",
-      "target": "src_app_encuentraestilo",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/App.jsx",
-      "source_location": "L13",
-      "weight": 1.0,
-      "source": "src_app",
-      "target": "src_app_isstandalonelaunch",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/App.jsx",
-      "source_location": "L36",
-      "weight": 1.0,
-      "source": "src_app",
-      "target": "src_app_login",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/App.jsx",
-      "source_location": "L19",
-      "weight": 1.0,
-      "source": "src_app",
-      "target": "src_app_pwalaunchrouter",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/App.jsx",
-      "source_location": "L45",
-      "weight": 1.0,
-      "source": "src_app",
-      "target": "src_app_routefallback",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/App.jsx",
-      "source_location": "L41",
-      "weight": 1.0,
-      "source": "src_app",
-      "target": "src_app_workshop",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ModuleFooter.jsx",
-      "source_location": "L16",
-      "weight": 1.0,
-      "source": "components_modulefooter",
-      "target": "components_modulefooter_ic",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ModuleFooter.jsx",
-      "source_location": "L11",
-      "weight": 1.0,
-      "source": "components_modulefooter",
-      "target": "components_modulefooter_icons",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ModuleFooter.jsx",
-      "source_location": "L24",
-      "weight": 1.0,
-      "source": "components_modulefooter",
-      "target": "components_modulefooter_modulefooter",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Cursos.jsx",
-      "source_location": "L5",
-      "weight": 1.0,
-      "source": "pages_cursos",
-      "target": "components_modulefooter",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L5",
-      "weight": 1.0,
-      "source": "pages_home",
-      "target": "components_modulefooter",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Cursos.jsx",
-      "source_location": "L5",
-      "weight": 1.0,
-      "source": "pages_cursos",
-      "target": "components_modulefooter_modulefooter",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L5",
-      "weight": 1.0,
-      "source": "pages_home",
-      "target": "components_modulefooter_modulefooter",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/brunetti.jsx",
-      "source_location": "L137",
-      "weight": 1.0,
-      "source": "components_brunetti",
-      "target": "components_brunetti_brunettifooter",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/brunetti.jsx",
-      "source_location": "L130",
-      "weight": 1.0,
-      "source": "components_brunetti",
-      "target": "components_brunetti_scrolltoid",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/brunetti.jsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "source": "components_brunetti",
-      "target": "components_brunetti_usebrunettifx",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Cursos.jsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "pages_cursos",
-      "target": "components_brunetti",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "pages_home",
-      "target": "components_brunetti",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Cursos.jsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "pages_cursos",
-      "target": "components_brunetti_usebrunettifx",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/pages/Cursos.jsx",
-      "source_location": "L110",
-      "weight": 1.0,
-      "source": "pages_cursos_cursos",
-      "target": "components_brunetti_usebrunettifx"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "pages_home",
-      "target": "components_brunetti_usebrunettifx",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L74",
-      "weight": 1.0,
-      "source": "pages_home_home",
-      "target": "components_brunetti_usebrunettifx"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Cursos.jsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "pages_cursos",
-      "target": "components_brunetti_scrolltoid",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "pages_home",
-      "target": "components_brunetti_scrolltoid",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ui.jsx",
-      "source_location": "L14",
-      "weight": 1.0,
-      "source": "components_ui",
-      "target": "components_ui_brandmark",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ui.jsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "components_ui",
-      "target": "components_ui_emblem",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ui.jsx",
-      "source_location": "L50",
-      "weight": 1.0,
-      "source": "components_ui",
-      "target": "components_ui_icon",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ui.jsx",
-      "source_location": "L23",
-      "weight": 1.0,
-      "source": "components_ui",
-      "target": "components_ui_icons",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ui.jsx",
-      "source_location": "L115",
-      "weight": 1.0,
-      "source": "components_ui",
-      "target": "components_ui_mobilescreen",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ui.jsx",
-      "source_location": "L75",
-      "weight": 1.0,
-      "source": "components_ui",
-      "target": "components_ui_reveal",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ui.jsx",
-      "source_location": "L104",
-      "weight": 1.0,
-      "source": "components_ui",
-      "target": "components_ui_sectionhead",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ui.jsx",
-      "source_location": "L82",
-      "weight": 1.0,
-      "source": "components_ui",
-      "target": "components_ui_stat",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ui.jsx",
-      "source_location": "L130",
-      "weight": 1.0,
-      "source": "components_ui",
-      "target": "components_ui_statusbar",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ui.jsx",
-      "source_location": "L59",
-      "weight": 1.0,
-      "source": "components_ui",
-      "target": "components_ui_useinview",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/BarberLogin.jsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "pages_barberlogin",
-      "target": "components_ui",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "pages_dashboard",
-      "target": "components_ui",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/BarberLogin.jsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "pages_barberlogin",
-      "target": "components_ui_emblem",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "pages_dashboard",
-      "target": "components_ui_brandmark",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/BarberLogin.jsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "pages_barberlogin",
-      "target": "components_ui_icon",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "pages_dashboard",
-      "target": "components_ui_icon",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/ui.jsx",
-      "source_location": "L76",
-      "weight": 1.0,
-      "source": "components_ui_reveal",
-      "target": "components_ui_useinview",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "pages_dashboard",
-      "target": "components_ui_stat",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L28",
-      "weight": 1.0,
-      "source": "data_workshop",
-      "target": "data_workshop_feature_cards",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L7",
-      "weight": 1.0,
-      "source": "data_workshop",
-      "target": "data_workshop_testimonials",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L140",
-      "weight": 1.0,
-      "source": "data_workshop",
-      "target": "data_workshop_wk_base",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L142",
-      "weight": 1.0,
-      "source": "data_workshop",
-      "target": "data_workshop_wk_dias",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L156",
-      "weight": 1.0,
-      "source": "data_workshop",
-      "target": "data_workshop_wk_ed",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L141",
-      "weight": 1.0,
-      "source": "data_workshop",
-      "target": "data_workshop_wk_meses",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L143",
-      "weight": 1.0,
-      "source": "data_workshop",
-      "target": "data_workshop_wkeditiondate",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L158",
-      "weight": 1.0,
-      "source": "data_workshop",
-      "target": "data_workshop_workshop",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L103",
-      "weight": 1.0,
-      "source": "data_workshop",
-      "target": "data_workshop_workshop_dates",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L1",
-      "weight": 1.0,
-      "source": "data_workshop",
-      "target": "data_workshop_workshop_highlights",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L96",
-      "weight": 1.0,
-      "source": "data_workshop",
-      "target": "data_workshop_workshop_includes",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L61",
-      "weight": 1.0,
-      "source": "data_workshop",
-      "target": "data_workshop_workshop_modules",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L88",
-      "weight": 1.0,
-      "source": "data_workshop",
-      "target": "data_workshop_workshop_timeline",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/data/workshop.js",
-      "source_location": "L120",
-      "weight": 1.0,
-      "source": "data_workshop",
-      "target": "data_workshop_workshop_videos",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L6",
-      "weight": 1.0,
-      "source": "pages_workshop",
-      "target": "data_workshop",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L6",
-      "weight": 1.0,
-      "source": "pages_workshop",
-      "target": "data_workshop_workshop",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Cursos.jsx",
-      "source_location": "L6",
-      "weight": 1.0,
-      "source": "pages_cursos",
-      "target": "src_enrollmentsstore",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "source": "pages_dashboard",
-      "target": "src_enrollmentsstore",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "source": "pages_workshop",
-      "target": "src_enrollmentsstore",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/enrollmentsStore.js",
-      "source_location": "L22",
-      "weight": 1.0,
-      "source": "src_enrollmentsstore",
-      "target": "src_enrollmentsstore_addlocalenrollment",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/enrollmentsStore.js",
-      "source_location": "L45",
-      "weight": 1.0,
-      "source": "src_enrollmentsstore",
-      "target": "src_enrollmentsstore_mergeenrollments",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/enrollmentsStore.js",
-      "source_location": "L13",
-      "weight": 1.0,
-      "source": "src_enrollmentsstore",
-      "target": "src_enrollmentsstore_readlocalenrollments",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/enrollmentsStore.js",
-      "source_location": "L17",
-      "weight": 1.0,
-      "source": "src_enrollmentsstore",
-      "target": "src_enrollmentsstore_writelocalenrollments",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/enrollmentsStore.js",
-      "source_location": "L23",
-      "weight": 1.0,
-      "source": "src_enrollmentsstore_addlocalenrollment",
-      "target": "src_enrollmentsstore_readlocalenrollments",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/enrollmentsStore.js",
-      "source_location": "L46",
-      "weight": 1.0,
-      "source": "src_enrollmentsstore_mergeenrollments",
-      "target": "src_enrollmentsstore_readlocalenrollments",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/enrollmentsStore.js",
-      "source_location": "L39",
-      "weight": 1.0,
-      "source": "src_enrollmentsstore_addlocalenrollment",
-      "target": "src_enrollmentsstore_writelocalenrollments",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Cursos.jsx",
-      "source_location": "L6",
-      "weight": 1.0,
-      "source": "pages_cursos",
-      "target": "src_enrollmentsstore_addlocalenrollment",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "source": "pages_workshop",
-      "target": "src_enrollmentsstore_addlocalenrollment",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L450",
-      "weight": 1.0,
-      "source": "pages_workshop_register",
-      "target": "src_enrollmentsstore_addlocalenrollment",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "source": "pages_dashboard",
-      "target": "src_enrollmentsstore_mergeenrollments",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L814",
-      "weight": 1.0,
-      "source": "pages_dashboard_enrollmentspanel",
-      "target": "src_enrollmentsstore_mergeenrollments",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/BarberLogin.jsx",
-      "source_location": "L21",
-      "weight": 1.0,
-      "source": "pages_barberlogin",
-      "target": "pages_barberlogin_barberlogin",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/BarberLogin.jsx",
-      "source_location": "L17",
-      "weight": 1.0,
-      "source": "pages_barberlogin",
-      "target": "pages_barberlogin_clearlockout",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/BarberLogin.jsx",
-      "source_location": "L9",
-      "weight": 1.0,
-      "source": "pages_barberlogin",
-      "target": "pages_barberlogin_getlockout",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/BarberLogin.jsx",
-      "source_location": "L14",
-      "weight": 1.0,
-      "source": "pages_barberlogin",
-      "target": "pages_barberlogin_setlockout",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Cursos.jsx",
-      "source_location": "L99",
-      "weight": 1.0,
-      "source": "pages_cursos",
-      "target": "pages_cursos_cursos",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Cursos.jsx",
-      "source_location": "L77",
-      "weight": 1.0,
-      "source": "pages_cursos",
-      "target": "pages_cursos_includes",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Cursos.jsx",
-      "source_location": "L92",
-      "weight": 1.0,
-      "source": "pages_cursos",
-      "target": "pages_cursos_levels",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Cursos.jsx",
-      "source_location": "L14",
-      "weight": 1.0,
-      "source": "pages_cursos",
-      "target": "pages_cursos_modules",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Cursos.jsx",
-      "source_location": "L86",
-      "weight": 1.0,
-      "source": "pages_cursos",
-      "target": "pages_cursos_placeholder_modules",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L19",
-      "weight": 1.0,
-      "source": "pages_dashboard",
-      "target": "pages_dashboard_agenda_slots",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L60",
-      "weight": 1.0,
-      "source": "pages_dashboard",
-      "target": "pages_dashboard_barchart",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L36",
-      "weight": 1.0,
-      "source": "pages_dashboard",
-      "target": "pages_dashboard_buildweek",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L785",
-      "weight": 1.0,
-      "source": "pages_dashboard",
-      "target": "pages_dashboard_cfg_sections",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L905",
-      "weight": 1.0,
-      "source": "pages_dashboard",
-      "target": "pages_dashboard_cfgrow",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L1007",
-      "weight": 1.0,
-      "source": "pages_dashboard",
-      "target": "pages_dashboard_configpanel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L881",
-      "weight": 1.0,
-      "source": "pages_dashboard",
-      "target": "pages_dashboard_configswitch",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L89",
-      "weight": 1.0,
-      "source": "pages_dashboard",
-      "target": "pages_dashboard_dashboard",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L1442",
-      "weight": 1.0,
-      "source": "pages_dashboard",
-      "target": "pages_dashboard_dashboardshell",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L1470",
-      "weight": 1.0,
-      "source": "pages_dashboard",
-      "target": "pages_dashboard_dashboardtopbar",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L21",
-      "weight": 1.0,
-      "source": "pages_dashboard",
-      "target": "pages_dashboard_day_labels",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L803",
-      "weight": 1.0,
-      "source": "pages_dashboard",
-      "target": "pages_dashboard_enrollmentspanel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L23",
-      "weight": 1.0,
-      "source": "pages_dashboard",
-      "target": "pages_dashboard_getsvcicon",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L32",
-      "weight": 1.0,
-      "source": "pages_dashboard",
-      "target": "pages_dashboard_isodate",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L1003",
-      "weight": 1.0,
-      "source": "pages_dashboard",
-      "target": "pages_dashboard_isstrongpassword",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L48",
-      "weight": 1.0,
-      "source": "pages_dashboard",
-      "target": "pages_dashboard_localblockkey",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L77",
-      "weight": 1.0,
-      "source": "pages_dashboard",
-      "target": "pages_dashboard_panel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L920",
-      "weight": 1.0,
-      "source": "pages_dashboard",
-      "target": "pages_dashboard_pushcard",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L52",
-      "weight": 1.0,
-      "source": "pages_dashboard",
-      "target": "pages_dashboard_readlocalblocks",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L56",
-      "weight": 1.0,
-      "source": "pages_dashboard",
-      "target": "pages_dashboard_writelocalblocks",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L197",
-      "weight": 1.0,
-      "source": "pages_dashboard_dashboard",
-      "target": "pages_dashboard_buildweek",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Dashboard.jsx",
-      "source_location": "L1148",
-      "weight": 1.0,
-      "source": "pages_dashboard_configpanel",
-      "target": "pages_dashboard_isstrongpassword",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L46",
-      "weight": 1.0,
-      "source": "pages_home",
-      "target": "pages_home_cards",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L64",
-      "weight": 1.0,
-      "source": "pages_home",
-      "target": "pages_home_home",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L62",
-      "weight": 1.0,
-      "source": "pages_home",
-      "target": "pages_home_name",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L12",
-      "weight": 1.0,
-      "source": "pages_home",
-      "target": "pages_home_pillars",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L40",
-      "weight": 1.0,
-      "source": "pages_home",
-      "target": "pages_home_services",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L55",
-      "weight": 1.0,
-      "source": "pages_home",
-      "target": "pages_home_testimonials",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Home.jsx",
-      "source_location": "L523",
-      "weight": 1.0,
-      "source": "pages_home",
-      "target": "pages_home_tmword",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L69",
-      "weight": 1.0,
-      "source": "pages_workshop",
-      "target": "pages_workshop_bw",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L104",
-      "weight": 1.0,
-      "source": "pages_workshop",
-      "target": "pages_workshop_calc",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L315",
-      "weight": 1.0,
-      "source": "pages_workshop",
-      "target": "pages_workshop_cronograma",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L538",
-      "weight": 1.0,
-      "source": "pages_workshop",
-      "target": "pages_workshop_faq",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L235",
-      "weight": 1.0,
-      "source": "pages_workshop",
-      "target": "pages_workshop_featurerow",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L567",
-      "weight": 1.0,
-      "source": "pages_workshop",
-      "target": "pages_workshop_footer",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L78",
-      "weight": 1.0,
-      "source": "pages_workshop",
-      "target": "pages_workshop_formatclp",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L342",
-      "weight": 1.0,
-      "source": "pages_workshop",
-      "target": "pages_workshop_givekit",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L120",
-      "weight": 1.0,
-      "source": "pages_workshop",
-      "target": "pages_workshop_hero",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L33",
-      "weight": 1.0,
-      "source": "pages_workshop",
-      "target": "pages_workshop_icon",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L380",
-      "weight": 1.0,
-      "source": "pages_workshop",
-      "target": "pages_workshop_pricing",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L271",
-      "weight": 1.0,
-      "source": "pages_workshop",
-      "target": "pages_workshop_programa",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L206",
-      "weight": 1.0,
-      "source": "pages_workshop",
-      "target": "pages_workshop_quoteblock",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L425",
-      "weight": 1.0,
-      "source": "pages_workshop",
-      "target": "pages_workshop_register",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L58",
-      "weight": 1.0,
-      "source": "pages_workshop",
-      "target": "pages_workshop_reveal",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L114",
-      "weight": 1.0,
-      "source": "pages_workshop",
-      "target": "pages_workshop_smoothto",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L621",
-      "weight": 1.0,
-      "source": "pages_workshop",
-      "target": "pages_workshop_stickycta",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L179",
-      "weight": 1.0,
-      "source": "pages_workshop",
-      "target": "pages_workshop_transform",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L96",
-      "weight": 1.0,
-      "source": "pages_workshop",
-      "target": "pages_workshop_usecountdown",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L42",
-      "weight": 1.0,
-      "source": "pages_workshop",
-      "target": "pages_workshop_useinview",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L85",
-      "weight": 1.0,
-      "source": "pages_workshop",
-      "target": "pages_workshop_usescrolled",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L12",
-      "weight": 1.0,
-      "source": "pages_workshop",
-      "target": "pages_workshop_wk_icons",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L632",
-      "weight": 1.0,
-      "source": "pages_workshop",
-      "target": "pages_workshop_workshop",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L381",
-      "weight": 1.0,
-      "source": "pages_workshop_pricing",
-      "target": "pages_workshop_useinview",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L207",
-      "weight": 1.0,
-      "source": "pages_workshop_quoteblock",
-      "target": "pages_workshop_useinview",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L59",
-      "weight": 1.0,
-      "source": "pages_workshop_reveal",
-      "target": "pages_workshop_useinview",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L166",
-      "weight": 1.0,
-      "source": "pages_workshop_hero",
-      "target": "pages_workshop_formatclp",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L397",
-      "weight": 1.0,
-      "source": "pages_workshop_pricing",
-      "target": "pages_workshop_formatclp",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L478",
-      "weight": 1.0,
-      "source": "pages_workshop_register",
-      "target": "pages_workshop_formatclp",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L625",
-      "weight": 1.0,
-      "source": "pages_workshop_stickycta",
-      "target": "pages_workshop_formatclp",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L622",
-      "weight": 1.0,
-      "source": "pages_workshop_stickycta",
-      "target": "pages_workshop_usescrolled",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/pages/Workshop.jsx",
-      "source_location": "L121",
-      "weight": 1.0,
-      "source": "pages_workshop_hero",
-      "target": "pages_workshop_usecountdown",
-      "confidence_score": 1.0
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "904a775057966afa63f6648ceabd8ea9cea0c529"
+  "built_at_commit": "d304bcd4f892f650979247f1c63c26c2a4b19c63"
 }
