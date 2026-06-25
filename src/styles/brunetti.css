@@ -80,15 +80,20 @@
 }
 .brunetti-site .btn:active { transform: scale(0.96); }
 .brunetti-site .btn-primary {
-  background: var(--gold-grad);
+  background: var(--gold);
   color: var(--on-gold);
   border: 1px solid var(--gold-bright);
-  box-shadow: var(--g-spec), 0 8px 22px rgba(0, 0, 0, 0.42);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.38);
+  transition: box-shadow 0.22s ease, transform 0.22s ease, background 0.22s ease;
 }
 .brunetti-site .btn-primary:hover {
-  background: linear-gradient(180deg, #f4d897 0%, #d8b46c 55%, #b88e34 100%);
+  background: var(--gold-bright);
   transform: translateY(-1px);
-  box-shadow: var(--g-spec), 0 12px 30px rgba(0, 0, 0, 0.5), 0 6px 22px rgba(201, 163, 91, 0.32);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.38), 0 0 22px var(--gold-glow);
+}
+.brunetti-site .btn-primary:active {
+  transform: translateY(0px) scale(0.99);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3), 0 0 28px var(--gold-glow);
 }
 .brunetti-site .btn-ghost {
   background: var(--g-tint);
@@ -1079,7 +1084,8 @@
 /* ============================================================
    FEATURE SECTION (compare / carousel / testimonios)
    ============================================================ */
-.brunetti-site .feature-section { padding: clamp(3.5rem, 8vw, 6rem) 0; position: relative; }
+/* Carrusel de servicios: sin fondo propio — las tarjetas flotan sobre el fondo de la página */
+.brunetti-site .feature-section { padding: clamp(3.5rem, 8vw, 6rem) 0; position: relative; background: transparent; }
 .brunetti-site .feature-head { text-align: center; margin: 0 auto 2.6rem; width: min(720px, 92vw); }
 .brunetti-site .feature-head .kicker {
   margin: 0 0 0.6rem;
@@ -1384,7 +1390,8 @@
   text-wrap: pretty;
   animation: bruFadeUp 0.9s var(--ease-out) 0.4s both;
 }
-.brunetti-site .course-hero .actions { margin-top: 1.9rem; display: flex; gap: 0.8rem; flex-wrap: wrap; animation: bruFadeUp 0.9s var(--ease-out) 0.55s both; }
+.brunetti-site .course-hero .actions { margin-top: 1.9rem; display: flex; gap: 0.8rem; animation: bruFadeUp 0.9s var(--ease-out) 0.55s both; }
+.brunetti-site .course-hero .actions .btn { flex: 1; }
 .brunetti-site .course-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: clamp(2rem, 5vw, 3rem); }
 .brunetti-site .course-stats .cst {
   text-align: center;
@@ -1604,13 +1611,17 @@
     text-align: center;
   }
   .brunetti-site .bhero-grid { grid-template-columns: 1fr; gap: 2rem; }
-  /* Texto primero, retrato debajo; todo centrado en móvil. */
-  .brunetti-site .bhero-text { text-align: center; }
-  .brunetti-site .bhero-kicker { margin-left: auto; margin-right: auto; }
-  .brunetti-site .bhero-sub { margin-left: auto; margin-right: auto; }
-  .brunetti-site .bhero-actions { justify-content: center; }
-  .brunetti-site .bhero-meta { justify-content: center; }
-  .brunetti-site .bhero-figwrap { order: 2; width: min(320px, 74vw); margin-inline: auto; margin-bottom: 3rem; }
+  /* En móvil: kicker → foto → resto del texto.
+     display: contents hace que los hijos de .bhero-text fluyan como hermanos en .bhero-grid,
+     permitiendo reordenarlos con order. */
+  .brunetti-site .bhero-text { display: contents; text-align: center; }
+  .brunetti-site .bhero-kicker { order: 1; margin-left: auto; margin-right: auto; }
+  .brunetti-site .bhero-name { order: 2; }
+  .brunetti-site .bhero-figwrap { order: 3; width: min(320px, 74vw); margin-inline: auto; margin-bottom: 1.5rem; }
+  .brunetti-site .bhero-role { order: 4; }
+  .brunetti-site .bhero-sub { order: 5; margin-left: auto; margin-right: auto; }
+  .brunetti-site .bhero-actions { order: 6; justify-content: center; }
+  .brunetti-site .bhero-meta { order: 7; justify-content: center; }
   /* Los chips flotantes se solapaban con el tag del retrato en pantallas chicas. */
   .brunetti-site .bhero-chip { display: none; }
   .brunetti-site .bhero-cue { display: none; }
@@ -2129,10 +2140,14 @@
     linear-gradient(to right, rgba(6, 6, 8, 0.95) 20%, rgba(6, 6, 8, 0.7) 55%, rgba(6, 6, 8, 0.55) 100%),
     linear-gradient(to top, rgba(6, 6, 8, 0.9), transparent 60%);
 }
-/* Botón primario :hover (degradado dorado hardcodeado) → azul */
+/* Botón primario cursos: azul plano + glow azul (sin degradado) */
+.cursos-page .btn-primary { background: #0b129e; border-color: #3a44d6; }
 .cursos-page .btn-primary:hover {
-  background: linear-gradient(180deg, #3a44d6 0%, #0b129e 55%, #070a66 100%);
-  box-shadow: var(--g-spec), 0 12px 30px rgba(0, 0, 0, 0.5), 0 6px 22px rgba(11, 18, 158, 0.4);
+  background: #1a22b8;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.38), 0 0 24px rgba(107,116,240,0.45);
+}
+.cursos-page .btn-primary:active {
+  box-shadow: 0 4px 14px rgba(0,0,0,0.3), 0 0 32px rgba(107,116,240,0.6);
 }
 /* Hero: contenido alineado a la izquierda (antes centrado) — solo desktop */
 @media (min-width: 861px) {
@@ -2248,6 +2263,9 @@
   color: rgba(245, 244, 242, 0.92) !important;
 }
 /* Tarjetas "glass" (tinte blanco) → tinte oscuro sutil para que tengan cuerpo */
+/* tm-body y mfooter: sin fondo en claro (flotan sobre el fondo de la página) */
+[data-theme="light"] .brunetti-site .tm-body { background: transparent; }
+[data-theme="light"] .mfooter { background: rgba(0, 0, 0, 0.035); }
 [data-theme="light"] .brunetti-site .pillar,
 [data-theme="light"] .brunetti-site .bserv,
 [data-theme="light"] .brunetti-site .bcard,
@@ -2257,9 +2275,7 @@
 [data-theme="light"] .brunetti-site .include,
 [data-theme="light"] .brunetti-site .enroll-aside,
 [data-theme="light"] .brunetti-site .enroll-form,
-[data-theme="light"] .brunetti-site .bteaser-inner,
-[data-theme="light"] .brunetti-site .tm-body,
-[data-theme="light"] .mfooter { background: rgba(0, 0, 0, 0.035); }
+[data-theme="light"] .brunetti-site .bteaser-inner { background: rgba(0, 0, 0, 0.035); }
 [data-theme="light"] .brunetti-site .pillar,
 [data-theme="light"] .brunetti-site .bserv,
 [data-theme="light"] .brunetti-site .bcard,

@@ -28,7 +28,7 @@
   .site-nav-burger { display: none; }
 }
 
-/* Marca: centrar el texto (PIMP STUDIO / Barber Studio) en la barra. */
+/* Marca: centrar el texto (BRUNETTI / Barber Studio) en la barra. */
 .home-nav .brandmark .wordmark { text-align: center; }
 
 /* Navbar siempre translúcido: SÓLO el pill redondeado (.home-nav.is-scrolled::before).
@@ -40,42 +40,35 @@
   -webkit-backdrop-filter: none;
 }
 
-/* En móvil: más aire en los bordes (logo y botón de menú no pegados al borde
-   del pill del navbar) y el Reservar del top bar se oculta (pasa a la barra inferior). */
+/* En móvil: más aire en los bordes */
 @media (max-width: 899px) {
   .home-nav {
     align-items: center;
-    justify-content: flex-start; /* emblema (logo) a la izquierda */
+    justify-content: flex-start;
     padding-left: 1.4rem;
     padding-right: 1.4rem;
     gap: 0.75rem;
   }
-  /* los enlaces y el Reservar pasan al menú y a la barra inferior */
   .home-nav-links { display: none; }
   .site-nav-reserve-desktop { display: none !important; }
   .site-nav-barber-desktop { display: none !important; }
-  /* texto PIMP STUDIO + botón de menú: van en position:absolute, así que su
-     `top:50%` se centra en TODA la caja del navbar (incluido el padding-top del
-     safe-area), quedando más arriba que el emblema (que se centra en el área de
-     contenido). Se compensa bajándolos medio safe-area-inset-top para alinearlos
-     con el emblema y que no se metan bajo el notch. */
   .home-nav .brandmark .wordmark {
     position: absolute;
     left: 50%;
     top: calc(50% + env(safe-area-inset-top) / 2);
     transform: translate(-50%, -50%);
   }
-  /* botón de menú anclado a la derecha */
+  /* Burger: 0.75rem del borde derecho del pill (antes 1.4rem, quedaba muy pegado) */
   .site-nav-burger {
     position: absolute;
-    right: 1.4rem;
+    right: 0.75rem;
     top: calc(50% + env(safe-area-inset-top) / 2);
     transform: translateY(-50%);
   }
 }
 
 /* Menú desplegable (sheet) — sólo móvil.
-   Tarjeta redondeada translúcida que flota DEBAJO del navbar (no lo tapa). */
+   Backdrop oscuro fijo independiente del tema: texto siempre blanco. */
 .site-nav-sheet {
   position: fixed;
   top: calc(env(safe-area-inset-top, 0px) + 74px);
@@ -84,9 +77,9 @@
   z-index: 55;
   display: grid;
   border-radius: 22px;
-  background: rgba(12, 11, 10, 0.42);
-  backdrop-filter: blur(24px) saturate(160%);
-  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  background: rgba(12, 11, 10, 0.72);
+  backdrop-filter: blur(28px) saturate(160%);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
   border: 1px solid rgba(214, 178, 102, 0.22);
   box-shadow: 0 26px 60px -24px rgba(0, 0, 0, 0.72);
   padding: 0.3rem 1.1rem 0.5rem;
@@ -108,7 +101,8 @@
   text-align: left;
   background: none;
   border: 0;
-  color: var(--ink-soft);
+  /* El sheet tiene backdrop oscuro siempre → texto blanco en claro y oscuro */
+  color: rgba(255, 255, 255, 0.85);
   font-family: var(--font-display);
   letter-spacing: 0.04em;
   font-size: 1.02rem;
@@ -117,8 +111,9 @@
   cursor: pointer;
 }
 .site-nav-sheet button:last-child { border-bottom: 0; }
+/* Activo: en cursos/workshop toma el color de acento del módulo */
 .site-nav-sheet button.is-active { color: var(--gold); }
-/* Acceso barberos dentro del menú: destacado con acento dorado y su icono */
+/* Acceso barberos */
 .site-nav-sheet .site-nav-sheet-barber {
   display: flex;
   align-items: center;
@@ -132,7 +127,7 @@
   .site-nav-sheet { display: none; }
 }
 
-/* Backdrop para cerrar el menú (debajo del navbar para no tapar el botón cerrar) */
+/* Backdrop para cerrar el menú */
 .site-nav-backdrop {
   position: fixed;
   inset: 0;
@@ -143,17 +138,18 @@
   .site-nav-backdrop { display: none; }
 }
 
-/* CTA Reservar — sólo el botón flotante sticky (sin barra ni borde de fondo) */
+/* CTA Reservar flotante — sin barra de fondo, solo el botón */
 .site-nav-cta-bar {
   position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: 65;
+  /* padding-bottom: safe-area del home indicator + espacio visual */
   padding: 0.85rem clamp(1rem, 4vw, 1.4rem) calc(0.9rem + env(safe-area-inset-bottom, 0px));
   background: none;
   border-top: 0;
-  pointer-events: none; /* sólo el botón captura toques; el resto deja pasar el scroll */
+  pointer-events: none;
 }
 .site-nav-cta-bar .btn {
   width: 100%;
@@ -164,10 +160,9 @@
   .site-nav-cta-bar { display: none; }
 }
 
-/* Reservar el espacio inferior para que la barra fija no tape contenido (móvil) */
+/* Espacio inferior para que el botón flotante no tape contenido */
 @media (max-width: 899px) {
   .home-scroll { padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px)); }
   .wks-shell { padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px)); }
-  /* /style: el botón flotante Reservar no debe tapar el footer compartido. */
   .estilo-page .mfooter { padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px)); }
 }

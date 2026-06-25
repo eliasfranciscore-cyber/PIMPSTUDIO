@@ -113,7 +113,7 @@ export default function Cursos() {
 
   const onChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault()
     const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())
     if (!form.name.trim() || form.phone.replace(/\D/g, '').length < 8 || !validEmail) {
@@ -121,11 +121,20 @@ export default function Cursos() {
       return
     }
     setError(false)
+    /* Guardar en localStorage como respaldo offline */
     try {
       const list = JSON.parse(localStorage.getItem('curso_waitlist') || '[]')
       list.push({ ...form, at: new Date().toISOString() })
       localStorage.setItem('curso_waitlist', JSON.stringify(list))
     } catch (x) { /* noop */ }
+    /* Enviar a la API (enrollments + users) — no bloquea si falla */
+    try {
+      await fetch('/api/enrollments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...form, source: 'cursos' }),
+      })
+    } catch (x) { /* noop: guardado local como fallback */ }
     setDone(true)
   }
 

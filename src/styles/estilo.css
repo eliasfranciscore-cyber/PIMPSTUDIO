@@ -195,6 +195,15 @@
 .ete-hero-stats .s b { font-family: var(--font-display); display: block; font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 600; color: var(--gold-lt); line-height: 1; }
 .ete-hero-stats .s span { display: block; margin-top: 0.4rem; font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
 
+@media (max-width: 879px) {
+  .ete-hero-inner { text-align: center; }
+  .ete-hero-kicker { justify-content: center; }
+  .ete-hero h1 { text-align: center; }
+  .ete-hero-sub { margin-inline: auto; text-align: center; }
+  .ete-hero-actions { justify-content: center; }
+  .ete-hero-stats { justify-content: center; }
+}
+
 /* ============================================================
    SECCIÓN
    ============================================================ */

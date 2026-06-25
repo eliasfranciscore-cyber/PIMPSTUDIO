@@ -91,7 +91,7 @@ export default function Home() {
 
   /* ---- Testimonios: autoplay ---- */
   useEffect(() => {
-    const t = setInterval(() => { setTmIdx((i) => (i + 1) % TESTIMONIALS.length); setTmReveal((r) => r + 1) }, 5200)
+    const t = setInterval(() => { setTmIdx((i) => (i + 1) % TESTIMONIALS.length); setTmReveal((r) => r + 1) }, 8000)
     return () => clearInterval(t)
   }, [])
   const tmGo = (dir) => { setTmIdx((i) => (i + dir + TESTIMONIALS.length) % TESTIMONIALS.length); setTmReveal((r) => r + 1) }
@@ -261,7 +261,7 @@ export default function Home() {
         <section className="bsection" id="estilo-teaser">
           <div className="bwrap">
             <div className="bteaser" data-reveal="scale">
-              <div className="bteaser-bg"><img src="/assets/bruno-feature.jpg" alt="Asesoría de visagismo Brunetti" loading="lazy" decoding="async" /></div>
+              <div className="bteaser-bg"><img src="/assets/estilo-teaser.jpg" alt="Asesoría de visagismo Brunetti" loading="lazy" decoding="async" /></div>
               <div className="bteaser-inner">
                 <p className="kicker">Nuevo · Visagismo interactivo</p>
                 <h2>Encuentra tu estilo según tu rostro</h2>

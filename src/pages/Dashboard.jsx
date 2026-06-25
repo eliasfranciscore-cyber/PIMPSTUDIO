@@ -248,15 +248,16 @@ export default function Dashboard() {
   }, [barber])
 
   const nav = [
-    ["resumen",   "grid",     "Resumen"],
-    ["agenda",    "calendar", "Agenda"],
-    ["reservas",  "scissors", "Reservas"],
+    ["resumen",        "grid",     "Resumen"],
+    ["agenda",         "calendar", "Agenda"],
+    ["reservas",       "scissors", "Reservas"],
     ...(canViewFinance ? [["finanzas", "wallet", "Finanzas"]] : []),
-    ["clientes",  "user",     "Clientes"],
+    ["clientes",       "user",     "Clientes"],
+    ["inscripciones",  "spark",    "Inscripciones"],
     ...(canEditServices ? [["servicios", "cut", "Servicios"]] : []),
     ...(admin ? [["gastos", "wallet", "Gastos"]] : []),
-    ["marketing", "spark",    "Marketing"],
-    ["config",    "key",      "Config."],
+    ["marketing",      "spark",    "Marketing"],
+    ["config",         "key",      "Config."],
   ]
 
   // Acceso por barbero: Bruno (admin) ve todo. El admin concede módulos por barbero
@@ -590,6 +591,11 @@ export default function Dashboard() {
           />
         )}
 
+        {/* INSCRIPCIONES */}
+        {tab === "inscripciones" && (
+          <EnrollmentsPanel />
+        )}
+
         {/* SERVICIOS */}
         {tab === "servicios" && (
           <div className="animate-in" style={{ display: "grid", gap: "1.1rem" }}>
@@ -787,6 +793,87 @@ const CFG_SECTIONS = [
   { id: "datos",         icon: "wallet",   label: "Datos y respaldos" },
   { id: "acerca",        icon: "spark",    label: "Acerca de" },
 ]
+
+/* ============================================================
+   INSCRIPCIONES — lista unificada de Cursos + Workshop
+   Carga desde /api/enrollments (requiere sesión interna).
+   Categoriza con colores del módulo: azul = cursos, morado = workshop.
+   ============================================================ */
+function EnrollmentsPanel() {
+  const [rows, setRows] = React.useState([])
+  const [loading, setLoading] = React.useState(true)
+  const [filter, setFilter] = React.useState("todos") // todos | cursos | workshop
+  const [query, setQuery] = React.useState("")
+
+  React.useEffect(() => {
+    fetch("/api/enrollments", { credentials: "include" })
+      .then((r) => r.json())
+      .then((d) => { setRows(d.enrollments || []); setLoading(false) })
+      .catch(() => setLoading(false))
+  }, [])
+
+  const filtered = rows.filter((r) => {
+    if (filter !== "todos" && r.source !== filter) return false
+    if (query) {
+      const q = query.toLowerCase()
+      return r.name?.toLowerCase().includes(q) || r.phone?.includes(q) || r.email?.toLowerCase().includes(q)
+    }
+    return true
+  })
+
+  const cursosBadge = { background: "rgba(11,18,158,0.18)", color: "#6b74f0", border: "1px solid rgba(107,116,240,0.35)" }
+  const workshopBadge = { background: "rgba(136,56,216,0.18)", color: "#b483f3", border: "1px solid rgba(136,56,216,0.35)" }
+
+  const fmtDate = (iso) => {
+    if (!iso) return "—"
+    const d = new Date(iso)
+    return d.toLocaleDateString("es-CL", { day: "2-digit", month: "short", year: "numeric" })
+  }
+
+  return (
+    <div className="animate-in" style={{ display: "grid", gap: "1.1rem" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))", gap: "1rem" }}>
+        <Stat icon="user"    label="Total inscripciones" value={rows.length} accent />
+        <Stat icon="spark"   label="Cursos"   value={rows.filter(r => r.source === "cursos").length} />
+        <Stat icon="scissors" label="Workshop" value={rows.filter(r => r.source === "workshop").length} />
+      </div>
+      <Panel title="Inscripciones" action={
+        <div style={{ display: "flex", gap: "0.5rem" }}>
+          {["todos","cursos","workshop"].map(f => (
+            <button key={f} onClick={() => setFilter(f)}
+              className={"btn btn-sm " + (filter === f ? "btn-gold" : "btn-dark")}
+              style={{ textTransform: "capitalize" }}>{f}</button>
+          ))}
+        </div>
+      }>
+        <div className="client-search">
+          <Icon name="user" size={15} />
+          <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Buscar por nombre, teléfono o email" />
+        </div>
+        <div className="client-list">
+          {loading && <div className="empty-state">Cargando inscripciones…</div>}
+          {!loading && !filtered.length && <div className="empty-state">No hay inscripciones que coincidan.</div>}
+          {filtered.map((r) => (
+            <div key={r.id} className="client-row" style={{ cursor: "default" }}>
+              <div style={{ minWidth: 0 }}>
+                <strong>{r.name}</strong>
+                <span>{r.phone} · {r.email}</span>
+                {r.level && <span style={{ fontSize: "0.75rem", color: "var(--muted)" }}>{r.level}</span>}
+                {r.edition && <span style={{ fontSize: "0.75rem", color: "var(--muted)" }}>Edición: {r.edition}</span>}
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.3rem" }}>
+                <span style={{ fontSize: "0.7rem", padding: "2px 8px", borderRadius: 999, ...( r.source === "cursos" ? cursosBadge : workshopBadge) }}>
+                  {r.source === "cursos" ? "Cursos" : "Workshop"}
+                </span>
+                <span style={{ fontSize: "0.75rem", color: "var(--muted)" }}>{fmtDate(r.created_at)}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Panel>
+    </div>
+  )
+}
 
 function ConfigSwitch({ checked, onChange, disabled }) {
   return (

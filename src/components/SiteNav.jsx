@@ -28,6 +28,7 @@ export default function SiteNav({ onSection, scrolled: scrolledProp }) {
   const location = useLocation()
   const isHome = location.pathname === "/"
   const isWorkshop = location.pathname === "/workshop"
+  const isCursos = location.pathname === "/cursos"
   const isStyle = location.pathname === "/style"
   const [scrolledWin, setScrolledWin] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -59,15 +60,16 @@ export default function SiteNav({ onSection, scrolled: scrolledProp }) {
     else goSection(id)
   }
 
-  const reserveLabel = isWorkshop ? "Reservar asiento" : "Reservar hora"
+  const reserveLabel = isWorkshop ? "Reservar asiento" : isCursos ? "Inscribirme" : "Reservar hora"
   const reserve = () => {
     setMenuOpen(false)
     if (isWorkshop) {
       const el = document.getElementById("inscribir")
-      if (el) {
-        window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 64, behavior: "smooth" })
-        return
-      }
+      if (el) { window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 64, behavior: "smooth" }); return }
+    }
+    if (isCursos) {
+      const el = document.getElementById("inscripcion")
+      if (el) { window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 64, behavior: "smooth" }); return }
     }
     navigate("/login")
   }

@@ -441,9 +441,18 @@ function Register({ formRef }) {
     return Object.keys(er).length === 0;
   };
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    if (validate()) setSent(true);
+    if (!validate()) return;
+    /* Enviar a API (enrollments + users) — no bloquea si falla */
+    try {
+      await fetch('/api/enrollments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...form, source: 'workshop' }),
+      });
+    } catch (x) { /* noop */ }
+    setSent(true);
   };
 
   return (
