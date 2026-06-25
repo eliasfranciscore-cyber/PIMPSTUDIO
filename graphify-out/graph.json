@@ -1,213 +1,8 @@
 {
   "directed": false,
   "multigraph": false,
-  "graph": {
-    "hyperedges": [
-      {
-        "id": "enrollment_flow",
-        "label": "Enrollment Data Flow: Cursos + Workshop \u2192 API \u2192 Dashboard",
-        "nodes": [
-          "pages_cursos_onsubmit",
-          "pages_workshop_register",
-          "api_enrollments_handler",
-          "pages_dashboard_enrollmentspanel"
-        ],
-        "relation": "participate_in",
-        "confidence": "EXTRACTED",
-        "confidence_score": 1.0,
-        "source_file": "api/enrollments.js"
-      },
-      {
-        "id": "sitenav_page_integration",
-        "label": "SiteNav shared across all public pages (Home, Cursos, Workshop)",
-        "nodes": [
-          "components_sitenav_sitenav",
-          "pages_home_home",
-          "pages_cursos_cursos",
-          "pages_workshop_workshop"
-        ],
-        "relation": "participate_in",
-        "confidence": "EXTRACTED",
-        "confidence_score": 1.0,
-        "source_file": "src/components/SiteNav.jsx"
-      },
-      {
-        "id": "dashboard_api_auth_pattern",
-        "label": "Dashboard authenticated API calls pattern (authHeaders + fetch + fallback)",
-        "nodes": [
-          "pages_dashboard_authheaders",
-          "pages_dashboard_saveservice",
-          "pages_dashboard_saveexpense",
-          "pages_dashboard_savebarber"
-        ],
-        "relation": "participate_in",
-        "confidence": "EXTRACTED",
-        "confidence_score": 1.0,
-        "source_file": "src/pages/Dashboard.jsx"
-      }
-    ]
-  },
+  "graph": {},
   "nodes": [
-    {
-      "label": "_auth.js",
-      "file_type": "code",
-      "source_file": "api/_auth.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "_auth.js",
-      "id": "api_auth"
-    },
-    {
-      "label": "b64url()",
-      "file_type": "code",
-      "source_file": "api/_auth.js",
-      "source_location": "L5",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "b64url()",
-      "id": "api_auth_b64url"
-    },
-    {
-      "label": "sign()",
-      "file_type": "code",
-      "source_file": "api/_auth.js",
-      "source_location": "L9",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "sign()",
-      "id": "api_auth_sign"
-    },
-    {
-      "label": "createSession()",
-      "file_type": "code",
-      "source_file": "api/_auth.js",
-      "source_location": "L13",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "createsession()",
-      "id": "api_auth_createsession"
-    },
-    {
-      "label": "readSession()",
-      "file_type": "code",
-      "source_file": "api/_auth.js",
-      "source_location": "L26",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "readsession()",
-      "id": "api_auth_readsession"
-    },
-    {
-      "label": "requireInternal()",
-      "file_type": "code",
-      "source_file": "api/_auth.js",
-      "source_location": "L41",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "requireinternal()",
-      "id": "api_auth_requireinternal"
-    },
-    {
-      "label": "auth-barber.js",
-      "file_type": "code",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "auth-barber.js",
-      "id": "api_auth_barber"
-    },
-    {
-      "label": "sha256()",
-      "file_type": "code",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L19",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "sha256()",
-      "id": "api_auth_barber_sha256"
-    },
-    {
-      "label": "isAdmin()",
-      "file_type": "code",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L21",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "isadmin()",
-      "id": "api_auth_barber_isadmin"
-    },
-    {
-      "label": "isValidPassword()",
-      "file_type": "code",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L23",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "isvalidpassword()",
-      "id": "api_auth_barber_isvalidpassword"
-    },
-    {
-      "label": "BARBER_PROFILES",
-      "file_type": "code",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L28",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "barber_profiles",
-      "id": "api_auth_barber_barber_profiles"
-    },
-    {
-      "label": "fallbackPasswords()",
-      "file_type": "code",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L39",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "fallbackpasswords()",
-      "id": "api_auth_barber_fallbackpasswords"
-    },
-    {
-      "label": "fallbackLogin()",
-      "file_type": "code",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L43",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "fallbacklogin()",
-      "id": "api_auth_barber_fallbacklogin"
-    },
-    {
-      "label": "handleLogin()",
-      "file_type": "code",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L53",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "handlelogin()",
-      "id": "api_auth_barber_handlelogin"
-    },
-    {
-      "label": "handleChangePassword()",
-      "file_type": "code",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L81",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "handlechangepassword()",
-      "id": "api_auth_barber_handlechangepassword"
-    },
-    {
-      "label": "handler()",
-      "file_type": "code",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L104",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "handler()",
-      "id": "api_auth_barber_handler"
-    },
     {
       "label": "auth-login.js",
       "file_type": "code",
@@ -407,96 +202,6 @@
       "community": 2,
       "norm_label": "handler()",
       "id": "api_expenses_handler"
-    },
-    {
-      "label": "push.js",
-      "file_type": "code",
-      "source_file": "api/push.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "push.js",
-      "id": "api_push"
-    },
-    {
-      "label": "getWebPush()",
-      "file_type": "code",
-      "source_file": "api/push.js",
-      "source_location": "L15",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "getwebpush()",
-      "id": "api_push_getwebpush"
-    },
-    {
-      "label": "notifyBarber()",
-      "file_type": "code",
-      "source_file": "api/push.js",
-      "source_location": "L31",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "notifybarber()",
-      "id": "api_push_notifybarber"
-    },
-    {
-      "label": "handler()",
-      "file_type": "code",
-      "source_file": "api/push.js",
-      "source_location": "L60",
-      "_origin": "ast",
-      "community": 2,
-      "norm_label": "handler()",
-      "id": "api_push_handler"
-    },
-    {
-      "label": "register-client.js",
-      "file_type": "code",
-      "source_file": "api/register-client.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 16,
-      "norm_label": "register-client.js",
-      "id": "api_register_client"
-    },
-    {
-      "label": "{ put }",
-      "file_type": "code",
-      "source_file": "api/register-client.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 16,
-      "norm_label": "{ put }",
-      "id": "api_register_client_put"
-    },
-    {
-      "label": "readBody()",
-      "file_type": "code",
-      "source_file": "api/register-client.js",
-      "source_location": "L3",
-      "_origin": "ast",
-      "community": 16,
-      "norm_label": "readbody()",
-      "id": "api_register_client_readbody"
-    },
-    {
-      "label": "sendJson()",
-      "file_type": "code",
-      "source_file": "api/register-client.js",
-      "source_location": "L12",
-      "_origin": "ast",
-      "community": 16,
-      "norm_label": "sendjson()",
-      "id": "api_register_client_sendjson"
-    },
-    {
-      "label": "putClientRecord()",
-      "file_type": "code",
-      "source_file": "api/register-client.js",
-      "source_location": "L18",
-      "_origin": "ast",
-      "community": 16,
-      "norm_label": "putclientrecord()",
-      "id": "api_register_client_putclientrecord"
     },
     {
       "label": "services.js",
@@ -3936,9 +3641,9 @@
       "source_file": "api/enrollments.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "api_enrollments",
       "community": 1,
-      "norm_label": "enrollments.js"
+      "norm_label": "enrollments.js",
+      "id": "api_enrollments"
     },
     {
       "label": "DEMO",
@@ -3946,9 +3651,9 @@
       "source_file": "api/enrollments.js",
       "source_location": "L18",
       "_origin": "ast",
-      "id": "api_enrollments_demo",
       "community": 1,
-      "norm_label": "demo"
+      "norm_label": "demo",
+      "id": "api_enrollments_demo"
     },
     {
       "label": "cleanPhone()",
@@ -3956,9 +3661,9 @@
       "source_file": "api/enrollments.js",
       "source_location": "L23",
       "_origin": "ast",
-      "id": "api_enrollments_cleanphone",
       "community": 1,
-      "norm_label": "cleanphone()"
+      "norm_label": "cleanphone()",
+      "id": "api_enrollments_cleanphone"
     },
     {
       "label": "sendJson()",
@@ -3966,9 +3671,9 @@
       "source_file": "api/enrollments.js",
       "source_location": "L24",
       "_origin": "ast",
-      "id": "api_enrollments_sendjson",
       "community": 1,
-      "norm_label": "sendjson()"
+      "norm_label": "sendjson()",
+      "id": "api_enrollments_sendjson"
     },
     {
       "label": "handler()",
@@ -3976,9 +3681,9 @@
       "source_file": "api/enrollments.js",
       "source_location": "L26",
       "_origin": "ast",
-      "id": "api_enrollments_handler",
       "community": 1,
-      "norm_label": "handler()"
+      "norm_label": "handler()",
+      "id": "api_enrollments_handler"
     },
     {
       "label": "SiteNav.jsx",
@@ -3986,9 +3691,9 @@
       "source_file": "src/components/SiteNav.jsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "components_sitenav",
       "community": 1,
-      "norm_label": "sitenav.jsx"
+      "norm_label": "sitenav.jsx",
+      "id": "components_sitenav"
     },
     {
       "label": "NAV",
@@ -3996,9 +3701,9 @@
       "source_file": "src/components/SiteNav.jsx",
       "source_location": "L15",
       "_origin": "ast",
-      "id": "components_sitenav_nav",
       "community": 1,
-      "norm_label": "nav"
+      "norm_label": "nav",
+      "id": "components_sitenav_nav"
     },
     {
       "label": "SiteNav()",
@@ -4006,9 +3711,9 @@
       "source_file": "src/components/SiteNav.jsx",
       "source_location": "L26",
       "_origin": "ast",
-      "id": "components_sitenav_sitenav",
       "community": 1,
-      "norm_label": "sitenav()"
+      "norm_label": "sitenav()",
+      "id": "components_sitenav_sitenav"
     },
     {
       "label": "Cursos.jsx",
@@ -4016,9 +3721,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "pages_cursos",
       "community": 1,
-      "norm_label": "cursos.jsx"
+      "norm_label": "cursos.jsx",
+      "id": "pages_cursos"
     },
     {
       "label": "MODULES",
@@ -4026,9 +3731,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L13",
       "_origin": "ast",
-      "id": "pages_cursos_modules",
       "community": 1,
-      "norm_label": "modules"
+      "norm_label": "modules",
+      "id": "pages_cursos_modules"
     },
     {
       "label": "INCLUDES",
@@ -4036,9 +3741,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L76",
       "_origin": "ast",
-      "id": "pages_cursos_includes",
       "community": 1,
-      "norm_label": "includes"
+      "norm_label": "includes",
+      "id": "pages_cursos_includes"
     },
     {
       "label": "PLACEHOLDER_MODULES",
@@ -4046,9 +3751,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L85",
       "_origin": "ast",
-      "id": "pages_cursos_placeholder_modules",
       "community": 1,
-      "norm_label": "placeholder_modules"
+      "norm_label": "placeholder_modules",
+      "id": "pages_cursos_placeholder_modules"
     },
     {
       "label": "LEVELS",
@@ -4056,9 +3761,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L91",
       "_origin": "ast",
-      "id": "pages_cursos_levels",
       "community": 1,
-      "norm_label": "levels"
+      "norm_label": "levels",
+      "id": "pages_cursos_levels"
     },
     {
       "label": "Cursos()",
@@ -4066,9 +3771,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L98",
       "_origin": "ast",
-      "id": "pages_cursos_cursos",
       "community": 1,
-      "norm_label": "cursos()"
+      "norm_label": "cursos()",
+      "id": "pages_cursos_cursos"
     },
     {
       "label": "Dashboard.jsx",
@@ -4076,9 +3781,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "pages_dashboard",
       "community": 3,
-      "norm_label": "dashboard.jsx"
+      "norm_label": "dashboard.jsx",
+      "id": "pages_dashboard"
     },
     {
       "label": "AGENDA_SLOTS",
@@ -4086,9 +3791,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L18",
       "_origin": "ast",
-      "id": "pages_dashboard_agenda_slots",
       "community": 3,
-      "norm_label": "agenda_slots"
+      "norm_label": "agenda_slots",
+      "id": "pages_dashboard_agenda_slots"
     },
     {
       "label": "DAY_LABELS",
@@ -4096,9 +3801,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L20",
       "_origin": "ast",
-      "id": "pages_dashboard_day_labels",
       "community": 3,
-      "norm_label": "day_labels"
+      "norm_label": "day_labels",
+      "id": "pages_dashboard_day_labels"
     },
     {
       "label": "getSvcIcon()",
@@ -4106,9 +3811,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L22",
       "_origin": "ast",
-      "id": "pages_dashboard_getsvcicon",
       "community": 3,
-      "norm_label": "getsvcicon()"
+      "norm_label": "getsvcicon()",
+      "id": "pages_dashboard_getsvcicon"
     },
     {
       "label": "isoDate()",
@@ -4116,9 +3821,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L31",
       "_origin": "ast",
-      "id": "pages_dashboard_isodate",
       "community": 3,
-      "norm_label": "isodate()"
+      "norm_label": "isodate()",
+      "id": "pages_dashboard_isodate"
     },
     {
       "label": "buildWeek()",
@@ -4126,9 +3831,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L35",
       "_origin": "ast",
-      "id": "pages_dashboard_buildweek",
       "community": 3,
-      "norm_label": "buildweek()"
+      "norm_label": "buildweek()",
+      "id": "pages_dashboard_buildweek"
     },
     {
       "label": "localBlockKey()",
@@ -4136,9 +3841,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L47",
       "_origin": "ast",
-      "id": "pages_dashboard_localblockkey",
       "community": 3,
-      "norm_label": "localblockkey()"
+      "norm_label": "localblockkey()",
+      "id": "pages_dashboard_localblockkey"
     },
     {
       "label": "readLocalBlocks()",
@@ -4146,9 +3851,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L51",
       "_origin": "ast",
-      "id": "pages_dashboard_readlocalblocks",
       "community": 3,
-      "norm_label": "readlocalblocks()"
+      "norm_label": "readlocalblocks()",
+      "id": "pages_dashboard_readlocalblocks"
     },
     {
       "label": "writeLocalBlocks()",
@@ -4156,9 +3861,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L55",
       "_origin": "ast",
-      "id": "pages_dashboard_writelocalblocks",
       "community": 3,
-      "norm_label": "writelocalblocks()"
+      "norm_label": "writelocalblocks()",
+      "id": "pages_dashboard_writelocalblocks"
     },
     {
       "label": "BarChart()",
@@ -4166,9 +3871,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L59",
       "_origin": "ast",
-      "id": "pages_dashboard_barchart",
       "community": 3,
-      "norm_label": "barchart()"
+      "norm_label": "barchart()",
+      "id": "pages_dashboard_barchart"
     },
     {
       "label": "Panel()",
@@ -4176,9 +3881,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L76",
       "_origin": "ast",
-      "id": "pages_dashboard_panel",
       "community": 3,
-      "norm_label": "panel()"
+      "norm_label": "panel()",
+      "id": "pages_dashboard_panel"
     },
     {
       "label": "Dashboard()",
@@ -4186,9 +3891,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L88",
       "_origin": "ast",
-      "id": "pages_dashboard_dashboard",
       "community": 3,
-      "norm_label": "dashboard()"
+      "norm_label": "dashboard()",
+      "id": "pages_dashboard_dashboard"
     },
     {
       "label": "CFG_SECTIONS",
@@ -4196,9 +3901,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L784",
       "_origin": "ast",
-      "id": "pages_dashboard_cfg_sections",
       "community": 3,
-      "norm_label": "cfg_sections"
+      "norm_label": "cfg_sections",
+      "id": "pages_dashboard_cfg_sections"
     },
     {
       "label": "EnrollmentsPanel()",
@@ -4206,9 +3911,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L802",
       "_origin": "ast",
-      "id": "pages_dashboard_enrollmentspanel",
       "community": 1,
-      "norm_label": "enrollmentspanel()"
+      "norm_label": "enrollmentspanel()",
+      "id": "pages_dashboard_enrollmentspanel"
     },
     {
       "label": "ConfigSwitch()",
@@ -4216,9 +3921,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L878",
       "_origin": "ast",
-      "id": "pages_dashboard_configswitch",
       "community": 3,
-      "norm_label": "configswitch()"
+      "norm_label": "configswitch()",
+      "id": "pages_dashboard_configswitch"
     },
     {
       "label": "CfgRow()",
@@ -4226,9 +3931,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L902",
       "_origin": "ast",
-      "id": "pages_dashboard_cfgrow",
       "community": 3,
-      "norm_label": "cfgrow()"
+      "norm_label": "cfgrow()",
+      "id": "pages_dashboard_cfgrow"
     },
     {
       "label": "PushCard()",
@@ -4236,9 +3941,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L917",
       "_origin": "ast",
-      "id": "pages_dashboard_pushcard",
       "community": 3,
-      "norm_label": "pushcard()"
+      "norm_label": "pushcard()",
+      "id": "pages_dashboard_pushcard"
     },
     {
       "label": "isStrongPassword()",
@@ -4246,9 +3951,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L1000",
       "_origin": "ast",
-      "id": "pages_dashboard_isstrongpassword",
       "community": 3,
-      "norm_label": "isstrongpassword()"
+      "norm_label": "isstrongpassword()",
+      "id": "pages_dashboard_isstrongpassword"
     },
     {
       "label": "ConfigPanel()",
@@ -4256,9 +3961,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L1004",
       "_origin": "ast",
-      "id": "pages_dashboard_configpanel",
       "community": 3,
-      "norm_label": "configpanel()"
+      "norm_label": "configpanel()",
+      "id": "pages_dashboard_configpanel"
     },
     {
       "label": "DashboardShell()",
@@ -4266,9 +3971,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L1439",
       "_origin": "ast",
-      "id": "pages_dashboard_dashboardshell",
       "community": 3,
-      "norm_label": "dashboardshell()"
+      "norm_label": "dashboardshell()",
+      "id": "pages_dashboard_dashboardshell"
     },
     {
       "label": "DashboardTopbar()",
@@ -4276,9 +3981,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L1467",
       "_origin": "ast",
-      "id": "pages_dashboard_dashboardtopbar",
       "community": 3,
-      "norm_label": "dashboardtopbar()"
+      "norm_label": "dashboardtopbar()",
+      "id": "pages_dashboard_dashboardtopbar"
     },
     {
       "label": "Home.jsx",
@@ -4286,9 +3991,9 @@
       "source_file": "src/pages/Home.jsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "pages_home",
       "community": 1,
-      "norm_label": "home.jsx"
+      "norm_label": "home.jsx",
+      "id": "pages_home"
     },
     {
       "label": "PILLARS",
@@ -4296,9 +4001,9 @@
       "source_file": "src/pages/Home.jsx",
       "source_location": "L12",
       "_origin": "ast",
-      "id": "pages_home_pillars",
       "community": 1,
-      "norm_label": "pillars"
+      "norm_label": "pillars",
+      "id": "pages_home_pillars"
     },
     {
       "label": "SERVICES",
@@ -4306,9 +4011,9 @@
       "source_file": "src/pages/Home.jsx",
       "source_location": "L40",
       "_origin": "ast",
-      "id": "pages_home_services",
       "community": 1,
-      "norm_label": "services"
+      "norm_label": "services",
+      "id": "pages_home_services"
     },
     {
       "label": "CARDS",
@@ -4316,9 +4021,9 @@
       "source_file": "src/pages/Home.jsx",
       "source_location": "L46",
       "_origin": "ast",
-      "id": "pages_home_cards",
       "community": 1,
-      "norm_label": "cards"
+      "norm_label": "cards",
+      "id": "pages_home_cards"
     },
     {
       "label": "TESTIMONIALS",
@@ -4326,9 +4031,9 @@
       "source_file": "src/pages/Home.jsx",
       "source_location": "L55",
       "_origin": "ast",
-      "id": "pages_home_testimonials",
       "community": 1,
-      "norm_label": "testimonials"
+      "norm_label": "testimonials",
+      "id": "pages_home_testimonials"
     },
     {
       "label": "NAME",
@@ -4336,9 +4041,9 @@
       "source_file": "src/pages/Home.jsx",
       "source_location": "L62",
       "_origin": "ast",
-      "id": "pages_home_name",
       "community": 1,
-      "norm_label": "name"
+      "norm_label": "name",
+      "id": "pages_home_name"
     },
     {
       "label": "Home()",
@@ -4346,9 +4051,9 @@
       "source_file": "src/pages/Home.jsx",
       "source_location": "L64",
       "_origin": "ast",
-      "id": "pages_home_home",
       "community": 4,
-      "norm_label": "home()"
+      "norm_label": "home()",
+      "id": "pages_home_home"
     },
     {
       "label": "TmWord()",
@@ -4356,9 +4061,9 @@
       "source_file": "src/pages/Home.jsx",
       "source_location": "L523",
       "_origin": "ast",
-      "id": "pages_home_tmword",
       "community": 1,
-      "norm_label": "tmword()"
+      "norm_label": "tmword()",
+      "id": "pages_home_tmword"
     },
     {
       "label": "Workshop.jsx",
@@ -4366,9 +4071,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "pages_workshop",
       "community": 1,
-      "norm_label": "workshop.jsx"
+      "norm_label": "workshop.jsx",
+      "id": "pages_workshop"
     },
     {
       "label": "WK_ICONS",
@@ -4376,9 +4081,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L11",
       "_origin": "ast",
-      "id": "pages_workshop_wk_icons",
       "community": 1,
-      "norm_label": "wk_icons"
+      "norm_label": "wk_icons",
+      "id": "pages_workshop_wk_icons"
     },
     {
       "label": "Icon()",
@@ -4386,9 +4091,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L32",
       "_origin": "ast",
-      "id": "pages_workshop_icon",
       "community": 1,
-      "norm_label": "icon()"
+      "norm_label": "icon()",
+      "id": "pages_workshop_icon"
     },
     {
       "label": "useInView()",
@@ -4396,9 +4101,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L41",
       "_origin": "ast",
-      "id": "pages_workshop_useinview",
       "community": 1,
-      "norm_label": "useinview()"
+      "norm_label": "useinview()",
+      "id": "pages_workshop_useinview"
     },
     {
       "label": "Reveal()",
@@ -4406,9 +4111,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L57",
       "_origin": "ast",
-      "id": "pages_workshop_reveal",
       "community": 1,
-      "norm_label": "reveal()"
+      "norm_label": "reveal()",
+      "id": "pages_workshop_reveal"
     },
     {
       "label": "Bw()",
@@ -4416,9 +4121,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L68",
       "_origin": "ast",
-      "id": "pages_workshop_bw",
       "community": 1,
-      "norm_label": "bw()"
+      "norm_label": "bw()",
+      "id": "pages_workshop_bw"
     },
     {
       "label": "formatCLP()",
@@ -4426,9 +4131,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L77",
       "_origin": "ast",
-      "id": "pages_workshop_formatclp",
       "community": 1,
-      "norm_label": "formatclp()"
+      "norm_label": "formatclp()",
+      "id": "pages_workshop_formatclp"
     },
     {
       "label": "useScrolled()",
@@ -4436,9 +4141,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L84",
       "_origin": "ast",
-      "id": "pages_workshop_usescrolled",
       "community": 1,
-      "norm_label": "usescrolled()"
+      "norm_label": "usescrolled()",
+      "id": "pages_workshop_usescrolled"
     },
     {
       "label": "useCountdown()",
@@ -4446,9 +4151,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L95",
       "_origin": "ast",
-      "id": "pages_workshop_usecountdown",
       "community": 1,
-      "norm_label": "usecountdown()"
+      "norm_label": "usecountdown()",
+      "id": "pages_workshop_usecountdown"
     },
     {
       "label": "calc()",
@@ -4456,9 +4161,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L103",
       "_origin": "ast",
-      "id": "pages_workshop_calc",
       "community": 1,
-      "norm_label": "calc()"
+      "norm_label": "calc()",
+      "id": "pages_workshop_calc"
     },
     {
       "label": "smoothTo()",
@@ -4466,9 +4171,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L113",
       "_origin": "ast",
-      "id": "pages_workshop_smoothto",
       "community": 1,
-      "norm_label": "smoothto()"
+      "norm_label": "smoothto()",
+      "id": "pages_workshop_smoothto"
     },
     {
       "label": "Hero()",
@@ -4476,9 +4181,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L119",
       "_origin": "ast",
-      "id": "pages_workshop_hero",
       "community": 1,
-      "norm_label": "hero()"
+      "norm_label": "hero()",
+      "id": "pages_workshop_hero"
     },
     {
       "label": "Transform()",
@@ -4486,9 +4191,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L178",
       "_origin": "ast",
-      "id": "pages_workshop_transform",
       "community": 1,
-      "norm_label": "transform()"
+      "norm_label": "transform()",
+      "id": "pages_workshop_transform"
     },
     {
       "label": "QuoteBlock()",
@@ -4496,9 +4201,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L205",
       "_origin": "ast",
-      "id": "pages_workshop_quoteblock",
       "community": 1,
-      "norm_label": "quoteblock()"
+      "norm_label": "quoteblock()",
+      "id": "pages_workshop_quoteblock"
     },
     {
       "label": "FeatureRow()",
@@ -4506,9 +4211,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L234",
       "_origin": "ast",
-      "id": "pages_workshop_featurerow",
       "community": 1,
-      "norm_label": "featurerow()"
+      "norm_label": "featurerow()",
+      "id": "pages_workshop_featurerow"
     },
     {
       "label": "Programa()",
@@ -4516,9 +4221,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L270",
       "_origin": "ast",
-      "id": "pages_workshop_programa",
       "community": 1,
-      "norm_label": "programa()"
+      "norm_label": "programa()",
+      "id": "pages_workshop_programa"
     },
     {
       "label": "Cronograma()",
@@ -4526,9 +4231,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L314",
       "_origin": "ast",
-      "id": "pages_workshop_cronograma",
       "community": 1,
-      "norm_label": "cronograma()"
+      "norm_label": "cronograma()",
+      "id": "pages_workshop_cronograma"
     },
     {
       "label": "GiveKit()",
@@ -4536,9 +4241,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L341",
       "_origin": "ast",
-      "id": "pages_workshop_givekit",
       "community": 1,
-      "norm_label": "givekit()"
+      "norm_label": "givekit()",
+      "id": "pages_workshop_givekit"
     },
     {
       "label": "Pricing()",
@@ -4546,9 +4251,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L379",
       "_origin": "ast",
-      "id": "pages_workshop_pricing",
       "community": 1,
-      "norm_label": "pricing()"
+      "norm_label": "pricing()",
+      "id": "pages_workshop_pricing"
     },
     {
       "label": "Register()",
@@ -4556,9 +4261,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L424",
       "_origin": "ast",
-      "id": "pages_workshop_register",
       "community": 1,
-      "norm_label": "register()"
+      "norm_label": "register()",
+      "id": "pages_workshop_register"
     },
     {
       "label": "Faq()",
@@ -4566,9 +4271,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L534",
       "_origin": "ast",
-      "id": "pages_workshop_faq",
       "community": 1,
-      "norm_label": "faq()"
+      "norm_label": "faq()",
+      "id": "pages_workshop_faq"
     },
     {
       "label": "Footer()",
@@ -4576,9 +4281,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L563",
       "_origin": "ast",
-      "id": "pages_workshop_footer",
       "community": 1,
-      "norm_label": "footer()"
+      "norm_label": "footer()",
+      "id": "pages_workshop_footer"
     },
     {
       "label": "StickyCta()",
@@ -4586,9 +4291,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L617",
       "_origin": "ast",
-      "id": "pages_workshop_stickycta",
       "community": 1,
-      "norm_label": "stickycta()"
+      "norm_label": "stickycta()",
+      "id": "pages_workshop_stickycta"
     },
     {
       "label": "Workshop()",
@@ -4596,9 +4301,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L628",
       "_origin": "ast",
-      "id": "pages_workshop_workshop",
       "community": 1,
-      "norm_label": "workshop()"
+      "norm_label": "workshop()",
+      "id": "pages_workshop_workshop"
     },
     {
       "label": "cleanPhone helper",
@@ -4609,9 +4314,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "api_enrollments_cleandphone",
       "community": 1,
-      "norm_label": "cleanphone helper"
+      "norm_label": "cleanphone helper",
+      "id": "api_enrollments_cleandphone"
     },
     {
       "label": "neon (NeonDB serverless SQL)",
@@ -4622,9 +4327,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "api_enrollments_neon",
       "community": 1,
-      "norm_label": "neon (neondb serverless sql)"
+      "norm_label": "neon (neondb serverless sql)",
+      "id": "api_enrollments_neon"
     },
     {
       "label": "requireInternal auth guard",
@@ -4635,9 +4340,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "api_enrollments_requireinternal",
       "community": 1,
-      "norm_label": "requireinternal auth guard"
+      "norm_label": "requireinternal auth guard",
+      "id": "api_enrollments_requireinternal"
     },
     {
       "label": "NAV items config",
@@ -4648,9 +4353,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "components_sitenav_nav_config",
       "community": 1,
-      "norm_label": "nav items config"
+      "norm_label": "nav items config",
+      "id": "components_sitenav_nav_config"
     },
     {
       "label": "goSection scroll/navigate helper",
@@ -4661,9 +4366,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "components_sitenav_gosection",
       "community": 26,
-      "norm_label": "gosection scroll/navigate helper"
+      "norm_label": "gosection scroll/navigate helper",
+      "id": "components_sitenav_gosection"
     },
     {
       "label": "handleNav route dispatcher",
@@ -4674,9 +4379,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "components_sitenav_handlenav",
       "community": 26,
-      "norm_label": "handlenav route dispatcher"
+      "norm_label": "handlenav route dispatcher",
+      "id": "components_sitenav_handlenav"
     },
     {
       "label": "reserve CTA handler",
@@ -4687,9 +4392,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "components_sitenav_reserve",
       "community": 1,
-      "norm_label": "reserve cta handler"
+      "norm_label": "reserve cta handler",
+      "id": "components_sitenav_reserve"
     },
     {
       "label": "Cursos form onSubmit handler",
@@ -4700,9 +4405,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "pages_cursos_onsubmit",
       "community": 1,
-      "norm_label": "cursos form onsubmit handler"
+      "norm_label": "cursos form onsubmit handler",
+      "id": "pages_cursos_onsubmit"
     },
     {
       "label": "saveService function",
@@ -4713,9 +4418,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "pages_dashboard_saveservice",
       "community": 3,
-      "norm_label": "saveservice function"
+      "norm_label": "saveservice function",
+      "id": "pages_dashboard_saveservice"
     },
     {
       "label": "saveExpense function",
@@ -4726,9 +4431,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "pages_dashboard_saveexpense",
       "community": 3,
-      "norm_label": "saveexpense function"
+      "norm_label": "saveexpense function",
+      "id": "pages_dashboard_saveexpense"
     },
     {
       "label": "saveBarber function",
@@ -4739,9 +4444,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "pages_dashboard_savebarber",
       "community": 3,
-      "norm_label": "savebarber function"
+      "norm_label": "savebarber function",
+      "id": "pages_dashboard_savebarber"
     },
     {
       "label": "loadAgenda function",
@@ -4752,9 +4457,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "pages_dashboard_loadagenda",
       "community": 3,
-      "norm_label": "loadagenda function"
+      "norm_label": "loadagenda function",
+      "id": "pages_dashboard_loadagenda"
     },
     {
       "label": "logout function",
@@ -4765,9 +4470,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "pages_dashboard_logout",
       "community": 3,
-      "norm_label": "logout function"
+      "norm_label": "logout function",
+      "id": "pages_dashboard_logout"
     },
     {
       "label": "authHeaders function",
@@ -4778,9 +4483,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "pages_dashboard_authheaders",
       "community": 3,
-      "norm_label": "authheaders function"
+      "norm_label": "authheaders function",
+      "id": "pages_dashboard_authheaders"
     },
     {
       "label": "exportCSV function",
@@ -4791,9 +4496,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "pages_dashboard_exportcsv",
       "community": 3,
-      "norm_label": "exportcsv function"
+      "norm_label": "exportcsv function",
+      "id": "pages_dashboard_exportcsv"
     },
     {
       "label": "WORKSHOP data import (data/workshop.js)",
@@ -4804,9 +4509,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "pages_workshop_workshop_data",
       "community": 1,
-      "norm_label": "workshop data import (data/workshop.js)"
+      "norm_label": "workshop data import (data/workshop.js)",
+      "id": "pages_workshop_workshop_data"
     },
     {
       "label": "Hero Photo: Brunetti Barber in Action",
@@ -4817,9 +4522,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "assets_bruno_hero_photo",
       "community": 14,
-      "norm_label": "hero photo: brunetti barber in action"
+      "norm_label": "hero photo: brunetti barber in action",
+      "id": "assets_bruno_hero_photo"
     },
     {
       "label": "Barber (Bruno Brunetti)",
@@ -4830,9 +4535,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "assets_bruno_hero_barber",
       "community": 14,
-      "norm_label": "barber (bruno brunetti)"
+      "norm_label": "barber (bruno brunetti)",
+      "id": "assets_bruno_hero_barber"
     },
     {
       "label": "Client in barber cape receiving haircut",
@@ -4843,9 +4548,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "assets_bruno_hero_client",
       "community": 14,
-      "norm_label": "client in barber cape receiving haircut"
+      "norm_label": "client in barber cape receiving haircut",
+      "id": "assets_bruno_hero_client"
     },
     {
       "label": "Green barber comb (tool)",
@@ -4856,9 +4561,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "assets_bruno_hero_comb",
       "community": 14,
-      "norm_label": "green barber comb (tool)"
+      "norm_label": "green barber comb (tool)",
+      "id": "assets_bruno_hero_comb"
     },
     {
       "label": "Dark patterned barber cape",
@@ -4869,9 +4574,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "assets_bruno_hero_cape",
       "community": 14,
-      "norm_label": "dark patterned barber cape"
+      "norm_label": "dark patterned barber cape",
+      "id": "assets_bruno_hero_cape"
     },
     {
       "label": "Lapel/headset microphone worn by barber",
@@ -4882,9 +4587,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "assets_bruno_hero_headset",
       "community": 14,
-      "norm_label": "lapel/headset microphone worn by barber"
+      "norm_label": "lapel/headset microphone worn by barber",
+      "id": "assets_bruno_hero_headset"
     },
     {
       "label": "Background text: 'El cliente...' (partially visible)",
@@ -4895,9 +4600,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "assets_bruno_hero_background_text",
       "community": 14,
-      "norm_label": "background text: 'el cliente...' (partially visible)"
+      "norm_label": "background text: 'el cliente...' (partially visible)",
+      "id": "assets_bruno_hero_background_text"
     },
     {
       "label": "Event/stage setting with brick wall and blue ambient light",
@@ -4908,9 +4613,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "assets_bruno_hero_setting",
       "community": 14,
-      "norm_label": "event/stage setting with brick wall and blue ambient light"
+      "norm_label": "event/stage setting with brick wall and blue ambient light",
+      "id": "assets_bruno_hero_setting"
     },
     {
       "label": "Photo style: professional portrait, shallow depth of field, vertical crop",
@@ -4921,9 +4626,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "assets_bruno_hero_style",
       "community": 14,
-      "norm_label": "photo style: professional portrait, shallow depth of field, vertical crop"
+      "norm_label": "photo style: professional portrait, shallow depth of field, vertical crop",
+      "id": "assets_bruno_hero_style"
     },
     {
       "label": "Website hero image purpose: showcase barber skill and professionalism",
@@ -4934,9 +4639,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "assets_bruno_hero_purpose",
       "community": 14,
-      "norm_label": "website hero image purpose: showcase barber skill and professionalism"
+      "norm_label": "website hero image purpose: showcase barber skill and professionalism",
+      "id": "assets_bruno_hero_purpose"
     },
     {
       "label": "Context: live demo or barbering course/event",
@@ -4947,9 +4652,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "assets_bruno_hero_courses_context",
       "community": 14,
-      "norm_label": "context: live demo or barbering course/event"
+      "norm_label": "context: live demo or barbering course/event",
+      "id": "assets_bruno_hero_courses_context"
     },
     {
       "label": "estilo-teaser.jpg (style module teaser image)",
@@ -4960,9 +4665,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "assets_estilo_teaser_image",
       "community": 15,
-      "norm_label": "estilo-teaser.jpg (style module teaser image)"
+      "norm_label": "estilo-teaser.jpg (style module teaser image)",
+      "id": "assets_estilo_teaser_image"
     },
     {
       "label": "Barber / Instructor (PIMP & STUDIOS branded, tattooed, glasses, mic)",
@@ -4973,9 +4678,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "assets_estilo_teaser_barber",
       "community": 15,
-      "norm_label": "barber / instructor (pimp & studios branded, tattooed, glasses, mic)"
+      "norm_label": "barber / instructor (pimp & studios branded, tattooed, glasses, mic)",
+      "id": "assets_estilo_teaser_barber"
     },
     {
       "label": "Client seated in barber chair wearing cape",
@@ -4986,9 +4691,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "assets_estilo_teaser_client",
       "community": 15,
-      "norm_label": "client seated in barber chair wearing cape"
+      "norm_label": "client seated in barber chair wearing cape",
+      "id": "assets_estilo_teaser_client"
     },
     {
       "label": "PIMP & STUDIOS brand logo (on barber shirt)",
@@ -4999,9 +4704,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "assets_estilo_teaser_pimp_studios_brand",
       "community": 15,
-      "norm_label": "pimp & studios brand logo (on barber shirt)"
+      "norm_label": "pimp & studios brand logo (on barber shirt)",
+      "id": "assets_estilo_teaser_pimp_studios_brand"
     },
     {
       "label": "Haircut / styling service in progress",
@@ -5012,9 +4717,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "assets_estilo_teaser_haircut_service",
       "community": 15,
-      "norm_label": "haircut / styling service in progress"
+      "norm_label": "haircut / styling service in progress",
+      "id": "assets_estilo_teaser_haircut_service"
     },
     {
       "label": "Barber tools: scissors and styling product (green spray/pomade)",
@@ -5025,9 +4730,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "assets_estilo_teaser_tools",
       "community": 15,
-      "norm_label": "barber tools: scissors and styling product (green spray/pomade)"
+      "norm_label": "barber tools: scissors and styling product (green spray/pomade)",
+      "id": "assets_estilo_teaser_tools"
     },
     {
       "label": "Ring light (professional studio lighting behind barber)",
@@ -5038,9 +4743,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "assets_estilo_teaser_ring_light",
       "community": 15,
-      "norm_label": "ring light (professional studio lighting behind barber)"
+      "norm_label": "ring light (professional studio lighting behind barber)",
+      "id": "assets_estilo_teaser_ring_light"
     },
     {
       "label": "Barbershop / studio interior with white brick wall",
@@ -5051,9 +4756,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "assets_estilo_teaser_barbershop_setting",
       "community": 15,
-      "norm_label": "barbershop / studio interior with white brick wall"
+      "norm_label": "barbershop / studio interior with white brick wall",
+      "id": "assets_estilo_teaser_barbershop_setting"
     },
     {
       "label": "Teaser image purpose: promote estilo (style) module / course",
@@ -5064,9 +4769,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "assets_estilo_teaser_teaser_purpose",
       "community": 15,
-      "norm_label": "teaser image purpose: promote estilo (style) module / course"
+      "norm_label": "teaser image purpose: promote estilo (style) module / course",
+      "id": "assets_estilo_teaser_teaser_purpose"
     },
     {
       "label": "Mood: professional, focused, editorial photography",
@@ -5077,603 +4782,262 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "id": "assets_estilo_teaser_professional_mood",
       "community": 15,
-      "norm_label": "mood: professional, focused, editorial photography"
+      "norm_label": "mood: professional, focused, editorial photography",
+      "id": "assets_estilo_teaser_professional_mood"
+    },
+    {
+      "label": "_auth.js",
+      "file_type": "code",
+      "source_file": "api/_auth.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "api_auth",
+      "community": 2,
+      "norm_label": "_auth.js"
+    },
+    {
+      "label": "b64url()",
+      "file_type": "code",
+      "source_file": "api/_auth.js",
+      "source_location": "L14",
+      "_origin": "ast",
+      "id": "api_auth_b64url",
+      "community": 2,
+      "norm_label": "b64url()"
+    },
+    {
+      "label": "sign()",
+      "file_type": "code",
+      "source_file": "api/_auth.js",
+      "source_location": "L18",
+      "_origin": "ast",
+      "id": "api_auth_sign",
+      "community": 2,
+      "norm_label": "sign()"
+    },
+    {
+      "label": "createSession()",
+      "file_type": "code",
+      "source_file": "api/_auth.js",
+      "source_location": "L23",
+      "_origin": "ast",
+      "id": "api_auth_createsession",
+      "community": 2,
+      "norm_label": "createsession()"
+    },
+    {
+      "label": "readSession()",
+      "file_type": "code",
+      "source_file": "api/_auth.js",
+      "source_location": "L38",
+      "_origin": "ast",
+      "id": "api_auth_readsession",
+      "community": 2,
+      "norm_label": "readsession()"
+    },
+    {
+      "label": "requireInternal()",
+      "file_type": "code",
+      "source_file": "api/_auth.js",
+      "source_location": "L55",
+      "_origin": "ast",
+      "id": "api_auth_requireinternal",
+      "community": 2,
+      "norm_label": "requireinternal()"
+    },
+    {
+      "label": "auth-barber.js",
+      "file_type": "code",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "api_auth_barber",
+      "community": 2,
+      "norm_label": "auth-barber.js"
+    },
+    {
+      "label": "sha256()",
+      "file_type": "code",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L19",
+      "_origin": "ast",
+      "id": "api_auth_barber_sha256",
+      "community": 2,
+      "norm_label": "sha256()"
+    },
+    {
+      "label": "isAdmin()",
+      "file_type": "code",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L21",
+      "_origin": "ast",
+      "id": "api_auth_barber_isadmin",
+      "community": 2,
+      "norm_label": "isadmin()"
+    },
+    {
+      "label": "isValidPassword()",
+      "file_type": "code",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L23",
+      "_origin": "ast",
+      "id": "api_auth_barber_isvalidpassword",
+      "community": 2,
+      "norm_label": "isvalidpassword()"
+    },
+    {
+      "label": "BARBER_PROFILES",
+      "file_type": "code",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L28",
+      "_origin": "ast",
+      "id": "api_auth_barber_barber_profiles",
+      "community": 2,
+      "norm_label": "barber_profiles"
+    },
+    {
+      "label": "fallbackPasswords()",
+      "file_type": "code",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L39",
+      "_origin": "ast",
+      "id": "api_auth_barber_fallbackpasswords",
+      "community": 2,
+      "norm_label": "fallbackpasswords()"
+    },
+    {
+      "label": "fallbackLogin()",
+      "file_type": "code",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L43",
+      "_origin": "ast",
+      "id": "api_auth_barber_fallbacklogin",
+      "community": 2,
+      "norm_label": "fallbacklogin()"
+    },
+    {
+      "label": "handleLogin()",
+      "file_type": "code",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L53",
+      "_origin": "ast",
+      "id": "api_auth_barber_handlelogin",
+      "community": 2,
+      "norm_label": "handlelogin()"
+    },
+    {
+      "label": "handleChangePassword()",
+      "file_type": "code",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L87",
+      "_origin": "ast",
+      "id": "api_auth_barber_handlechangepassword",
+      "community": 2,
+      "norm_label": "handlechangepassword()"
+    },
+    {
+      "label": "handler()",
+      "file_type": "code",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L110",
+      "_origin": "ast",
+      "id": "api_auth_barber_handler",
+      "community": 2,
+      "norm_label": "handler()"
+    },
+    {
+      "label": "push.js",
+      "file_type": "code",
+      "source_file": "api/push.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "api_push",
+      "community": 2,
+      "norm_label": "push.js"
+    },
+    {
+      "label": "getWebPush()",
+      "file_type": "code",
+      "source_file": "api/push.js",
+      "source_location": "L15",
+      "_origin": "ast",
+      "id": "api_push_getwebpush",
+      "community": 2,
+      "norm_label": "getwebpush()"
+    },
+    {
+      "label": "notifyBarber()",
+      "file_type": "code",
+      "source_file": "api/push.js",
+      "source_location": "L31",
+      "_origin": "ast",
+      "id": "api_push_notifybarber",
+      "community": 2,
+      "norm_label": "notifybarber()"
+    },
+    {
+      "label": "handler()",
+      "file_type": "code",
+      "source_file": "api/push.js",
+      "source_location": "L60",
+      "_origin": "ast",
+      "id": "api_push_handler",
+      "community": 2,
+      "norm_label": "handler()"
+    },
+    {
+      "label": "register-client.js",
+      "file_type": "code",
+      "source_file": "api/register-client.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "api_register_client",
+      "community": 16,
+      "norm_label": "register-client.js"
+    },
+    {
+      "label": "{ put }",
+      "file_type": "code",
+      "source_file": "api/register-client.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "api_register_client_put",
+      "community": 16,
+      "norm_label": "{ put }"
+    },
+    {
+      "label": "readBody()",
+      "file_type": "code",
+      "source_file": "api/register-client.js",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "api_register_client_readbody",
+      "community": 16,
+      "norm_label": "readbody()"
+    },
+    {
+      "label": "sendJson()",
+      "file_type": "code",
+      "source_file": "api/register-client.js",
+      "source_location": "L12",
+      "_origin": "ast",
+      "id": "api_register_client_sendjson",
+      "community": 16,
+      "norm_label": "sendjson()"
+    },
+    {
+      "label": "putClientRecord()",
+      "file_type": "code",
+      "source_file": "api/register-client.js",
+      "source_location": "L18",
+      "_origin": "ast",
+      "id": "api_register_client_putclientrecord",
+      "community": 16,
+      "norm_label": "putclientrecord()"
     }
   ],
   "links": [
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "api/_auth.js",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth",
-      "target": "api_auth_b64url"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "api/_auth.js",
-      "source_location": "L13",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth",
-      "target": "api_auth_createsession"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "api/_auth.js",
-      "source_location": "L26",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth",
-      "target": "api_auth_readsession"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "api/_auth.js",
-      "source_location": "L41",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth",
-      "target": "api_auth_requireinternal"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "api/_auth.js",
-      "source_location": "L9",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth",
-      "target": "api_auth_sign"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_barber",
-      "target": "api_auth"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "api/availability.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_availability",
-      "target": "api_auth"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "api/barbers.js",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_barbers",
-      "target": "api_auth"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "api/bookings.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_bookings",
-      "target": "api_auth"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "api/clients.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_clients",
-      "target": "api_auth"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "api/expenses.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_expenses",
-      "target": "api_auth"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "api/push.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_push",
-      "target": "api_auth"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "api/services.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_services",
-      "target": "api_auth"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "api/_auth.js",
-      "source_location": "L14",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_createsession",
-      "target": "api_auth_b64url"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "api/_auth.js",
-      "source_location": "L23",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_createsession",
-      "target": "api_auth_sign"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "api/_auth.js",
-      "source_location": "L31",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_readsession",
-      "target": "api_auth_sign"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_barber",
-      "target": "api_auth_createsession"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L71",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_barber_handlelogin",
-      "target": "api_auth_createsession"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "api/_auth.js",
-      "source_location": "L42",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_requireinternal",
-      "target": "api_auth_readsession"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_barber",
-      "target": "api_auth_requireinternal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L82",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_barber_handlechangepassword",
-      "target": "api_auth_requireinternal"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "api/availability.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_availability",
-      "target": "api_auth_requireinternal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "api/availability.js",
-      "source_location": "L14",
-      "weight": 1.0,
-      "source": "api_availability_handler",
-      "target": "api_auth_requireinternal"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "api/barbers.js",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_barbers",
-      "target": "api_auth_requireinternal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "api/barbers.js",
-      "source_location": "L34",
-      "weight": 1.0,
-      "source": "api_barbers_handler",
-      "target": "api_auth_requireinternal"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "api/bookings.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_bookings",
-      "target": "api_auth_requireinternal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "api/bookings.js",
-      "source_location": "L18",
-      "weight": 1.0,
-      "source": "api_bookings_handler",
-      "target": "api_auth_requireinternal"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "api/clients.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_clients",
-      "target": "api_auth_requireinternal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "api/clients.js",
-      "source_location": "L47",
-      "weight": 1.0,
-      "source": "api_clients_handler",
-      "target": "api_auth_requireinternal"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "api/enrollments.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "source": "api_enrollments",
-      "target": "api_auth_requireinternal",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "api/expenses.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_expenses",
-      "target": "api_auth_requireinternal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "api/expenses.js",
-      "source_location": "L26",
-      "weight": 1.0,
-      "source": "api_expenses_handler",
-      "target": "api_auth_requireinternal"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "api/push.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_push",
-      "target": "api_auth_requireinternal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "api/push.js",
-      "source_location": "L61",
-      "weight": 1.0,
-      "source": "api_push_handler",
-      "target": "api_auth_requireinternal"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "api/services.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_services",
-      "target": "api_auth_requireinternal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "api/services.js",
-      "source_location": "L25",
-      "weight": 1.0,
-      "source": "api_services_handler",
-      "target": "api_auth_requireinternal"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L28",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_barber",
-      "target": "api_auth_barber_barber_profiles"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L43",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_barber",
-      "target": "api_auth_barber_fallbacklogin"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L39",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_barber",
-      "target": "api_auth_barber_fallbackpasswords"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L81",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_barber",
-      "target": "api_auth_barber_handlechangepassword"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L53",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_barber",
-      "target": "api_auth_barber_handlelogin"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L104",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_barber",
-      "target": "api_auth_barber_handler"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L21",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_barber",
-      "target": "api_auth_barber_isadmin"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L23",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_barber",
-      "target": "api_auth_barber_isvalidpassword"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L19",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_barber",
-      "target": "api_auth_barber_sha256"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L49",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_barber_fallbacklogin",
-      "target": "api_auth_barber_sha256"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L92",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_barber_handlechangepassword",
-      "target": "api_auth_barber_sha256"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L60",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_barber_handlelogin",
-      "target": "api_auth_barber_sha256"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L50",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_barber_fallbacklogin",
-      "target": "api_auth_barber_isadmin"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L70",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_barber_handlelogin",
-      "target": "api_auth_barber_isadmin"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L85",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_barber_handlechangepassword",
-      "target": "api_auth_barber_isvalidpassword"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L44",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_barber_fallbacklogin",
-      "target": "api_auth_barber_fallbackpasswords"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L75",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_barber_handlelogin",
-      "target": "api_auth_barber_fallbacklogin"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L105",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_barber_handler",
-      "target": "api_auth_barber_handlelogin"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "api/auth-barber.js",
-      "source_location": "L106",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_auth_barber_handler",
-      "target": "api_auth_barber_handlechangepassword"
-    },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
@@ -5683,6 +5047,28 @@
       "confidence_score": 1.0,
       "source": "api_auth_login",
       "target": "api_auth_login_handler"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "api/availability.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_availability",
+      "target": "api_auth"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "api/availability.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_availability",
+      "target": "api_auth_requireinternal"
     },
     {
       "relation": "contains",
@@ -5705,6 +5091,39 @@
       "target": "api_availability_handler"
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "api/availability.js",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "api_availability_handler",
+      "target": "api_auth_requireinternal"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "api/barbers.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_barbers",
+      "target": "api_auth"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "api/barbers.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_barbers",
+      "target": "api_auth_requireinternal"
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "api/barbers.js",
@@ -5723,6 +5142,39 @@
       "confidence_score": 1.0,
       "source": "api_barbers",
       "target": "api_barbers_static_barbers"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "api/barbers.js",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "api_barbers_handler",
+      "target": "api_auth_requireinternal"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "api/bookings.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_bookings",
+      "target": "api_auth"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "api/bookings.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_bookings",
+      "target": "api_auth_requireinternal"
     },
     {
       "relation": "contains",
@@ -5772,10 +5224,43 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "api/bookings.js",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "api_bookings_handler",
+      "target": "api_auth_requireinternal"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "api/bookings.js",
       "source_location": "L83",
       "weight": 1.0,
       "source": "api_bookings_handler",
       "target": "api_push_notifybarber"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "api/clients.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_clients",
+      "target": "api_auth"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "api/clients.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_clients",
+      "target": "api_auth_requireinternal"
     },
     {
       "relation": "contains",
@@ -5851,6 +5336,39 @@
       "target": "api_clients_validateclient"
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "api/clients.js",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "api_clients_handler",
+      "target": "api_auth_requireinternal"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "api/expenses.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_expenses",
+      "target": "api_auth"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "api/expenses.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_expenses",
+      "target": "api_auth_requireinternal"
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "api/expenses.js",
@@ -5892,85 +5410,37 @@
       "target": "api_expenses_validateexpense"
     },
     {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "api/push.js",
-      "source_location": "L15",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_push",
-      "target": "api_push_getwebpush"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "api/push.js",
-      "source_location": "L60",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_push",
-      "target": "api_push_handler"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "api/push.js",
-      "source_location": "L31",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_push",
-      "target": "api_push_notifybarber"
-    },
-    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
-      "source_file": "api/push.js",
-      "source_location": "L33",
-      "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "api_push_notifybarber",
-      "target": "api_push_getwebpush"
+      "source_file": "api/expenses.js",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "api_expenses_handler",
+      "target": "api_auth_requireinternal"
     },
     {
-      "relation": "contains",
+      "relation": "imports_from",
+      "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "api/register-client.js",
-      "source_location": "L1",
+      "source_file": "api/services.js",
+      "source_location": "L2",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "api_register_client",
-      "target": "api_register_client_put"
+      "source": "api_services",
+      "target": "api_auth"
     },
     {
-      "relation": "contains",
+      "relation": "imports",
+      "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "api/register-client.js",
-      "source_location": "L18",
+      "source_file": "api/services.js",
+      "source_location": "L2",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "api_register_client",
-      "target": "api_register_client_putclientrecord"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "api/register-client.js",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_register_client",
-      "target": "api_register_client_readbody"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "api/register-client.js",
-      "source_location": "L12",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "api_register_client",
-      "target": "api_register_client_sendjson"
+      "source": "api_services",
+      "target": "api_auth_requireinternal"
     },
     {
       "relation": "contains",
@@ -5991,6 +5461,17 @@
       "confidence_score": 1.0,
       "source": "api_services",
       "target": "api_services_static_services"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "api/services.js",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "api_services_handler",
+      "target": "api_auth_requireinternal"
     },
     {
       "relation": "contains",
@@ -6557,9 +6038,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_bookingsstore_readlocalbookings",
-      "confidence_score": 1.0
+      "target": "src_bookingsstore_readlocalbookings"
     },
     {
       "relation": "calls",
@@ -6711,9 +6192,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_bookingsstore_mergebookings",
-      "confidence_score": 1.0
+      "target": "src_bookingsstore_mergebookings"
     },
     {
       "relation": "contains",
@@ -7193,9 +6674,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_cursos",
-      "target": "components_brunetti_usebrunettifx",
-      "confidence_score": 1.0
+      "target": "components_brunetti_usebrunettifx"
     },
     {
       "relation": "imports",
@@ -7204,9 +6685,9 @@
       "source_file": "src/pages/Home.jsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_home",
-      "target": "components_brunetti_usebrunettifx",
-      "confidence_score": 1.0
+      "target": "components_brunetti_usebrunettifx"
     },
     {
       "relation": "imports",
@@ -7215,9 +6696,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_cursos",
-      "target": "components_brunetti_scrolltoid",
-      "confidence_score": 1.0
+      "target": "components_brunetti_scrolltoid"
     },
     {
       "relation": "imports",
@@ -7226,9 +6707,9 @@
       "source_file": "src/pages/Home.jsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_home",
-      "target": "components_brunetti_scrolltoid",
-      "confidence_score": 1.0
+      "target": "components_brunetti_scrolltoid"
     },
     {
       "relation": "imports_from",
@@ -7470,9 +6951,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_data_barbers",
-      "confidence_score": 1.0
+      "target": "src_data_barbers"
     },
     {
       "relation": "imports",
@@ -7492,9 +6973,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_data_services",
-      "confidence_score": 1.0
+      "target": "src_data_services"
     },
     {
       "relation": "imports",
@@ -7503,9 +6984,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_data_clients",
-      "confidence_score": 1.0
+      "target": "src_data_clients"
     },
     {
       "relation": "imports",
@@ -7514,9 +6995,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_data_expenses",
-      "confidence_score": 1.0
+      "target": "src_data_expenses"
     },
     {
       "relation": "imports",
@@ -7591,9 +7072,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_data_today_bookings",
-      "confidence_score": 1.0
+      "target": "src_data_today_bookings"
     },
     {
       "relation": "imports",
@@ -7613,9 +7094,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_data_metrics",
-      "confidence_score": 1.0
+      "target": "src_data_metrics"
     },
     {
       "relation": "imports",
@@ -7679,9 +7160,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_data_clp",
-      "confidence_score": 1.0
+      "target": "src_data_clp"
     },
     {
       "relation": "imports",
@@ -7690,9 +7171,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_data_clpk",
-      "confidence_score": 1.0
+      "target": "src_data_clpk"
     },
     {
       "relation": "imports",
@@ -7756,9 +7237,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_data_barberbyid",
-      "confidence_score": 1.0
+      "target": "src_data_barberbyid"
     },
     {
       "relation": "imports",
@@ -7789,9 +7270,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_data_isadminuser",
-      "confidence_score": 1.0
+      "target": "src_data_isadminuser"
     },
     {
       "relation": "imports_from",
@@ -8016,9 +7497,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_push_isios",
-      "confidence_score": 1.0
+      "target": "src_push_isios"
     },
     {
       "relation": "calls",
@@ -8049,9 +7530,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_push_isstandalone",
-      "confidence_score": 1.0
+      "target": "src_push_isstandalone"
     },
     {
       "relation": "calls",
@@ -8082,9 +7563,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_push_pushsupported",
-      "confidence_score": 1.0
+      "target": "src_push_pushsupported"
     },
     {
       "relation": "calls",
@@ -8115,9 +7596,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_push_pushavailablehere",
-      "confidence_score": 1.0
+      "target": "src_push_pushavailablehere"
     },
     {
       "relation": "imports",
@@ -8126,9 +7607,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_push_permissionstate",
-      "confidence_score": 1.0
+      "target": "src_push_permissionstate"
     },
     {
       "relation": "calls",
@@ -8148,9 +7629,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_push_registerserviceworker",
-      "confidence_score": 1.0
+      "target": "src_push_registerserviceworker"
     },
     {
       "relation": "calls",
@@ -8225,9 +7706,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_push_enablepush",
-      "confidence_score": 1.0
+      "target": "src_push_enablepush"
     },
     {
       "relation": "imports",
@@ -8236,9 +7717,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_push_disablepush",
-      "confidence_score": 1.0
+      "target": "src_push_disablepush"
     },
     {
       "relation": "imports",
@@ -8247,9 +7728,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_push_pushenabledfor",
-      "confidence_score": 1.0
+      "target": "src_push_pushenabledfor"
     },
     {
       "relation": "calls",
@@ -8269,9 +7750,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_push_notifylocal",
-      "confidence_score": 1.0
+      "target": "src_push_notifylocal"
     },
     {
       "relation": "calls",
@@ -8291,9 +7772,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "src_push_notifybarberofbooking",
-      "confidence_score": 1.0
+      "target": "src_push_notifybarberofbooking"
     },
     {
       "relation": "contains",
@@ -10067,9 +9548,9 @@
       "source_file": "src/components/SiteNav.jsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_sitenav",
-      "target": "components_ui_brandmark",
-      "confidence_score": 1.0
+      "target": "components_ui_brandmark"
     },
     {
       "relation": "imports",
@@ -10078,9 +9559,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "components_ui_brandmark",
-      "confidence_score": 1.0
+      "target": "components_ui_brandmark"
     },
     {
       "relation": "imports",
@@ -10089,9 +9570,9 @@
       "source_file": "src/components/SiteNav.jsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_sitenav",
-      "target": "components_ui_icon",
-      "confidence_score": 1.0
+      "target": "components_ui_icon"
     },
     {
       "relation": "imports",
@@ -10122,9 +9603,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "components_ui_icon",
-      "confidence_score": 1.0
+      "target": "components_ui_icon"
     },
     {
       "relation": "imports",
@@ -10155,9 +9636,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "components_ui_stat",
-      "confidence_score": 1.0
+      "target": "components_ui_stat"
     },
     {
       "relation": "imports",
@@ -10328,9 +9809,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop",
-      "target": "data_workshop_workshop",
-      "confidence_score": 1.0
+      "target": "data_workshop_workshop"
     },
     {
       "relation": "contains",
@@ -10570,9 +10051,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "components_theme_themeprovider",
-      "confidence_score": 1.0
+      "target": "components_theme_themeprovider"
     },
     {
       "relation": "imports",
@@ -10614,9 +10095,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "components_theme_usetheme",
-      "confidence_score": 1.0
+      "target": "components_theme_usetheme"
     },
     {
       "relation": "imports",
@@ -10636,9 +10117,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "components_theme_themetoggle",
-      "confidence_score": 1.0
+      "target": "components_theme_themetoggle"
     },
     {
       "relation": "imports",
@@ -11119,14 +10600,25 @@
       "target": "pages_encuentraestilo_usereveal"
     },
     {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "api/enrollments.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "api_enrollments",
+      "target": "api_auth_requireinternal"
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "api/enrollments.js",
       "source_location": "L23",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_enrollments",
-      "target": "api_enrollments_cleanphone",
-      "confidence_score": 1.0
+      "target": "api_enrollments_cleanphone"
     },
     {
       "relation": "contains",
@@ -11134,9 +10626,9 @@
       "source_file": "api/enrollments.js",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_enrollments",
-      "target": "api_enrollments_demo",
-      "confidence_score": 1.0
+      "target": "api_enrollments_demo"
     },
     {
       "relation": "contains",
@@ -11144,9 +10636,9 @@
       "source_file": "api/enrollments.js",
       "source_location": "L26",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_enrollments",
-      "target": "api_enrollments_handler",
-      "confidence_score": 1.0
+      "target": "api_enrollments_handler"
     },
     {
       "relation": "contains",
@@ -11154,9 +10646,9 @@
       "source_file": "api/enrollments.js",
       "source_location": "L24",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_enrollments",
-      "target": "api_enrollments_sendjson",
-      "confidence_score": 1.0
+      "target": "api_enrollments_sendjson"
     },
     {
       "relation": "references",
@@ -11175,9 +10667,9 @@
       "source_file": "api/enrollments.js",
       "source_location": "L64",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "api_enrollments_handler",
-      "target": "api_enrollments_cleanphone",
-      "confidence_score": 1.0
+      "target": "api_enrollments_cleanphone"
     },
     {
       "relation": "calls",
@@ -11256,9 +10748,9 @@
       "source_file": "src/components/SiteNav.jsx",
       "source_location": "L15",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_sitenav",
-      "target": "components_sitenav_nav",
-      "confidence_score": 1.0
+      "target": "components_sitenav_nav"
     },
     {
       "relation": "contains",
@@ -11266,9 +10758,9 @@
       "source_file": "src/components/SiteNav.jsx",
       "source_location": "L26",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_sitenav",
-      "target": "components_sitenav_sitenav",
-      "confidence_score": 1.0
+      "target": "components_sitenav_sitenav"
     },
     {
       "relation": "imports_from",
@@ -11277,9 +10769,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_cursos",
-      "target": "components_sitenav",
-      "confidence_score": 1.0
+      "target": "components_sitenav"
     },
     {
       "relation": "imports_from",
@@ -11288,9 +10780,9 @@
       "source_file": "src/pages/Home.jsx",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_home",
-      "target": "components_sitenav",
-      "confidence_score": 1.0
+      "target": "components_sitenav"
     },
     {
       "relation": "imports_from",
@@ -11299,9 +10791,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop",
-      "target": "components_sitenav",
-      "confidence_score": 1.0
+      "target": "components_sitenav"
     },
     {
       "relation": "references",
@@ -11320,9 +10812,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_cursos",
-      "target": "components_sitenav_sitenav",
-      "confidence_score": 1.0
+      "target": "components_sitenav_sitenav"
     },
     {
       "relation": "references",
@@ -11341,9 +10833,9 @@
       "source_file": "src/pages/Home.jsx",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_home",
-      "target": "components_sitenav_sitenav",
-      "confidence_score": 1.0
+      "target": "components_sitenav_sitenav"
     },
     {
       "relation": "references",
@@ -11362,9 +10854,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop",
-      "target": "components_sitenav_sitenav",
-      "confidence_score": 1.0
+      "target": "components_sitenav_sitenav"
     },
     {
       "relation": "references",
@@ -11382,9 +10874,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L98",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_cursos",
-      "target": "pages_cursos_cursos",
-      "confidence_score": 1.0
+      "target": "pages_cursos_cursos"
     },
     {
       "relation": "contains",
@@ -11392,9 +10884,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L76",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_cursos",
-      "target": "pages_cursos_includes",
-      "confidence_score": 1.0
+      "target": "pages_cursos_includes"
     },
     {
       "relation": "contains",
@@ -11402,9 +10894,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L91",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_cursos",
-      "target": "pages_cursos_levels",
-      "confidence_score": 1.0
+      "target": "pages_cursos_levels"
     },
     {
       "relation": "contains",
@@ -11412,9 +10904,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_cursos",
-      "target": "pages_cursos_modules",
-      "confidence_score": 1.0
+      "target": "pages_cursos_modules"
     },
     {
       "relation": "contains",
@@ -11422,9 +10914,9 @@
       "source_file": "src/pages/Cursos.jsx",
       "source_location": "L85",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_cursos",
-      "target": "pages_cursos_placeholder_modules",
-      "confidence_score": 1.0
+      "target": "pages_cursos_placeholder_modules"
     },
     {
       "relation": "references",
@@ -11492,9 +10984,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "pages_dashboard_agenda_slots",
-      "confidence_score": 1.0
+      "target": "pages_dashboard_agenda_slots"
     },
     {
       "relation": "contains",
@@ -11502,9 +10994,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L59",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "pages_dashboard_barchart",
-      "confidence_score": 1.0
+      "target": "pages_dashboard_barchart"
     },
     {
       "relation": "contains",
@@ -11512,9 +11004,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L35",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "pages_dashboard_buildweek",
-      "confidence_score": 1.0
+      "target": "pages_dashboard_buildweek"
     },
     {
       "relation": "contains",
@@ -11522,9 +11014,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L784",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "pages_dashboard_cfg_sections",
-      "confidence_score": 1.0
+      "target": "pages_dashboard_cfg_sections"
     },
     {
       "relation": "contains",
@@ -11532,9 +11024,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L902",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "pages_dashboard_cfgrow",
-      "confidence_score": 1.0
+      "target": "pages_dashboard_cfgrow"
     },
     {
       "relation": "contains",
@@ -11542,9 +11034,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L1004",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "pages_dashboard_configpanel",
-      "confidence_score": 1.0
+      "target": "pages_dashboard_configpanel"
     },
     {
       "relation": "contains",
@@ -11552,9 +11044,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L878",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "pages_dashboard_configswitch",
-      "confidence_score": 1.0
+      "target": "pages_dashboard_configswitch"
     },
     {
       "relation": "contains",
@@ -11562,9 +11054,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L88",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "pages_dashboard_dashboard",
-      "confidence_score": 1.0
+      "target": "pages_dashboard_dashboard"
     },
     {
       "relation": "contains",
@@ -11572,9 +11064,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L1439",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "pages_dashboard_dashboardshell",
-      "confidence_score": 1.0
+      "target": "pages_dashboard_dashboardshell"
     },
     {
       "relation": "contains",
@@ -11582,9 +11074,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L1467",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "pages_dashboard_dashboardtopbar",
-      "confidence_score": 1.0
+      "target": "pages_dashboard_dashboardtopbar"
     },
     {
       "relation": "contains",
@@ -11592,9 +11084,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L20",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "pages_dashboard_day_labels",
-      "confidence_score": 1.0
+      "target": "pages_dashboard_day_labels"
     },
     {
       "relation": "contains",
@@ -11602,9 +11094,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L802",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "pages_dashboard_enrollmentspanel",
-      "confidence_score": 1.0
+      "target": "pages_dashboard_enrollmentspanel"
     },
     {
       "relation": "contains",
@@ -11612,9 +11104,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L22",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "pages_dashboard_getsvcicon",
-      "confidence_score": 1.0
+      "target": "pages_dashboard_getsvcicon"
     },
     {
       "relation": "contains",
@@ -11622,9 +11114,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L31",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "pages_dashboard_isodate",
-      "confidence_score": 1.0
+      "target": "pages_dashboard_isodate"
     },
     {
       "relation": "contains",
@@ -11632,9 +11124,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L1000",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "pages_dashboard_isstrongpassword",
-      "confidence_score": 1.0
+      "target": "pages_dashboard_isstrongpassword"
     },
     {
       "relation": "contains",
@@ -11642,9 +11134,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L47",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "pages_dashboard_localblockkey",
-      "confidence_score": 1.0
+      "target": "pages_dashboard_localblockkey"
     },
     {
       "relation": "contains",
@@ -11652,9 +11144,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L76",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "pages_dashboard_panel",
-      "confidence_score": 1.0
+      "target": "pages_dashboard_panel"
     },
     {
       "relation": "contains",
@@ -11662,9 +11154,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L917",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "pages_dashboard_pushcard",
-      "confidence_score": 1.0
+      "target": "pages_dashboard_pushcard"
     },
     {
       "relation": "contains",
@@ -11672,9 +11164,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L51",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "pages_dashboard_readlocalblocks",
-      "confidence_score": 1.0
+      "target": "pages_dashboard_readlocalblocks"
     },
     {
       "relation": "contains",
@@ -11682,9 +11174,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L55",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard",
-      "target": "pages_dashboard_writelocalblocks",
-      "confidence_score": 1.0
+      "target": "pages_dashboard_writelocalblocks"
     },
     {
       "relation": "calls",
@@ -11693,9 +11185,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L196",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard_dashboard",
-      "target": "pages_dashboard_buildweek",
-      "confidence_score": 1.0
+      "target": "pages_dashboard_buildweek"
     },
     {
       "relation": "references",
@@ -11804,9 +11296,9 @@
       "source_file": "src/pages/Dashboard.jsx",
       "source_location": "L1145",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_dashboard_configpanel",
-      "target": "pages_dashboard_isstrongpassword",
-      "confidence_score": 1.0
+      "target": "pages_dashboard_isstrongpassword"
     },
     {
       "relation": "contains",
@@ -11814,9 +11306,9 @@
       "source_file": "src/pages/Home.jsx",
       "source_location": "L46",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_home",
-      "target": "pages_home_cards",
-      "confidence_score": 1.0
+      "target": "pages_home_cards"
     },
     {
       "relation": "contains",
@@ -11824,9 +11316,9 @@
       "source_file": "src/pages/Home.jsx",
       "source_location": "L64",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_home",
-      "target": "pages_home_home",
-      "confidence_score": 1.0
+      "target": "pages_home_home"
     },
     {
       "relation": "contains",
@@ -11834,9 +11326,9 @@
       "source_file": "src/pages/Home.jsx",
       "source_location": "L62",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_home",
-      "target": "pages_home_name",
-      "confidence_score": 1.0
+      "target": "pages_home_name"
     },
     {
       "relation": "contains",
@@ -11844,9 +11336,9 @@
       "source_file": "src/pages/Home.jsx",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_home",
-      "target": "pages_home_pillars",
-      "confidence_score": 1.0
+      "target": "pages_home_pillars"
     },
     {
       "relation": "contains",
@@ -11854,9 +11346,9 @@
       "source_file": "src/pages/Home.jsx",
       "source_location": "L40",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_home",
-      "target": "pages_home_services",
-      "confidence_score": 1.0
+      "target": "pages_home_services"
     },
     {
       "relation": "contains",
@@ -11864,9 +11356,9 @@
       "source_file": "src/pages/Home.jsx",
       "source_location": "L55",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_home",
-      "target": "pages_home_testimonials",
-      "confidence_score": 1.0
+      "target": "pages_home_testimonials"
     },
     {
       "relation": "contains",
@@ -11874,9 +11366,9 @@
       "source_file": "src/pages/Home.jsx",
       "source_location": "L523",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_home",
-      "target": "pages_home_tmword",
-      "confidence_score": 1.0
+      "target": "pages_home_tmword"
     },
     {
       "relation": "references",
@@ -11894,9 +11386,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L68",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop",
-      "target": "pages_workshop_bw",
-      "confidence_score": 1.0
+      "target": "pages_workshop_bw"
     },
     {
       "relation": "contains",
@@ -11904,9 +11396,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L103",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop",
-      "target": "pages_workshop_calc",
-      "confidence_score": 1.0
+      "target": "pages_workshop_calc"
     },
     {
       "relation": "contains",
@@ -11914,9 +11406,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L314",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop",
-      "target": "pages_workshop_cronograma",
-      "confidence_score": 1.0
+      "target": "pages_workshop_cronograma"
     },
     {
       "relation": "contains",
@@ -11924,9 +11416,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L534",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop",
-      "target": "pages_workshop_faq",
-      "confidence_score": 1.0
+      "target": "pages_workshop_faq"
     },
     {
       "relation": "contains",
@@ -11934,9 +11426,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L234",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop",
-      "target": "pages_workshop_featurerow",
-      "confidence_score": 1.0
+      "target": "pages_workshop_featurerow"
     },
     {
       "relation": "contains",
@@ -11944,9 +11436,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L563",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop",
-      "target": "pages_workshop_footer",
-      "confidence_score": 1.0
+      "target": "pages_workshop_footer"
     },
     {
       "relation": "contains",
@@ -11954,9 +11446,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L77",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop",
-      "target": "pages_workshop_formatclp",
-      "confidence_score": 1.0
+      "target": "pages_workshop_formatclp"
     },
     {
       "relation": "contains",
@@ -11964,9 +11456,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L341",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop",
-      "target": "pages_workshop_givekit",
-      "confidence_score": 1.0
+      "target": "pages_workshop_givekit"
     },
     {
       "relation": "contains",
@@ -11974,9 +11466,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L119",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop",
-      "target": "pages_workshop_hero",
-      "confidence_score": 1.0
+      "target": "pages_workshop_hero"
     },
     {
       "relation": "contains",
@@ -11984,9 +11476,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L32",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop",
-      "target": "pages_workshop_icon",
-      "confidence_score": 1.0
+      "target": "pages_workshop_icon"
     },
     {
       "relation": "contains",
@@ -11994,9 +11486,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L379",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop",
-      "target": "pages_workshop_pricing",
-      "confidence_score": 1.0
+      "target": "pages_workshop_pricing"
     },
     {
       "relation": "contains",
@@ -12004,9 +11496,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L270",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop",
-      "target": "pages_workshop_programa",
-      "confidence_score": 1.0
+      "target": "pages_workshop_programa"
     },
     {
       "relation": "contains",
@@ -12014,9 +11506,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L205",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop",
-      "target": "pages_workshop_quoteblock",
-      "confidence_score": 1.0
+      "target": "pages_workshop_quoteblock"
     },
     {
       "relation": "contains",
@@ -12024,9 +11516,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L424",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop",
-      "target": "pages_workshop_register",
-      "confidence_score": 1.0
+      "target": "pages_workshop_register"
     },
     {
       "relation": "contains",
@@ -12034,9 +11526,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L57",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop",
-      "target": "pages_workshop_reveal",
-      "confidence_score": 1.0
+      "target": "pages_workshop_reveal"
     },
     {
       "relation": "contains",
@@ -12044,9 +11536,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L113",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop",
-      "target": "pages_workshop_smoothto",
-      "confidence_score": 1.0
+      "target": "pages_workshop_smoothto"
     },
     {
       "relation": "contains",
@@ -12054,9 +11546,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L617",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop",
-      "target": "pages_workshop_stickycta",
-      "confidence_score": 1.0
+      "target": "pages_workshop_stickycta"
     },
     {
       "relation": "contains",
@@ -12064,9 +11556,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L178",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop",
-      "target": "pages_workshop_transform",
-      "confidence_score": 1.0
+      "target": "pages_workshop_transform"
     },
     {
       "relation": "contains",
@@ -12074,9 +11566,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L95",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop",
-      "target": "pages_workshop_usecountdown",
-      "confidence_score": 1.0
+      "target": "pages_workshop_usecountdown"
     },
     {
       "relation": "contains",
@@ -12084,9 +11576,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L41",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop",
-      "target": "pages_workshop_useinview",
-      "confidence_score": 1.0
+      "target": "pages_workshop_useinview"
     },
     {
       "relation": "contains",
@@ -12094,9 +11586,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L84",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop",
-      "target": "pages_workshop_usescrolled",
-      "confidence_score": 1.0
+      "target": "pages_workshop_usescrolled"
     },
     {
       "relation": "contains",
@@ -12104,9 +11596,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop",
-      "target": "pages_workshop_wk_icons",
-      "confidence_score": 1.0
+      "target": "pages_workshop_wk_icons"
     },
     {
       "relation": "contains",
@@ -12114,9 +11606,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L628",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop",
-      "target": "pages_workshop_workshop",
-      "confidence_score": 1.0
+      "target": "pages_workshop_workshop"
     },
     {
       "relation": "calls",
@@ -12125,9 +11617,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L380",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop_pricing",
-      "target": "pages_workshop_useinview",
-      "confidence_score": 1.0
+      "target": "pages_workshop_useinview"
     },
     {
       "relation": "calls",
@@ -12136,9 +11628,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L206",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop_quoteblock",
-      "target": "pages_workshop_useinview",
-      "confidence_score": 1.0
+      "target": "pages_workshop_useinview"
     },
     {
       "relation": "calls",
@@ -12147,9 +11639,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L58",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop_reveal",
-      "target": "pages_workshop_useinview",
-      "confidence_score": 1.0
+      "target": "pages_workshop_useinview"
     },
     {
       "relation": "calls",
@@ -12158,9 +11650,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L165",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop_hero",
-      "target": "pages_workshop_formatclp",
-      "confidence_score": 1.0
+      "target": "pages_workshop_formatclp"
     },
     {
       "relation": "calls",
@@ -12169,9 +11661,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L396",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop_pricing",
-      "target": "pages_workshop_formatclp",
-      "confidence_score": 1.0
+      "target": "pages_workshop_formatclp"
     },
     {
       "relation": "calls",
@@ -12180,9 +11672,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L474",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop_register",
-      "target": "pages_workshop_formatclp",
-      "confidence_score": 1.0
+      "target": "pages_workshop_formatclp"
     },
     {
       "relation": "calls",
@@ -12191,9 +11683,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L621",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop_stickycta",
-      "target": "pages_workshop_formatclp",
-      "confidence_score": 1.0
+      "target": "pages_workshop_formatclp"
     },
     {
       "relation": "calls",
@@ -12202,9 +11694,9 @@
       "source_file": "src/pages/Workshop.jsx",
       "source_location": "L618",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pages_workshop_stickycta",
-      "target": "pages_workshop_usescrolled",
-      "confidence_score": 1.0
+      "target": "pages_workshop_usescrolled"
     },
     {
       "relation": "calls",
@@ -12636,51 +12128,471 @@
       "weight": 1.0,
       "source": "assets_estilo_teaser_barbershop_setting",
       "target": "assets_estilo_teaser_ring_light"
-    }
-  ],
-  "hyperedges": [
-    {
-      "id": "enrollment_flow",
-      "label": "Enrollment Data Flow: Cursos + Workshop \u2192 API \u2192 Dashboard",
-      "nodes": [
-        "pages_cursos_onsubmit",
-        "pages_workshop_register",
-        "api_enrollments_handler",
-        "pages_dashboard_enrollmentspanel"
-      ],
-      "relation": "participate_in",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "api/enrollments.js"
     },
     {
-      "id": "sitenav_page_integration",
-      "label": "SiteNav shared across all public pages (Home, Cursos, Workshop)",
-      "nodes": [
-        "components_sitenav_sitenav",
-        "pages_home_home",
-        "pages_cursos_cursos",
-        "pages_workshop_workshop"
-      ],
-      "relation": "participate_in",
+      "relation": "contains",
       "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/components/SiteNav.jsx"
+      "source_file": "api/_auth.js",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "api_auth",
+      "target": "api_auth_b64url",
+      "confidence_score": 1.0
     },
     {
-      "id": "dashboard_api_auth_pattern",
-      "label": "Dashboard authenticated API calls pattern (authHeaders + fetch + fallback)",
-      "nodes": [
-        "pages_dashboard_authheaders",
-        "pages_dashboard_saveservice",
-        "pages_dashboard_saveexpense",
-        "pages_dashboard_savebarber"
-      ],
-      "relation": "participate_in",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/_auth.js",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "api_auth",
+      "target": "api_auth_createsession",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/_auth.js",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "api_auth",
+      "target": "api_auth_readsession",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/_auth.js",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "api_auth",
+      "target": "api_auth_requireinternal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/_auth.js",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "api_auth",
+      "target": "api_auth_sign",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "api_auth_barber",
+      "target": "api_auth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "api/push.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "api_push",
+      "target": "api_auth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/_auth.js",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "api_auth_createsession",
+      "target": "api_auth_b64url",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/_auth.js",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "api_auth_createsession",
+      "target": "api_auth_sign",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/_auth.js",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "api_auth_readsession",
+      "target": "api_auth_sign",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "api_auth_barber",
+      "target": "api_auth_createsession",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L71",
+      "weight": 1.0,
+      "source": "api_auth_barber_handlelogin",
+      "target": "api_auth_createsession",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/_auth.js",
+      "source_location": "L56",
+      "weight": 1.0,
+      "source": "api_auth_requireinternal",
+      "target": "api_auth_readsession",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "api_auth_barber",
+      "target": "api_auth_requireinternal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "api_auth_barber_handlechangepassword",
+      "target": "api_auth_requireinternal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "api/push.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "api_push",
+      "target": "api_auth_requireinternal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "src/pages/Dashboard.jsx"
+      "source_file": "api/push.js",
+      "source_location": "L61",
+      "weight": 1.0,
+      "source": "api_push_handler",
+      "target": "api_auth_requireinternal"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "api_auth_barber",
+      "target": "api_auth_barber_barber_profiles",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "api_auth_barber",
+      "target": "api_auth_barber_fallbacklogin",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "api_auth_barber",
+      "target": "api_auth_barber_fallbackpasswords",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L87",
+      "weight": 1.0,
+      "source": "api_auth_barber",
+      "target": "api_auth_barber_handlechangepassword",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L53",
+      "weight": 1.0,
+      "source": "api_auth_barber",
+      "target": "api_auth_barber_handlelogin",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L110",
+      "weight": 1.0,
+      "source": "api_auth_barber",
+      "target": "api_auth_barber_handler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "api_auth_barber",
+      "target": "api_auth_barber_isadmin",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "api_auth_barber",
+      "target": "api_auth_barber_isvalidpassword",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "api_auth_barber",
+      "target": "api_auth_barber_sha256",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L49",
+      "weight": 1.0,
+      "source": "api_auth_barber_fallbacklogin",
+      "target": "api_auth_barber_sha256",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L98",
+      "weight": 1.0,
+      "source": "api_auth_barber_handlechangepassword",
+      "target": "api_auth_barber_sha256",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L60",
+      "weight": 1.0,
+      "source": "api_auth_barber_handlelogin",
+      "target": "api_auth_barber_sha256",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L50",
+      "weight": 1.0,
+      "source": "api_auth_barber_fallbacklogin",
+      "target": "api_auth_barber_isadmin",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L70",
+      "weight": 1.0,
+      "source": "api_auth_barber_handlelogin",
+      "target": "api_auth_barber_isadmin",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L91",
+      "weight": 1.0,
+      "source": "api_auth_barber_handlechangepassword",
+      "target": "api_auth_barber_isvalidpassword",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "api_auth_barber_fallbacklogin",
+      "target": "api_auth_barber_fallbackpasswords",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L77",
+      "weight": 1.0,
+      "source": "api_auth_barber_handlelogin",
+      "target": "api_auth_barber_fallbacklogin",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L111",
+      "weight": 1.0,
+      "source": "api_auth_barber_handler",
+      "target": "api_auth_barber_handlelogin",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/auth-barber.js",
+      "source_location": "L112",
+      "weight": 1.0,
+      "source": "api_auth_barber_handler",
+      "target": "api_auth_barber_handlechangepassword",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/push.js",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "api_push",
+      "target": "api_push_getwebpush",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/push.js",
+      "source_location": "L60",
+      "weight": 1.0,
+      "source": "api_push",
+      "target": "api_push_handler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/push.js",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "api_push",
+      "target": "api_push_notifybarber",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "api/push.js",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "api_push_notifybarber",
+      "target": "api_push_getwebpush",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/register-client.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "api_register_client",
+      "target": "api_register_client_put",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/register-client.js",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "api_register_client",
+      "target": "api_register_client_putclientrecord",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/register-client.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "api_register_client",
+      "target": "api_register_client_readbody",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "api/register-client.js",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "api_register_client",
+      "target": "api_register_client_sendjson",
+      "confidence_score": 1.0
     }
   ],
-  "built_at_commit": "e9507355aee5aa4bbe7e6483475ab079d0240910"
+  "hyperedges": [],
+  "built_at_commit": "ffc17879fefa9487d1895db6bfdd05092162d8b1"
 }
