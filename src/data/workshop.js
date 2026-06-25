@@ -167,7 +167,7 @@ export const WORKSHOP = {
     dateLong: WK_ED.long,
     location: "Viña del Mar",
     handle: "@brunetticutz",
-    whatsapp: "+56 9 0000 0000",
+    whatsapp: "+56 9 8748 3279",
     priceNow: 97000,
     priceWas: 184000,
     off: "-50%",

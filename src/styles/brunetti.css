@@ -2175,6 +2175,9 @@
   line-height: 0;
 }
 .float-theme-toggle:hover { border-color: var(--gold-edge, var(--gold-line)); }
+/* En el panel interno (body.dash-mode) ya hay un toggle de tema en la topbar:
+   ocultamos el flotante para que no se solape con las tarjetas ni con el dock. */
+body.dash-mode .float-theme-toggle { display: none; }
 .ftt-track { position: relative; display: block; width: 56px; height: 24px; }
 .ftt-side {
   position: absolute; top: 0; width: 24px; height: 24px;

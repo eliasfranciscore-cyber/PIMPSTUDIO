@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useBrunettiFx, scrollToId } from '../components/brunetti.jsx'
 import SiteNav from '../components/SiteNav.jsx'
 import ModuleFooter from '../components/ModuleFooter.jsx'
+import { addLocalEnrollment } from '../enrollmentsStore.js'
 
 /* ============================================================
    CURSOS BRUNETTI — Formación en visagismo & barbería
@@ -121,12 +122,9 @@ export default function Cursos() {
       return
     }
     setError(false)
-    /* Guardar en localStorage como respaldo offline */
-    try {
-      const list = JSON.parse(localStorage.getItem('curso_waitlist') || '[]')
-      list.push({ ...form, at: new Date().toISOString() })
-      localStorage.setItem('curso_waitlist', JSON.stringify(list))
-    } catch (x) { /* noop */ }
+    /* Respaldo local: aparece de inmediato en el panel interno (Inscripciones),
+       aunque el backend no esté disponible (p. ej. en desarrollo). */
+    addLocalEnrollment({ ...form, source: 'cursos' })
     /* Enviar a la API (enrollments + users) — no bloquea si falla */
     try {
       await fetch('/api/enrollments', {

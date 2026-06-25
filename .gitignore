@@ -14,3 +14,6 @@ dist
 # Archivos movidos a desuso: se conservan en disco para referencia,
 # pero NO se versionan ni se despliegan.
 Archivos en desuso/
+
+# graphify scratch/temp files
+graphify-out/.graphify_*

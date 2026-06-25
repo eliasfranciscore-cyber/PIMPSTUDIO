@@ -1,7 +1,35 @@
-import React, { Suspense, lazy } from 'react'
-import { Routes, Route, Navigate } from 'react-router-dom'
+import React, { Suspense, lazy, useEffect } from 'react'
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom'
 import Home from './pages/Home.jsx'
 import { ThemeProvider, FloatingThemeToggle } from './components/theme.jsx'
+
+// ── Ruteo de lanzamiento de la PWA instalada (iOS "Agregar a inicio") ──────
+// iOS Safari ignora con frecuencia el start_url del manifest y abre la PWA en
+// la última URL vista al instalarla (normalmente la landing "/"). Para que el
+// barbero entre SIEMPRE directo a su acceso, en modo standalone redirigimos el
+// primer arranque: si hay sesión válida → /panel, si no → /ingreso.
+// Sólo se aplica una vez por sesión de la app (sessionStorage), para no romper
+// el botón "Ver web" ni la navegación interna posterior.
+function isStandaloneLaunch() {
+  if (typeof window === 'undefined') return false
+  return window.navigator.standalone === true ||
+    window.matchMedia?.('(display-mode: standalone)').matches === true
+}
+
+function PWALaunchRouter() {
+  const navigate = useNavigate()
+  const location = useLocation()
+  useEffect(() => {
+    if (!isStandaloneLaunch()) return
+    if (sessionStorage.getItem('ps_pwa_routed') === '1') return
+    sessionStorage.setItem('ps_pwa_routed', '1')
+    // Sólo intervenimos si la app abre en la landing (caso del arranque iOS).
+    if (location.pathname !== '/') return
+    const hasSession = !!localStorage.getItem('ps_barber')
+    navigate(hasSession ? '/panel' : '/ingreso', { replace: true })
+  }, [])
+  return null
+}
 
 // Code-splitting: la landing (Home) carga de inmediato; el resto se carga bajo
 // demanda para que la primera pantalla sea más liviana y rápida.
@@ -26,6 +54,7 @@ export default function App() {
   return (
     <ThemeProvider>
       <div className="stage">
+        <PWALaunchRouter />
         <Suspense fallback={<RouteFallback />}>
           <Routes>
             <Route path="/"         element={<Home />} />

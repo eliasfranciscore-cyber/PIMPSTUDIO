@@ -5,6 +5,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { WORKSHOP } from '../data/workshop.js'
 import SiteNav from '../components/SiteNav.jsx'
+import { addLocalEnrollment } from '../enrollmentsStore.js'
 import '../styles/workshop.css'
 
 /* ---------- helpers UI ---------- */
@@ -444,6 +445,9 @@ function Register({ formRef }) {
   const submit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
+    /* Respaldo local: aparece de inmediato en el panel interno (Inscripciones),
+       aunque el backend no esté disponible (p. ej. en desarrollo). */
+    addLocalEnrollment({ ...form, source: 'workshop' });
     /* Enviar a API (enrollments + users) — no bloquea si falla */
     try {
       await fetch('/api/enrollments', {

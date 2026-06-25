@@ -57,6 +57,34 @@ export async function notifyBarber(barberId, payload) {
   }
 }
 
+/* Envía un push a TODAS las suscripciones registradas. Útil para avisos que no
+   son de un barbero concreto (p. ej. inscripciones a Cursos/Workshop). En el
+   modo "solo Brunetti" todas las suscripciones son del equipo de Bruno. */
+export async function notifyAll(payload) {
+  const webpush = await getWebPush()
+  if (!webpush) return { ok: false, sent: 0, reason: "push-not-configured" }
+  try {
+    const sql = neon(process.env.DATABASE_URL)
+    const subs = await sql`SELECT id, endpoint, p256dh, auth FROM push_subscriptions`
+    let sent = 0
+    await Promise.all(subs.map(async (s) => {
+      const subscription = { endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } }
+      try {
+        await webpush.sendNotification(subscription, JSON.stringify(payload))
+        sent++
+      } catch (err) {
+        if (err?.statusCode === 404 || err?.statusCode === 410) {
+          await sql`DELETE FROM push_subscriptions WHERE id = ${s.id}`.catch(() => {})
+        }
+      }
+    }))
+    return { ok: true, sent }
+  } catch (err) {
+    console.error("notifyAll error:", err)
+    return { ok: false, sent: 0 }
+  }
+}
+
 export default async function handler(req, res) {
   const session = requireInternal(req, res)
   if (!session) return
@@ -72,6 +100,18 @@ export default async function handler(req, res) {
       if (!endpoint || !p256dh || !auth) {
         return res.status(400).json({ ok: false, error: "Suscripción inválida" })
       }
+      // Auto-crear la tabla si no existe (primera vez en una DB nueva), igual
+      // que enrollments. Sin FK a barbers para no fallar si esa tabla aún no está.
+      await sql`
+        CREATE TABLE IF NOT EXISTS push_subscriptions (
+          id         SERIAL PRIMARY KEY,
+          barber_id  INTEGER,
+          endpoint   TEXT UNIQUE NOT NULL,
+          p256dh     TEXT NOT NULL,
+          auth       TEXT NOT NULL,
+          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        )
+      `
       // Cada barbero solo registra suscripciones para SU usuario (id de sesión).
       const barberId = session.id
       await sql`

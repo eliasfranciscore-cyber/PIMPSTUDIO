@@ -2,7 +2,7 @@
   "name": "Brunetti · Panel interno",
   "short_name": "Panel",
   "description": "Acceso exclusivo al panel de gestión de Brunetti Barber Studio",
-  "start_url": "/ingreso",
+  "start_url": "/panel",
   "scope": "/",
   "display": "standalone",
   "background_color": "#080807",

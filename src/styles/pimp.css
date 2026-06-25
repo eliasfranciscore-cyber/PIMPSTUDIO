@@ -1568,6 +1568,9 @@ select.input { text-overflow: ellipsis; }
   display: grid;
   place-items: center;
   padding: clamp(1rem, 4vw, 2rem);
+  /* Re-resuelve --ink dentro del shell (que fuerza paleta dark) para que el
+     título/textos heredados no queden con la tinta oscura del tema claro. */
+  color: var(--ink);
 }
 .barber-login-card {
   width: min(1120px, 100%);
@@ -1961,6 +1964,19 @@ select.input { text-overflow: ellipsis; }
    superficie y tinta manteniendo el dorado de marca.
    ============================================================ */
 :root, [data-theme="dark"] {
+  /* Neutros oscuros: replicados aquí (además del :root base) para que un
+     data-theme="dark" ANIDADO —p. ej. el acceso interno dentro de la web en
+     tema claro— herede textos/bordes claros y no quede invisible. */
+  --ink: #f6f5f3;
+  --ink-soft: #cfcdc8;
+  --muted: #8d8a84;
+  --muted-2: #6a6862;
+  --bg: #080807;
+  --bg-1: #0c0c0b;
+  --panel: #111110;
+  --panel-2: #161614;
+  --hair: rgba(255, 255, 255, 0.07);
+  --hair-2: rgba(255, 255, 255, 0.12);
   --surface: #0f0f0e;
   --surface-2: #161614;
   --surface-3: #1c1c1a;

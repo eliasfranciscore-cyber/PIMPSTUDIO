@@ -33,6 +33,12 @@ export default function BarberLogin() {
   })
   const [attempts, setAttempts] = useState(() => getLockout()?.attempts || 0)
 
+  // Si ya hay una sesión guardada y vigente, entra directo al panel sin pedir
+  // login otra vez (el panel cierra sesión solo tras 30 min de inactividad).
+  React.useEffect(() => {
+    if (localStorage.getItem("ps_barber")) navigate("/panel", { replace: true })
+  }, [])
+
   // countdown timer para mostrar minutos restantes del bloqueo
   React.useEffect(() => {
     if (!lockedUntil) return
@@ -109,7 +115,10 @@ export default function BarberLogin() {
   }
 
   return (
-    <div className="barber-login-shell">
+    // El acceso interno es siempre de estética oscura (foto + panel negro).
+    // Forzamos la paleta dark localmente para que los textos (título, labels)
+    // sean legibles aunque la web pública esté en tema claro.
+    <div className="barber-login-shell" data-theme="dark">
       <div className="barber-login-card">
         <div className="barber-login-visual">
           <img src="/assets/gallery-2.jpg" alt="Brunetti interior" />

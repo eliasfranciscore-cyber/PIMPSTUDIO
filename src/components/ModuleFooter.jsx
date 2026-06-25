@@ -25,7 +25,7 @@ export default function ModuleFooter({
   brandName = 'BRUNETTI',
   tagline = 'Visagismo, barbería de precisión y dirección de estilo personal — el método de Bruno Herrera.',
   links = [],
-  whatsapp = '56912345678',
+  whatsapp = '56987483279',
   instagram = 'brunetticutz',
   igHandle = '@brunetticutz',
   onPrimary,

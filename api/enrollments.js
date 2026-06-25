@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless"
 import { requireInternal } from "./_auth.js"
+import { notifyAll } from "./push.js"
 
 /* Tabla esperada en Neon (créala si no existe):
    CREATE TABLE IF NOT EXISTS enrollments (
@@ -72,27 +73,53 @@ export default async function handler(req, res) {
         return sendJson(res, 400, { ok: false, error: "Datos incompletos" })
       }
 
-      /* Crear o actualizar usuario en tabla users (clientes) */
-      await sql`
-        INSERT INTO users (name, phone, email)
-        VALUES (${name}, ${phone}, ${email})
-        ON CONFLICT (phone) DO UPDATE SET
-          name  = EXCLUDED.name,
-          email = COALESCE(NULLIF(EXCLUDED.email,''), users.email)
-      `
-
-      /* Guardar inscripción */
+      /* 1) Guardar la INSCRIPCIÓN primero: es el registro que lee el panel
+         interno. No debe depender del upsert en `users` (que antes, al fallar
+         —p. ej. por la columna updated_at NOT NULL— abortaba todo y la
+         inscripción se perdía aunque al cliente se le mostrara "listo"). */
       const [row] = await sql`
         INSERT INTO enrollments (name, phone, email, source, level, message, edition)
         VALUES (${name}, ${phone}, ${email}, ${source}, ${level}, ${message}, ${edition})
         RETURNING id, created_at
       `
 
+      /* 2) Crear/actualizar el cliente en `users` — best-effort: si falla NO
+         debe tumbar la inscripción ya guardada. Alineado con api/clients.js
+         (incluye updated_at = NOW()). */
+      try {
+        await sql`
+          INSERT INTO users (name, phone, email, updated_at)
+          VALUES (${name}, ${phone}, ${email}, NOW())
+          ON CONFLICT (phone) DO UPDATE SET
+            name  = EXCLUDED.name,
+            email = COALESCE(NULLIF(EXCLUDED.email,''), users.email),
+            updated_at = NOW()
+        `
+      } catch (uerr) {
+        console.error("enrollments users upsert (no bloquea):", uerr?.message)
+      }
+
+      /* 3) Push a la app instalada (iOS) avisando de la nueva inscripción.
+         Best-effort: si el push no está configurado o falla, no bloquea. */
+      try {
+        const tipo = source === "workshop" ? "Workshop" : "Curso"
+        await notifyAll({
+          title: `Nueva inscripción · ${tipo}`,
+          body: `${name}${level ? " · " + level : ""} · ${phone}`,
+          url: "/panel",
+          tag: `inscripcion-${row.id}`,
+        })
+      } catch (nerr) {
+        console.error("enrollments notify (no bloquea):", nerr?.message)
+      }
+
       return sendJson(res, 200, { ok: true, id: row.id })
     } catch (err) {
-      /* Fallback: si la tabla no existe, devolver ok igual para no bloquear al usuario */
+      /* Sólo llega aquí si falló la inserción de la INSCRIPCIÓN: devolvemos
+         error real para no aparentar éxito (el cliente igual tiene respaldo en
+         localStorage 'curso_waitlist'). */
       console.error("enrollments POST error:", err?.message)
-      return sendJson(res, 200, { ok: true, demo: true })
+      return sendJson(res, 500, { ok: false, error: "No se pudo guardar la inscripción" })
     }
   }
 

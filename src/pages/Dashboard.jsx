@@ -5,6 +5,7 @@ import { ThemeProvider, ThemeToggle, useTheme } from '../components/theme.jsx'
 import MobileDock from '../components/MobileDock.jsx'
 import { BARBERS, CLIENTS, EXPENSES, METRICS, SERVICES, TODAY_BOOKINGS, barberById, CLP, CLPk, isAdminUser } from '../data.js'
 import { mergeBookings, readLocalBookings } from '../bookingsStore.js'
+import { mergeEnrollments } from '../enrollmentsStore.js'
 import BookingsInbox from '../components/BookingsInbox.jsx'
 import DashboardResumen from '../components/DashboardResumen.jsx'
 import ClientModal from '../components/ClientModal.jsx'
@@ -806,10 +807,12 @@ function EnrollmentsPanel() {
   const [query, setQuery] = React.useState("")
 
   React.useEffect(() => {
+    // Combina lo del backend con el respaldo local (inscripciones hechas desde
+    // Cursos/Workshop), para que aparezcan aunque /api no esté disponible.
     fetch("/api/enrollments", { credentials: "include" })
-      .then((r) => r.json())
-      .then((d) => { setRows(d.enrollments || []); setLoading(false) })
-      .catch(() => setLoading(false))
+      .then((r) => r.headers.get("content-type")?.includes("application/json") ? r.json() : Promise.reject(new Error("api unavailable")))
+      .then((d) => { setRows(mergeEnrollments(d.enrollments || [])); setLoading(false) })
+      .catch(() => { setRows(mergeEnrollments([])); setLoading(false) })
   }, [])
 
   const filtered = rows.filter((r) => {

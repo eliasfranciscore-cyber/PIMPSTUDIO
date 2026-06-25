@@ -83,12 +83,12 @@ export function Stat({ icon, label, value, delta, suffix, accent }) {
   const up = delta >= 0
   return (
     <div className="card" style={{ padding: "1.1rem 1.2rem", display: "grid", gap: ".6rem", borderTop: accent ? "1px solid var(--gold-line)" : undefined }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <span style={{ fontSize: ".66rem", letterSpacing: ".16em", textTransform: "uppercase", color: "var(--muted)", fontFamily: "var(--font-display)" }}>{label}</span>
-        <span style={{ color: accent ? "var(--gold)" : "var(--muted)" }}><Icon name={icon} size={17} /></span>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: ".4rem" }}>
+        <span style={{ fontSize: ".66rem", letterSpacing: ".12em", textTransform: "uppercase", color: "var(--muted)", fontFamily: "var(--font-display)", minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{label}</span>
+        <span style={{ color: accent ? "var(--gold)" : "var(--muted)", flexShrink: 0, display: "inline-flex" }}><Icon name={icon} size={17} /></span>
       </div>
       <div style={{ fontFamily: "var(--font-display)", fontSize: "1.85rem", fontWeight: 600, letterSpacing: "-.01em", color: accent ? "var(--gold)" : "var(--ink)" }}>
-        {value}{suffix && <span style={{ fontSize: "1rem", color: "var(--muted)" }}>{suffix}</span>}
+        {value}{suffix && <span style={{ fontSize: "1rem", color: "var(--muted)", marginLeft: ".15em" }}>{suffix}</span>}
       </div>
       {delta != null && (
         <div style={{ display: "flex", alignItems: "center", gap: ".35rem", fontSize: ".74rem", color: up ? "#9fd0a0" : "#d99a8f" }}>

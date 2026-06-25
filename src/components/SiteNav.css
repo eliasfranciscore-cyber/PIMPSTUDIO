@@ -58,10 +58,12 @@
     top: calc(50% + env(safe-area-inset-top) / 2);
     transform: translate(-50%, -50%);
   }
-  /* Burger: 0.75rem del borde derecho del pill (antes 1.4rem, quedaba muy pegado) */
+  /* Burger: anclado al inset del pill (.home-nav.is-scrolled::before, inset
+     horizontal = clamp(.7rem,4vw,2.1rem)) + 0.85rem de aire, para que SIEMPRE
+     quede dentro de la píldora redondeada y no asomado en el borde. */
   .site-nav-burger {
     position: absolute;
-    right: 0.75rem;
+    right: calc(clamp(.7rem, 4vw, 2.1rem) + 0.85rem);
     top: calc(50% + env(safe-area-inset-top) / 2);
     transform: translateY(-50%);
   }

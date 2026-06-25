@@ -46,11 +46,19 @@ export function useBrunettiFx(rootRef, { parallax = true } = {}) {
     /* 3. Animated counters */
     const countNodes = Array.from(root.querySelectorAll('[data-count]'))
     if (countNodes.length) {
+      const done = new WeakSet()
+      const setFinal = (el) => {
+        done.add(el)
+        const target = parseFloat(el.getAttribute('data-count'))
+        el.textContent = (el.getAttribute('data-prefix') || '') + target.toLocaleString('es-CL') + (el.getAttribute('data-suffix') || '')
+      }
       const animate = (el) => {
+        if (done.has(el)) return
+        done.add(el)
         const target = parseFloat(el.getAttribute('data-count'))
         const suffix = el.getAttribute('data-suffix') || ''
         const prefix = el.getAttribute('data-prefix') || ''
-        if (reduce) { el.textContent = prefix + target + suffix; return }
+        if (reduce || !('requestAnimationFrame' in window)) { el.textContent = prefix + target.toLocaleString('es-CL') + suffix; return }
         const dur = 1400
         let start = null
         const frame = (ts) => {
@@ -68,9 +76,14 @@ export function useBrunettiFx(rootRef, { parallax = true } = {}) {
       } else {
         const io = new IntersectionObserver((entries) => {
           entries.forEach((e) => { if (e.isIntersecting) { animate(e.target); io.unobserve(e.target) } })
-        }, { threshold: 0.6 })
+        }, { threshold: 0.25 })
         countNodes.forEach((n) => io.observe(n))
         cleanups.push(() => io.disconnect())
+        // Failsafe: si el observer no dispara (algunos WebKit/PWA en iOS no
+        // entregan el callback de inmediato), fija el valor final directo
+        // —sin rAF, que puede estar pausado— para nunca dejar el contador en 0.
+        const t = setTimeout(() => countNodes.forEach((el) => { if (!done.has(el)) setFinal(el) }), 2600)
+        cleanups.push(() => clearTimeout(t))
       }
     }
 
