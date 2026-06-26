@@ -40,10 +40,18 @@ export function ThemeProvider({ children }) {
   // Aplica el tema al documento y persiste.
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
+    const bg = theme === 'light' ? '#f6f5f3' : '#080807'
     // Sincroniza el theme-color de iOS con el tema REAL (no con prefers-color-scheme),
     // si no las barras superior/inferior quedan del color del tema contrario.
     const meta = document.querySelector('meta[name="theme-color"]')
-    if (meta) meta.setAttribute('content', theme === 'light' ? '#f6f5f3' : '#080807')
+    if (meta) meta.setAttribute('content', bg)
+    // iOS Safari a veces muestrea el background-color de <html>/<body> para teñir
+    // la barra de estado: lo forzamos al color del tema para que NO quede oscura
+    // sobre una página clara (sin cambiar la paleta de la página).
+    try {
+      document.documentElement.style.backgroundColor = bg
+      if (document.body) document.body.style.backgroundColor = bg
+    } catch {}
     try { localStorage.setItem('ps_theme', theme) } catch {}
   }, [theme])
 
