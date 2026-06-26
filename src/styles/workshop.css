@@ -723,3 +723,16 @@
 .wks .btn-ghost:hover { background: rgba(136, 56, 216, 0.06); }
 .wks .site-nav-burger:hover { background: rgba(136, 56, 216, 0.08); }
 .wks .site-nav-sheet { border-color: rgba(136, 56, 216, 0.22); }
+
+/* Modo claro: modal de precios */
+[data-theme="light"] .wks-pricing-card {
+  background: linear-gradient(170deg, #ffffff, #faf9f7);
+  border-color: rgba(136, 56, 216, 0.2);
+  color: #1a1a1a;
+}
+[data-theme="light"] .wks-pricing-amount .now { color: #8838d8; }
+[data-theme="light"] .wks-pricing-amount .was { color: #999; }
+[data-theme="light"] .wks-cupos-head b { color: #8838d8; }
+[data-theme="light"] .wks-cupos-head span { color: #666; }
+[data-theme="light"] .wks-pricing-note { color: #666; }
+[data-theme="light"] .wks-pricing::after { background: linear-gradient(180deg, rgba(250,249,247,0.7), rgba(255,255,255,0.9)); }

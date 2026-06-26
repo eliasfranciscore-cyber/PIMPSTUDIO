@@ -135,9 +135,9 @@
     "semantic_hash": "f4691291bcb1e191a1c15ac40fbca255"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/components/SiteNav.jsx": {
-    "mtime": 1782442577.586082,
-    "ast_hash": "062d939cc9270f5fbba41efd95f6007a",
-    "semantic_hash": "062d939cc9270f5fbba41efd95f6007a"
+    "mtime": 1782505036.481104,
+    "ast_hash": "4644aa805da1ab860af1e8afeef0970f",
+    "semantic_hash": "4644aa805da1ab860af1e8afeef0970f"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/components/brunetti.jsx": {
     "mtime": 1782394820.9828105,
@@ -150,9 +150,9 @@
     "semantic_hash": "c1fa5ced9e51247af9eb135be69b91ae"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/components/theme.jsx": {
-    "mtime": 1782311732.3754938,
-    "ast_hash": "73539f9a72115e39fdb3eb799ed27359",
-    "semantic_hash": "73539f9a72115e39fdb3eb799ed27359"
+    "mtime": 1782475104.3957856,
+    "ast_hash": "488e4e009b0318b5d807747a9683b812",
+    "semantic_hash": "488e4e009b0318b5d807747a9683b812"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/components/ui.jsx": {
     "mtime": 1782395320.1181726,
@@ -200,9 +200,9 @@
     "semantic_hash": "90e45bac39fbd3873ade05354ee9ef35"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/pages/Home.jsx": {
-    "mtime": 1782472213.6270735,
-    "ast_hash": "6a842fc23e411030edb4a8a09a480ba6",
-    "semantic_hash": "6a842fc23e411030edb4a8a09a480ba6"
+    "mtime": 1782506031.7009046,
+    "ast_hash": "9508c662ad8a1b22eff5454e91bcc0df",
+    "semantic_hash": "9508c662ad8a1b22eff5454e91bcc0df"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/src/pages/Login.jsx": {
     "mtime": 1782330076.7279267,
@@ -220,9 +220,9 @@
     "semantic_hash": "f448d37ae7f2220344d2f63852f2f5cb"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/vercel.json": {
-    "mtime": 1782393158.8641224,
-    "ast_hash": "74a79ce87cc9faa2b65c4728924765d5",
-    "semantic_hash": "74a79ce87cc9faa2b65c4728924765d5"
+    "mtime": 1782505090.1197038,
+    "ast_hash": "53a82c77d35357525e0c37d6b268576f",
+    "semantic_hash": "53a82c77d35357525e0c37d6b268576f"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/vite.config.js": {
     "mtime": 1782247963.8169465,
@@ -245,9 +245,9 @@
     "semantic_hash": "0683f76e1b8d1fdf512f1d595283c15d"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/index.html": {
-    "mtime": 1782473170.5020616,
-    "ast_hash": "55bc16b49a8044062f809bfe5ea9b6a7",
-    "semantic_hash": "55bc16b49a8044062f809bfe5ea9b6a7"
+    "mtime": 1782491329.846994,
+    "ast_hash": "de3eb39d1e2d958cb789862618950183",
+    "semantic_hash": "de3eb39d1e2d958cb789862618950183"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/public/assets/PIMP_STUDIO_LOGO.svg": {
     "mtime": 1781237386.665618,
@@ -370,9 +370,9 @@
     "semantic_hash": "5039c4819202c8571b8205b29a13d04d"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/public/assets/brunetti-logo-lockup.svg": {
-    "mtime": 1782441150.1492245,
-    "ast_hash": "ccf6e681589f09ef08f19a4516a3c7ae",
-    "semantic_hash": "ccf6e681589f09ef08f19a4516a3c7ae"
+    "mtime": 1782492222.4445822,
+    "ast_hash": "811d52b1bc779da212adac9a9ab9f978",
+    "semantic_hash": "811d52b1bc779da212adac9a9ab9f978"
   },
   "/Users/elija/Projects/PIMPSTUDIO-desarrollo/public/assets/brunetti-logo-monogram.svg": {
     "mtime": 1782440405.6632857,
@@ -383,5 +383,10 @@
     "mtime": 1782441623.3629138,
     "ast_hash": "44f2e6216f355569c2eaabbc4af61c32",
     "semantic_hash": "44f2e6216f355569c2eaabbc4af61c32"
+  },
+  "/Users/elija/Projects/PIMPSTUDIO-desarrollo/public/assets/brunetti-logo-lockup-v2.svg": {
+    "mtime": 1782506009.2716212,
+    "ast_hash": "a87aaab7b69e397c9d6d293562de9428",
+    "semantic_hash": "a87aaab7b69e397c9d6d293562de9428"
   }
 }
