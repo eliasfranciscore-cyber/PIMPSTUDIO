@@ -1,16 +1,18 @@
 -- PIMP STUDIO — Seed data (base de prueba)
 -- PIN hasheado con SHA-256 de "1234" = 03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4
+-- Contraseña de desarrollo: "Pimp2024" → SHA-256 = bc5e2f061fb85a8f0ea2fedd30df0142dc8b061b155e3b350ba01b68607464df
+-- CAMBIAR password_hash en producción usando el endpoint PATCH /api/auth-barber
 
-INSERT INTO barbers (id, name, short_name, code, role, tier, exp_years, rating, pin_hash) VALUES
-  (4,  'Juan Carlos',         'Juan Carlos', 'juan-carlos',         'Barbero Senior',      'general', 8,  4.9, '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4'),
-  (5,  'Andryz',              'Andryz',      'andryz',              'Barbero',             'general', 5,  4.8, '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4'),
-  (6,  'Brunetti',            'Brunetti',    'bruno-herrera',       'Visagista · Premium', 'premium', 12, 5.0, '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4'),
-  (7,  'Diego Moya',          'Diego',       'diego-moya',          'Barbero',             'general', 6,  4.7, '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4'),
-  (8,  'Thinn Sayen Herrera', 'Thinn S.',    'thinn-sayen-herrera', 'Barbero',             'general', 4,  4.8, '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4'),
-  (9,  'Vicente Pietrapiana', 'Vicente',     'vicente-pietrapiana', 'Barbero',             'general', 5,  4.9, '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4'),
-  (10, 'Rodrigo Godoy',       'Rodrigo',     'rodrigo-godoy',       'Barbero',             'general', 7,  4.8, '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4'),
-  (11, 'Matías Inostroza',    'Matías',      'matias-inostroza',    'Barbero Junior',      'general', 3,  4.6, '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4')
-ON CONFLICT (id) DO NOTHING;
+INSERT INTO barbers (id, name, short_name, code, role, tier, exp_years, rating, pin_hash, password_hash) VALUES
+  (4,  'Juan Carlos',         'Juan Carlos', 'juan-carlos',         'Barbero Senior',      'general', 8,  4.9, '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'bc5e2f061fb85a8f0ea2fedd30df0142dc8b061b155e3b350ba01b68607464df'),
+  (5,  'Andryz',              'Andryz',      'andryz',              'Barbero',             'general', 5,  4.8, '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'bc5e2f061fb85a8f0ea2fedd30df0142dc8b061b155e3b350ba01b68607464df'),
+  (6,  'Brunetti',            'Brunetti',    'bruno-herrera',       'Visagista · Premium', 'premium', 12, 5.0, '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'bc5e2f061fb85a8f0ea2fedd30df0142dc8b061b155e3b350ba01b68607464df'),
+  (7,  'Diego Moya',          'Diego',       'diego-moya',          'Barbero',             'general', 6,  4.7, '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'bc5e2f061fb85a8f0ea2fedd30df0142dc8b061b155e3b350ba01b68607464df'),
+  (8,  'Thinn Sayen Herrera', 'Thinn S.',    'thinn-sayen-herrera', 'Barbero',             'general', 4,  4.8, '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'bc5e2f061fb85a8f0ea2fedd30df0142dc8b061b155e3b350ba01b68607464df'),
+  (9,  'Vicente Pietrapiana', 'Vicente',     'vicente-pietrapiana', 'Barbero',             'general', 5,  4.9, '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'bc5e2f061fb85a8f0ea2fedd30df0142dc8b061b155e3b350ba01b68607464df'),
+  (10, 'Rodrigo Godoy',       'Rodrigo',     'rodrigo-godoy',       'Barbero',             'general', 7,  4.8, '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'bc5e2f061fb85a8f0ea2fedd30df0142dc8b061b155e3b350ba01b68607464df'),
+  (11, 'Matías Inostroza',    'Matías',      'matias-inostroza',    'Barbero Junior',      'general', 3,  4.6, '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'bc5e2f061fb85a8f0ea2fedd30df0142dc8b061b155e3b350ba01b68607464df')
+ON CONFLICT (id) DO UPDATE SET password_hash = EXCLUDED.password_hash WHERE barbers.password_hash IS NULL;
 
 INSERT INTO services (id, name, price, duration_min, category, tne_eligible, description) VALUES
   (5,  'Asesoría de corte',              24990, 90,  'general', true,  'Consulta profesional para encontrar tu estilo ideal.'),
