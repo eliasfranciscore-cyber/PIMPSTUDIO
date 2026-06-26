@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useBrunettiFx, scrollToId } from '../components/brunetti.jsx'
 import SiteNav from '../components/SiteNav.jsx'
 import ModuleFooter from '../components/ModuleFooter.jsx'
+import { Lamp } from '../components/ui/lamp.jsx'
 
 /* ============================================================
    BRUNETTI — Landing de marca personal (Bruno Herrera)
@@ -178,11 +179,7 @@ export default function Home() {
       <main>
         {/* ============ HERO ============ */}
         <section id="hero" className="bhero">
-          <div className="bhero-lamp-wrap" aria-hidden="true">
-            <div className="bhero-lamp-dot" />
-            <div className="bhero-lamp-bar" />
-            <div className="bhero-lamp-cone" />
-          </div>
+          <Lamp className="bru-lamp--hero" />
           <div className="bhero-grid">
             <div className="bhero-text">
               <h1 className="bhero-name" aria-label="Brunetti">
@@ -279,11 +276,7 @@ export default function Home() {
 
         {/* ============ SOBRE BRUNO ============ */}
         <section id="sobre" className="bsection">
-          <div className="bsec-lamp-wrap" aria-hidden="true">
-            <div className="bsec-lamp-dot" />
-            <div className="bsec-lamp-bar" />
-            <div className="bsec-lamp-cone" />
-          </div>
+          <Lamp className="bru-lamp--sec" />
           <div className="bwrap babout">
             <figure className="babout-figure" data-reveal="left">
               <img src="/assets/workshop-2026.jpg" alt="Bruno Herrera con su comunidad de barberos" loading="lazy" decoding="async" />
@@ -379,11 +372,7 @@ export default function Home() {
 
         {/* ============ CURSOS TEASER ============ */}
         <section className="bsection" id="cursos-teaser">
-          <div className="bsec-lamp-wrap" aria-hidden="true">
-            <div className="bsec-lamp-dot" />
-            <div className="bsec-lamp-bar" />
-            <div className="bsec-lamp-cone" />
-          </div>
+          <Lamp className="bru-lamp--sec" />
           <div className="bwrap">
             <div className="bteaser" data-reveal="scale">
               <div className="bteaser-bg"><img src="/assets/workshop-2026.jpg" alt="Workshop Brunetti con su comunidad de barberos" loading="lazy" decoding="async" /></div>

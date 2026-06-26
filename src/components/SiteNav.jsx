@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Brandmark, Icon } from './ui.jsx'
+import { Icon } from './ui.jsx'
 import './SiteNav.css'
 
 /* Navbar global del sitio. Persiste en todas las páginas (Home, Workshop, ...).
@@ -77,12 +77,9 @@ export default function SiteNav({ onSection, scrolled: scrolledProp }) {
   return (
     <React.Fragment>
       <header className={`home-nav ${scrolled || menuOpen ? "is-scrolled" : ""}`}>
-        <Brandmark
-          size={38}
-          label="BRUNETTI"
-          sub={isWorkshop ? "Workshop 2026" : "Barber Studio"}
-          onClick={() => navigate("/")}
-        />
+        <a href="#" className="brand" onClick={(e) => { e.preventDefault(); navigate("/") }}>
+          <img className="brand-lockup" src="/assets/brunetti-logo-lockup.svg" alt="Brunetti Cutz" />
+        </a>
         <nav className="home-nav-links">
           {NAV.map(([id, label]) => (
             <button

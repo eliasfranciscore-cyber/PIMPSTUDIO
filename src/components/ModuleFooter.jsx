@@ -39,8 +39,7 @@ export default function ModuleFooter({
         <div className="mfooter-cols">
           <div className="mfooter-brand">
             <div className="mfooter-word">
-              <img src="/assets/pimp-studio-logo.jpg" alt={brandName} className="mfooter-logo-mark" />
-              <span>{brandName}</span>
+              <img src="/assets/brunetti-logo-monogram.svg" alt={brandName} className="mfooter-logo-mark" style={{ height: '70px', width: 'auto' }} />
             </div>
             <p className="mfooter-tag">{tagline}</p>
             {onPrimary && (

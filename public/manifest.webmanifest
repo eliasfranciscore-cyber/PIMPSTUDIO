@@ -1,6 +1,6 @@
 {
-  "name": "Brunetti · Panel interno",
-  "short_name": "Panel",
+  "name": "Brunetti Cutz",
+  "short_name": "Brunetti",
   "description": "Acceso exclusivo al panel de gestión de Brunetti Barber Studio",
   "start_url": "/panel",
   "scope": "/",
@@ -9,7 +9,8 @@
   "theme_color": "#080807",
   "orientation": "portrait",
   "icons": [
-    { "src": "/assets/pimp-studio-mark.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" },
-    { "src": "/assets/pimp-studio-logo.jpg", "sizes": "1080x1080", "type": "image/jpeg" }
+    { "src": "/assets/brunetti-logo-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" },
+    { "src": "/assets/brunetti-logo-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/assets/brunetti-logo-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ]
 }

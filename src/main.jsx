@@ -6,6 +6,8 @@ import { BrowserRouter } from 'react-router-dom'
 import './styles/pimp.css'
 import './styles/modules.css'
 import './styles/brunetti.css'
+// Tailwind (solo utilidades, preflight OFF) — alimenta el componente de lámpara.
+import './styles/tailwind.css'
 import App from './App.jsx'
 import { Analytics } from '@vercel/analytics/react'
 

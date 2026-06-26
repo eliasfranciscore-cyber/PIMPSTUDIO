@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { WORKSHOP } from '../data/workshop.js'
 import SiteNav from '../components/SiteNav.jsx'
 import { addLocalEnrollment } from '../enrollmentsStore.js'
+import { Lamp } from '../components/ui/lamp.jsx'
 import '../styles/workshop.css'
 
 /* ---------- helpers UI ---------- */
@@ -235,11 +236,7 @@ function QuoteBlock() {
 function FeatureRow({ data, reversed }) {
   return (
     <section className="wks-section">
-      <div className="wks-lamp-wrap" aria-hidden="true">
-        <div className="wks-lamp-dot" />
-        <div className="wks-lamp-bar" />
-        <div className="wks-lamp-cone" />
-      </div>
+      <Lamp className="bru-lamp--sec" />
       <div className="wks-container">
         <Reveal className={`wks-feature ${reversed ? "is-rev" : ""}`}>
           <div className="wks-feature-media">

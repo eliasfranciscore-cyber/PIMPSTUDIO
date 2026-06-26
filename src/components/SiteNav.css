@@ -28,8 +28,21 @@
   .site-nav-burger { display: none; }
 }
 
-/* Marca: centrar el texto (BRUNETTI / Barber Studio) en la barra. */
-.home-nav .brandmark .wordmark { text-align: center; }
+/* Logo en navbar: lockup (con escudo) en escritorio, wordmark centrado en móvil */
+.home-nav .brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  text-decoration: none;
+}
+.home-nav .brand img {
+  width: auto;
+  transition: height 0.2s ease;
+}
+.home-nav .brand-lockup { display: block; height: 56px; }
+.home-nav .brand-wordmark { display: none; }
+.home-nav.is-scrolled .brand-lockup { height: 44px; }
 
 /* Navbar siempre translúcido: SÓLO el pill redondeado (.home-nav.is-scrolled::before).
    Sin relleno ni desenfoque de ancho completo "por fuera" del pill. */
@@ -44,6 +57,8 @@
 @media (max-width: 899px) {
   .home-nav {
     align-items: center;
+    /* Marca (escudo + texto) a la izquierda; hamburguesa en absoluto a la
+       derecha. Así el texto se aleja del botón y no queda apretado. */
     justify-content: flex-start;
     padding-left: 1.4rem;
     padding-right: 1.4rem;
@@ -52,12 +67,15 @@
   .home-nav-links { display: none; }
   .site-nav-reserve-desktop { display: none !important; }
   .site-nav-barber-desktop { display: none !important; }
-  .home-nav .brandmark .wordmark {
-    position: absolute;
-    left: 50%;
-    top: calc(50% + env(safe-area-inset-top) / 2);
-    transform: translate(-50%, -50%);
+  /* En móvil se mantiene el LOCKUP completo (escudo negro + "Brunetti Cutz").
+     max-width reserva sitio para la hamburguesa, sin solaparse ni salirse de
+     la píldora (mantiene la proporción del SVG). */
+  .home-nav .brand-lockup {
+    display: block;
+    height: 40px;
+    max-width: calc(100vw - 8rem);
   }
+  .home-nav.is-scrolled .brand-lockup { height: 38px; }
   /* Burger: anclado al inset del pill (.home-nav.is-scrolled::before, inset
      horizontal = clamp(.7rem,4vw,2.1rem)) + 0.85rem de aire, para que SIEMPRE
      quede dentro de la píldora redondeada y no asomado en el borde. */

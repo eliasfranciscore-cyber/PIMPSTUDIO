@@ -1765,6 +1765,54 @@
   50% { transform: translateX(-50%) scaleX(1.06); opacity: 1; }
 }
 
+/* --- Lámpara Aceternity (componente React src/components/ui/lamp.jsx) ---
+   Backdrop posicionado arriba de la sección; overflow hidden recorta los haces.
+   --bru-lamp-bg = color de las "tapas" del haz; por tema para claro/oscuro. */
+/* LÁMPARA DORADA — luz transparente que brilla SOBRE el fondo (sin caja negra).
+   Funciona en claro y oscuro porque es luz dorada semitransparente + máscaras
+   que se desvanecen a transparente. La línea brillante + el cono radial dan el
+   "spotlight"; los haces cónicos abren los rayos. */
+.bru-lamp {
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+.bru-lamp-inner { position: relative; width: 100%; height: 100%; transform-origin: 50% 0; }
+.bru-lamp--hero { top: 0; height: 480px; --lamp-y: 86px; }
+.bru-lamp--sec  { top: 0; height: 360px; --lamp-y: 60px; }
+
+/* Filamento brillante (línea de la lámpara) */
+.bru-lamp-line {
+  position: absolute; top: var(--lamp-y); left: 50%;
+  width: min(36rem, 88%); height: 3px;
+  transform: translateX(-50%);
+  border-radius: 3px;
+  background: linear-gradient(90deg, transparent, rgba(231,200,126,.5) 16%, #f6df9f 36%, #fff7de 50%, #f6df9f 64%, rgba(231,200,126,.5) 84%, transparent);
+  box-shadow: 0 0 24px 4px rgba(231,200,126,.95), 0 0 70px 18px rgba(231,200,126,.6), 0 0 140px 48px rgba(231,200,126,.3);
+}
+/* Cono de luz dorado bajo la línea (transparente, sin caja) */
+.bru-lamp-glow {
+  position: absolute; top: var(--lamp-y); left: 50%;
+  width: min(46rem, 124%); height: 22rem;
+  transform: translateX(-50%);
+  background: radial-gradient(56% 66% at 50% 0%, rgba(231,200,126,.58) 0%, rgba(231,200,126,.30) 26%, rgba(231,200,126,.10) 54%, transparent 80%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0,0,0,.62) 46%, transparent 92%);
+  mask-image: linear-gradient(to bottom, #000 0%, rgba(0,0,0,.62) 46%, transparent 92%);
+}
+/* Rayos cónicos que abren hacia abajo */
+.bru-lamp-beam {
+  position: absolute; top: var(--lamp-y); height: 18rem; width: 28rem;
+  -webkit-mask-image: linear-gradient(to top, transparent 4%, #000 62%);
+  mask-image: linear-gradient(to top, transparent 4%, #000 62%);
+}
+.bru-lamp-beam--l { right: 50%; background-image: conic-gradient(from 82deg at 100% 0, rgba(231,200,126,.42), transparent 28%); }
+.bru-lamp-beam--r { left: 50%;  background-image: conic-gradient(from 278deg at 0 0, transparent 72%, rgba(231,200,126,.42)); }
+
 .brunetti-site .bhero-lamp-wrap {
   pointer-events: none;
   position: absolute;

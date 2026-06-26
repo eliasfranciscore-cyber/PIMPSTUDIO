@@ -1,0 +1,4 @@
+/* Entrada de Tailwind — SOLO utilidades/componentes (sin @tailwind base, ya que
+   preflight está desactivado). Esto alimenta el componente de la lámpara. */
+@tailwind components;
+@tailwind utilities;
