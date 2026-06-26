@@ -72,10 +72,10 @@
      la píldora (mantiene la proporción del SVG). */
   .home-nav .brand-lockup {
     display: block;
-    height: 52px;
-    max-width: calc(100vw - 7.25rem);
+    height: 58px;
+    max-width: calc(100vw - 5.5rem);
   }
-  .home-nav.is-scrolled .brand-lockup { height: 47px; }
+  .home-nav.is-scrolled .brand-lockup { height: 54px; }
   /* Burger: anclado al inset del pill (.home-nav.is-scrolled::before, inset
      horizontal = clamp(.7rem,4vw,2.1rem)) + 0.85rem de aire, para que SIEMPRE
      quede dentro de la píldora redondeada y no asomado en el borde. */
