@@ -28,6 +28,12 @@ CREATE TABLE IF NOT EXISTS barbers (
 -- Para bases existentes (idempotente):
 ALTER TABLE barbers ADD COLUMN IF NOT EXISTS password_hash VARCHAR(64);
 
+-- Migración: actualiza password_hash solo en filas que aún no lo tienen.
+-- Contraseña de desarrollo por defecto: "Pimp2024" (cambiar en producción).
+UPDATE barbers
+  SET password_hash = 'bc5e2f061fb85a8f0ea2fedd30df0142dc8b061b155e3b350ba01b68607464df'
+  WHERE password_hash IS NULL;
+
 CREATE TABLE IF NOT EXISTS services (
   id            INTEGER PRIMARY KEY,
   name          VARCHAR(200) NOT NULL,
