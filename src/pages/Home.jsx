@@ -185,7 +185,7 @@ export default function Home() {
               <h1 className="bhero-name" aria-label="Brunetti">
                 {NAME.map((ch, i) => (<span key={i} style={{ '--l': i }}>{ch}</span>))}
               </h1>
-              <span className="bhero-kicker"><span className="dot" />Visagista · Barbería Premium · Maipú</span>
+              <span className="bhero-kicker"><span className="dot" />Visagista - Barbero Premium</span>
               <p className="bhero-role">Bruno Herrera — <b>director de imagen &amp; visagista</b></p>
               <p className="bhero-sub">No es solo un corte: es leer tu rostro, tu estilo de vida y tu identidad para diseñar la imagen que realmente te representa. Técnica de precisión, dirección de estilo y una experiencia pensada al detalle.</p>
               <div className="bhero-actions">

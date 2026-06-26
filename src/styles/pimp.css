@@ -63,12 +63,9 @@ body {
   font-family: var(--font-body);
   color: var(--ink);
   background: #080807;
-  /* 100dvh + viewport-fit=cover: la página llena TODA la pantalla del móvil
-     (incluido detrás de la barra de estado y de la barra de Safari), igual que
-     un sitio full-screen. Scroll natural del documento (sin overscroll lock)
-     para que iOS colapse/flote sus barras como en cualquier web. */
+  /* 100vh (no dvh en body) para que el botón Reservar sticky no se suba al scroll
+     en Chrome. viewport-fit=cover + scroll natural en el doc. */
   min-height: 100vh;
-  min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -76,7 +73,6 @@ body {
 /* App scaffold with a living, gradient backdrop */
 .stage {
   min-height: 100vh;
-  min-height: 100dvh;
   position: relative;
 }
 /* Fondo decorativo (degradados + glow dorado) como capa FIJA al viewport vía
