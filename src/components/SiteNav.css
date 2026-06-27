@@ -33,32 +33,33 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 0 0 auto;
   text-decoration: none;
 }
 .home-nav .brand-mark {
-  order: -1;
+  flex: 0 0 auto;
   padding-left: 0.5rem;
+  padding-right: 0.8rem;
 }
 .home-nav .brand-mark img {
-  height: 54px;
+  height: 60px;
   width: auto;
 }
 .home-nav .brand-text {
   flex: 1;
+  display: flex;
+  align-items: center;
   justify-content: center;
 }
 .home-nav .brand-text img {
-  height: 48px;
+  height: 56px;
   width: auto;
-  max-width: 70%;
 }
-.home-nav.is-scrolled .brand-mark img { height: 44px; }
-.home-nav.is-scrolled .brand-text img { height: 36px; }
+.home-nav.is-scrolled .brand-mark img { height: 48px; }
+.home-nav.is-scrolled .brand-text img { height: 42px; }
 @media (min-width: 900px) {
   .home-nav .brand-mark { display: none; }
-  .home-nav .brand-text { display: none; }
-  .home-nav .brand-lockup { display: block; height: 56px; order: 0; padding-left: 0; }
+  .home-nav .brand-text { display: none; flex: 0 0 auto; }
+  .home-nav .brand-lockup { display: block; height: 56px; flex: 0 0 auto; }
   .home-nav.is-scrolled .brand-lockup { height: 44px; }
 }
 
