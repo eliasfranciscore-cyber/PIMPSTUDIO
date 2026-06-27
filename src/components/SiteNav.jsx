@@ -83,6 +83,9 @@ export default function SiteNav({ onSection, scrolled: scrolledProp }) {
         <a href="#" className="brand brand-text" onClick={(e) => { e.preventDefault(); navigate("/") }}>
           <img className="brand-text" src="/assets/brunetti-logo-text.svg" alt="Brunetti Cutz" />
         </a>
+        <a href="#" className="brand brand-lockup" onClick={(e) => { e.preventDefault(); navigate("/") }}>
+          <img className="brand-lockup" src="/assets/brunetti-logo-lockup-v2.svg" alt="Brunetti Cutz" />
+        </a>
         <nav className="home-nav-links">
           {NAV.map(([id, label]) => (
             <button

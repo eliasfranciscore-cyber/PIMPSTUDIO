@@ -37,8 +37,8 @@
 }
 .home-nav .brand-mark {
   flex: 0 0 auto;
-  padding-left: 0.5rem;
-  padding-right: 0.8rem;
+  padding-left: 0.3rem;
+  padding-right: 0.6rem;
 }
 .home-nav .brand-mark img {
   height: 60px;
@@ -53,12 +53,13 @@
 .home-nav .brand-text img {
   height: 56px;
   width: auto;
+  max-width: 220px;
 }
 .home-nav.is-scrolled .brand-mark img { height: 48px; }
 .home-nav.is-scrolled .brand-text img { height: 42px; }
 @media (min-width: 900px) {
   .home-nav .brand-mark { display: none; }
-  .home-nav .brand-text { display: none; flex: 0 0 auto; }
+  .home-nav .brand-text { display: none; }
   .home-nav .brand-lockup { display: block; height: 56px; flex: 0 0 auto; }
   .home-nav.is-scrolled .brand-lockup { height: 44px; }
 }
@@ -75,34 +76,23 @@
 /* En móvil: más aire en los bordes */
 @media (max-width: 899px) {
   .home-nav {
-    /* Marca A LA IZQUIERDA en la barra; la hamburguesa va en absoluto a la derecha.
-       Padding vertical más chico para que el lockup no quede tan abajo. */
+    /* Marca A LA IZQUIERDA en la barra; la hamburguesa va en absoluto a la derecha. */
     align-items: center;
     justify-content: flex-start;
-    padding-top: calc(0.55rem + env(safe-area-inset-top));
+    padding-top: 0.55rem;
     padding-bottom: 0.55rem;
     padding-left: 1.1rem;
     padding-right: 1.4rem;
     gap: 0.75rem;
   }
+  .home-nav .brand-lockup { display: none; }
   .home-nav-links { display: none; }
   .site-nav-reserve-desktop { display: none !important; }
   .site-nav-barber-desktop { display: none !important; }
-  /* Lockup completo (escudo + "Brunetti Cutz") centrado. max-width deja aire
-     simétrico para que el lockup centrado nunca choque la hamburguesa. */
-  .home-nav .brand-lockup {
-    display: block;
-    height: 58px;
-    max-width: calc(100vw - 9.5rem);
-  }
-  .home-nav.is-scrolled .brand-lockup { height: 54px; }
-  /* Burger: anclado al inset del pill (.home-nav.is-scrolled::before, inset
-     horizontal = clamp(.7rem,4vw,2.1rem)) + 0.85rem de aire, para que SIEMPRE
-     quede dentro de la píldora redondeada y no asomado en el borde. */
   .site-nav-burger {
     position: absolute;
     right: calc(clamp(.7rem, 4vw, 2.1rem) + 0.85rem);
-    top: calc(50% + env(safe-area-inset-top) / 2);
+    top: 50%;
     transform: translateY(-50%);
   }
 }
