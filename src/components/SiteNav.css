@@ -183,8 +183,7 @@
   right: 0;
   bottom: 0;
   z-index: 65;
-  /* padding-bottom: safe-area del home indicator + espacio visual */
-  padding: 0.85rem clamp(1rem, 4vw, 1.4rem) calc(0.9rem + env(safe-area-inset-bottom, 0px));
+  padding: 0.85rem clamp(1rem, 4vw, 1.4rem) 0.9rem;
   background: none;
   border-top: 0;
   pointer-events: none;
@@ -200,7 +199,7 @@
 
 /* Espacio inferior para que el botón flotante no tape contenido */
 @media (max-width: 899px) {
-  .home-scroll { padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px)); }
-  .wks-shell { padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px)); }
-  .estilo-page .mfooter { padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px)); }
+  .home-scroll { padding-bottom: 5rem; }
+  .wks-shell { padding-bottom: 5rem; }
+  .estilo-page .mfooter { padding-bottom: 5rem; }
 }
