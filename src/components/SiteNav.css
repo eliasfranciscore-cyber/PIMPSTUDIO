@@ -61,8 +61,15 @@
 @media (min-width: 900px) {
   .home-nav .brand-mark { display: none; }
   .home-nav .brand-text { display: none; }
-  .home-nav .brand-lockup { display: block; height: 56px; flex: 0 0 auto; }
-  .home-nav.is-scrolled .brand-lockup { height: 44px; }
+  .home-nav .brand-lockup {
+    display: block;
+    flex: 0 0 auto;
+  }
+  .home-nav .brand-lockup img {
+    height: 56px;
+    width: auto;
+  }
+  .home-nav.is-scrolled .brand-lockup img { height: 44px; }
 }
 
 /* Navbar siempre translúcido: SÓLO el pill redondeado (.home-nav.is-scrolled::before).
