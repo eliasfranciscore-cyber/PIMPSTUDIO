@@ -45,15 +45,16 @@
   width: auto;
 }
 .home-nav .brand-text {
-  flex: 1;
+  flex: 0 1 auto;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0 auto;
 }
 .home-nav .brand-text img {
   height: 56px;
   width: auto;
-  max-width: 220px;
+  max-width: 160px;
 }
 .home-nav.is-scrolled .brand-mark img { height: 48px; }
 .home-nav.is-scrolled .brand-text img { height: 42px; }
