@@ -40,6 +40,10 @@
   width: auto;
   transition: height 0.2s ease;
 }
+.home-nav .brand img {
+  width: auto;
+  transition: height 0.2s ease;
+}
 .home-nav .brand-lockup { display: block; height: 56px; }
 .home-nav .brand-wordmark { display: none; }
 .home-nav.is-scrolled .brand-lockup { height: 44px; }
@@ -56,13 +60,13 @@
 /* En móvil: más aire en los bordes */
 @media (max-width: 899px) {
   .home-nav {
-    /* Marca CENTRADA en la barra; la hamburguesa va en absoluto a la derecha.
+    /* Marca A LA IZQUIERDA en la barra; la hamburguesa va en absoluto a la derecha.
        Padding vertical más chico para que el lockup no quede tan abajo. */
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     padding-top: calc(0.55rem + env(safe-area-inset-top));
     padding-bottom: 0.55rem;
-    padding-left: 1.4rem;
+    padding-left: 1.1rem;
     padding-right: 1.4rem;
     gap: 0.75rem;
   }
