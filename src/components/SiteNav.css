@@ -28,7 +28,7 @@
   .site-nav-burger { display: none; }
 }
 
-/* Logo en navbar: lockup (con escudo) en escritorio, wordmark centrado en móvil */
+/* Logo en navbar: separado en mark + text en móvil, lockup en desktop */
 .home-nav .brand {
   display: flex;
   align-items: center;
@@ -36,17 +36,31 @@
   flex: 0 0 auto;
   text-decoration: none;
 }
-.home-nav .brand img {
-  width: auto;
-  transition: height 0.2s ease;
+.home-nav .brand-mark {
+  order: -1;
+  padding-left: 0.5rem;
 }
-.home-nav .brand img {
+.home-nav .brand-mark img {
+  height: 54px;
   width: auto;
-  transition: height 0.2s ease;
 }
-.home-nav .brand-lockup { display: block; height: 56px; }
-.home-nav .brand-wordmark { display: none; }
-.home-nav.is-scrolled .brand-lockup { height: 44px; }
+.home-nav .brand-text {
+  flex: 1;
+  justify-content: center;
+}
+.home-nav .brand-text img {
+  height: 48px;
+  width: auto;
+  max-width: 70%;
+}
+.home-nav.is-scrolled .brand-mark img { height: 44px; }
+.home-nav.is-scrolled .brand-text img { height: 36px; }
+@media (min-width: 900px) {
+  .home-nav .brand-mark { display: none; }
+  .home-nav .brand-text { display: none; }
+  .home-nav .brand-lockup { display: block; height: 56px; order: 0; padding-left: 0; }
+  .home-nav.is-scrolled .brand-lockup { height: 44px; }
+}
 
 /* Navbar siempre translúcido: SÓLO el pill redondeado (.home-nav.is-scrolled::before).
    Sin relleno ni desenfoque de ancho completo "por fuera" del pill. */

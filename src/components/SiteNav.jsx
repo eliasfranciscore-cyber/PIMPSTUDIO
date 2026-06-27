@@ -77,8 +77,11 @@ export default function SiteNav({ onSection, scrolled: scrolledProp }) {
   return (
     <React.Fragment>
       <header className={`home-nav ${scrolled || menuOpen ? "is-scrolled" : ""}`}>
-        <a href="#" className="brand" onClick={(e) => { e.preventDefault(); navigate("/") }}>
-          <img className="brand-lockup" src="/assets/brunetti-logo-lockup-v2.svg" alt="Brunetti Cutz" />
+        <a href="#" className="brand brand-mark" onClick={(e) => { e.preventDefault(); navigate("/") }}>
+          <img className="brand-mark" src="/assets/brunetti-logo-mark.svg" alt="Brunetti" />
+        </a>
+        <a href="#" className="brand brand-text" onClick={(e) => { e.preventDefault(); navigate("/") }}>
+          <img className="brand-text" src="/assets/brunetti-logo-text.svg" alt="Brunetti Cutz" />
         </a>
         <nav className="home-nav-links">
           {NAV.map(([id, label]) => (

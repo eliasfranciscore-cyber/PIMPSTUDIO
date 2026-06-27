@@ -1606,7 +1606,7 @@
   .brunetti-site .bhero {
     align-items: start;
     min-height: auto;
-    padding-top: calc(5.5rem + env(safe-area-inset-top));
+    padding-top: calc(5.5rem + );
     padding-bottom: clamp(2.5rem, 7vh, 4rem);
     text-align: center;
   }
@@ -2209,7 +2209,7 @@
 .float-theme-toggle {
   position: fixed;
   left: 1rem;
-  bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+  bottom: calc(1rem + );
   z-index: 1200;
   padding: 4px;
   border-radius: 999px;
@@ -2243,9 +2243,9 @@ body.dash-mode .float-theme-toggle { display: none; }
 .float-theme-toggle.is-dark .ftt-knob { transform: translateX(0); }
 .float-theme-toggle.is-light .ftt-knob { transform: translateX(32px); }
 @media (max-width: 900px) {
-  .float-theme-toggle { bottom: calc(6.4rem + env(safe-area-inset-bottom, 0px)); z-index: 66; }
+  .float-theme-toggle { bottom: calc(6.4rem + ); z-index: 66; }
   /* Espacio para que la barra fija de Reservar (móvil) no tape el contenido/footer */
-  .brunetti-site { padding-bottom: calc(5.6rem + env(safe-area-inset-bottom, 0px)); }
+  .brunetti-site { padding-bottom: calc(5.6rem + ); }
 }
 
 /* ============================================================

@@ -315,7 +315,7 @@ export default function Booking() {
       </div>
 
       {step < 3 && (
-        <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, padding: ".7rem 1.2rem calc(1.2rem + env(safe-area-inset-bottom))", background: "linear-gradient(180deg, transparent, var(--bg) 30%)", display: "flex", gap: ".6rem", justifyContent: "space-between", alignItems: "flex-end" }}>
+        <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, padding: ".7rem 1.2rem calc(1.2rem + )", background: "linear-gradient(180deg, transparent, var(--bg) 30%)", display: "flex", gap: ".6rem", justifyContent: "space-between", alignItems: "flex-end" }}>
           {(barber || service) && (
             <div style={{ display: "flex", flexDirection: "column", gap: ".3rem", fontSize: ".7rem", color: "var(--muted)", flex: 1 }}>
               <span>{barber?.short}{service ? ` · ${service.name}` : ""}</span>

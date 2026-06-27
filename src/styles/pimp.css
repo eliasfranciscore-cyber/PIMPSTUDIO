@@ -904,7 +904,7 @@ select.input { text-overflow: ellipsis; }
   justify-content: space-between;
   gap: 1rem;
   /* safe-area-inset-top mantiene el logo bajo el notch/cámara en PWA iOS */
-  padding: calc(0.85rem + env(safe-area-inset-top)) clamp(1rem, 4vw, 2.4rem) 0.85rem 0.2rem;
+  padding: calc(0.85rem) clamp(1rem, 4vw, 2.4rem) 0.85rem 0.2rem;
   background: transparent;
   border-bottom: 1px solid transparent;
   transition: background .35s ease, border-color .35s ease, backdrop-filter .35s ease;
@@ -1910,7 +1910,7 @@ select.input { text-overflow: ellipsis; }
   position: absolute;
   /* +safe-area-inset-top: que la píldora baje bajo el notch y envuelva el
      contenido del navbar (si no, queda arriba y se ve "cortada" en iOS PWA). */
-  inset: calc(.2rem + env(safe-area-inset-top)) clamp(.7rem, 4vw, 2.1rem) auto;
+  inset: calc(.2rem) clamp(.7rem, 4vw, 2.1rem) auto;
   height: 62px;
   border-radius: 999px;
   background: linear-gradient(150deg, rgba(255,255,255,.14), rgba(255,255,255,.05));
@@ -2277,7 +2277,7 @@ select.input { text-overflow: ellipsis; }
 .mobile-dock {
   position: fixed;
   left: 50%;
-  bottom: calc(0.85rem + env(safe-area-inset-bottom));
+  bottom: calc(0.85rem);
   transform: translateX(-50%);
   z-index: 80;
   display: none;
@@ -2339,7 +2339,7 @@ select.input { text-overflow: ellipsis; }
   .mobile-dock { display: inline-flex; }
   /* Espacio inferior para que el dock flotante no tape el contenido final
      (incluye el safe-area del home indicator en iPhone). */
-  .dashboard-main { padding-bottom: calc(7.5rem + env(safe-area-inset-bottom)) !important; }
+  .dashboard-main { padding-bottom: calc(7.5rem) !important; }
 }
 
 /* Full menu sheet (triggered by center button) */
@@ -2355,7 +2355,7 @@ select.input { text-overflow: ellipsis; }
 .dock-sheet {
   position: fixed;
   left: 50%;
-  bottom: calc(0.85rem + env(safe-area-inset-bottom) + 70px);
+  bottom: calc(0.85rem + 70px);
   transform: translateX(-50%);
   z-index: 100;
   width: min(420px, calc(100vw - 1.4rem));
@@ -2796,7 +2796,7 @@ select.input { text-overflow: ellipsis; }
      .dashboard-main reserva padding-top = alto del topbar + safe-area para
      que el contenido no quede oculto debajo. */
   .dashboard-main {
-    padding-top: calc(64px + env(safe-area-inset-top)) !important;
+    padding-top: calc(64px) !important;
   }
   .dashboard-topbar {
     position: fixed !important;
@@ -2813,8 +2813,8 @@ select.input { text-overflow: ellipsis; }
 
   /* Header mobile — altura mínima + safe-area-inset-top para el notch */
   .dashboard-topbar {
-    padding: calc(.5rem + env(safe-area-inset-top)) .8rem .5rem;
-    min-height: calc(48px + env(safe-area-inset-top));
+    padding: calc(.5rem) .8rem .5rem;
+    min-height: calc(48px);
     gap: .3rem;
   }
   .dashboard-topbar-title { display: none; }
@@ -2889,7 +2889,7 @@ select.input { text-overflow: ellipsis; }
   /* Mantener arriba el espacio del topbar fijo y abajo el del dock flotante
      (no resetear el padding a .6rem en los cuatro lados). */
   .dashboard-main {
-    padding: calc(64px + env(safe-area-inset-top)) .6rem calc(7.5rem + env(safe-area-inset-bottom)) !important;
+    padding: calc(64px) .6rem calc(7.5rem) !important;
   }
   .card { margin: 0 !important; border-radius: 10px; }
 
@@ -3218,7 +3218,7 @@ select.input { text-overflow: ellipsis; }
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
-    padding: 0 .7rem calc(7.5rem + env(safe-area-inset-bottom)) .7rem !important;
+    padding: 0 .7rem calc(7.5rem) .7rem !important;
   }
   /* Topbar sticky dentro del scroller interno (no fixed): no rebota en iOS. */
   body.dash-mode .dashboard-topbar {
@@ -3227,7 +3227,7 @@ select.input { text-overflow: ellipsis; }
     left: auto !important;
     right: auto !important;
     margin: 0 -.7rem 1rem -.7rem !important;
-    padding: calc(.5rem + env(safe-area-inset-top)) .9rem .5rem !important;
+    padding: calc(.5rem) .9rem .5rem !important;
     z-index: 100 !important;
     border-radius: 0 0 14px 14px !important;
     background: var(--surface) !important;
@@ -3236,7 +3236,7 @@ select.input { text-overflow: ellipsis; }
   /* El dock queda fijo al shell (que ya no scrollea): cero rebote. */
   body.dash-mode .mobile-dock {
     position: fixed;
-    bottom: calc(0.85rem + env(safe-area-inset-bottom));
+    bottom: calc(0.85rem);
   }
 }
 
@@ -3247,5 +3247,5 @@ select.input { text-overflow: ellipsis; }
   .barber-login-shell { padding: 0; place-items: stretch; }
   .barber-login-card { grid-template-columns: 1fr; border: 0; border-radius: 0; box-shadow: none; background: var(--bg); min-height: 100vh; }
   .barber-login-visual { display: none; }
-  .barber-login-form-wrap { min-height: 100vh; align-content: center; padding: clamp(1.2rem, 6vw, 2rem); padding-top: calc(env(safe-area-inset-top) + 1.5rem); }
+  .barber-login-form-wrap { min-height: 100vh; align-content: center; padding: clamp(1.2rem, 6vw, 2rem); padding-top: 0; }
 }
