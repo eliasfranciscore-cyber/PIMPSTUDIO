@@ -2051,6 +2051,16 @@ select.input { text-overflow: ellipsis; }
     radial-gradient(900px 600px at 8% 10%, rgba(255,255,255,0.6), transparent 55%),
     linear-gradient(180deg, #f8f6ef 0%, #efece4 100%);
 }
+/* La capa de fondo FIJA (.stage::before) es la que pinta las "safe areas" (notch
+   y barra inferior) en iOS Safari. En oscuro es negra; en CLARO debe ser crema,
+   si no se ven dos bandas negras arriba/abajo y la página no se ve full-screen. */
+[data-theme="light"] .stage::before {
+  background:
+    radial-gradient(1200px 700px at 78% -10%, rgba(201, 161, 78, 0.10), transparent 60%),
+    radial-gradient(900px 600px at 10% 8%, rgba(255, 255, 255, 0.5), transparent 55%),
+    radial-gradient(1000px 800px at 50% 120%, rgba(201, 161, 78, 0.06), transparent 60%),
+    linear-gradient(180deg, #f8f6ef 0%, #efece4 100%);
+}
 [data-theme="light"] .card {
   background: linear-gradient(165deg, #ffffff, #f6f3ea);
   border-color: var(--hair);
