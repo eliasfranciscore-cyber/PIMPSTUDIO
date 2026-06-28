@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useBrunettiFx, scrollToId } from '../components/brunetti.jsx'
 import SiteNav from '../components/SiteNav.jsx'
 import ModuleFooter from '../components/ModuleFooter.jsx'
+import { Lamp } from '../components/ui/lamp.jsx'
 import { addLocalEnrollment } from '../enrollmentsStore.js'
 
 /* ============================================================
@@ -233,7 +234,8 @@ export default function Cursos() {
         </section>
 
         {/* ============ INSCRIPCIÓN ============ */}
-        <section className="bsection" id="inscripcion">
+        <section className="bsection bsection-lamp" id="inscripcion">
+          <Lamp className="bru-lamp--sec" />
           <div className="bwrap">
             <div className="bhead center" data-reveal>
               <p className="kicker">Cupos limitados</p>

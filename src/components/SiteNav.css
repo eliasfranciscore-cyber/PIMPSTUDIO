@@ -99,7 +99,7 @@
    de la barra es 0.2rem, así que para dejar el logo ~0.6rem dentro de la píldora:
    2.1rem (píldora) − 0.2rem (padding barra) + 0.6rem (aire) ≈ 2.5rem. */
 @media (min-width: 900px) {
-  .home-nav .site-nav-brand { padding-left: 2.5rem; }
+  .home-nav .site-nav-brand { padding-left: 3.4rem; }
 }
 
 /* Navbar siempre translúcido: SÓLO el pill redondeado (.home-nav.is-scrolled::before).

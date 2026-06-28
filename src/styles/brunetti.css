@@ -1606,7 +1606,7 @@
   .brunetti-site .bhero {
     align-items: start;
     min-height: auto;
-    padding-top: calc(5.5rem + );
+    padding-top: 5.5rem;
     padding-bottom: clamp(2.5rem, 7vh, 4rem);
     text-align: center;
   }
@@ -1781,6 +1781,11 @@
   display: flex;
   justify-content: center;
   overflow: hidden;
+  /* Color de la lámpara por módulo: dorado por defecto; azul en /cursos y
+     morado en /workshop (overrides más abajo). --lamp-rgb se usa en rgba(). */
+  --lamp-rgb: 231, 200, 126;
+  --lamp-mid: #f6df9f;
+  --lamp-core: #fff7de;
 }
 .bru-lamp-inner { position: relative; width: 100%; height: 100%; transform-origin: 50% 0; }
 .bru-lamp--hero { top: 120px; height: 480px; --lamp-y: 140px; }
@@ -1792,15 +1797,15 @@
   width: min(36rem, 88%); height: 3px;
   transform: translateX(-50%);
   border-radius: 3px;
-  background: linear-gradient(90deg, transparent, rgba(231,200,126,.5) 16%, #f6df9f 36%, #fff7de 50%, #f6df9f 64%, rgba(231,200,126,.5) 84%, transparent);
-  box-shadow: 0 0 24px 4px rgba(231,200,126,.95), 0 0 70px 18px rgba(231,200,126,.6), 0 0 140px 48px rgba(231,200,126,.3);
+  background: linear-gradient(90deg, transparent, rgba(var(--lamp-rgb),.5) 16%, var(--lamp-mid) 36%, var(--lamp-core) 50%, var(--lamp-mid) 64%, rgba(var(--lamp-rgb),.5) 84%, transparent);
+  box-shadow: 0 0 24px 4px rgba(var(--lamp-rgb),.95), 0 0 70px 18px rgba(var(--lamp-rgb),.6), 0 0 140px 48px rgba(var(--lamp-rgb),.3);
 }
 /* Cono de luz dorado bajo la línea (transparente, sin caja) */
 .bru-lamp-glow {
   position: absolute; top: var(--lamp-y); left: 50%;
   width: min(46rem, 124%); height: 22rem;
   transform: translateX(-50%);
-  background: radial-gradient(56% 66% at 50% 0%, rgba(231,200,126,.58) 0%, rgba(231,200,126,.30) 26%, rgba(231,200,126,.10) 54%, transparent 80%);
+  background: radial-gradient(56% 66% at 50% 0%, rgba(var(--lamp-rgb),.58) 0%, rgba(var(--lamp-rgb),.30) 26%, rgba(var(--lamp-rgb),.10) 54%, transparent 80%);
   -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0,0,0,.62) 46%, transparent 92%);
   mask-image: linear-gradient(to bottom, #000 0%, rgba(0,0,0,.62) 46%, transparent 92%);
 }
@@ -1810,8 +1815,15 @@
   -webkit-mask-image: linear-gradient(to top, transparent 4%, #000 62%);
   mask-image: linear-gradient(to top, transparent 4%, #000 62%);
 }
-.bru-lamp-beam--l { right: 50%; background-image: conic-gradient(from 82deg at 100% 0, rgba(231,200,126,.42), transparent 28%); }
-.bru-lamp-beam--r { left: 50%;  background-image: conic-gradient(from 278deg at 0 0, transparent 72%, rgba(231,200,126,.42)); }
+.bru-lamp-beam--l { right: 50%; background-image: conic-gradient(from 82deg at 100% 0, rgba(var(--lamp-rgb),.42), transparent 28%); }
+.bru-lamp-beam--r { left: 50%;  background-image: conic-gradient(from 278deg at 0 0, transparent 72%, rgba(var(--lamp-rgb),.42)); }
+
+/* Lámpara por módulo: azul en /cursos, morado en /workshop (dorada por defecto). */
+.cursos-page .bru-lamp { --lamp-rgb: 107, 116, 240; --lamp-mid: #8b93f5; --lamp-core: #dfe2ff; }
+.wks .bru-lamp { --lamp-rgb: 180, 131, 243; --lamp-mid: #c9a3f7; --lamp-core: #f1e4ff; }
+
+/* Sección que aloja una lámpara: contiene el haz absoluto sin desbordar. */
+.bsection-lamp { position: relative; overflow: hidden; isolation: isolate; }
 
 .brunetti-site .bhero-lamp-wrap {
   pointer-events: none;
@@ -2217,7 +2229,7 @@
 .float-theme-toggle {
   position: fixed;
   left: 1rem;
-  bottom: calc(1rem + );
+  bottom: 1rem;
   z-index: 1200;
   padding: 4px;
   border-radius: 999px;
@@ -2250,10 +2262,13 @@ body.dash-mode .float-theme-toggle { display: none; }
 }
 .float-theme-toggle.is-dark .ftt-knob { transform: translateX(0); }
 .float-theme-toggle.is-light .ftt-knob { transform: translateX(32px); }
+/* Acento del knob según el módulo actual: azul en /cursos, morado en /workshop. */
+.float-theme-toggle.ftt-cursos .ftt-knob { background: linear-gradient(135deg, #6b74f0, #0b129e); color: #fff; }
+.float-theme-toggle.ftt-workshop .ftt-knob { background: linear-gradient(135deg, #b483f3, #8838d8); color: #fff; }
 @media (max-width: 900px) {
-  .float-theme-toggle { bottom: calc(6.4rem + ); z-index: 66; }
+  .float-theme-toggle { bottom: 6.4rem; z-index: 66; }
   /* Espacio para que la barra fija de Reservar (móvil) no tape el contenido/footer */
-  .brunetti-site { padding-bottom: calc(5.6rem + ); }
+  .brunetti-site { padding-bottom: 5.6rem; }
 }
 
 /* ============================================================
@@ -2267,6 +2282,31 @@ body.dash-mode .float-theme-toggle { display: none; }
 .mfooter-brand { display: grid; gap: 1.05rem; justify-items: start; }
 .mfooter-word { display: inline-flex; align-items: center; gap: 0.7rem; font-family: var(--font-display, "Sora", sans-serif); font-weight: 700; letter-spacing: 0.18em; font-size: 1.05rem; color: var(--ink); }
 .mfooter-logo-mark { width: 42px; height: 42px; border-radius: 999px; object-fit: cover; border: 1.5px solid var(--gold-edge, var(--gold-line)); }
+/* Wordmark de texto "Brunetti Cutz" en el footer (reemplaza el logo monograma).
+   Gótica + degradado dorado por defecto; azul en /cursos, morado en /workshop. */
+.mfooter-wordmark {
+  font-family: "Manufacturing Consent", "Pirata One", serif;
+  font-weight: 400;
+  font-size: clamp(2rem, 5vw, 2.6rem);
+  line-height: 1;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  background: linear-gradient(180deg, #f1e2b0 0%, #e9d7a0 18%, #c9a14e 50%, #9c7a32 78%, #7a5e26 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.cursos-page .mfooter-wordmark {
+  background: linear-gradient(180deg, #aab0f7 0%, #8b93f5 18%, #6b74f0 50%, #2730b8 78%, #0b129e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.wks .mfooter-wordmark {
+  background: linear-gradient(180deg, #d9c2f9 0%, #c9a3f7 18%, #b483f3 50%, #8838d8 78%, #6b28b8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
 .mfooter-tag { margin: 0; color: var(--ink-2, var(--muted)); font-size: 0.95rem; line-height: 1.6; max-width: 46ch; }
 .mfooter-cta { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.85rem 1.5rem; border-radius: var(--pill, 999px); border: 1px solid var(--gold-bright); background: var(--gold-grad); color: var(--on-gold); font-family: var(--font-display, "Sora", sans-serif); font-weight: 600; letter-spacing: 0.06em; font-size: 0.82rem; cursor: pointer; box-shadow: var(--g-spec, none), 0 8px 22px rgba(0, 0, 0, 0.32); transition: transform .2s, box-shadow .2s; }
 .mfooter-cta:hover { transform: translateY(-1px); box-shadow: var(--g-spec, none), 0 12px 30px rgba(0, 0, 0, 0.42); }
@@ -2394,6 +2434,42 @@ body.dash-mode .float-theme-toggle { display: none; }
 }
 /* Checklist de la card de inscripción: contraste sólido en claro */
 [data-theme="light"] .brunetti-site .bcontact-list li { color: #2a2723; }
+
+/* --- CURSOS en CLARO: hero LUMINOSO (sin filtro negro) + tarjetas claras.
+   El usuario quiere el modo claro uniforme: la foto del hero se ve clara y el
+   texto/indicadores pasan a oscuro/azul (no se quedan blancos sobre la foto).
+   Va DESPUÉS de las reglas globales para ganar por orden de cascada. --- */
+[data-theme="light"] .cursos-page .course-hero::after {
+  background:
+    radial-gradient(60vw 50vw at 72% 8%, rgba(107, 116, 240, 0.18), transparent 60%),
+    linear-gradient(to right, rgba(247, 243, 234, 0.92) 18%, rgba(247, 243, 234, 0.66) 55%, rgba(247, 243, 234, 0.40) 100%),
+    linear-gradient(to top, rgba(247, 243, 234, 0.96), transparent 64%);
+}
+[data-theme="light"] .cursos-page .course-hero h1 {
+  /* background-image (no shorthand) para NO resetear background-clip; + clip
+     !important para ganar al `background:none !important` de la regla global. */
+  background-image: linear-gradient(180deg, #2730b8 18%, #0b129e 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+[data-theme="light"] .cursos-page .course-hero .sub { color: #34302a !important; }
+[data-theme="light"] .cursos-page .course-hero .btn-ghost {
+  background: rgba(11, 18, 158, 0.06);
+  border-color: rgba(11, 18, 158, 0.28);
+  color: #0b129e;
+}
+[data-theme="light"] .cursos-page .course-hero .btn-ghost:hover {
+  background: rgba(11, 18, 158, 0.12);
+  border-color: rgba(11, 18, 158, 0.42);
+}
+[data-theme="light"] .cursos-page .course-stats .cst {
+  background: #ffffff;
+  border-color: rgba(11, 18, 158, 0.14);
+  box-shadow: 0 12px 30px -18px rgba(11, 18, 158, 0.32);
+}
+[data-theme="light"] .cursos-page .course-stats .cst span { color: #6b6660 !important; }
 
 /* --- WORKSHOP: superficies con fondo oscuro hardcodeado (no usan tokens) →
    se vuelven claras en modo claro para que no queden como bloques negros. --- */

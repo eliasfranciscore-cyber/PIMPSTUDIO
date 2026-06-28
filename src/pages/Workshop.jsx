@@ -76,6 +76,75 @@ function Bw({ src, alt, label = "Foto", className = "", innerClass = "" }) {
   );
 }
 
+/* ID de YouTube desde cualquier formato de URL (watch/share/embed/shorts/live). */
+function ytId(url) {
+  const m = (url || "").match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/))([\w-]{11})/);
+  return m ? m[1] : null;
+}
+
+/* Normaliza una URL de YouTube o Vimeo (watch/share/embed) a su URL de embed
+   con autoplay. Si ya es una URL de embed, la deja igual. */
+function toEmbedUrl(url) {
+  if (!url) return "";
+  const yt = ytId(url);
+  if (yt) return `https://www.youtube-nocookie.com/embed/${yt}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+  const m = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+  if (m) return `https://player.vimeo.com/video/${m[1]}?autoplay=1&title=0&byline=0&portrait=0`;
+  return url;
+}
+
+/* Embed de video con fachada "click-to-play": muestra la VISTA PREVIA propia
+   del video (miniatura de YouTube), no una foto del sitio. No carga el iframe
+   pesado hasta que el usuario pulsa play → mejor rendimiento/LCP.
+   `vertical` para reels 9:16. */
+function VideoEmbed({ src, title = "Video", vertical = false }) {
+  const [playing, setPlaying] = useState(false);
+  const embed = toEmbedUrl(src);
+  const yt = ytId(src);
+  const thumb = yt ? `https://img.youtube.com/vi/${yt}/maxresdefault.jpg` : null;
+  return (
+    <div className={`wks-video ${vertical ? "is-vertical" : ""}`}>
+      {playing ? (
+        <iframe
+          className="wks-video-frame"
+          src={embed}
+          title={title}
+          loading="lazy"
+          allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+          allowFullScreen
+        />
+      ) : (
+        <button type="button" className="wks-video-poster" onClick={() => setPlaying(true)} aria-label={`Reproducir: ${title}`}>
+          {thumb && <img src={thumb} alt={title} loading="lazy" />}
+          <span className="wks-video-play" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+          </span>
+        </button>
+      )}
+    </div>
+  );
+}
+
+/* Sección dedicada del video (VSL), centrada y prominente — "entremedio". */
+function VideoShowcase() {
+  if (!WK.video) return null;
+  return (
+    <section className="wks-section wks-vsl">
+      <Lamp className="bru-lamp--sec" />
+      <div className="wks-container">
+        <Reveal className="wks-head">
+          <span className="wks-eyebrow">{WK.video.eyebrow}</span>
+          <h2 className="wks-h2">{WK.video.title}</h2>
+          <hr className="wks-rule" />
+        </Reveal>
+        <Reveal className="wks-vsl-frame">
+          <VideoEmbed src={WK.video.url} title={WK.video.title} />
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
 function formatCLP(n) {
   return "$" + Math.round(Number(n) || 0).toLocaleString("es-CL");
 }
@@ -575,7 +644,7 @@ function Footer({ onReserve }) {
       <div className="wks-footer-wide">
         <div className="wks-footer-cols">
           <div className="wks-footer-brand">
-            <img className="wks-footer-logo" src="/assets/ascension-logo.webp" alt="ASCENSIÓN" />
+            <span className="mfooter-wordmark" aria-label="Brunetti Cutz">Brunetti Cutz</span>
             <p className="wks-footer-tag">
               Workshop de marca personal para barberos. Convierte tu técnica en visibilidad,
               y tu visibilidad en agenda real.
@@ -640,6 +709,7 @@ export default function Workshop() {
         <QuoteBlock />
         <FeatureRow data={WK.experiencia} />
         <FeatureRow data={WK.asesoria} reversed />
+        <VideoShowcase />
         <Programa />
         <Cronograma />
         <GiveKit />

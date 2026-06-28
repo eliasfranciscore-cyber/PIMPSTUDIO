@@ -175,6 +175,13 @@ export const WORKSHOP = {
     seatsTaken: 13,
   },
 
+  // Video VSL del workshop — sección dedicada (usa la vista previa de YouTube).
+  video: {
+    url: "https://youtu.be/T2vr97BHQvQ",
+    eyebrow: "El workshop en video",
+    title: "Mira de qué se trata, en menos de 3 minutos.",
+  },
+
   // imágenes Unsplash (se fuerzan a B/N por CSS). Reemplazables por /assets propias.
   photos: {
     hero: "/assets/workshop-2026.jpg",

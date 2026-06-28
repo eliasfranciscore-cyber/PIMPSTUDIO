@@ -39,7 +39,7 @@ export default function ModuleFooter({
         <div className="mfooter-cols">
           <div className="mfooter-brand">
             <div className="mfooter-word">
-              <img src="/assets/brunetti-logo-monogram.svg" alt={brandName} className="mfooter-logo-mark" style={{ height: '70px', width: 'auto' }} />
+              <span className="mfooter-wordmark" aria-label={brandName}>Brunetti Cutz</span>
             </div>
             <p className="mfooter-tag">{tagline}</p>
             {onPrimary && (

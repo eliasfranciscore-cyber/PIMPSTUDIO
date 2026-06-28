@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react'
+import { useLocation } from 'react-router-dom'
 
 /* ============================================================
    Tema claro/oscuro global.
@@ -128,6 +129,10 @@ function SunIcon({ size = 16 }) {
 export function FloatingThemeToggle() {
   const { theme, toggle } = useTheme()
   const isDark = theme === 'dark'
+  // Acento por módulo: el toggle vive fuera de los wrappers .cursos-page/.wks,
+  // así que derivamos la clase desde la ruta para teñirlo del color del módulo.
+  const { pathname } = useLocation()
+  const moduleClass = pathname.startsWith('/workshop') ? 'ftt-workshop' : pathname.startsWith('/cursos') ? 'ftt-cursos' : ''
   return (
     <button
       type="button"
@@ -136,7 +141,7 @@ export function FloatingThemeToggle() {
       aria-checked={!isDark}
       aria-label={isDark ? 'Activar modo claro' : 'Activar modo oscuro'}
       title={isDark ? 'Modo claro' : 'Modo oscuro'}
-      className={`float-theme-toggle ${isDark ? 'is-dark' : 'is-light'}`}
+      className={`float-theme-toggle ${isDark ? 'is-dark' : 'is-light'} ${moduleClass}`}
     >
       <span className="ftt-track">
         <span className="ftt-side ftt-side-moon"><MoonIcon /></span>
