@@ -80,9 +80,13 @@
   padding-left: 0.4em;
 }
 
-/* En desktop el logo respira un poco del borde izquierdo de la barra. */
+/* En desktop el logo debe quedar DENTRO de la píldora translúcida del navbar.
+   La píldora (.home-nav.is-scrolled::before) arranca en clamp(.7rem,4vw,2.1rem)
+   = 2.1rem desde el borde de la barra en todo desktop (≥900px). El padding-izq
+   de la barra es 0.2rem, así que para dejar el logo ~0.6rem dentro de la píldora:
+   2.1rem (píldora) − 0.2rem (padding barra) + 0.6rem (aire) ≈ 2.5rem. */
 @media (min-width: 900px) {
-  .home-nav .site-nav-brand { padding-left: 0.8rem; }
+  .home-nav .site-nav-brand { padding-left: 2.5rem; }
 }
 
 /* Navbar siempre translúcido: SÓLO el pill redondeado (.home-nav.is-scrolled::before).
