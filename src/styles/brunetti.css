@@ -35,26 +35,17 @@
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: clip;
-  /* Fondo OPACO en el propio wrapper (igual que .wks en workshop): rellena el
-     viewport completo incluyendo las safe-areas de iOS, así Safari tiñe el notch
-     y la barra inferior con el color de la página → full-screen, sin bandas
-     negras. Por tema (oscuro por defecto; crema en claro, override abajo). */
+  /* Fondo SIEMPRE OSCURO (igual que .wks en workshop): el overlay
+     black-translucent del notch/home-indicator cae sobre negro → invisible
+     → full-screen sin safe-area bars, en cualquier modo de tema. */
   background:
     radial-gradient(1200px 700px at 78% -10%, rgba(201, 161, 78, 0.10), transparent 60%),
     linear-gradient(180deg, #0a0a09 0%, #070706 100%);
 }
-[data-theme="light"] .brunetti-site {
-  background:
-    radial-gradient(1200px 700px at 80% -10%, rgba(201, 161, 78, 0.16), transparent 60%),
-    radial-gradient(900px 600px at 8% 10%, rgba(255, 255, 255, 0.6), transparent 55%),
-    linear-gradient(180deg, #f8f6ef 0%, #efece4 100%);
-}
-/* En /cursos el acento del glow es azul (combina con el módulo). */
-[data-theme="light"] .brunetti-site.cursos-page {
-  background:
-    radial-gradient(1200px 700px at 80% -10%, rgba(107, 116, 240, 0.14), transparent 60%),
-    linear-gradient(180deg, #f8f6ef 0%, #efece4 100%);
-}
+/* El fondo de .brunetti-site es SIEMPRE oscuro (igual que .wks en workshop):
+   así el overlay black-translucent del status bar cae sobre negro → invisible
+   → la página se ve full-screen en home y cursos igual que en workshop.
+   El modo claro lo expresan las secciones y cards dentro, no el wrapper. */
 .brunetti-site.cursos-page {
   background:
     radial-gradient(1200px 700px at 80% -10%, rgba(43, 51, 201, 0.12), transparent 60%),
