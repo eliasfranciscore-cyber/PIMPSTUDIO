@@ -65,6 +65,19 @@
   color: transparent;
   filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.4));
 }
+/* En /cursos y /workshop el logotipo adopta el degradado del módulo (azul/morado),
+   manteniendo el mismo recorte de texto y brillo. Dorado en el resto del sitio.
+   El recorte (background-clip:text + fill transparente) ya viene heredado arriba. */
+.cursos-page .site-nav-brand-word {
+  background: linear-gradient(180deg, #aab0f7 0%, #8b93f5 18%, #6b74f0 50%, #2730b8 78%, #0b129e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.wks .site-nav-brand-word {
+  background: linear-gradient(180deg, #d9c2f9 0%, #c9a3f7 18%, #b483f3 50%, #8838d8 78%, #6b28b8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
 .home-nav .site-nav-brand-sub {
   display: block;
   font-family: var(--font-display);
