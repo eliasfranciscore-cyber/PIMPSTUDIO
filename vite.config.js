@@ -3,6 +3,10 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
+  server: {
+    port: parseInt(process.env.PORT) || 5173,
+    strictPort: false,
+  },
   build: {
     outDir: 'dist',
     // Vendor split: React y el router cambian poco, así el navegador los cachea

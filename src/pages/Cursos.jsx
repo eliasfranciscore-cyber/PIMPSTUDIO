@@ -14,63 +14,60 @@ import { addLocalEnrollment } from '../enrollmentsStore.js'
 
 const MODULES = [
   {
-    t: 'Fundamentos del Visagismo',
-    d: 'Qué es el visagismo y por qué cambia tu forma de cortar.',
+    t: 'Bienvenida',
+    d: 'Quién soy y qué vas a lograr aquí — el método, la comunidad y cómo aprovechar Skool.',
     lessons: [
-      ['Introducción al visagismo', '08:24'],
-      ['Historia y principios del rostro', '11:02'],
-      ['Proporciones áureas aplicadas', '13:47'],
-      ['Tu mirada como barbero', '06:58'],
+      ['Mi historia como barbero — por qué creé esto', '07:30'],
+      ['Qué vas a lograr en esta comunidad', '05:30'],
+      ['Cómo usar Skool en 3 minutos (en español)', '05:00'],
     ],
   },
   {
-    t: 'Análisis de fisonomía y diagnóstico',
-    d: 'Identificar formas de rostro, rasgos y qué favorece a cada uno.',
+    t: 'El Protocolo Pre-Corte',
+    d: 'Por qué el 90% falla antes de tomar la máquina — las 5 preguntas que cambian la experiencia del cliente.',
     lessons: [
-      ['Tipos de rostro y cómo leerlos', '14:30'],
-      ['Diagnóstico en consulta', '12:15'],
-      ['Líneas, volúmenes y largos', '10:41'],
-      ['Ficha del cliente', '07:20'],
+      ['El error que comete el 90% antes de cortar', '07:30'],
+      ['Las 5 preguntas explicadas una por una', '08:30'],
+      ['Las 5 preguntas en vivo con cliente real', '08:30'],
+      ['Cómo el protocolo cambia lo que cobrás', '07:30'],
     ],
   },
   {
-    t: 'Técnica de corte a medida',
-    d: 'Ejecución de precisión pensada para la fisonomía del cliente.',
+    t: 'El Sistema de Fade',
+    d: 'Low, mid y high fade desde cero — lectura del cráneo, ejecución y corrección de errores.',
     lessons: [
-      ['Degradados quirúrgicos', '16:08'],
-      ['Texturizado y movimiento', '13:55'],
-      ['Adaptar el corte al rostro', '12:33'],
-      ['Acabado y producto', '09:12'],
+      ['Cómo leer el cráneo antes de empezar', '07:30'],
+      ['Low fade — paso a paso', '08:30'],
+      ['Mid fade y high fade — las diferencias clave', '09:30'],
+      ['Cómo borrar manchas y líneas duras', '08:30'],
     ],
   },
   {
-    t: 'Barba y perfilado de precisión',
-    d: 'Diseño de barba que complementa el corte y el rostro.',
+    t: 'El Orden del Corte',
+    d: 'Patrón de crecimiento, secciones y zonas anatómicas — un sistema que da resultados consistentes.',
     lessons: [
-      ['Diseño de líneas y simetría', '11:48'],
-      ['Perfilado con navaja', '14:22'],
-      ['Barba según fisonomía', '10:05'],
-      ['Mantenimiento y recomendaciones', '07:39'],
+      ['Por qué el orden importa más que la técnica', '07:30'],
+      ['Secciones anatómicas: occipital, parietal y temporal', '09:30'],
+      ['El mapa del cráneo — zonas y orden de trabajo', '07:30'],
     ],
   },
   {
-    t: 'Dirección de estilo & transformación',
-    d: 'Del corte al cambio de imagen integral.',
+    t: 'Marca Personal',
+    d: 'Cómo posicionarte como EL barbero de tu ciudad — qué publicar y cómo documentar tu trabajo.',
     lessons: [
-      ['Construir una propuesta de imagen', '13:17'],
-      ['Transformación completa paso a paso', '18:44'],
-      ['Comunicar el cambio al cliente', '09:50'],
-      ['Casos reales comentados', '15:26'],
+      ['El barbero que no se ve no existe', '07:30'],
+      ['Qué publicar en TikTok e Instagram como barbero', '08:30'],
+      ['Cómo documentar un corte en 60 segundos', '07:30'],
     ],
   },
   {
-    t: 'Marca personal, contenido y negocio',
-    d: 'Mostrar tu trabajo y profesionalizar tu servicio.',
+    t: 'Cómo Cobrar Más',
+    d: 'De $12.000 a $20.000 — el caso real de Brunetti, la mentalidad y el método paso a paso.',
     lessons: [
-      ['Tu identidad como barbero', '10:33'],
-      ['Cómo grabar y mostrar tu trabajo', '14:09'],
-      ['Construir comunidad y clientes', '12:51'],
-      ['Precios, agenda y crecimiento', '13:40'],
+      ['Por qué los barberos cobran poco', '07:30'],
+      ['El caso Brunetti — de $12.000 a $20.000', '08:30'],
+      ['Cómo comunicar la subida sin perder clientes', '08:30'],
+      ['Tu plan de los próximos 30 días', '07:30'],
     ],
   },
 ]
@@ -155,7 +152,7 @@ export default function Cursos() {
             </div>
             <div className="course-stats">
               <div className="cst"><strong data-count="6">0</strong><span>Módulos</span></div>
-              <div className="cst"><strong data-count="24">0</strong><span>Lecciones</span></div>
+              <div className="cst"><strong data-count="21">0</strong><span>Lecciones</span></div>
               <div className="cst"><strong data-count="100" data-suffix="%">0</strong><span>Online</span></div>
               <div className="cst"><strong>∞</strong><span>Acceso al material</span></div>
             </div>
@@ -247,7 +244,7 @@ export default function Cursos() {
                 <h3>Curso Brunetti</h3>
                 <p>Formación completa en visagismo, técnica de barbería, dirección de estilo y marca personal — el método de Bruno Herrera.</p>
                 <ul className="bcontact-list">
-                  <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M9 12l2 2 4-4" /></svg>6 módulos · 24 lecciones en video</li>
+                  <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M9 12l2 2 4-4" /></svg>6 módulos · 21 lecciones en video</li>
                   <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M9 12l2 2 4-4" /></svg>Acceso al material compartido</li>
                   <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M9 12l2 2 4-4" /></svg>Enfoque en visagismo y marca personal</li>
                 </ul>
