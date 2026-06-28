@@ -45,12 +45,13 @@
             t = (h >= 7 && h < 19) ? 'light' : 'dark';
           }
           document.documentElement.setAttribute('data-theme', t);
-          var bg = t === 'light' ? '#f6f5f3' : '#080807';
+          var bg = t === 'light' ? '#f7f3ea' : '#080807';
           var m = document.querySelector('meta[name="theme-color"]');
           if (m) m.setAttribute('content', bg);
           // Fija el color de raíz desde el primer paint (iOS lo muestrea para
           // la barra de estado → evita banda oscura sobre página clara).
           document.documentElement.style.backgroundColor = bg;
+          if (document.body) document.body.style.backgroundColor = bg;
         } catch (e) { document.documentElement.setAttribute('data-theme', 'dark'); }
       })();
     </script>
