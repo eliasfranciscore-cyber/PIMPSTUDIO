@@ -177,7 +177,7 @@ export const WORKSHOP = {
 
   // Video VSL del workshop — sección dedicada (usa la vista previa de YouTube).
   video: {
-    url: "https://youtu.be/T2vr97BHQvQ",
+    url: "https://youtu.be/8gnNeVWrZG0",
     eyebrow: "El workshop en video",
     title: "Mira de qué se trata, en menos de 3 minutos.",
   },
