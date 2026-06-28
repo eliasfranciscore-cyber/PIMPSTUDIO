@@ -2168,6 +2168,14 @@
   --shadow-gold: 0 16px 40px -18px rgba(11, 18, 158, 0.55);
   --on-gold: #ffffff;
 }
+/* Modo claro: el azul claro (#6b74f0) no contrasta sobre la crema (~3.9:1 < AA).
+   Se oscurece el acento del módulo SOLO en claro para el ítem activo del navbar
+   y demás usos de --gold-lt, igual que el workshop hace con su morado.
+   Especificidad (0,3,0) → gana a .brunetti-site.cursos-page (0,2,0). */
+[data-theme="light"] .brunetti-site.cursos-page {
+  --gold-lt: #3a44d6;
+  --gold-bright: #3a44d6;
+}
 /* Degradados de texto dorados hardcodeados → blanco→azul */
 .cursos-page .course-hero h1 {
   background: linear-gradient(180deg, #fff 28%, #5660e6 64%, #0b129e 100%);

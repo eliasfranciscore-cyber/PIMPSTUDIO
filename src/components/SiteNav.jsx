@@ -77,14 +77,14 @@ export default function SiteNav({ onSection, scrolled: scrolledProp }) {
   return (
     <React.Fragment>
       <header className={`home-nav ${scrolled || menuOpen ? "is-scrolled" : ""}`}>
-        <a href="#" className="brand brand-mark" onClick={(e) => { e.preventDefault(); navigate("/") }}>
-          <img className="brand-mark" src="/assets/brunetti-logo-mark.svg" alt="Brunetti" />
-        </a>
-        <a href="#" className="brand brand-text" onClick={(e) => { e.preventDefault(); navigate("/") }}>
-          <img className="brand-text" src="/assets/brunetti-logo-text.svg" alt="Brunetti Cutz" />
-        </a>
-        <a href="#" className="brand brand-lockup" onClick={(e) => { e.preventDefault(); navigate("/") }}>
-          <img className="brand-lockup" src="/assets/brunetti-logo-lockup-v2.svg" alt="Brunetti Cutz" />
+        <a
+          href="#"
+          className="site-nav-brand"
+          aria-label="Brunetti Cutz — Barber Studio"
+          onClick={(e) => { e.preventDefault(); navigate("/") }}
+        >
+          <span className="site-nav-brand-word">Brunetti Cutz</span>
+          <span className="site-nav-brand-sub">Barber Studio</span>
         </a>
         <nav className="home-nav-links">
           {NAV.map(([id, label]) => (
@@ -92,13 +92,13 @@ export default function SiteNav({ onSection, scrolled: scrolledProp }) {
               key={id}
               onClick={() => handleNav(id)}
               className="nav-link"
-              style={(id === "workshop" && isWorkshop) || (id === "style" && isStyle) ? { color: "var(--gold)" } : undefined}
+              style={(id === "workshop" && isWorkshop) || (id === "cursos" && isCursos) || (id === "style" && isStyle) ? { color: "var(--gold-lt)" } : undefined}
             >
               {label}
             </button>
           ))}
-          <button className="btn btn-ghost btn-sm site-nav-barber-desktop" onClick={() => navigate("/ingreso")}>
-            <Icon name="key" size={14} /> Acceso interno
+          <button className="btn btn-ghost btn-sm site-nav-barber-desktop" onClick={() => navigate("/ingreso")} aria-label="Acceso interno">
+            <Icon name="key" size={16} />
           </button>
           <button className="btn btn-gold btn-sm site-nav-reserve-desktop" onClick={() => navigate("/login")}>
             <Icon name="calendar" size={14} /> Reservar
@@ -122,7 +122,7 @@ export default function SiteNav({ onSection, scrolled: scrolledProp }) {
             key={id}
             role="menuitem"
             onClick={() => handleNav(id)}
-            className={(id === "workshop" && isWorkshop) || (id === "style" && isStyle) ? "is-active" : ""}
+            className={(id === "workshop" && isWorkshop) || (id === "cursos" && isCursos) || (id === "style" && isStyle) ? "is-active" : ""}
           >
             {label}
           </button>

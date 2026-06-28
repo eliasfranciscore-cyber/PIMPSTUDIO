@@ -28,48 +28,61 @@
   .site-nav-burger { display: none; }
 }
 
-/* Logo en navbar: separado en mark + text en móvil, lockup en desktop */
-.home-nav .brand {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-}
-.home-nav .brand-mark {
+/* ------------------------------------------------------------------
+   Logotipo del navbar como TEXTO (no SVG): "Brunetti Cutz" en gótica
+   dorada + "Barber Studio" centrado debajo. Todo escala desde una sola
+   font-size en el contenedor (.brand-logo); los hijos usan em → mover el
+   logo entre desktop/móvil es cambiar UN número, sin romper el layout.
+   ------------------------------------------------------------------ */
+.home-nav .site-nav-brand {
   flex: 0 0 auto;
-  padding-left: 0.3rem;
-  padding-right: 0.6rem;
+  /* inline-block + text-align:center = shrink-wrap fiable al ancho del texto
+     más ancho ("Brunetti Cutz") y "Barber Studio" centrado debajo. Evita los
+     quirks de tamaño de un flex-column anidado. */
+  display: inline-block;
+  text-align: center;
+  line-height: 1;
+  font-size: 17px;         /* unidad base: toda la marca escala desde aquí */
+  text-decoration: none;
+  white-space: nowrap;
 }
-.home-nav .brand-mark img {
-  height: 60px;
-  width: auto;
+.home-nav.is-scrolled .site-nav-brand { font-size: 14.5px; }
+
+.home-nav .site-nav-brand-word {
+  display: block;
+  font-family: "Manufacturing Consent", "Pirata One", serif;
+  font-weight: 400;
+  font-size: 2.15em;
+  line-height: 0.92;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  /* Gradiente dorado FIJO (no var(--gold-grad)): se mantiene dorado también
+     en /workshop (morado) y /cursos (azul), donde --gold-grad se remapea. */
+  background: linear-gradient(180deg, #f1e2b0 0%, #e9d7a0 18%, #c9a14e 50%, #9c7a32 78%, #7a5e26 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.4));
 }
-.home-nav .brand-text {
-  flex: 0 1 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
+.home-nav .site-nav-brand-sub {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.62em;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+  margin-top: 0.3em;
+  /* El tracking añade un hueco a la DERECHA de la última letra → este padding
+     izquierdo lo compensa para que quede ópticamente centrado bajo la palabra. */
+  padding-left: 0.4em;
 }
-.home-nav .brand-text img {
-  height: 56px;
-  width: auto;
-  max-width: 160px;
-}
-.home-nav.is-scrolled .brand-mark img { height: 48px; }
-.home-nav.is-scrolled .brand-text img { height: 42px; }
+
+/* En desktop el logo respira un poco del borde izquierdo de la barra. */
 @media (min-width: 900px) {
-  .home-nav .brand-mark { display: none; }
-  .home-nav .brand-text { display: none; }
-  .home-nav .brand-lockup {
-    display: block;
-    flex: 0 0 auto;
-  }
-  .home-nav .brand-lockup img {
-    height: 56px;
-    width: auto;
-  }
-  .home-nav.is-scrolled .brand-lockup img { height: 44px; }
+  .home-nav .site-nav-brand { padding-left: 0.8rem; }
 }
 
 /* Navbar siempre translúcido: SÓLO el pill redondeado (.home-nav.is-scrolled::before).
@@ -81,25 +94,34 @@
   -webkit-backdrop-filter: none;
 }
 
-/* En móvil: más aire en los bordes */
+/* En móvil: brand centrada absolutamente, hamburguesa a la derecha */
 @media (max-width: 899px) {
   .home-nav {
-    /* Marca A LA IZQUIERDA en la barra; la hamburguesa va en absoluto a la derecha. */
     align-items: center;
-    justify-content: flex-start;
-    padding-top: 0.55rem;
-    padding-bottom: 0.55rem;
-    padding-left: 1.1rem;
-    padding-right: 1.4rem;
-    gap: 0.75rem;
+    justify-content: center;
+    /* padding uniforme arriba/abajo; left/right se anulan porque la brand va absoluta */
+    padding: 0.9rem clamp(1rem, 4vw, 1.4rem);
+    min-height: 76px;
   }
-  .home-nav .brand-lockup { display: none; }
+  /* Brand centrada con absolute → 100% simétrica dentro de la pill.
+     font-size con clamp: ~19px en teléfonos normales (375px) pero encoge en
+     pantallas muy estrechas para que el wordmark (nowrap, centrado) nunca
+     alcance la hamburguesa absoluta de la derecha. */
+  .home-nav .site-nav-brand {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: clamp(15px, 5.1vw, 19px);
+    pointer-events: auto;
+  }
+  .home-nav.is-scrolled .site-nav-brand { font-size: 16px; }
   .home-nav-links { display: none; }
   .site-nav-reserve-desktop { display: none !important; }
   .site-nav-barber-desktop { display: none !important; }
   .site-nav-burger {
     position: absolute;
-    right: calc(clamp(.7rem, 4vw, 2.1rem) + 0.85rem);
+    right: clamp(1.1rem, 5.5vw, 2rem);
     top: 50%;
     transform: translateY(-50%);
   }
@@ -150,8 +172,8 @@
   cursor: pointer;
 }
 .site-nav-sheet button:last-child { border-bottom: 0; }
-/* Activo: en cursos/workshop toma el color de acento del módulo */
-.site-nav-sheet button.is-active { color: var(--gold); }
+/* Activo: en cursos/workshop toma el color de acento (claro) del módulo */
+.site-nav-sheet button.is-active { color: var(--gold-lt); }
 
 /* Modo claro: el sheet sigue el tema — fondo crema translúcido + tinta oscura,
    no el panel oscuro fijo. (data-theme vive en <html>, ancestro del sheet.) */
@@ -176,6 +198,16 @@
 .site-nav-sheet .site-nav-sheet-barber svg { flex: 0 0 auto; }
 @media (min-width: 900px) {
   .site-nav-sheet { display: none; }
+}
+
+/* Botón acceso interno — solo ícono, cuadrado */
+.site-nav-barber-desktop {
+  width: 36px;
+  height: 36px;
+  padding: 0 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Backdrop para cerrar el menú */
