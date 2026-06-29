@@ -147,7 +147,7 @@ export default function Cursos() {
             <h1>Curso Brunetti<br />Visagismo &amp; Barbería</h1>
             <p className="sub">Aprende a leer el rostro, dominar la técnica y construir tu marca personal. 6 módulos pensados para barberos que quieren dejar de copiar tendencias y empezar a diseñar imagen.</p>
             <div className="actions">
-              <a className="btn btn-primary" onClick={() => goAnchor('inscripcion')}>INSCRIBIRME EN LA LISTA</a>
+              <a className="btn btn-primary" href="https://www.skool.com/brunetti-academy-2840/classroom" target="_blank" rel="noopener noreferrer">INSCRIBIRME EN LA LISTA</a>
               <a className="btn btn-ghost" onClick={() => goAnchor('curriculum')}>VER PROGRAMA</a>
             </div>
             <div className="course-stats">
