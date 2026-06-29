@@ -188,13 +188,13 @@ export default function Cursos() {
             </div>
             <div className="course-levels" data-reveal>
               {LEVELS.map((lv, i) => (
-                <button key={lv.key} type="button" className={`course-level${i === level ? ' is-active' : ''}`} onClick={() => { setLevel(i); setOpenIdx(0) }}>
+                <button key={lv.key} type="button" className={`course-level${i === level ? ' is-active' : ''}`} onClick={() => { setLevel(i); setOpenIdx(-1) }}>
                   <span className="cl-n">{lv.name}</span>
                   <span className="cl-s">{lv.sub}</span>
                 </button>
               ))}
             </div>
-            <p className="course-level-desc" data-reveal>{activeLevel.desc}</p>
+            <p className="course-level-desc">{activeLevel.desc}</p>
             <div className="modules">
               {activeLevel.modules.map((m, i) => {
                 const num = (i + 1 < 10 ? '0' : '') + (i + 1)
@@ -225,7 +225,7 @@ export default function Cursos() {
             </div>
             <div className="shared-note" data-reveal>
               <svg viewBox="0 0 24 24"><path d="M22 12.6V19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6l2 3h8a2 2 0 0 1 2 2z" /></svg>
-              <span>El material en video de los 6 módulos se comparte por Google Drive una vez confirmada tu inscripción. <a href="https://drive.google.com/drive/folders/1SN4IGz9T92e2vsNC9a1rALVXr83YL8aL" target="_blank" rel="noopener noreferrer">Ver carpeta del curso →</a></span>
+              <span>El material en video de los 6 módulos se comparte por Google Drive una vez confirmada tu inscripción.</span>
             </div>
           </div>
         </section>
