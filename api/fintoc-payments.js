@@ -30,8 +30,9 @@ async function handleCheckout(req, res) {
     return res.status(400).json({ error: 'Missing required fields' })
   }
 
-  if (!FINTOC_SECRET_KEY) {
-    console.error('FINTOC_SECRET_KEY not configured')
+  const key = process.env.FINTOC_SECRET_KEY
+  if (!key) {
+    console.error('FINTOC_SECRET_KEY missing. Available keys:', Object.keys(process.env).filter(k => k.includes('FINTOC')))
     return res.status(500).json({ error: 'Payment service not configured' })
   }
 
@@ -39,7 +40,7 @@ async function handleCheckout(req, res) {
     const response = await fetch('https://api.fintoc.com/v1/payments/sessions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${FINTOC_SECRET_KEY}`,
+        'Authorization': `Bearer ${key}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
