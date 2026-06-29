@@ -4,15 +4,12 @@ import { useBrunettiFx, scrollToId } from '../components/brunetti.jsx'
 import SiteNav from '../components/SiteNav.jsx'
 import ModuleFooter from '../components/ModuleFooter.jsx'
 import { Lamp } from '../components/ui/lamp.jsx'
+import FintocCheckout from '../components/FintocCheckout.jsx'
 
 /* ================================================================
    CURSOS BRUNETTI — Formación en visagismo & barbería
    Flujo: usuario ve módulos → paga vía Fintoc → accede a Skool
    ================================================================ */
-
-/* REEMPLAZA este URL cuando tengas el link de pago en Fintoc Dashboard */
-const FINTOC_PAYMENT_URL = 'https://pay.fintoc.com/l/REEMPLAZAR'
-const CURSO_PRICE = '$9.990'
 
 const MODULES = [
   {
@@ -81,14 +78,6 @@ const INCLUDES = [
   { b: 'Crecimiento & negocio', s: 'Mentalidad y orden para profesionalizar tu servicio.', icon: (<path d="M12 2l2.4 7.4H22l-6 4.4 2.3 7.2-6.3-4.6L5.7 21l2.3-7.2-6-4.4h7.6z" />) },
 ]
 
-const CHECKOUT_ITEMS = [
-  '6 módulos · 21 lecciones en video',
-  'Acceso inmediato a la comunidad Brunetti en Skool',
-  'Método de visagismo aplicado — lectura de rostro',
-  'Sistema de fade, orden de corte y marca personal',
-  'Acceso de por vida al material y actualizaciones',
-]
-
 export default function Cursos() {
   const navigate = useNavigate()
   const rootRef = useRef(null)
@@ -112,7 +101,7 @@ export default function Cursos() {
             <h1>Curso Brunetti<br />Visagismo &amp; Barbería</h1>
             <p className="sub">Aprende a leer el rostro, dominar la técnica y construir tu marca personal. 6 módulos pensados para barberos que quieren dejar de copiar tendencias y empezar a diseñar imagen.</p>
             <div className="actions">
-              <a className="btn btn-primary" href={FINTOC_PAYMENT_URL} target="_blank" rel="noopener noreferrer">ACCEDER AL CURSO — {CURSO_PRICE}</a>
+              <a className="btn btn-primary" onClick={() => goAnchor('inscripcion')}>ACCEDER AL CURSO — $9.990</a>
               <a className="btn btn-ghost" onClick={() => goAnchor('curriculum')}>VER PROGRAMA</a>
             </div>
             <div className="course-stats">
@@ -192,58 +181,7 @@ export default function Cursos() {
               <p>Un pago único. Acceso de por vida a los 6 módulos en la comunidad Brunetti en Skool.</p>
             </div>
 
-            <div className="checkout-card" data-reveal>
-              {/* — Info — */}
-              <div className="checkout-info">
-                <p className="checkout-label">Lo que recibes</p>
-                <h3 className="checkout-title">Curso Brunetti · Visagismo &amp; Barbería</h3>
-                <ul className="checkout-list">
-                  {CHECKOUT_ITEMS.map((item) => (
-                    <li key={item}>
-                      <svg viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="9" /><path d="M9 12l2 2 4-4" /></svg>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* — Pago — */}
-              <div className="checkout-pay">
-                <div className="checkout-price-block">
-                  <span className="checkout-price-label">Precio de lanzamiento</span>
-                  <div className="checkout-price-row">
-                    <span className="checkout-amount">{CURSO_PRICE}</span>
-                    <span className="checkout-currency">CLP</span>
-                  </div>
-                  <span className="checkout-price-sub">Pago único · sin cuotas · sin renovación</span>
-                </div>
-
-                <a
-                  className="btn btn-primary checkout-cta"
-                  href={FINTOC_PAYMENT_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  ACCEDER AL CURSO AHORA
-                </a>
-
-                <div className="checkout-secure">
-                  <svg viewBox="0 0 24 24" width="14" height="14"><path d="M12 2l7 4v6c0 5-3.5 9-7 10C8.5 21 5 17 5 12V6l7-4z" /></svg>
-                  Pago seguro vía transferencia bancaria con Fintoc
-                </div>
-
-                <div className="checkout-fintoc-badge">
-                  <span>Procesado por</span>
-                  <svg viewBox="0 0 80 20" width="56" height="14" aria-label="Fintoc">
-                    <text x="0" y="15" fontFamily="system-ui,sans-serif" fontSize="13" fontWeight="700" fill="currentColor">fintoc</text>
-                  </svg>
-                </div>
-
-                <p className="checkout-after">
-                  Tras el pago recibirás acceso a la comunidad Brunetti en Skool con todos los módulos desbloqueados.
-                </p>
-              </div>
-            </div>
+            <FintocCheckout />
           </div>
         </section>
       </main>

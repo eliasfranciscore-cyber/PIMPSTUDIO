@@ -2602,12 +2602,12 @@ body.dash-mode .float-theme-toggle { display: none; }
 }
 @media (max-width: 720px) { .checkout-pay { padding: 1.6rem 1.4rem; } }
 
-.checkout-price-block { display: flex; flex-direction: column; gap: 0.18rem; }
+.checkout-price-block { display: flex; flex-direction: column; gap: 0.18rem; align-items: center; text-align: center; }
 .checkout-price-label {
   font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em;
   text-transform: uppercase; color: var(--muted);
 }
-.checkout-price-row { display: flex; align-items: baseline; gap: 0.32rem; }
+.checkout-price-row { display: flex; align-items: baseline; gap: 0.32rem; justify-content: center; }
 .checkout-amount {
   font-size: 2.6rem; font-weight: 800; color: var(--ink);
   font-family: var(--font-display, "Sora", sans-serif); letter-spacing: -0.02em;
@@ -2629,6 +2629,37 @@ body.dash-mode .float-theme-toggle { display: none; }
   padding-top: 0.6rem; border-top: 1px solid var(--hair);
 }
 .checkout-after { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+
+.checkout-form { display: flex; flex-direction: column; gap: 0.8rem; }
+.checkout-form .frow { display: flex; flex-direction: column; gap: 0.3rem; }
+.checkout-form .frow.two { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+@media (max-width: 720px) { .checkout-form .frow.two { grid-template-columns: 1fr; } }
+.checkout-form label {
+  font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--muted);
+}
+.checkout-form input {
+  padding: 0.7rem 0.9rem; border-radius: 10px;
+  border: 1px solid var(--hair-2); background: rgba(255,255,255,0.04);
+  color: var(--ink); font-size: 0.875rem;
+  transition: background .2s, border-color .2s;
+}
+.checkout-form input:focus {
+  outline: none; background: rgba(255,255,255,0.08);
+  border-color: var(--gold-edge);
+}
+.checkout-form input::placeholder { color: var(--muted); }
+.checkout-error { font-size: 0.75rem; color: #e11d48; }
+.checkout-form .btn:disabled { opacity: 0.65; cursor: not-allowed; }
+
+[data-theme="light"] .checkout-form input {
+  background: #ffffff; border-color: rgba(0,0,0,0.10);
+  color: #211d15;
+}
+[data-theme="light"] .checkout-form input:focus {
+  background: #ffffff; border-color: rgba(11, 18, 158, 0.28);
+}
+[data-theme="light"] .checkout-form input::placeholder { color: #7a7264; }
 
 [data-theme="light"] .checkout-card { border-color: rgba(0,0,0,0.10); background: #fffdf8; }
 [data-theme="light"] .checkout-info { border-color: rgba(0,0,0,0.08); }
