@@ -4,13 +4,15 @@ import { useBrunettiFx, scrollToId } from '../components/brunetti.jsx'
 import SiteNav from '../components/SiteNav.jsx'
 import ModuleFooter from '../components/ModuleFooter.jsx'
 import { Lamp } from '../components/ui/lamp.jsx'
-import { addLocalEnrollment } from '../enrollmentsStore.js'
 
-/* ============================================================
+/* ================================================================
    CURSOS BRUNETTI — Formación en visagismo & barbería
-   Recreación 1:1 de cursos.html en React. (El módulo Workshop
-   antiguo se mantiene aparte en /workshop.)
-   ============================================================ */
+   Flujo: usuario ve módulos → paga vía Fintoc → accede a Skool
+   ================================================================ */
+
+/* REEMPLAZA este URL cuando tengas el link de pago en Fintoc Dashboard */
+const FINTOC_PAYMENT_URL = 'https://pay.fintoc.com/l/REEMPLAZAR'
+const CURSO_PRICE = '$9.990'
 
 const MODULES = [
   {
@@ -79,60 +81,23 @@ const INCLUDES = [
   { b: 'Crecimiento & negocio', s: 'Mentalidad y orden para profesionalizar tu servicio.', icon: (<path d="M12 2l2.4 7.4H22l-6 4.4 2.3 7.2-6.3-4.6L5.7 21l2.3-7.2-6-4.4h7.6z" />) },
 ]
 
-/* Un solo Curso Brunetti con 4 niveles. El nivel 1 trae el temario
-   completo; los niveles 2–4 quedan como placeholders listos para llenar. */
-const PLACEHOLDER_MODULES = [
-  { t: 'Módulo por definir', d: 'Contenido en preparación para este nivel.', lessons: [['Lección por definir', '00:00']] },
-  { t: 'Módulo por definir', d: 'Contenido en preparación para este nivel.', lessons: [['Lección por definir', '00:00']] },
-  { t: 'Módulo por definir', d: 'Contenido en preparación para este nivel.', lessons: [['Lección por definir', '00:00']] },
-  { t: 'Módulo por definir', d: 'Contenido en preparación para este nivel.', lessons: [['Lección por definir', '00:00']] },
-]
-const LEVELS = [
-  { key: 'fundamentos', name: 'Nivel 1', sub: 'Fundamentos', desc: 'Visagismo, técnica base y lectura de rostro — el método completo de Bruno Herrera.', modules: MODULES },
-  { key: 'intermedio', name: 'Nivel 2', sub: 'Intermedio', desc: 'Profundización en técnica de precisión y dirección de estilo. (Contenido por definir.)', modules: PLACEHOLDER_MODULES },
-  { key: 'avanzado', name: 'Nivel 3', sub: 'Avanzado', desc: 'Transformación integral de imagen y casos reales de alto nivel. (Contenido por definir.)', modules: PLACEHOLDER_MODULES },
-  { key: 'master', name: 'Nivel 4', sub: 'Máster', desc: 'Marca personal, negocio y mentoría avanzada para barberos. (Contenido por definir.)', modules: PLACEHOLDER_MODULES },
+const CHECKOUT_ITEMS = [
+  '6 módulos · 21 lecciones en video',
+  'Acceso inmediato a la comunidad Brunetti en Skool',
+  'Método de visagismo aplicado — lectura de rostro',
+  'Sistema de fade, orden de corte y marca personal',
+  'Acceso de por vida al material y actualizaciones',
 ]
 
 export default function Cursos() {
   const navigate = useNavigate()
   const rootRef = useRef(null)
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [level, setLevel] = useState(0)
-  const [openIdx, setOpenIdx] = useState(0)
-  const activeLevel = LEVELS[level]
-  const [form, setForm] = useState({ name: '', phone: '', email: '', level: '', message: '' })
-  const [error, setError] = useState(false)
-  const [done, setDone] = useState(false)
+  const [openIdx, setOpenIdx] = useState(-1)
 
   useBrunettiFx(rootRef, { parallax: false })
 
-  const goHomeSection = (section) => { setMenuOpen(false); navigate('/', { state: { section } }) }
-  const goAnchor = (id) => { setMenuOpen(false); scrollToId(id) }
-
-  const onChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
-
-  const onSubmit = async (e) => {
-    e.preventDefault()
-    const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())
-    if (!form.name.trim() || form.phone.replace(/\D/g, '').length < 8 || !validEmail) {
-      setError(true)
-      return
-    }
-    setError(false)
-    /* Respaldo local: aparece de inmediato en el panel interno (Inscripciones),
-       aunque el backend no esté disponible (p. ej. en desarrollo). */
-    addLocalEnrollment({ ...form, source: 'cursos' })
-    /* Enviar a la API (enrollments + users) — no bloquea si falla */
-    try {
-      await fetch('/api/enrollments', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, source: 'cursos' }),
-      })
-    } catch (x) { /* noop: guardado local como fallback */ }
-    setDone(true)
-  }
+  const goHomeSection = (section) => navigate('/', { state: { section } })
+  const goAnchor = (id) => scrollToId(id)
 
   return (
     <div className="brunetti-site cursos-page" ref={rootRef}>
@@ -147,7 +112,7 @@ export default function Cursos() {
             <h1>Curso Brunetti<br />Visagismo &amp; Barbería</h1>
             <p className="sub">Aprende a leer el rostro, dominar la técnica y construir tu marca personal. 6 módulos pensados para barberos que quieren dejar de copiar tendencias y empezar a diseñar imagen.</p>
             <div className="actions">
-              <a className="btn btn-primary" href="https://www.skool.com/brunetti-academy-2840/classroom" target="_blank" rel="noopener noreferrer">INSCRIBIRME EN LA LISTA</a>
+              <a className="btn btn-primary" href={FINTOC_PAYMENT_URL} target="_blank" rel="noopener noreferrer">ACCEDER AL CURSO — {CURSO_PRICE}</a>
               <a className="btn btn-ghost" onClick={() => goAnchor('curriculum')}>VER PROGRAMA</a>
             </div>
             <div className="course-stats">
@@ -182,21 +147,12 @@ export default function Cursos() {
         <section className="bsection wk-alt" id="curriculum">
           <div className="bwrap">
             <div className="bhead center" data-reveal>
-              <p className="kicker">Programa · 4 niveles</p>
+              <p className="kicker">6 módulos · 21 lecciones</p>
               <h2>El temario completo</h2>
-              <p>Elige el nivel del Curso Brunetti. Toca cada módulo para ver sus lecciones.</p>
+              <p>Toca cada módulo para ver sus lecciones y contenidos.</p>
             </div>
-            <div className="course-levels" data-reveal>
-              {LEVELS.map((lv, i) => (
-                <button key={lv.key} type="button" className={`course-level${i === level ? ' is-active' : ''}`} onClick={() => { setLevel(i); setOpenIdx(-1) }}>
-                  <span className="cl-n">{lv.name}</span>
-                  <span className="cl-s">{lv.sub}</span>
-                </button>
-              ))}
-            </div>
-            <p className="course-level-desc">{activeLevel.desc}</p>
             <div className="modules">
-              {activeLevel.modules.map((m, i) => {
+              {MODULES.map((m, i) => {
                 const num = (i + 1 < 10 ? '0' : '') + (i + 1)
                 const open = openIdx === i
                 return (
@@ -223,71 +179,70 @@ export default function Cursos() {
                 )
               })}
             </div>
-            <div className="shared-note" data-reveal>
-              <svg viewBox="0 0 24 24"><path d="M22 12.6V19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6l2 3h8a2 2 0 0 1 2 2z" /></svg>
-              <span>El material en video de los 6 módulos se comparte por Google Drive una vez confirmada tu inscripción.</span>
-            </div>
           </div>
         </section>
 
-        {/* ============ INSCRIPCIÓN ============ */}
+        {/* ============ CHECKOUT ============ */}
         <section className="bsection bsection-lamp" id="inscripcion">
           <Lamp className="bru-lamp--sec" />
           <div className="bwrap">
             <div className="bhead center" data-reveal>
-              <p className="kicker">Cupos limitados</p>
-              <h2>Inscríbete en la lista de espera</h2>
-              <p>Deja tus datos y te avisamos apenas se abra el próximo grupo del Curso Brunetti.</p>
+              <p className="kicker">Acceso inmediato</p>
+              <h2>Empieza hoy mismo</h2>
+              <p>Un pago único. Acceso de por vida a los 6 módulos en la comunidad Brunetti en Skool.</p>
             </div>
-            <div className="enroll">
-              <aside className="enroll-aside" data-reveal="left">
-                <h3>Curso Brunetti</h3>
-                <p>Formación completa en visagismo, técnica de barbería, dirección de estilo y marca personal — el método de Bruno Herrera.</p>
-                <ul className="bcontact-list">
-                  <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M9 12l2 2 4-4" /></svg>6 módulos · 21 lecciones en video</li>
-                  <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M9 12l2 2 4-4" /></svg>Acceso al material compartido</li>
-                  <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M9 12l2 2 4-4" /></svg>Enfoque en visagismo y marca personal</li>
-                </ul>
-                <div className="price-row"><b>Próximo grupo</b></div>
-                <p className="enroll-note">Te contactaremos por teléfono o email con valores, fechas y forma de pago al abrir cupos.</p>
-              </aside>
 
-              <form className="enroll-form" data-reveal="right" noValidate onSubmit={onSubmit}>
-                <div className="frow">
-                  <label htmlFor="f-name">Nombre completo</label>
-                  <input type="text" id="f-name" name="name" placeholder="Tu nombre" value={form.name} onChange={onChange} required />
-                </div>
-                <div className="frow two">
-                  <div className="frow">
-                    <label htmlFor="f-phone">Teléfono</label>
-                    <input type="tel" id="f-phone" name="phone" placeholder="9 1234 5678" value={form.phone} onChange={onChange} required />
+            <div className="checkout-card" data-reveal>
+              {/* — Info — */}
+              <div className="checkout-info">
+                <p className="checkout-label">Lo que recibes</p>
+                <h3 className="checkout-title">Curso Brunetti · Visagismo &amp; Barbería</h3>
+                <ul className="checkout-list">
+                  {CHECKOUT_ITEMS.map((item) => (
+                    <li key={item}>
+                      <svg viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="9" /><path d="M9 12l2 2 4-4" /></svg>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* — Pago — */}
+              <div className="checkout-pay">
+                <div className="checkout-price-block">
+                  <span className="checkout-price-label">Precio de lanzamiento</span>
+                  <div className="checkout-price-row">
+                    <span className="checkout-amount">{CURSO_PRICE}</span>
+                    <span className="checkout-currency">CLP</span>
                   </div>
-                  <div className="frow">
-                    <label htmlFor="f-email">Email</label>
-                    <input type="email" id="f-email" name="email" placeholder="tu@email.com" value={form.email} onChange={onChange} required />
-                  </div>
+                  <span className="checkout-price-sub">Pago único · sin cuotas · sin renovación</span>
                 </div>
-                <div className="frow">
-                  <label htmlFor="f-level">Nivel de experiencia</label>
-                  <select id="f-level" name="level" value={form.level} onChange={onChange}>
-                    <option value="">Selecciona una opción</option>
-                    <option>Estoy empezando</option>
-                    <option>Barbero con experiencia</option>
-                    <option>Profesional buscando especializarme</option>
-                    <option>Creador / figura pública</option>
-                  </select>
+
+                <a
+                  className="btn btn-primary checkout-cta"
+                  href={FINTOC_PAYMENT_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  ACCEDER AL CURSO AHORA
+                </a>
+
+                <div className="checkout-secure">
+                  <svg viewBox="0 0 24 24" width="14" height="14"><path d="M12 2l7 4v6c0 5-3.5 9-7 10C8.5 21 5 17 5 12V6l7-4z" /></svg>
+                  Pago seguro vía transferencia bancaria con Fintoc
                 </div>
-                <div className="frow">
-                  <label htmlFor="f-msg">¿Qué te gustaría lograr? (opcional)</label>
-                  <textarea id="f-msg" name="message" placeholder="Cuéntale a Bruno tu objetivo..." value={form.message} onChange={onChange} />
+
+                <div className="checkout-fintoc-badge">
+                  <span>Procesado por</span>
+                  <svg viewBox="0 0 80 20" width="56" height="14" aria-label="Fintoc">
+                    <text x="0" y="15" fontFamily="system-ui,sans-serif" fontSize="13" fontWeight="700" fill="currentColor">fintoc</text>
+                  </svg>
                 </div>
-                {!done && <button className="btn btn-primary" type="submit">UNIRME A LA LISTA DE ESPERA</button>}
-                {error && <p className="enroll-note" style={{ color: '#e11d48' }}>Revisa los campos requeridos.</p>}
-                <div className={`enroll-success${done ? ' show' : ''}`}>
-                  <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4" /><circle cx="12" cy="12" r="9" /></svg>
-                  <span><b>¡Listo!</b> Quedaste en la lista de espera. Bruno te contactará pronto.</span>
-                </div>
-              </form>
+
+                <p className="checkout-after">
+                  Tras el pago recibirás acceso a la comunidad Brunetti en Skool con todos los módulos desbloqueados.
+                </p>
+              </div>
             </div>
           </div>
         </section>
@@ -296,13 +251,13 @@ export default function Cursos() {
       <ModuleFooter
         links={[
           [() => goAnchor('curriculum'), 'Programa'],
-          [() => goAnchor('inscripcion'), 'Inscripción'],
+          [() => goAnchor('inscripcion'), 'Acceder'],
           [() => goHomeSection('visagismo'), 'Visagismo'],
           [() => navigate('/workshop'), 'Workshop'],
           [() => goHomeSection('contacto'), 'Contacto'],
         ]}
         onPrimary={() => goAnchor('inscripcion')}
-        primaryLabel="Inscribirme"
+        primaryLabel="Acceder al curso"
       />
     </div>
   )
