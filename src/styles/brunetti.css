@@ -2669,6 +2669,39 @@ body.dash-mode .float-theme-toggle { display: none; }
 }
 [data-theme="light"] .checkout-list li { color: #3a3633; }
 
+.checkout-widget-mode {
+  grid-template-columns: 1fr !important;
+}
+.checkout-widget-wrapper {
+  grid-column: 1 / -1; padding: 0;
+  border-radius: 20px; overflow: hidden;
+  min-height: 600px;
+}
+.fintoc-widget-iframe {
+  width: 100%; height: 100%; border: none; display: block;
+  min-height: 600px;
+}
+
+.checkout-success-icon {
+  font-size: 3rem; font-weight: 700; color: var(--gold-bright);
+  text-align: center; margin-bottom: 1rem;
+}
+.checkout-success-title {
+  font-size: 1.6rem; font-weight: 700; color: var(--ink);
+  text-align: center; margin-bottom: 1rem; line-height: 1.2;
+}
+.checkout-success-text {
+  text-align: center; color: var(--ink-soft); margin-bottom: 0.8rem;
+  line-height: 1.6;
+}
+.checkout-success-subtext {
+  text-align: center; color: var(--muted); font-size: 0.85rem;
+}
+
+[data-theme="light"] .checkout-success-icon { color: #0b129e; }
+[data-theme="light"] .checkout-success-title { color: #211d15; }
+[data-theme="light"] .checkout-success-text { color: #3a3633; }
+
 /* ============================================================
    MODO CLARO — DORADO PROFUNDO (tonos del paquete)
    El dorado pálido (#e7c87e/#c9a14e) es casi ilegible sobre crema, por eso

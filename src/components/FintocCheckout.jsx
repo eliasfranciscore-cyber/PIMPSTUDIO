@@ -13,6 +13,8 @@ export default function FintocCheckout() {
   const [form, setForm] = useState({ name: '', email: '', phone: '' })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [sessionUrl, setSessionUrl] = useState('')
+  const [paid, setPaid] = useState(false)
 
   const onChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
 
@@ -48,11 +50,52 @@ export default function FintocCheckout() {
       }
 
       const data = await response.json()
-      window.location.href = data.sessionUrl
+      setSessionUrl(data.sessionUrl)
+      // Escuchar mensaje de cierre del widget (pago completado)
+      window.addEventListener('message', (e) => {
+        if (e.origin !== 'https://pay.fintoc.com' && e.origin !== 'https://pay.sandbox.fintoc.com') return
+        if (e.data?.type === 'fintoc:payment:completed') {
+          setPaid(true)
+        }
+      })
     } catch (err) {
       setError(err.message || 'Error al procesar pago')
       setLoading(false)
     }
+  }
+
+  // Si pagó exitosamente
+  if (paid) {
+    return (
+      <div className="checkout-card" data-reveal>
+        <div className="checkout-info">
+          <div className="checkout-success-icon">✓</div>
+          <h3 className="checkout-success-title">¡Pago completado!</h3>
+          <p className="checkout-success-text">
+            Tu inscripción fue confirmada. Te enviaremos un email con el enlace de acceso a la comunidad Brunetti en Skool.
+          </p>
+          <p className="checkout-success-subtext">
+            Revisa tu bandeja de entrada (y spam) en los próximos minutos.
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  // Si hay sessionUrl, mostrar widget
+  if (sessionUrl) {
+    return (
+      <div className="checkout-card checkout-widget-mode" data-reveal>
+        <div className="checkout-widget-wrapper">
+          <iframe
+            src={sessionUrl}
+            title="Fintoc Payment Widget"
+            className="fintoc-widget-iframe"
+            allow="payment"
+          />
+        </div>
+      </div>
+    )
   }
 
   return (

@@ -1,5 +1,5 @@
 /* ================================================================
-   Serverless: crear sesión de pago en Fintoc
+   Serverless: crear sesión de pago en Fintoc (widget embebido)
    POST /api/fintoc-checkout
    Body: { amount, email, name, phone }
    Response: { sessionUrl, sessionId }
@@ -19,7 +19,7 @@ export default async function handler(req, res) {
   const secretKey = process.env.FINTOC_SECRET_KEY
 
   if (!secretKey) {
-    console.error('FINTOC_SECRET_KEY not configured in Vercel')
+    console.error('FINTOC_SECRET_KEY not configured')
     return res.status(500).json({ error: 'Payment service not configured' })
   }
 
@@ -33,21 +33,18 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        amount: Math.round(parseFloat(amount)), // en centavos CLP
+        amount: Math.round(parseFloat(amount)), // en CLP (no centavos)
         currency: 'CLP',
         customer: {
           email,
           name,
           phone: phone.replace(/\D/g, ''),
         },
-        // Metadatos para rastrear la inscripción al curso
         metadata: {
           product: 'curso-brunetti',
           customer_email: email,
         },
-        // URLs de redirección tras pago
-        success_url: `${process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'http://localhost:3000'}/cursos?pago=exito`,
-        failure_url: `${process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'http://localhost:3000'}/cursos?pago=error`,
+        // NO usamos redirect URLs: el widget está embebido
       }),
     })
 
@@ -59,7 +56,7 @@ export default async function handler(req, res) {
 
     const data = await response.json()
 
-    // Retornar el URL de la sesión para redirigir al usuario
+    // Retornar URL de la sesión para embeber en iframe
     return res.status(200).json({
       sessionUrl: data.session_url,
       sessionId: data.id,
