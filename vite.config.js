@@ -5,7 +5,7 @@ const mockFintocPlugin = {
   name: 'mock-fintoc',
   configureServer(server) {
     return () => {
-      server.middlewares.use('/api/fintoc-checkout', (req, res, next) => {
+      server.middlewares.use('/api/fintoc-payments', (req, res, next) => {
         if (req.method !== 'POST') return next()
         let body = ''
         req.on('data', (chunk) => { body += chunk })

@@ -33,7 +33,7 @@ export default function FintocCheckout() {
     setLoading(true)
 
     try {
-      const response = await fetch('/api/fintoc-checkout', {
+      const response = await fetch('/api/fintoc-payments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
