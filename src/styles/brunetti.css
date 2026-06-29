@@ -2344,6 +2344,13 @@ body.dash-mode .float-theme-toggle { display: none; }
   --ink-2: rgba(26, 24, 23, 0.82);
   --ink-3: rgba(26, 24, 23, 0.62);
 }
+/* En modo claro el fondo del wrapper debe ser transparente para que el ::before
+   crema quede visible. El dark-mode lo tenía opaco para safe-areas de iOS;
+   en claro el <html> ya es crema (lo fija theme.jsx), así que basta con none. */
+[data-theme="light"] .brunetti-site,
+[data-theme="light"] .brunetti-site.cursos-page {
+  background: none;
+}
 /* Fondo del sitio brunetti */
 [data-theme="light"] .brunetti-site::before {
   background:
