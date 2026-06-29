@@ -200,7 +200,7 @@ export default function Cursos() {
                 const num = (i + 1 < 10 ? '0' : '') + (i + 1)
                 const open = openIdx === i
                 return (
-                  <article className={`module${open ? ' is-open' : ''}`} data-reveal style={{ '--i': i % 3 }} key={m.t}>
+                  <article className={`module${open ? ' is-open' : ''}`} key={m.t}>
                     <button className="module-head" type="button" aria-expanded={open} onClick={() => setOpenIdx(open ? -1 : i)}>
                       <span className="module-num">{num}</span>
                       <span className="module-titles"><h3>{m.t}</h3><p>{m.d}</p></span>
