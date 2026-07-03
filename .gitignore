@@ -11,6 +11,11 @@ dist
 # Sistema
 .DS_Store
 
+# Xcode / iOS local state
+DerivedData/
+*.xcuserstate
+xcuserdata/
+
 # Archivos movidos a desuso: se conservan en disco para referencia,
 # pero NO se versionan ni se despliegan.
 Archivos en desuso/
