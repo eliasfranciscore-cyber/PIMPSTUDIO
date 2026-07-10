@@ -4,7 +4,12 @@
    POST /api/fintoc-payments?webhook=1 (webhook mode)
    ================================================================ */
 
+import { neon } from '@neondatabase/serverless'
+import { notifyAll } from './push.js'
+
 const FINTOC_SECRET_KEY = process.env.FINTOC_SECRET_KEY
+
+function cleanPhone(v) { return String(v || '').replace(/\D/g, '').slice(0, 9) }
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -108,15 +113,78 @@ async function handleWebhook(req, res) {
 
     console.log('[WEBHOOK] Pago confirmado:', payment)
 
-    // TODO: Guardar en DB (Vercel KV, Supabase, MongoDB, etc)
-    // TODO: Enviar email al usuario
-    // TODO: Notificar al admin (Slack, Telegram, etc)
+    const name = String(customer?.name || '').trim()
+    const phone = cleanPhone(customer?.phone)
+    const email = String(customer?.email || '').trim().toLowerCase()
 
-    return res.status(200).json({
-      received: true,
-      paymentId: id,
-      message: 'Pago registrado',
-    })
+    if (!name || phone.length < 8 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      console.error('[WEBHOOK] Datos de cliente incompletos, no se registra inscripción:', { name, phone, email })
+      return res.status(200).json({ received: true, paymentId: id, message: 'Pago registrado (sin datos de cliente válidos)' })
+    }
+
+    try {
+      const sql = neon(process.env.DATABASE_URL)
+
+      /* Auto-crear tabla si no existe (mismo esquema que api/enrollments.js) */
+      await sql`
+        CREATE TABLE IF NOT EXISTS enrollments (
+          id         SERIAL PRIMARY KEY,
+          name       TEXT NOT NULL,
+          phone      TEXT NOT NULL,
+          email      TEXT NOT NULL,
+          source     TEXT NOT NULL DEFAULT 'cursos',
+          level      TEXT,
+          message    TEXT,
+          edition    TEXT,
+          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        )
+      `
+
+      /* 1) Guardar la inscripción: es lo que lee el panel interno. */
+      const [row] = await sql`
+        INSERT INTO enrollments (name, phone, email, source, message)
+        VALUES (${name}, ${phone}, ${email}, 'cursos', ${`Pago Fintoc ${id} · $${amount}`})
+        RETURNING id, created_at
+      `
+
+      /* 2) Crear/actualizar el cliente en `users` — best-effort. */
+      try {
+        await sql`
+          INSERT INTO users (name, phone, email, updated_at)
+          VALUES (${name}, ${phone}, ${email}, NOW())
+          ON CONFLICT (phone) DO UPDATE SET
+            name  = EXCLUDED.name,
+            email = COALESCE(NULLIF(EXCLUDED.email,''), users.email),
+            updated_at = NOW()
+        `
+      } catch (uerr) {
+        console.error('[WEBHOOK] users upsert (no bloquea):', uerr?.message)
+      }
+
+      /* 3) Push al panel interno avisando de la nueva inscripción pagada. */
+      try {
+        await notifyAll({
+          title: 'Nueva inscripción · Curso (pagado)',
+          body: `${name} · ${phone} · $${amount}`,
+          url: '/panel',
+          tag: `inscripcion-${row.id}`,
+        })
+      } catch (nerr) {
+        console.error('[WEBHOOK] notify (no bloquea):', nerr?.message)
+      }
+
+      return res.status(200).json({
+        received: true,
+        paymentId: id,
+        enrollmentId: row.id,
+        message: 'Pago e inscripción registrados',
+      })
+    } catch (dbErr) {
+      console.error('[WEBHOOK] Error guardando inscripción:', dbErr?.message)
+      // Igual confirmamos recepción a Fintoc (200) para que no reintente indefinidamente,
+      // pero dejamos constancia del fallo en logs para investigar.
+      return res.status(200).json({ received: true, paymentId: id, error: 'No se pudo guardar la inscripción' })
+    }
   } catch (err) {
     console.error('[WEBHOOK] Error:', err)
     return res.status(200).json({

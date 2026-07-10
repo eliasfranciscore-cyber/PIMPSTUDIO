@@ -36,7 +36,8 @@ export default async function handler(req, res) {
         FROM enrollments ORDER BY created_at DESC LIMIT 300
       `
       return sendJson(res, 200, { ok: true, enrollments: rows })
-    } catch {
+    } catch (err) {
+      console.error("enrollments GET error:", err?.message)
       return sendJson(res, 200, { ok: true, enrollments: DEMO, demo: true })
     }
   }

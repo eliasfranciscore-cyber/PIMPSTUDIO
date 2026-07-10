@@ -896,7 +896,8 @@ function EnrollmentsPanel() {
   React.useEffect(() => {
     // Combina lo del backend con el respaldo local (inscripciones hechas desde
     // Cursos/Workshop), para que aparezcan aunque /api no esté disponible.
-    fetch("/api/enrollments", { credentials: "include" })
+    const token = localStorage.getItem("ps_barber_token") || ""
+    fetch("/api/enrollments", { headers: token ? { Authorization: `Bearer ${token}` } : {} })
       .then((r) => r.headers.get("content-type")?.includes("application/json") ? r.json() : Promise.reject(new Error("api unavailable")))
       .then((d) => { setRows(mergeEnrollments(d.enrollments || [])); setLoading(false) })
       .catch(() => { setRows(mergeEnrollments([])); setLoading(false) })
