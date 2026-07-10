@@ -24,7 +24,10 @@ async function getWebPush() {
       webpushModule = webpush
       return webpush
     }
-  } catch {/* paquete no instalado o claves ausentes */}
+    console.error("getWebPush: VAPID_PUBLIC_KEY o VAPID_PRIVATE_KEY ausentes")
+  } catch (err) {
+    console.error("getWebPush import error:", err?.message)
+  }
   return null
 }
 
@@ -47,6 +50,8 @@ export async function notifyBarber(barberId, payload) {
         // Suscripción caducada/expirada: limpiarla.
         if (err?.statusCode === 404 || err?.statusCode === 410) {
           await sql`DELETE FROM push_subscriptions WHERE id = ${s.id}`.catch(() => {})
+        } else {
+          console.error("notifyBarber sendNotification error:", err?.statusCode, err?.body || err?.message)
         }
       }
     }))
@@ -75,6 +80,8 @@ export async function notifyAll(payload) {
       } catch (err) {
         if (err?.statusCode === 404 || err?.statusCode === 410) {
           await sql`DELETE FROM push_subscriptions WHERE id = ${s.id}`.catch(() => {})
+        } else {
+          console.error("notifyAll sendNotification error:", err?.statusCode, err?.body || err?.message)
         }
       }
     }))
