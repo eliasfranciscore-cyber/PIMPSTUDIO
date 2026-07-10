@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useTheme } from '../components/theme.jsx'
 import SiteNav from '../components/SiteNav.jsx'
 import ModuleFooter from '../components/ModuleFooter.jsx'
-import { FACE_SHAPES, GALLERY_CATS, GALLERY, u } from '../data/estilo.js'
+import { FACE_SHAPES, GALLERY_CATS, GALLERY, HERO_PHOTOS, u } from '../data/estilo.js'
 import '../styles/estilo.css'
 
 /* ============================================================
@@ -83,11 +83,23 @@ function smoothScroll(id) {
 
 /* ---------- HERO ---------- */
 function Hero() {
+  const [heroIndex, setHeroIndex] = useState(0)
+
+  useEffect(() => {
+    const reduce = 'matchMedia' in window && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduce || HERO_PHOTOS.length < 2) return
+    const id = setInterval(() => setHeroIndex((i) => (i + 1) % HERO_PHOTOS.length), 4000)
+    return () => clearInterval(id)
+  }, [])
+
   return (
     <header className="ete-hero">
       <div className="ete-hero-media">
-        <img src={u('1605497788044-5a32c7078486', 1900)} alt="Asesoría de imagen en Brunetti"
-          onError={(e) => { e.target.parentElement.style.background = 'linear-gradient(160deg,#1a1916,#0a0a09)' }} />
+        {HERO_PHOTOS.map((file, i) => (
+          <img key={file} src={u(file)} alt={i === 0 ? 'Asesoría de imagen en Brunetti' : ''}
+            className={i === heroIndex ? 'is-active' : ''}
+            onError={(e) => { e.target.parentElement.style.background = 'linear-gradient(160deg,#1a1916,#0a0a09)' }} />
+        ))}
       </div>
       <div className="ete-hero-overlay" />
       <div className="ete-wrap ete-hero-inner">
@@ -257,7 +269,7 @@ function CtaBand({ onReserveService }) {
   return (
     <section className="ete-section ete-cta">
       <div className="ete-cta-bg">
-        <img src={u('1622286342621-4bd786c2447c', 1800)} alt="" aria-hidden="true"
+        <img src={u('estilo-textura-spiky.jpg')} alt="" aria-hidden="true"
           onError={(e) => { e.target.parentElement.style.background = 'var(--bg-1)' }} />
       </div>
       <div className="ete-wrap">

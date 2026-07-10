@@ -1,14 +1,12 @@
 /* ============================================================
    ENCUENTRA TU ESTILO — datos del módulo
    Visagismo interactivo + galería de estilos · Brunetti
-   Imágenes de muestra (Unsplash) listas para reemplazar por
-   fotos reales del estudio. Cada una degrada a un placeholder
-   con etiqueta si no carga (ver SmartImg).
+   Fotos reales del estudio (fondo blanco). Cada una degrada a
+   un placeholder con etiqueta si no carga (ver SmartImg).
    ============================================================ */
 
-// helper de URL de muestra (Unsplash)
-export const u = (id, w) =>
-  `https://images.unsplash.com/photo-${id}?w=${w || 900}&q=80&auto=format&fit=crop`
+// helper de URL local de assets del módulo
+export const u = (name) => `/assets/estilo/${name}`
 
 // ---- FORMAS DE ROSTRO (paso 1 del workflow) ----
 // path = silueta SVG simple dentro de viewBox 0 0 100 120
@@ -23,9 +21,9 @@ export const FACE_SHAPES = [
       'El rostro más versátil. Las proporciones ya están equilibradas, así que casi cualquier corte funciona — el objetivo es resaltar tu estilo, no corregir.',
     goal: 'Mantener la armonía y jugar con la personalidad.',
     best: [
-      { name: 'Texturizado medio', img: u('1567894340315-735d7c361db0'), note: 'Movimiento natural sin perder estructura.' },
-      { name: 'Fade clásico', img: u('1599351431202-1e0f0137899a'), note: 'Limpio en los lados, definido arriba.' },
-      { name: 'Pompadour suave', img: u('1583864697784-a0efc8379f70'), note: 'Volumen frontal para un aire elegante.' },
+      { name: 'Texturizado medio', img: u('estilo-crop-texturizado.jpg'), note: 'Movimiento natural sin perder estructura.' },
+      { name: 'Fade clásico', img: u('estilo-skin-fade.jpg'), note: 'Limpio en los lados, definido arriba.' },
+      { name: 'Pompadour suave', img: u('estilo-pompadour-clasico.jpg'), note: 'Volumen frontal para un aire elegante.' },
     ],
     avoid: 'Flequillos muy pesados que tapen la frente y rompan la proporción.',
   },
@@ -39,9 +37,9 @@ export const FACE_SHAPES = [
       'Buscamos crear altura y ángulos para estilizar el rostro. Volumen arriba y lados más cerrados alargan visualmente la cara.',
     goal: 'Añadir altura y definición vertical.',
     best: [
-      { name: 'Pompadour / Quiff', img: u('1583864697784-a0efc8379f70'), note: 'Altura arriba que estiliza el conjunto.' },
-      { name: 'Undercut con volumen', img: u('1622286342621-4bd786c2447c'), note: 'Contraste marcado lados-tope.' },
-      { name: 'Fade alto', img: u('1599351431202-1e0f0137899a'), note: 'Cierra los lados y sube la mirada.' },
+      { name: 'Pompadour / Quiff', img: u('estilo-pompadour-color.jpg'), note: 'Altura arriba que estiliza el conjunto.' },
+      { name: 'Undercut con volumen', img: u('estilo-fade-clasico.jpg'), note: 'Contraste marcado lados-tope.' },
+      { name: 'Fade alto', img: u('estilo-crop-texturizado-oscuro.jpg'), note: 'Cierra los lados y sube la mirada.' },
     ],
     avoid: 'Cortes redondeados y volumen a los costados — ensanchan aún más.',
   },
@@ -55,9 +53,9 @@ export const FACE_SHAPES = [
       'Una estructura fuerte que admite cortes potentes. Podemos exaltar la mandíbula o suavizarla según el resultado que busques.',
     goal: 'Resaltar la fuerza o equilibrar con textura.',
     best: [
-      { name: 'Crop texturizado', img: u('1567894340315-735d7c361db0'), note: 'Textura arriba que moderna la estructura.' },
-      { name: 'Buzz / corte corto', img: u('1622286342621-4bd786c2447c'), note: 'Limpio, deja hablar a la mandíbula.' },
-      { name: 'Fade + barba definida', img: u('1596728325488-58c87691e9af'), note: 'Combo de carácter, muy fotogénico.' },
+      { name: 'Crop texturizado', img: u('estilo-crop-rizado.jpg'), note: 'Textura arriba que moderna la estructura.' },
+      { name: 'Buzz / corte corto', img: u('estilo-textura-spiky.jpg'), note: 'Limpio, deja hablar a la mandíbula.' },
+      { name: 'Fade + barba definida', img: u('estilo-textura-barba.jpg'), note: 'Combo de carácter, muy fotogénico.' },
     ],
     avoid: 'Volúmenes extremos que exageren demasiado la angulosidad.',
   },
@@ -71,9 +69,9 @@ export const FACE_SHAPES = [
       'El objetivo es acortar visualmente el rostro: menos altura arriba y algo de volumen a los lados crean equilibrio.',
     goal: 'Restar largo y sumar ancho.',
     best: [
-      { name: 'Flequillo / French crop', img: u('1567894340315-735d7c361db0'), note: 'Baja la frente y acorta el rostro.' },
-      { name: 'Lados con cuerpo', img: u('1605497788044-5a32c7078486'), note: 'Algo de volumen lateral para ensanchar.' },
-      { name: 'Barba media', img: u('1517832606299-7ae9b720a186'), note: 'Da peso al tercio inferior.' },
+      { name: 'Flequillo / French crop', img: u('estilo-flequillo-largo.jpg'), note: 'Baja la frente y acorta el rostro.' },
+      { name: 'Lados con cuerpo', img: u('estilo-mullet-shag.jpg'), note: 'Algo de volumen lateral para ensanchar.' },
+      { name: 'Barba media', img: u('estilo-barba-canosa.jpg'), note: 'Da peso al tercio inferior.' },
     ],
     avoid: 'Mucho volumen arriba y lados rapados al cero — alargan más.',
   },
@@ -87,9 +85,9 @@ export const FACE_SHAPES = [
       'Compensamos llevando volumen y amplitud a la zona superior, para equilibrar una mandíbula más ancha que la frente.',
     goal: 'Sumar volumen en la parte alta.',
     best: [
-      { name: 'Volumen arriba', img: u('1583864697784-a0efc8379f70'), note: 'Ensancha la frente ópticamente.' },
-      { name: 'Pompadour', img: u('1599351431202-1e0f0137899a'), note: 'Altura y cuerpo en el tope.' },
-      { name: 'Lados moderados', img: u('1605497788044-5a32c7078486'), note: 'Ni muy abiertos ni rapados.' },
+      { name: 'Volumen arriba', img: u('estilo-side-part.jpg'), note: 'Ensancha la frente ópticamente.' },
+      { name: 'Pompadour', img: u('estilo-pompadour-clasico.jpg'), note: 'Altura y cuerpo en el tope.' },
+      { name: 'Lados moderados', img: u('estilo-crop-rizado-corto.jpg'), note: 'Ni muy abiertos ni rapados.' },
     ],
     avoid: 'Lados muy voluminosos que ensanchen aún más la mandíbula.',
   },
@@ -103,27 +101,49 @@ export const FACE_SHAPES = [
       'Aprovechamos los pómulos marcados. Damos amplitud a frente y mentón para equilibrar el centro más ancho.',
     goal: 'Ensanchar frente y mentón.',
     best: [
-      { name: 'Flequillo texturizado', img: u('1567894340315-735d7c361db0'), note: 'Suma ancho en la frente.' },
-      { name: 'Volumen frontal', img: u('1583864697784-a0efc8379f70'), note: 'Equilibra el tercio superior.' },
-      { name: 'Barba en la mandíbula', img: u('1596728325488-58c87691e9af'), note: 'Da peso y ancho al mentón.' },
+      { name: 'Flequillo texturizado', img: u('estilo-mullet-rizado.jpg'), note: 'Suma ancho en la frente.' },
+      { name: 'Volumen frontal', img: u('estilo-pompadour-color.jpg'), note: 'Equilibra el tercio superior.' },
+      { name: 'Barba en la mandíbula', img: u('estilo-barba-canosa.jpg'), note: 'Da peso y ancho al mentón.' },
     ],
     avoid: 'Lados rapados al extremo que estrechen el rostro.',
   },
 ]
 
+// ---- FOTOS del hero (carrusel) ----
+export const HERO_PHOTOS = [
+  'estilo-mullet-rizado.jpg',
+  'estilo-fade-clasico.jpg',
+  'estilo-pompadour-color.jpg',
+  'estilo-crop-rizado.jpg',
+  'estilo-side-part.jpg',
+  'estilo-textura-barba.jpg',
+  'estilo-flequillo-largo.jpg',
+  'estilo-crop-texturizado-oscuro.jpg',
+  'estilo-mullet-shag.jpg',
+  'estilo-crop-plata.jpg',
+  'estilo-fade-diseno.jpg',
+  'estilo-pompadour-clasico.jpg',
+  'estilo-crop-rizado-corto.jpg',
+  'estilo-skin-fade.jpg',
+  'estilo-barba-canosa.jpg',
+  'estilo-textura-spiky.jpg',
+  'estilo-fade-diseno-plata.jpg',
+  'estilo-crop-texturizado.jpg',
+]
+
 // ---- GALERÍA por tipo de corte ----
 export const GALLERY_CATS = ['Todos', 'Fade', 'Texturizado', 'Clásico', 'Largo', 'Barba']
 export const GALLERY = [
-  { cat: 'Fade', title: 'Skin fade', sub: 'Degradado al cero', img: u('1599351431202-1e0f0137899a') },
-  { cat: 'Fade', title: 'Mid fade + diseño', sub: 'Línea marcada', img: u('1622286342621-4bd786c2447c') },
-  { cat: 'Texturizado', title: 'Crop texturizado', sub: 'Movimiento natural', img: u('1567894340315-735d7c361db0') },
-  { cat: 'Clásico', title: 'Side part', sub: 'Elegancia atemporal', img: u('1583864697784-a0efc8379f70') },
-  { cat: 'Barba', title: 'Perfilado de barba', sub: 'Contorno definido', img: u('1596728325488-58c87691e9af') },
-  { cat: 'Fade', title: 'Taper en la nuca', sub: 'Acabado limpio', img: u('1605497788044-5a32c7078486') },
-  { cat: 'Barba', title: 'Afeitado a navaja', sub: 'Ritual clásico', img: u('1503951914875-452162b0f3f1') },
-  { cat: 'Clásico', title: 'Corte ejecutivo', sub: 'Pulcro y prolijo', img: u('1512690459411-b9245aed614b') },
-  { cat: 'Largo', title: 'Largo con textura', sub: 'Caída con cuerpo', img: u('1633332755192-727a05c4013d') },
-  { cat: 'Barba', title: 'Barba escultural', sub: 'Trabajo de detalle', img: u('1517832606299-7ae9b720a186') },
-  { cat: 'Texturizado', title: 'Quiff texturizado', sub: 'Volumen direccional', img: u('1582095133179-bfd08e2fc6b3') },
-  { cat: 'Clásico', title: 'El estudio', sub: 'Ambiente Brunetti', img: u('1599566150163-29194dcaad36') },
+  { cat: 'Fade', title: 'Skin fade', sub: 'Degradado al cero', img: u('estilo-skin-fade.jpg') },
+  { cat: 'Fade', title: 'Mid fade + diseño', sub: 'Línea marcada', img: u('estilo-fade-diseno.jpg') },
+  { cat: 'Texturizado', title: 'Crop texturizado', sub: 'Movimiento natural', img: u('estilo-crop-texturizado.jpg') },
+  { cat: 'Clásico', title: 'Side part', sub: 'Elegancia atemporal', img: u('estilo-side-part.jpg') },
+  { cat: 'Barba', title: 'Perfilado de barba', sub: 'Contorno definido', img: u('estilo-barba-canosa.jpg') },
+  { cat: 'Fade', title: 'Taper en la nuca', sub: 'Acabado limpio', img: u('estilo-mullet-shag.jpg') },
+  { cat: 'Barba', title: 'Afeitado a navaja', sub: 'Ritual clásico', img: u('estilo-fade-clasico.jpg') },
+  { cat: 'Clásico', title: 'Corte ejecutivo', sub: 'Pulcro y prolijo', img: u('estilo-crop-plata.jpg') },
+  { cat: 'Largo', title: 'Largo con textura', sub: 'Caída con cuerpo', img: u('estilo-flequillo-largo.jpg') },
+  { cat: 'Barba', title: 'Barba escultural', sub: 'Trabajo de detalle', img: u('estilo-textura-barba.jpg') },
+  { cat: 'Texturizado', title: 'Quiff texturizado', sub: 'Volumen direccional', img: u('estilo-pompadour-color.jpg') },
+  { cat: 'Clásico', title: 'El estudio', sub: 'Ambiente Brunetti', img: u('estilo-fade-diseno-plata.jpg') },
 ]

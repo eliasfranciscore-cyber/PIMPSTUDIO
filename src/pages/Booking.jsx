@@ -315,14 +315,14 @@ export default function Booking() {
       </div>
 
       {step < 3 && (
-        <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, padding: ".7rem 1.2rem calc(1.2rem + )", background: "linear-gradient(180deg, transparent, var(--bg) 30%)", display: "flex", gap: ".6rem", justifyContent: "space-between", alignItems: "flex-end" }}>
+        <div className="booking-footer">
           {(barber || service) && (
             <div style={{ display: "flex", flexDirection: "column", gap: ".3rem", fontSize: ".7rem", color: "var(--muted)", flex: 1 }}>
               <span>{barber?.short}{service ? ` · ${service.name}` : ""}</span>
               {service && <span className="gold-text font-display" style={{ fontWeight: 700, fontSize: ".85rem" }}>{CLP(service.price)}</span>}
             </div>
           )}
-          <button className="btn btn-gold" disabled={!canNext || saving}
+          <button className="btn btn-gold booking-continue-btn" disabled={!canNext || saving}
             onClick={step === 2 ? confirm : () => setStep(step + 1)}
             style={{ opacity: (canNext && !saving) ? 1 : .4, pointerEvents: (canNext && !saving) ? "auto" : "none", padding: ".45rem .8rem", fontSize: ".7rem", flexShrink: 0, whiteSpace: "nowrap" }}>
             {saving ? "Confirmando…" : (step === 2 ? "Confirmar" : "Continuar")} {!saving && <Icon name="arrowRight" size={12} />}
