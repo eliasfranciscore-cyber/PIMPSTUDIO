@@ -2,6 +2,8 @@ import { neon } from "@neondatabase/serverless"
 import { requireInternal } from "./_auth.js"
 import { notifyBarber } from "./push.js"
 
+const MIN_CANCEL_NOTICE_HOURS = 10
+
 const DEMO_BOOKINGS = [
   { id: 1, time: "09:00", date: "2026-06-12", client: "Carlos Rodriguez", phone: "987654321", service: "Corte + perfilado de barba", barberId: 4, price: 22990, status: "confirmada" },
   { id: 2, time: "10:00", date: "2026-06-12", client: "Diego Salinas", phone: "934567890", service: "Corte de cabello", barberId: 4, price: 15990, status: "en curso" },
@@ -108,6 +110,51 @@ export default async function handler(req, res) {
       return res.json({ ok: true, booking: { ...booking, time: booking.time?.slice(0, 5) } })
     }
 
+    if (req.method === "DELETE") {
+      const { id, purge } = req.query
+      if (!id) return res.status(400).json({ error: "Falta id" })
+
+      // purge=1: borrado definitivo, solo desde el panel interno (barbero).
+      if (purge) {
+        const session = requireInternal(req, res)
+        if (!session) return
+        await sql`DELETE FROM bookings WHERE id = ${Number(id)}`
+        return res.json({ ok: true })
+      }
+
+      // Cancelación del cliente (público, sin sesión): exige aviso minimo y
+      // marca la reserva como cancelada en vez de borrarla.
+      const [existing] = await sql`
+        SELECT b.id, b.booking_date::text as date, b.booking_time::text as time,
+               b.barber_id as "barberId", u.name as client
+        FROM bookings b JOIN users u ON b.client_id = u.id
+        WHERE b.id = ${Number(id)}
+      `
+      if (!existing) return res.status(404).json({ error: "Reserva no encontrada" })
+      const apptAt = new Date(`${existing.date}T${existing.time}`)
+      const hoursLeft = (apptAt.getTime() - Date.now()) / 3_600_000
+      if (hoursLeft < MIN_CANCEL_NOTICE_HOURS) {
+        return res.status(422).json({ error: `Solo puedes cancelar con al menos ${MIN_CANCEL_NOTICE_HOURS} horas de anticipación. Contáctanos directamente.` })
+      }
+
+      const [booking] = await sql`
+        UPDATE bookings SET status = 'cancelada', updated_at = NOW()
+        WHERE id = ${Number(id)}
+        RETURNING id, booking_date::text as date, booking_time::text as time, barber_id as "barberId", status
+      `
+      try {
+        await notifyBarber(existing.barberId, {
+          title: "Reserva cancelada",
+          body: `${existing.client || "Cliente"} canceló su hora del ${existing.date} a las ${String(existing.time).slice(0, 5)}`,
+          url: "/panel",
+          tag: `cancelada-${existing.id}`,
+        })
+      } catch (notifyErr) {
+        console.error("notify cancel error:", notifyErr)
+      }
+      return res.json({ ok: true, booking })
+    }
+
     return res.status(405).json({ error: "Method not allowed" })
   } catch (err) {
     console.error("bookings error:", err)
@@ -115,6 +162,7 @@ export default async function handler(req, res) {
       return res.json({ ok: true, booking: { id: Date.now(), status: "confirmada" } })
     }
     if (req.method === "PATCH") return res.json({ ok: true, booking: req.body })
+    if (req.method === "DELETE") return res.json({ ok: true })
     return res.json({ ok: true, bookings: req.query?.phone ? [] : DEMO_BOOKINGS })
   }
 }

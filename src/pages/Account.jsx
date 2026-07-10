@@ -44,12 +44,25 @@ export default function Account() {
 
   const logout = () => { localStorage.removeItem("ps_user"); navigate("/") }
 
-  const cancelAppt = (appt) => {
+  const MIN_CANCEL_NOTICE_HOURS = 10
+  const cancelAppt = async (appt) => {
     if (!appt) return
+    const apptAt = new Date(`${appt.date}T${appt.time}`)
+    const hoursLeft = (apptAt.getTime() - Date.now()) / 3_600_000
+    if (hoursLeft < MIN_CANCEL_NOTICE_HOURS) {
+      window.alert(`Solo puedes cancelar con al menos ${MIN_CANCEL_NOTICE_HOURS} horas de anticipación. Contáctanos directamente para resolverlo.`)
+      return
+    }
     if (!window.confirm("¿Cancelar esta cita? Esta acción no se puede deshacer.")) return
-    // Mejor esfuerzo contra el backend; el estado local es la fuente inmediata.
+    // Mejor esfuerzo contra el backend (marca cancelada + avisa al barbero);
+    // el estado local es la fuente inmediata para la UI.
     if (appt.id) {
-      fetch(`/api/bookings?id=${appt.id}`, { method: "DELETE" }).catch(() => {})
+      const res = await fetch(`/api/bookings?id=${appt.id}`, { method: "DELETE" }).catch(() => null)
+      if (res && !res.ok) {
+        const data = await res.json().catch(() => null)
+        window.alert(data?.error || "No se pudo cancelar la cita. Intenta de nuevo.")
+        return
+      }
     }
     cancelLocalBooking(appt)
     setAppts((current) => current.filter((a) => !(a.date === appt.date && a.time === appt.time && Number(a.barberId) === Number(appt.barberId))))

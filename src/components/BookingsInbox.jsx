@@ -22,8 +22,8 @@ import { CLP, barberById } from '../data.js'
 
 const STATUS_LABEL = { pendiente: 'Pendiente', confirmada: 'Confirmada', 'en curso': 'En curso', completada: 'Completada', cancelada: 'Cancelada' }
 const STATUS_OPTIONS = ['pendiente', 'confirmada', 'en curso', 'completada', 'cancelada']
-const FILTERS = ['Todas', 'Pendientes', 'Confirmadas', 'En curso', 'Completadas']
-const FILTER_MAP = { Pendientes: 'pendiente', Confirmadas: 'confirmada', 'En curso': 'en curso', Completadas: 'completada' }
+const FILTERS = ['Todas', 'Pendientes', 'Confirmadas', 'Completadas']
+const FILTER_MAP = { Pendientes: 'pendiente', Confirmadas: 'confirmada', Completadas: 'completada' }
 
 function waLink(bk, barberShort, status) {
   const first = (bk.client || 'Hola').split(' ')[0]
@@ -58,7 +58,7 @@ function ResCard({ bk, barbers, isAdmin, onOpen, onStatusSelect }) {
           <span className="psn-res-avatar">{initialsOf(bk.client)}</span>
           <div style={{ minWidth: 0 }}>
             <div className="nm">{bk.client}</div>
-            <div className="ph"><Icon name="phone" size={12} /> +56 {bk.phone || '—'}</div>
+            <div className="psn-res-phone"><Icon name="phone" size={12} /> +56 {bk.phone || '—'}</div>
           </div>
         </div>
         <div className="psn-res-meta">
@@ -85,7 +85,7 @@ function ResCard({ bk, barbers, isAdmin, onOpen, onStatusSelect }) {
 }
 
 /* Modal de gestión de la reserva (responsive). */
-function ResModal({ bk, barbers, isAdmin, onClose, onStatus, onReschedule, onAskCancel, prevStatus }) {
+function ResModal({ bk, barbers, isAdmin, onClose, onStatus, onReschedule, onAskCancel, onAskDelete, prevStatus }) {
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') onClose() }
     window.addEventListener('keydown', onKey)
@@ -142,6 +142,10 @@ function ResModal({ bk, barbers, isAdmin, onClose, onStatus, onReschedule, onAsk
               <Icon name="x" size={16} /> Cancelar reserva
             </button>
           ) : null}
+
+          <button className="btn btn-ghost btn-block psn-res-delete" onClick={() => onAskDelete(bk)}>
+            <Icon name="trash" size={15} /> Eliminar reserva definitivamente
+          </button>
         </div>
       </div>
     </div>
@@ -167,12 +171,32 @@ function ConfirmCancel({ bk, onClose, onConfirm }) {
   ), document.body)
 }
 
-export default function BookingsInbox({ bookings = [], barbers = [], barber, admin = false, onStatus = () => {}, onReschedule }) {
+/* Popup de confirmación de eliminación definitiva. */
+function ConfirmDelete({ bk, onClose, onConfirm }) {
+  if (!bk) return null
+  return createPortal((
+    <div className="psn-modal psn-modal-top" role="alertdialog" aria-modal="true">
+      <button className="psn-scrim" aria-label="Cerrar" onClick={onClose} />
+      <div className="psn-modal-card psn-confirm">
+        <span className="psn-confirm-ic"><Icon name="trash" size={22} /></span>
+        <h3 className="font-display">¿Eliminar esta reserva?</h3>
+        <p>Vas a borrar por completo la hora de <b>{bk.client}</b> ({bk.time} · {bk.date}). Esta acción no se puede deshacer.</p>
+        <div className="psn-confirm-actions">
+          <button className="btn btn-ghost btn-block" onClick={onClose}>Volver</button>
+          <button className="btn btn-danger btn-block" onClick={() => onConfirm(bk)}><Icon name="trash" size={15} /> Sí, eliminar</button>
+        </div>
+      </div>
+    </div>
+  ), document.body)
+}
+
+export default function BookingsInbox({ bookings = [], barbers = [], barber, admin = false, onStatus = () => {}, onDelete = () => {}, onReschedule }) {
   const [filter, setFilter] = useState('Todas')
   const [barberFilter, setBarberFilter] = useState('all')
   const [query, setQuery] = useState('')
   const [detailId, setDetailId] = useState(null)
   const [cancelTarget, setCancelTarget] = useState(null)
+  const [deleteTarget, setDeleteTarget] = useState(null)
   const prevStatus = useRef({})
 
   const todayKey = new Date().toISOString().slice(0, 10)
@@ -189,7 +213,9 @@ export default function BookingsInbox({ bookings = [], barbers = [], barber, adm
   const visible = useMemo(() => {
     let list = scope
     if (admin && barberFilter !== 'all') list = list.filter((b) => Number(b.barberId) === Number(barberFilter))
+    // "Todas" oculta las completadas (ya se atendieron); sólo aparecen al elegir el filtro Completadas.
     if (filter !== 'Todas') list = list.filter((b) => b.status === FILTER_MAP[filter])
+    else list = list.filter((b) => b.status !== 'completada')
     if (query.trim()) {
       const q = query.toLowerCase()
       list = list.filter((b) => `${b.client || ''} ${b.phone || ''} ${b.service || ''}`.toLowerCase().includes(q))
@@ -212,6 +238,11 @@ export default function BookingsInbox({ bookings = [], barbers = [], barber, adm
     prevStatus.current[idOf(bk)] = bk.status === 'cancelada' ? 'pendiente' : bk.status
     onStatus(bk, 'cancelada')
     setCancelTarget(null)
+  }
+  const confirmDelete = (bk) => {
+    onDelete(bk)
+    setDeleteTarget(null)
+    if (detailId != null && idOf(bk) === detailId) setDetailId(null)
   }
 
   return (
@@ -268,12 +299,17 @@ export default function BookingsInbox({ bookings = [], barbers = [], barber, adm
           onStatus={onStatus}
           onReschedule={onReschedule}
           onAskCancel={(b) => setCancelTarget(b)}
+          onAskDelete={(b) => setDeleteTarget(b)}
           prevStatus={prevStatus.current[idOf(detailBk)]}
         />
       )}
 
       {cancelTarget && (
         <ConfirmCancel bk={cancelTarget} onClose={() => setCancelTarget(null)} onConfirm={confirmCancel} />
+      )}
+
+      {deleteTarget && (
+        <ConfirmDelete bk={deleteTarget} onClose={() => setDeleteTarget(null)} onConfirm={confirmDelete} />
       )}
     </div>
   )

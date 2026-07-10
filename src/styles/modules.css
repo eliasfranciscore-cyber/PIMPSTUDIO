@@ -81,7 +81,9 @@
 .psn-stat b { font-family: var(--font-display); font-size: 1.5rem; }
 .psn-stat span { font-size: .72rem; color: var(--muted); letter-spacing: .04em; }
 .psn-inbox-toolbar { display: flex; gap: .8rem; align-items: center; flex-wrap: wrap; }
-.psn-inbox-filters { display: flex; gap: .4rem; flex-wrap: wrap; }
+.psn-inbox-filters { display: flex; gap: .4rem; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.psn-inbox-filters::-webkit-scrollbar { display: none; }
+.psn-inbox-filters .psn-chip-btn { flex: 0 0 auto; }
 .psn-barber-filter { padding: .5rem .8rem; border-radius: 999px; border: 1px solid var(--hair-2); background: rgba(255,255,255,.03); color: var(--ink-soft); font-family: var(--font-body); font-size: .85rem; }
 .psn-inbox-search { display: flex; align-items: center; gap: .5rem; padding: .5rem .8rem; border-radius: 999px; border: 1px solid var(--hair-2); background: rgba(255,255,255,.02); color: var(--muted); margin-left: auto; }
 .psn-inbox-search input { background: none; border: 0; color: var(--ink); outline: none; font-family: var(--font-body); font-size: .85rem; width: 160px; }
@@ -105,7 +107,7 @@
 .psn-res-client { display: flex; align-items: center; gap: .7rem; }
 .psn-res-avatar { width: 42px; height: 42px; border-radius: 999px; display: grid; place-items: center; font-family: var(--font-display); font-weight: 600; background: rgba(201,161,78,.1); border: 1px solid var(--gold-line); color: var(--gold-lt); flex-shrink: 0; }
 .psn-res-client .nm { font-weight: 600; font-size: .95rem; }
-.psn-res-client .ph { font-size: .78rem; color: var(--muted); display: flex; align-items: center; gap: .3rem; }
+.psn-res-phone { font-size: .78rem; color: var(--muted); display: flex; align-items: center; gap: .3rem; }
 .psn-res-meta { display: grid; gap: .35rem; padding: .7rem .8rem; border-radius: 10px; background: rgba(255,255,255,.02); border: 1px solid var(--hair); }
 .psn-res-row { display: flex; justify-content: space-between; align-items: center; font-size: .82rem; gap: .6rem; }
 .psn-res-row span { color: var(--muted); }
@@ -225,11 +227,11 @@ a.home-footer-access { display: inline-flex; align-items: center; gap: .4rem; te
 .psn-res-status.confirmada { border-color: rgba(111,191,134,.45); }
 .psn-res-status.cancelada { border-color: rgba(217,154,143,.45); color: var(--red); }
 .psn-res-detail { flex: 0 0 auto; white-space: nowrap; }
-/* Teléfono legible en ambos temas (sin caja negra de auto-detección iOS) */
-.psn-res-client .ph { color: var(--muted); }
 
 .btn-danger { background: linear-gradient(135deg, #d9544a, #b23b32); color: #fff; border: 0; box-shadow: 0 12px 30px -16px rgba(217,84,74,.6); }
 .btn-danger:hover { filter: brightness(1.06); }
+.psn-res-delete { color: #d9544a; border-color: rgba(217,84,74,.35); }
+.psn-res-delete:hover { border-color: rgba(217,84,74,.6); background: rgba(217,84,74,.08); color: #d9544a; }
 
 .psn-res-modal { text-align: center; }
 .psn-res-modal .psn-res-badge { display: inline-flex; margin: 0 auto .7rem; }
@@ -312,11 +314,41 @@ a.home-footer-access { display: inline-flex; align-items: center; gap: .4rem; te
 [data-theme="light"] .psn-modal-card.psn-client-modal,
 [data-theme="light"] .psn-modal-card.psn-barber-modal { background: #fff; }
 
+/* === Filtros de clientes (cuadrados, clicables) === */
+.client-filter-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; }
+.client-filter-card {
+  aspect-ratio: 1;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: .3rem;
+  padding: .8rem;
+  border-radius: 16px;
+  border: 1px solid var(--hair);
+  background: var(--panel);
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color .18s, background .18s, box-shadow .18s;
+}
+.client-filter-card:hover { border-color: var(--gold-line); background: rgba(201,161,78,.05); }
+.client-filter-card.is-active { border-color: var(--gold-line); background: rgba(201,161,78,.12); box-shadow: 0 0 0 1px var(--gold-line) inset; color: var(--gold-lt); }
+.client-filter-card strong { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; }
+.client-filter-card span { font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); text-align: center; }
+.client-filter-card.is-active span { color: var(--gold-lt); }
+[data-theme="light"] .client-filter-card { background: #fff; }
+
 /* === Service card grid === */
 .svc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: .75rem; }
 .svc-card { background: var(--panel); border: 1px solid var(--hair); border-radius: 14px; padding: .9rem; cursor: pointer; transition: border-color .18s, background .18s, box-shadow .18s; user-select: none; }
 .svc-card:hover:not(.is-open) { border-color: var(--gold-line); background: rgba(201,161,78,.05); box-shadow: 0 0 0 1px var(--gold-line) inset; }
-.svc-card.is-open { border-color: var(--gold-line); cursor: default; background: rgba(201,161,78,.04); }
+.svc-card.is-open {
+  border-color: var(--gold-line);
+  cursor: default;
+  background: rgba(201,161,78,.04);
+  /* Sin esto, el form de edición desborda el ancho fijo de la celda del grid
+     (148px) y queda tapado/pisado por la card vecina — botones inclickeables. */
+  grid-column: 1 / -1;
+}
 .svc-card-ic { width: 36px; height: 36px; border-radius: 10px; background: rgba(201,161,78,.12); display: grid; place-items: center; color: var(--gold); margin-bottom: .6rem; }
 .svc-card-name { font-size: .88rem; font-weight: 600; margin-bottom: .18rem; line-height: 1.3; }
 .svc-card-price { font-family: var(--font-display); font-size: 1.05rem; color: var(--gold-lt); font-weight: 600; margin-bottom: .18rem; }

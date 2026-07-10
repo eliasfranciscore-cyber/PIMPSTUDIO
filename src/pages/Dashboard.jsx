@@ -99,6 +99,7 @@ export default function Dashboard() {
   const [bookings, setBookings] = useState(mergeBookings(TODAY_BOOKINGS.map((item, index) => ({ ...item, id: index + 1, date: isoDate(new Date()) }))))
   const [clients, setClients] = useState(CLIENTS)
   const [clientQuery, setClientQuery] = useState("")
+  const [clientFilter, setClientFilter] = useState("all")
   const [selectedClient, setSelectedClient] = useState(null)
   const [clientHistory, setClientHistory] = useState([])
   const [clientEditing, setClientEditing] = useState(false)
@@ -142,9 +143,22 @@ export default function Dashboard() {
     acc[key].v += Number(item.price || 0)
     return acc
   }, {})).slice(-7)
+  // Inactivo = sin visitas hace 30 dias o mas (o nunca visito). Mas activos = 3+ visitas.
+  const clientActivityOf = (client) => {
+    if (!client.lastVisit) return "inactive"
+    const days = (Date.now() - new Date(client.lastVisit).getTime()) / 86_400_000
+    return days >= 30 ? "inactive" : "active"
+  }
+  const activeClients = clients.filter((c) => clientActivityOf(c) === "active")
+  const inactiveClients = clients.filter((c) => clientActivityOf(c) === "inactive")
+  const topClients = clients.filter((c) => Number(c.visits || 0) >= 3)
   const filteredClients = clients.filter((client) => {
     const haystack = `${client.name || ""} ${client.phone || ""} ${client.email || ""}`.toLowerCase()
-    return haystack.includes(clientQuery.trim().toLowerCase())
+    if (!haystack.includes(clientQuery.trim().toLowerCase())) return false
+    if (clientFilter === "active") return clientActivityOf(client) === "active"
+    if (clientFilter === "inactive") return clientActivityOf(client) === "inactive"
+    if (clientFilter === "top") return Number(client.visits || 0) >= 3
+    return true
   })
 
   // Modo panel: bloquea el scroll del body para que el scroll viva dentro de
@@ -354,6 +368,17 @@ export default function Dashboard() {
     }
   }
 
+  const deleteBooking = async (booking) => {
+    setBookings((items) => items.filter((item) => item.id !== booking.id))
+    const res = await fetch(`/api/bookings?id=${booking.id}&purge=1`, {
+      method: "DELETE",
+      headers: authHeaders(),
+    }).catch(() => null)
+    if (res && !res.ok) {
+      setBookings((items) => [...items, booking])
+    }
+  }
+
   const openClient = async (client, { edit = false } = {}) => {
     setSelectedClient(client)
     setClientEditing(edit)
@@ -400,6 +425,34 @@ export default function Dashboard() {
     setAgendaBusy("")
   }
 
+  // Bloquea/habilita varios horarios de una sola vez (mañana, tarde o el día completo).
+  const bulkAgenda = async (scope, mode) => {
+    const slots = AGENDA_SLOTS.filter((t) => {
+      if (scope === "morning") return Number(t.slice(0, 2)) < 12
+      if (scope === "afternoon") return Number(t.slice(0, 2)) >= 12
+      return true
+    })
+    setAgendaBusy(`bulk-${scope}-${mode}`)
+    const localBlocks = readLocalBlocks()
+    const dayAvailability = availability[agendaDayKey] || []
+    for (const slot of slots) {
+      const slotInfo = dayAvailability.find((item) => item.slot === slot)
+      const state = slotInfo?.state || (slotInfo?.available === false ? "blocked" : "free")
+      if (state === "booked") continue
+      const wantsBlocked = mode === "block"
+      if ((wantsBlocked && state === "blocked") || (!wantsBlocked && state === "free")) continue
+      const key = localBlockKey(agendaBarber, agendaDayKey, slot)
+      if (wantsBlocked) localBlocks[key] = { barberId: agendaBarber, date: agendaDayKey, slot }
+      else delete localBlocks[key]
+      const method = wantsBlocked ? "POST" : "DELETE"
+      const body = JSON.stringify({ barberId: agendaBarber, date: agendaDayKey, slot, reason: "Bloqueado desde agenda interna" })
+      await fetch("/api/availability", { method, headers: authHeaders({ "Content-Type": "application/json" }), body }).catch(() => null)
+    }
+    writeLocalBlocks(localBlocks)
+    await loadAgenda()
+    setAgendaBusy("")
+  }
+
   if (!barber) return null
 
   return (
@@ -433,18 +486,39 @@ export default function Dashboard() {
             <div className="agenda-controls">
               {/* Selector de barbero retirado: la agenda es exclusiva de Brunetti.
                   (Se conserva agendaBarber fijado a Bruno para la API de disponibilidad.) */}
-              <label className="agenda-control">
-                <span>Día</span>
-                <select className="input" value={agendaDayKey} onChange={(e) => setAgendaDayKey(e.target.value)}>
-                  {Array.from({ length: 14 }, (_, i) => {
-                    const d = new Date()
-                    d.setDate(d.getDate() + i)
-                    const k = isoDate(d)
-                    const label = i === 0 ? "Hoy" : i === 1 ? "Mañana" : `${DAY_LABELS[d.getDay()]} ${d.getDate()}/${d.getMonth() + 1}`
-                    return <option key={k} value={k}>{label}</option>
-                  })}
-                </select>
-              </label>
+              <div className="agenda-day-scroll">
+                {Array.from({ length: 30 }, (_, i) => {
+                  const d = new Date()
+                  d.setDate(d.getDate() + i)
+                  const k = isoDate(d)
+                  const isActive = k === agendaDayKey
+                  return (
+                    <button
+                      key={k}
+                      type="button"
+                      className={`agenda-day-pill ${isActive ? "is-active" : ""}`}
+                      onClick={() => setAgendaDayKey(k)}
+                    >
+                      <span className="agenda-day-pill-dow">{i === 0 ? "Hoy" : i === 1 ? "Mañ" : DAY_LABELS[d.getDay()]}</span>
+                      <span className="agenda-day-pill-num">{d.getDate()}</span>
+                    </button>
+                  )
+                })}
+              </div>
+              <div className="agenda-bulk-actions">
+                <button type="button" className="btn btn-dark btn-sm" disabled={!!agendaBusy} onClick={() => bulkAgenda("morning", "block")}>
+                  <Icon name="clock" size={13} /> Bloquear mañana
+                </button>
+                <button type="button" className="btn btn-dark btn-sm" disabled={!!agendaBusy} onClick={() => bulkAgenda("afternoon", "block")}>
+                  <Icon name="clock" size={13} /> Bloquear tarde
+                </button>
+                <button type="button" className="btn btn-dark btn-sm" disabled={!!agendaBusy} onClick={() => bulkAgenda("day", "block")}>
+                  <Icon name="close" size={13} /> Bloquear día completo
+                </button>
+                <button type="button" className="btn btn-gold btn-sm" disabled={!!agendaBusy} onClick={() => bulkAgenda("day", "enable")}>
+                  <Icon name="check" size={13} /> Habilitar día completo
+                </button>
+              </div>
             </div>
             <Panel
               title={`${(barbers.find((item) => item.id === agendaBarber) || barberById(agendaBarber))?.name || "Barbero"}`}
@@ -498,6 +572,7 @@ export default function Dashboard() {
             barber={barber}
             admin={admin}
             onStatus={(bk, status) => updateBookingStatus(bk, status)}
+            onDelete={deleteBooking}
             onReschedule={() => setTab("agenda")}
           />
         )}
@@ -547,10 +622,22 @@ export default function Dashboard() {
         {/* CLIENTES */}
         {tab === "clientes" && (
           <div className="animate-in" style={{ display: "grid", gap: "1.1rem" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: "1rem" }}>
-              <Stat icon="user" label="Clientes" value={clients.length} accent />
-              <Stat icon="scissors" label="Cortes registrados" value={clients.reduce((sum, item) => sum + Number(item.visits || 0), 0)} />
-              <Stat icon="wallet" label="Valor historial" value={CLP(clients.reduce((sum, item) => sum + Number(item.totalSpent || 0), 0))} />
+            <div className="client-filter-grid">
+              <button type="button" className={`client-filter-card ${clientFilter === "active" ? "is-active" : ""}`} onClick={() => setClientFilter((f) => f === "active" ? "all" : "active")}>
+                <Icon name="user" size={18} />
+                <strong>{activeClients.length}</strong>
+                <span>Activos</span>
+              </button>
+              <button type="button" className={`client-filter-card ${clientFilter === "inactive" ? "is-active" : ""}`} onClick={() => setClientFilter((f) => f === "inactive" ? "all" : "inactive")}>
+                <Icon name="clock" size={18} />
+                <strong>{inactiveClients.length}</strong>
+                <span>Inactivos 30+ días</span>
+              </button>
+              <button type="button" className={`client-filter-card ${clientFilter === "top" ? "is-active" : ""}`} onClick={() => setClientFilter((f) => f === "top" ? "all" : "top")}>
+                <Icon name="star" size={18} />
+                <strong>{topClients.length}</strong>
+                <span>Más activos</span>
+              </button>
             </div>
             <Panel title="Panel de clientes" action={<span className="chip chip-gold">Telefono como ID</span>}>
               <div className="client-search">
@@ -1492,7 +1579,6 @@ function DashboardTopbar({ title, barber, onLogout, tab, setTab, nav, notifCount
         >
           <Icon name="menu" size={18} />
         </button>
-        <span className="pimp-mark" aria-hidden="true" />
         <div className="dashboard-topbar-title">
           <strong>{title}</strong>
           <small>Brunetti</small>

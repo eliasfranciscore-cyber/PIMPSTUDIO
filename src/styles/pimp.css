@@ -2920,7 +2920,6 @@ select.input { text-overflow: ellipsis; }
    ============================================================ */
 .agenda-controls {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: .7rem;
   min-width: 0;
 }
@@ -2933,6 +2932,58 @@ select.input { text-overflow: ellipsis; }
   font-family: var(--font-display);
 }
 .agenda-control .input { width: 100%; }
+
+/* Acciones rápidas: bloquear/habilitar bloques completos del día. */
+.agenda-bulk-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+.agenda-bulk-actions .btn { flex: 1 1 auto; min-width: 140px; white-space: nowrap; }
+
+/* Franja de días con scroll horizontal — permite recorrer varias semanas
+   con el dedo para elegir el día a configurar, en vez de un <select> ciego. */
+.agenda-day-scroll {
+  display: flex;
+  gap: .5rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+  padding: .15rem .1rem .5rem;
+  margin: -.15rem -.1rem -.5rem;
+}
+.agenda-day-scroll::-webkit-scrollbar { display: none; }
+.agenda-day-pill {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  display: grid;
+  justify-items: center;
+  gap: .25rem;
+  min-width: 52px;
+  padding: .55rem .4rem;
+  border-radius: 14px;
+  border: 1px solid var(--hair);
+  background: var(--panel);
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color .18s, background .18s, color .18s;
+}
+.agenda-day-pill:hover:not(.is-active) { border-color: var(--gold-line); background: rgba(201,161,78,.05); }
+.agenda-day-pill.is-active {
+  border-color: var(--gold-line);
+  background: rgba(201,161,78,.14);
+  color: var(--gold-lt);
+  box-shadow: 0 0 0 1px var(--gold-line) inset;
+}
+.agenda-day-pill-dow {
+  font-size: .64rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-family: var(--font-display);
+}
+.agenda-day-pill.is-active .agenda-day-pill-dow { color: var(--gold-lt); }
+.agenda-day-pill-num { font-family: var(--font-display); font-weight: 600; font-size: 1rem; }
 
 .agenda-day-list {
   display: grid;
@@ -3223,6 +3274,12 @@ select.input { text-overflow: ellipsis; }
     display: block !important;
     overflow: hidden !important;
     max-width: 100vw;
+    /* En PWA standalone (sin chrome de Safari) el shell fixed arranca en el
+       y=0 real del dispositivo, debajo del status bar translúcido. En Safari
+       esto no se nota porque la barra de direcciones ya empuja el contenido.
+       Reservamos el safe-area aquí (contenedor NO scrolleable) para que el
+       topbar sticky de .dashboard-main nunca quede tapado por el status bar. */
+    padding-top: env(safe-area-inset-top, 0px);
   }
   body.dash-mode .dashboard-main {
     height: 100%;
