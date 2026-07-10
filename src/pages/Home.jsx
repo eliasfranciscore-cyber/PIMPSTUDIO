@@ -331,8 +331,8 @@ export default function Home() {
           </div>
           <div className="compare" data-reveal="scale">
             <div className="cmp-frame" id="compare-frame">
-              <img className="cmp-img cmp-after" src="/assets/gallery-3.jpg" alt="Después del corte" loading="lazy" decoding="async" />
-              <img className="cmp-img cmp-before" src="/assets/gallery-1.jpg" alt="Antes del corte" loading="lazy" decoding="async" />
+              <img className="cmp-img cmp-after" src="/assets/compare-after.jpg" alt="Después del corte" loading="lazy" decoding="async" />
+              <img className="cmp-img cmp-before" src="/assets/compare-before.jpg" alt="Antes del corte" loading="lazy" decoding="async" />
               <span className="cmp-tag before">Antes</span>
               <span className="cmp-tag after">Después</span>
               <div className="cmp-divider" />
