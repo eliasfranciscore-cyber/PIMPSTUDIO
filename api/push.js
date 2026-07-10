@@ -55,6 +55,7 @@ export async function notifyBarber(barberId, payload) {
         }
       }
     }))
+    console.log(`notifyBarber: ${sent}/${subs.length} enviados (barberId=${barberId})`)
     return { ok: true, sent }
   } catch (err) {
     console.error("notifyBarber error:", err)
@@ -85,6 +86,7 @@ export async function notifyAll(payload) {
         }
       }
     }))
+    console.log(`notifyAll: ${sent}/${subs.length} enviados`)
     return { ok: true, sent }
   } catch (err) {
     console.error("notifyAll error:", err)
