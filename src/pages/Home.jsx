@@ -51,14 +51,17 @@ const FALLBACK_SERVICES = [
 
 const CAT_TAG = { premium: 'Premium', quimico: 'Color', general: 'Corte' }
 
-function toDisplayService(svc, i, list) {
-  const featured = svc.cat === 'premium'
-    ? true
-    : !list.some((s) => s.cat === 'premium') && i === 0
+// Solo UN servicio lleva la insignia de destacado: el primer premium, o si no
+// hay ninguno, el primero de la lista.
+function pickFeaturedId(list) {
+  return (list.find((s) => s.cat === 'premium') || list[0])?.id
+}
+
+function toDisplayService(svc, featuredId) {
   return {
     id: svc.id,
     tag: CAT_TAG[svc.cat] || (svc.cat ? svc.cat[0].toUpperCase() + svc.cat.slice(1) : 'Servicio'),
-    featured,
+    featured: svc.id === featuredId,
     title: svc.name,
     desc: svc.desc || '',
     price: CLP(svc.price),
@@ -104,7 +107,10 @@ export default function Home() {
     fetch('/api/services')
       .then((r) => r.json())
       .then((data) => {
-        if (data.services?.length) setServices(data.services.map(toDisplayService))
+        if (data.services?.length) {
+          const featuredId = pickFeaturedId(data.services)
+          setServices(data.services.map((svc) => toDisplayService(svc, featuredId)))
+        }
       })
       .catch(() => {})
   }, [])
