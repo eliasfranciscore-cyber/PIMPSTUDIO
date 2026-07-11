@@ -265,3 +265,6 @@
   .wks-shell { padding-bottom: 5rem; }
   .estilo-page .mfooter { padding-bottom: 5rem; }
 }
+
+/* Modo claro: navbar "Barber Studio" debe ser blanco, no muted/gris */
+[data-theme="light"] .home-nav .site-nav-brand-sub { color: white !important; }

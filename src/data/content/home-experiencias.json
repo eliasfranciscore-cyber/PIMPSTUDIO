@@ -1,0 +1,37 @@
+{
+  "kicker": "Explora",
+  "h2": "El trabajo Brunetticutz",
+  "body": "Desliza para conocer cada servicio. Toca cualquier tarjeta para ver el detalle.",
+  "cards": [
+    {
+      "cat": "Visagismo",
+      "title": "Asesoría de Imagen Visagista",
+      "body": "Una consulta personalizada con Bruno Herrera donde analizamos tu fisonomía, estilo de vida y objetivos para definir el corte y la imagen que realmente te representan. No es solo un corte: es una dirección de estilo."
+    },
+    {
+      "cat": "Corte",
+      "title": "Corte a Medida",
+      "body": "Corte de precisión ejecutado con técnicas avanzadas y lectura del rostro. Definición limpia, transiciones cuidadas y un acabado pensado para favorecer tus rasgos."
+    },
+    {
+      "cat": "Corte + Barba",
+      "title": "Perfilado de Barba",
+      "body": "Diseño y perfilado de barba con navaja y productos premium. Definimos líneas, simetría y textura para complementar tu rostro y tu corte."
+    },
+    {
+      "cat": "Transformación",
+      "title": "Cambio de Imagen",
+      "body": "Un cambio integral de imagen pensado para elevar cómo te ves y cómo te sientes, con recomendaciones de mantenimiento y estilo a futuro."
+    },
+    {
+      "cat": "Formación",
+      "title": "Curso Profesional",
+      "body": "Programa de 6 módulos para barberos que quieren elevar su técnica, su imagen y su negocio. Visagismo, técnica, marca personal y contenido aplicables desde el primer día."
+    },
+    {
+      "cat": "Marca personal",
+      "title": "Contenido de Marca",
+      "body": "Asesoría de imagen pensada para cámara y redes: una identidad visual reconocible que potencia tu marca personal como creador o figura pública."
+    }
+  ]
+}

@@ -2,6 +2,7 @@ import React, { Suspense, lazy, useEffect } from 'react'
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom'
 import Home from './pages/Home.jsx'
 import { ThemeProvider, FloatingThemeToggle } from './components/theme.jsx'
+import EditProvider from './components/edit/EditProvider.jsx'
 
 // ── Ruteo de lanzamiento de la PWA instalada (iOS "Agregar a inicio") ──────
 // iOS Safari ignora con frecuencia el start_url del manifest y abre la PWA en
@@ -53,25 +54,27 @@ function RouteFallback() {
 export default function App() {
   return (
     <ThemeProvider>
-      <div className="stage">
-        <PWALaunchRouter />
-        <Suspense fallback={<RouteFallback />}>
-          <Routes>
-            <Route path="/"         element={<Home />} />
-            <Route path="/workshop" element={<Workshop />} />
-            <Route path="/cursos"   element={<Cursos />} />
-            <Route path="/style"    element={<EncuentraEstilo />} />
-            <Route path="/encuentra-tu-estilo" element={<Navigate to="/style" replace />} />
-            <Route path="/login"    element={<Login />} />
-            <Route path="/reservar" element={<Booking />} />
-            <Route path="/cuenta"   element={<Account />} />
-            <Route path="/ingreso"  element={<BarberLogin />} />
-            <Route path="/panel"    element={<Dashboard />} />
-            <Route path="*"         element={<Navigate to="/" replace />} />
-          </Routes>
-        </Suspense>
-        <FloatingThemeToggle />
-      </div>
+      <EditProvider>
+        <div className="stage">
+          <PWALaunchRouter />
+          <Suspense fallback={<RouteFallback />}>
+            <Routes>
+              <Route path="/"         element={<Home />} />
+              <Route path="/workshop" element={<Workshop />} />
+              <Route path="/cursos"   element={<Cursos />} />
+              <Route path="/style"    element={<EncuentraEstilo />} />
+              <Route path="/encuentra-tu-estilo" element={<Navigate to="/style" replace />} />
+              <Route path="/login"    element={<Login />} />
+              <Route path="/reservar" element={<Booking />} />
+              <Route path="/cuenta"   element={<Account />} />
+              <Route path="/ingreso"  element={<BarberLogin />} />
+              <Route path="/panel"    element={<Dashboard />} />
+              <Route path="*"         element={<Navigate to="/" replace />} />
+            </Routes>
+          </Suspense>
+          <FloatingThemeToggle />
+        </div>
+      </EditProvider>
     </ThemeProvider>
   )
 }

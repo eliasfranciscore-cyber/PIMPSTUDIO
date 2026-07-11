@@ -5,78 +5,37 @@ import SiteNav from '../components/SiteNav.jsx'
 import ModuleFooter from '../components/ModuleFooter.jsx'
 import { Lamp } from '../components/ui/lamp.jsx'
 import FintocCheckout from '../components/FintocCheckout.jsx'
+import { EditableText } from '../components/edit/EditableText.jsx'
+import CURSOS from '../data/content/cursos.json'
 
 /* ================================================================
    CURSOS BRUNETTI — Formación en visagismo & barbería
    Flujo: usuario ve módulos → paga vía Fintoc → accede a Skool
    ================================================================ */
 
-const MODULES = [
-  {
-    t: 'Bienvenida',
-    d: 'Quién soy y qué vas a lograr aquí — el método, la comunidad y cómo aprovechar Skool.',
-    lessons: [
-      ['Mi historia como barbero — por qué creé esto', '07:30'],
-      ['Qué vas a lograr en esta comunidad', '05:30'],
-      ['Cómo usar Skool en 3 minutos (en español)', '05:00'],
-    ],
-  },
-  {
-    t: 'El Protocolo Pre-Corte',
-    d: 'Por qué el 90% falla antes de tomar la máquina — las 5 preguntas que cambian la experiencia del cliente.',
-    lessons: [
-      ['El error que comete el 90% antes de cortar', '07:30'],
-      ['Las 5 preguntas explicadas una por una', '08:30'],
-      ['Las 5 preguntas en vivo con cliente real', '08:30'],
-      ['Cómo el protocolo cambia lo que cobrás', '07:30'],
-    ],
-  },
-  {
-    t: 'El Sistema de Fade',
-    d: 'Low, mid y high fade desde cero — lectura del cráneo, ejecución y corrección de errores.',
-    lessons: [
-      ['Cómo leer el cráneo antes de empezar', '07:30'],
-      ['Low fade — paso a paso', '08:30'],
-      ['Mid fade y high fade — las diferencias clave', '09:30'],
-      ['Cómo borrar manchas y líneas duras', '08:30'],
-    ],
-  },
-  {
-    t: 'El Orden del Corte',
-    d: 'Patrón de crecimiento, secciones y zonas anatómicas — un sistema que da resultados consistentes.',
-    lessons: [
-      ['Por qué el orden importa más que la técnica', '07:30'],
-      ['Secciones anatómicas: occipital, parietal y temporal', '09:30'],
-      ['El mapa del cráneo — zonas y orden de trabajo', '07:30'],
-    ],
-  },
-  {
-    t: 'Marca Personal',
-    d: 'Cómo posicionarte como EL barbero de tu ciudad — qué publicar y cómo documentar tu trabajo.',
-    lessons: [
-      ['El barbero que no se ve no existe', '07:30'],
-      ['Qué publicar en TikTok e Instagram como barbero', '08:30'],
-      ['Cómo documentar un corte en 60 segundos', '07:30'],
-    ],
-  },
-  {
-    t: 'Cómo Cobrar Más',
-    d: 'De $12.000 a $20.000 — el caso real de Brunetti, la mentalidad y el método paso a paso.',
-    lessons: [
-      ['Por qué los barberos cobran poco', '07:30'],
-      ['El caso Brunetti — de $12.000 a $20.000', '08:30'],
-      ['Cómo comunicar la subida sin perder clientes', '08:30'],
-      ['Tu plan de los próximos 30 días', '07:30'],
-    ],
-  },
+// La duración de cada lección es dato fijo (no editable por texto libre); el
+// título de la lección y del módulo sí viven en cursos.json y llegan por índice.
+const LESSON_DURATIONS = [
+  ['07:30', '05:30', '05:00'],
+  ['07:30', '08:30', '08:30', '07:30'],
+  ['07:30', '08:30', '09:30', '08:30'],
+  ['07:30', '09:30', '07:30'],
+  ['07:30', '08:30', '07:30'],
+  ['07:30', '08:30', '08:30', '07:30'],
 ]
+const MODULES = CURSOS.curriculum.modules.map((m, i) => ({
+  t: m.t,
+  d: m.d,
+  lessons: m.lessons.map((title, j) => [title, LESSON_DURATIONS[i][j]]),
+}))
 
-const INCLUDES = [
-  { b: 'Método de visagismo aplicado', s: 'Lee proporciones y rasgos para decidir cada corte con criterio, no por moda.', icon: (<><circle cx="12" cy="12" r="9" /><path d="M9 12l2 2 4-4" /></>) },
-  { b: 'Técnica de precisión', s: 'Degradados, texturas y acabados explicados paso a paso.', icon: (<path d="M14 4l6 6M3 21l3-1 11-11-2-2L4 18z" />) },
-  { b: 'Marca personal & contenido', s: 'Cómo mostrar tu trabajo y construir una identidad reconocible.', icon: (<><rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 3l-4 4-4-4" /></>) },
-  { b: 'Crecimiento & negocio', s: 'Mentalidad y orden para profesionalizar tu servicio.', icon: (<path d="M12 2l2.4 7.4H22l-6 4.4 2.3 7.2-6.3-4.6L5.7 21l2.3-7.2-6-4.4h7.6z" />) },
+const INCLUDE_ICONS = [
+  (<><circle cx="12" cy="12" r="9" /><path d="M9 12l2 2 4-4" /></>),
+  (<path d="M14 4l6 6M3 21l3-1 11-11-2-2L4 18z" />),
+  (<><rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 3l-4 4-4-4" /></>),
+  (<path d="M12 2l2.4 7.4H22l-6 4.4 2.3 7.2-6.3-4.6L5.7 21l2.3-7.2-6-4.4h7.6z" />),
 ]
+const INCLUDES = CURSOS.intro.includes.map((it, i) => ({ ...it, icon: INCLUDE_ICONS[i] }))
 
 export default function Cursos() {
   const navigate = useNavigate()
@@ -95,21 +54,24 @@ export default function Cursos() {
       <main>
         {/* ============ HERO ============ */}
         <section className="course-hero">
-          <div className="course-hero-bg"><img src="/assets/workshop-2026.jpg" alt="Workshop Brunetti con su comunidad de barberos" /></div>
+          <div className="course-hero-bg" aria-hidden="true"><img src="/assets/bruno-hero-bg.webp" alt="" fetchpriority="high" decoding="async" /></div>
           <div className="course-hero-inner">
-            <span className="bhero-kicker"><span className="dot" />Formación profesional · Bruno Herrera</span>
-            <h1>Curso Brunetti<br />Visagismo &amp; Barbería</h1>
-            <p className="sub">Aprende a leer el rostro, dominar la técnica y construir tu marca personal. 6 módulos pensados para barberos que quieren dejar de copiar tendencias y empezar a diseñar imagen.</p>
+            <span className="bhero-kicker"><span className="dot" /><EditableText file="cursos" path="hero.kicker">{CURSOS.hero.kicker}</EditableText></span>
+            <h1><EditableText file="cursos" path="hero.title1">{CURSOS.hero.title1}</EditableText><br /><EditableText file="cursos" path="hero.title2">{CURSOS.hero.title2}</EditableText></h1>
+            <p className="sub"><EditableText file="cursos" path="hero.sub" as="span">{CURSOS.hero.sub}</EditableText></p>
             <div className="actions">
-              <a className="btn btn-primary" onClick={() => goAnchor('inscripcion')}>ACCEDER AL CURSO — $9.990</a>
-              <a className="btn btn-ghost" onClick={() => goAnchor('curriculum')}>VER PROGRAMA</a>
+              <a className="btn btn-primary" onClick={() => goAnchor('inscripcion')}><EditableText file="cursos" path="hero.ctaPrimary">{CURSOS.hero.ctaPrimary}</EditableText></a>
+              <a className="btn btn-ghost" onClick={() => goAnchor('curriculum')}><EditableText file="cursos" path="hero.ctaSecondary">{CURSOS.hero.ctaSecondary}</EditableText></a>
             </div>
             <div className="course-stats">
-              <div className="cst"><strong data-count="6">0</strong><span>Módulos</span></div>
-              <div className="cst"><strong data-count="21">0</strong><span>Lecciones</span></div>
-              <div className="cst"><strong data-count="100" data-suffix="%">0</strong><span>Online</span></div>
-              <div className="cst"><strong>∞</strong><span>Acceso al material</span></div>
+              <div className="cst"><strong data-count="6">0</strong><span><EditableText file="cursos" path="hero.stat1Label">{CURSOS.hero.stat1Label}</EditableText></span></div>
+              <div className="cst"><strong data-count="21">0</strong><span><EditableText file="cursos" path="hero.stat2Label">{CURSOS.hero.stat2Label}</EditableText></span></div>
+              <div className="cst"><strong data-count="100" data-suffix="%">0</strong><span><EditableText file="cursos" path="hero.stat3Label">{CURSOS.hero.stat3Label}</EditableText></span></div>
+              <div className="cst"><strong>∞</strong><span><EditableText file="cursos" path="hero.stat4Label">{CURSOS.hero.stat4Label}</EditableText></span></div>
             </div>
+          </div>
+          <div className="course-hero-figwrap" aria-hidden="true">
+            <img src="/assets/cursos-hero-cutout.webp" alt="" />
           </div>
         </section>
 
@@ -117,15 +79,18 @@ export default function Cursos() {
         <section className="bsection">
           <div className="bwrap">
             <div className="bhead center" data-reveal>
-              <p className="kicker">Por qué este curso</p>
-              <h2>De cortar pelo a diseñar imagen</h2>
-              <p>Bruno comparte el mismo método que aplica en su estudio: visagismo, técnica de precisión, dirección de estilo y construcción de marca personal. Un programa práctico para que eleves tu trabajo, tu imagen y tu negocio.</p>
+              <p className="kicker"><EditableText file="cursos" path="intro.kicker">{CURSOS.intro.kicker}</EditableText></p>
+              <h2><EditableText file="cursos" path="intro.h2" as="span">{CURSOS.intro.h2}</EditableText></h2>
+              <p><EditableText file="cursos" path="intro.body" as="span">{CURSOS.intro.body}</EditableText></p>
             </div>
             <div className="includes-grid">
               {INCLUDES.map((it, i) => (
                 <div className="include" data-reveal style={{ '--i': i }} key={it.b}>
                   <svg viewBox="0 0 24 24">{it.icon}</svg>
-                  <div><b>{it.b}</b><span>{it.s}</span></div>
+                  <div>
+                    <b><EditableText file="cursos" path={`intro.includes.${i}.b`}>{it.b}</EditableText></b>
+                    <span><EditableText file="cursos" path={`intro.includes.${i}.s`}>{it.s}</EditableText></span>
+                  </div>
                 </div>
               ))}
             </div>
@@ -136,9 +101,9 @@ export default function Cursos() {
         <section className="bsection wk-alt" id="curriculum">
           <div className="bwrap">
             <div className="bhead center" data-reveal>
-              <p className="kicker">6 módulos · 21 lecciones</p>
-              <h2>El temario completo</h2>
-              <p>Toca cada módulo para ver sus lecciones y contenidos.</p>
+              <p className="kicker"><EditableText file="cursos" path="curriculum.kicker">{CURSOS.curriculum.kicker}</EditableText></p>
+              <h2><EditableText file="cursos" path="curriculum.h2" as="span">{CURSOS.curriculum.h2}</EditableText></h2>
+              <p><EditableText file="cursos" path="curriculum.body" as="span">{CURSOS.curriculum.body}</EditableText></p>
             </div>
             <div className="modules">
               {MODULES.map((m, i) => {
@@ -148,17 +113,20 @@ export default function Cursos() {
                   <article className={`module${open ? ' is-open' : ''}`} key={m.t}>
                     <button className="module-head" type="button" aria-expanded={open} onClick={() => setOpenIdx(open ? -1 : i)}>
                       <span className="module-num">{num}</span>
-                      <span className="module-titles"><h3>{m.t}</h3><p>{m.d}</p></span>
+                      <span className="module-titles">
+                        <h3><EditableText file="cursos" path={`curriculum.modules.${i}.t`} as="span">{m.t}</EditableText></h3>
+                        <p><EditableText file="cursos" path={`curriculum.modules.${i}.d`} as="span">{m.d}</EditableText></p>
+                      </span>
                       <span className="module-meta">
                         <span className="module-count">{m.lessons.length} lecciones</span>
                         <span className="module-chevron"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" /></svg></span>
                       </span>
                     </button>
                     <div className="module-body"><div className="module-body-inner"><ul className="lessons">
-                      {m.lessons.map((l) => (
+                      {m.lessons.map((l, j) => (
                         <li className="lesson" key={l[0]}>
                           <span className="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg></span>
-                          <span className="ltitle">{l[0]}</span>
+                          <span className="ltitle"><EditableText file="cursos" path={`curriculum.modules.${i}.lessons.${j}`} as="span">{l[0]}</EditableText></span>
                           <span className="ldur">{l[1]}</span>
                           <span className="lock"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg></span>
                         </li>
@@ -176,9 +144,9 @@ export default function Cursos() {
           <Lamp className="bru-lamp--sec" />
           <div className="bwrap">
             <div className="bhead center" data-reveal>
-              <p className="kicker">Acceso inmediato</p>
-              <h2>Empieza hoy mismo</h2>
-              <p>Un pago único. Acceso de por vida a los 6 módulos en la comunidad Brunetti en Skool.</p>
+              <p className="kicker"><EditableText file="cursos" path="checkout.kicker">{CURSOS.checkout.kicker}</EditableText></p>
+              <h2><EditableText file="cursos" path="checkout.h2" as="span">{CURSOS.checkout.h2}</EditableText></h2>
+              <p><EditableText file="cursos" path="checkout.body" as="span">{CURSOS.checkout.body}</EditableText></p>
             </div>
 
             <FintocCheckout />

@@ -1,0 +1,26 @@
+{
+  "kicker": "OPINIONES",
+  "h2": "Lo que Dicen Mis Clientes",
+  "items": [
+    {
+      "quote": "Llegué sin saber qué corte me quedaba y salí con el mejor look de mi vida. La asesoría visagista de Bruno es otro nivel.",
+      "name": "Matías Fuentes",
+      "role": "Asesoría de imagen · Visagista"
+    },
+    {
+      "quote": "Bruno no solo te corta el pelo, te dice qué te queda y por qué. Se nota que entiende de proporciones y de estilo.",
+      "name": "Cristóbal Reyes",
+      "role": "Corte de cabello y barba"
+    },
+    {
+      "quote": "Tomé su curso y cambió mi forma de trabajar. La parte de visagismo y de marca personal vale oro para cualquier barbero.",
+      "name": "Ignacio Soto",
+      "role": "Alumno · Curso Brunetti"
+    },
+    {
+      "quote": "Atención impecable de principio a fin. El estudio se siente premium y la hora reservada siempre se respeta.",
+      "name": "Felipe Carrasco",
+      "role": "Cliente frecuente"
+    }
+  ]
+}

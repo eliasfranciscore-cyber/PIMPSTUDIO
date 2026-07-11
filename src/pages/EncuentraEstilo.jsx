@@ -4,6 +4,8 @@ import { useTheme } from '../components/theme.jsx'
 import SiteNav from '../components/SiteNav.jsx'
 import ModuleFooter from '../components/ModuleFooter.jsx'
 import { FACE_SHAPES, GALLERY_CATS, GALLERY, HERO_PHOTOS, u } from '../data/estilo.js'
+import { EditableText } from '../components/edit/EditableText.jsx'
+import ESTILO from '../data/content/estilo.json'
 import '../styles/estilo.css'
 
 /* ============================================================
@@ -104,24 +106,23 @@ function Hero() {
       <div className="ete-hero-overlay" />
       <div className="ete-wrap ete-hero-inner">
         <div className="ete-hero-kicker">
-          <span className="ete-eyebrow">Visagismo interactivo</span>
-          <span className="ete-chip"><Icon name="spark" size={13} /> Nuevo</span>
+          <span className="ete-eyebrow"><EditableText file="estilo" path="hero.eyebrow">{ESTILO.hero.eyebrow}</EditableText></span>
+          <span className="ete-chip"><Icon name="spark" size={13} /> <EditableText file="estilo" path="hero.chip">{ESTILO.hero.chip}</EditableText></span>
         </div>
-        <h1>Encuentra<span className="l2">tu estilo</span></h1>
+        <h1><EditableText file="estilo" path="hero.title1">{ESTILO.hero.title1}</EditableText><span className="l2"><EditableText file="estilo" path="hero.title2">{ESTILO.hero.title2}</EditableText></span></h1>
         <p className="ete-hero-sub">
-          No copies una tendencia: descubre el corte que armoniza con la forma de tu rostro.
-          Haz tu autodiagnóstico de visagismo y explora la galería de estilos de Bruno Herrera.
+          <EditableText file="estilo" path="hero.sub" as="span">{ESTILO.hero.sub}</EditableText>
         </p>
         <div className="ete-hero-actions">
           <button className="ete-btn ete-btn-gold" type="button" onClick={() => smoothScroll('visagismo')}>
-            Iniciar diagnóstico <Icon name="arrow" size={16} />
+            <EditableText file="estilo" path="hero.ctaPrimary">{ESTILO.hero.ctaPrimary}</EditableText> <Icon name="arrow" size={16} />
           </button>
-          <button className="ete-btn ete-btn-ghost" type="button" onClick={() => smoothScroll('galeria')}>Ver galería</button>
+          <button className="ete-btn ete-btn-ghost" type="button" onClick={() => smoothScroll('galeria')}><EditableText file="estilo" path="hero.ctaSecondary">{ESTILO.hero.ctaSecondary}</EditableText></button>
         </div>
         <div className="ete-hero-stats">
-          <div className="s"><b>6</b><span>Formas de rostro</span></div>
-          <div className="s"><b>+30</b><span>Estilos guía</span></div>
-          <div className="s"><b>100%</b><span>A tu medida</span></div>
+          <div className="s"><b>6</b><span><EditableText file="estilo" path="hero.stat1Label">{ESTILO.hero.stat1Label}</EditableText></span></div>
+          <div className="s"><b>+30</b><span><EditableText file="estilo" path="hero.stat2Label">{ESTILO.hero.stat2Label}</EditableText></span></div>
+          <div className="s"><b>100%</b><span><EditableText file="estilo" path="hero.stat3Label">{ESTILO.hero.stat3Label}</EditableText></span></div>
         </div>
       </div>
     </header>
@@ -131,35 +132,36 @@ function Hero() {
 /* ---------- VISAGISMO ---------- */
 function Visagismo({ onReserveService }) {
   const [sel, setSel] = useState(null)
-  const shape = FACE_SHAPES.find((s) => s.id === sel)
+  const shapeIdx = FACE_SHAPES.findIndex((s) => s.id === sel)
+  const shape = shapeIdx >= 0 ? FACE_SHAPES[shapeIdx] : null
+  const sc = shapeIdx >= 0 ? ESTILO.faceShapes[shapeIdx] : null
   return (
     <section className="ete-section" id="visagismo">
       <div className="ete-wrap">
         <Reveal>
           <div className="ete-head">
-            <span className="ete-eyebrow">El método, paso a paso</span>
-            <h2 className="ete-h2">Tu rostro decide <span className="ete-gold-text">el corte</span></h2>
+            <span className="ete-eyebrow"><EditableText file="estilo" path="visagismo.eyebrow">{ESTILO.visagismo.eyebrow}</EditableText></span>
+            <h2 className="ete-h2"><EditableText file="estilo" path="visagismo.h2">{ESTILO.visagismo.h2}</EditableText> <span className="ete-gold-text"><EditableText file="estilo" path="visagismo.h2Highlight">{ESTILO.visagismo.h2Highlight}</EditableText></span></h2>
             <p className="ete-lead">
-              El visagismo estudia las proporciones de tu rostro para diseñar una imagen que te favorezca de verdad.
-              Empieza eligiendo la forma con la que más te identificas.
+              <EditableText file="estilo" path="visagismo.lead" as="span">{ESTILO.visagismo.lead}</EditableText>
             </p>
           </div>
         </Reveal>
 
         <Reveal>
           <div className="ete-vis-steps">
-            <span className="ete-step-pill is-active"><b>1</b> Elige tu forma de rostro</span>
-            <span className={'ete-step-pill' + (shape ? ' is-active' : '')}><b>2</b> Recibe tu diagnóstico</span>
-            <span className="ete-step-pill"><b>3</b> Reserva tu asesoría</span>
+            <span className="ete-step-pill is-active"><b>1</b> <EditableText file="estilo" path="visagismo.step1">{ESTILO.visagismo.step1}</EditableText></span>
+            <span className={'ete-step-pill' + (shape ? ' is-active' : '')}><b>2</b> <EditableText file="estilo" path="visagismo.step2">{ESTILO.visagismo.step2}</EditableText></span>
+            <span className="ete-step-pill"><b>3</b> <EditableText file="estilo" path="visagismo.step3">{ESTILO.visagismo.step3}</EditableText></span>
           </div>
 
           <div className="ete-shape-grid">
-            {FACE_SHAPES.map((s) => (
+            {FACE_SHAPES.map((s, i) => (
               <button key={s.id} className={'ete-shape' + (sel === s.id ? ' is-active' : '')}
                 type="button" onClick={() => setSel(s.id)} aria-pressed={sel === s.id}>
                 <FaceGlyph path={s.path} />
-                <span className="nm">{s.name}</span>
-                <span className="tg">{s.tagline}</span>
+                <span className="nm"><EditableText file="estilo" path={`faceShapes.${i}.name`}>{ESTILO.faceShapes[i].name}</EditableText></span>
+                <span className="tg"><EditableText file="estilo" path={`faceShapes.${i}.tagline`}>{ESTILO.faceShapes[i].tagline}</EditableText></span>
               </button>
             ))}
           </div>
@@ -168,7 +170,7 @@ function Visagismo({ onReserveService }) {
         {!shape && (
           <div className="ete-empty">
             <Icon name="target" size={40} />
-            <p style={{ margin: 0 }}>Selecciona una forma de rostro para ver tu diagnóstico y los cortes recomendados por Bruno.</p>
+            <p style={{ margin: 0 }}><EditableText file="estilo" path="visagismo.emptyText" as="span">{ESTILO.visagismo.emptyText}</EditableText></p>
           </div>
         )}
 
@@ -176,43 +178,43 @@ function Visagismo({ onReserveService }) {
           <div className="ete-result" key={shape.id}>
             <div className="ete-result-top">
               <div className="ete-result-diag">
-                <span className="ete-eyebrow">Rostro {shape.name.toLowerCase()}</span>
-                <h3>{shape.tagline}</h3>
-                <p className="diag">{shape.diagnosis}</p>
+                <span className="ete-eyebrow">Rostro {sc.name.toLowerCase()}</span>
+                <h3><EditableText file="estilo" path={`faceShapes.${shapeIdx}.tagline`} as="span">{sc.tagline}</EditableText></h3>
+                <p className="diag"><EditableText file="estilo" path={`faceShapes.${shapeIdx}.diagnosis`} as="span">{sc.diagnosis}</EditableText></p>
                 <div className="ete-traits">
-                  {shape.traits.map((t, i) => <span className="ete-chip" key={i}>{t}</span>)}
+                  {sc.traits.map((t, i) => <span className="ete-chip" key={i}><EditableText file="estilo" path={`faceShapes.${shapeIdx}.traits.${i}`}>{t}</EditableText></span>)}
                 </div>
                 <div className="ete-goal">
                   <span className="ic"><Icon name="target" size={20} /></span>
-                  <span><b>Objetivo: </b><span>{shape.goal}</span></span>
+                  <span><b>Objetivo: </b><span><EditableText file="estilo" path={`faceShapes.${shapeIdx}.goal`} as="span">{sc.goal}</EditableText></span></span>
                 </div>
               </div>
               <div className="ete-result-figure">
-                <SmartImg src={shape.best[0].img} alt={'Estilo recomendado para rostro ' + shape.name} label={'Rostro ' + shape.name} />
+                <SmartImg src={shape.best[0].img} alt={'Estilo recomendado para rostro ' + sc.name} label={'Rostro ' + sc.name} />
                 <span className="ete-chip tag">Look de referencia</span>
               </div>
             </div>
 
             <div className="ete-best">
-              <p className="ete-best-label">Cortes recomendados para ti</p>
+              <p className="ete-best-label"><EditableText file="estilo" path="visagismo.bestLabel">{ESTILO.visagismo.bestLabel}</EditableText></p>
               <div className="ete-best-grid">
                 {shape.best.map((c, i) => (
                   <article className="ete-cut" key={i}>
-                    <SmartImg src={c.img} alt={c.name} label={c.name} />
+                    <SmartImg src={c.img} alt={sc.best[i].name} label={sc.best[i].name} />
                     <div className="ete-cut-body">
-                      <h4>{c.name}</h4>
-                      <p>{c.note}</p>
+                      <h4><EditableText file="estilo" path={`faceShapes.${shapeIdx}.best.${i}.name`} as="span">{sc.best[i].name}</EditableText></h4>
+                      <p><EditableText file="estilo" path={`faceShapes.${shapeIdx}.best.${i}.note`} as="span">{sc.best[i].note}</EditableText></p>
                     </div>
                   </article>
                 ))}
               </div>
               <p className="ete-avoid">
                 <span className="ic"><Icon name="alert" size={18} /></span>
-                <span><b>Evita: </b>{shape.avoid}</span>
+                <span><b>Evita: </b><EditableText file="estilo" path={`faceShapes.${shapeIdx}.avoid`} as="span">{sc.avoid}</EditableText></span>
               </p>
               <div className="ete-best-cta">
-                <button className="ete-btn ete-btn-gold" type="button" onClick={() => onReserveService(10)}>Reservar asesoría<span className="ete-hide-mobile">&nbsp;con Bruno</span> <Icon name="arrow" size={16} /></button>
-                <button className="ete-btn ete-btn-ghost" type="button" onClick={() => smoothScroll('galeria')}>Ver más estilos</button>
+                <button className="ete-btn ete-btn-gold" type="button" onClick={() => onReserveService(10)}><EditableText file="estilo" path="visagismo.ctaPrimary">{ESTILO.visagismo.ctaPrimary}</EditableText><span className="ete-hide-mobile">&nbsp;<EditableText file="estilo" path="visagismo.ctaPrimarySuffix">{ESTILO.visagismo.ctaPrimarySuffix}</EditableText></span> <Icon name="arrow" size={16} /></button>
+                <button className="ete-btn ete-btn-ghost" type="button" onClick={() => smoothScroll('galeria')}><EditableText file="estilo" path="visagismo.ctaSecondary">{ESTILO.visagismo.ctaSecondary}</EditableText></button>
               </div>
             </div>
           </div>
@@ -225,16 +227,20 @@ function Visagismo({ onReserveService }) {
 /* ---------- GALERÍA ---------- */
 function Galeria() {
   const [cat, setCat] = useState('Todos')
-  const items = cat === 'Todos' ? GALLERY : GALLERY.filter((g) => g.cat === cat)
+  // Conservamos el índice ORIGINAL de cada item (antes de filtrar) para que
+  // apunte siempre a la misma entrada de estilo.json, sin importar qué
+  // categoría esté activa.
+  const indexed = GALLERY.map((g, originalIndex) => ({ ...g, originalIndex }))
+  const items = cat === 'Todos' ? indexed : indexed.filter((g) => g.cat === cat)
   return (
     <section className="ete-section ete-section-alt" id="galeria">
       <div className="ete-wrap">
         <Reveal>
           <div className="ete-head">
-            <span className="ete-eyebrow">Galería de estilos</span>
-            <h2 className="ete-h2">Explora <span className="ete-gold-text">por tipo de corte</span></h2>
+            <span className="ete-eyebrow"><EditableText file="estilo" path="galeria.eyebrow">{ESTILO.galeria.eyebrow}</EditableText></span>
+            <h2 className="ete-h2"><EditableText file="estilo" path="galeria.h2">{ESTILO.galeria.h2}</EditableText> <span className="ete-gold-text"><EditableText file="estilo" path="galeria.h2Highlight">{ESTILO.galeria.h2Highlight}</EditableText></span></h2>
             <p className="ete-lead">
-              Una guía visual para inspirarte. Filtra por estilo y lleva tus referencias favoritas a la asesoría.
+              <EditableText file="estilo" path="galeria.lead" as="span">{ESTILO.galeria.lead}</EditableText>
             </p>
           </div>
         </Reveal>
@@ -248,13 +254,13 @@ function Galeria() {
         </Reveal>
 
         <div className="ete-gallery">
-          {items.map((g, i) => (
-            <article className="ete-gcard" key={g.title + i}>
+          {items.map((g) => (
+            <article className="ete-gcard" key={g.title + g.originalIndex}>
               <span className="ete-gcard-cat">{g.cat}</span>
-              <SmartImg src={g.img} alt={g.title} label={g.title} />
+              <SmartImg src={g.img} alt={ESTILO.galeria.items[g.originalIndex].title} label={ESTILO.galeria.items[g.originalIndex].title} />
               <div className="ete-gcard-body">
-                <h4>{g.title}</h4>
-                <p>{g.sub}</p>
+                <h4><EditableText file="estilo" path={`galeria.items.${g.originalIndex}.title`} as="span">{ESTILO.galeria.items[g.originalIndex].title}</EditableText></h4>
+                <p><EditableText file="estilo" path={`galeria.items.${g.originalIndex}.sub`} as="span">{ESTILO.galeria.items[g.originalIndex].sub}</EditableText></p>
               </div>
             </article>
           ))}
@@ -275,13 +281,13 @@ function CtaBand({ onReserveService }) {
       <div className="ete-wrap">
         <Reveal>
           <div className="ete-cta-card">
-            <span className="ete-eyebrow is-center">Tu transformación empieza aquí</span>
-            <h2>Lleva tu diagnóstico a la silla de Bruno</h2>
-            <p>Agenda una asesoría de imagen y convirtamos tu forma de rostro y tu estilo de vida en un corte hecho a tu medida.</p>
+            <span className="ete-eyebrow is-center"><EditableText file="estilo" path="cta.eyebrow">{ESTILO.cta.eyebrow}</EditableText></span>
+            <h2><EditableText file="estilo" path="cta.h2" as="span">{ESTILO.cta.h2}</EditableText></h2>
+            <p><EditableText file="estilo" path="cta.body" as="span">{ESTILO.cta.body}</EditableText></p>
             <div className="ete-cta-actions">
-              <button className="ete-btn ete-btn-gold" type="button" onClick={() => onReserveService(10)}>Reservar asesoría <Icon name="arrow" size={16} /></button>
+              <button className="ete-btn ete-btn-gold" type="button" onClick={() => onReserveService(10)}><EditableText file="estilo" path="cta.ctaPrimary">{ESTILO.cta.ctaPrimary}</EditableText> <Icon name="arrow" size={16} /></button>
               <a className="ete-btn ete-btn-ghost" href="https://instagram.com/brunetticutz" target="_blank" rel="noopener noreferrer">
-                <Icon name="insta" size={16} /> @brunetticutz
+                <Icon name="insta" size={16} /> <EditableText file="estilo" path="cta.igHandle">{ESTILO.cta.igHandle}</EditableText>
               </a>
             </div>
           </div>

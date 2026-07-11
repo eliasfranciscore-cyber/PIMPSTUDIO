@@ -341,6 +341,31 @@
   isolation: isolate;
   padding: clamp(7rem, 12vh, 10rem) 0 clamp(3rem, 8vh, 6rem);
 }
+.brunetti-site .bhero-bgphoto {
+  position: absolute;
+  inset: 0;
+  z-index: -4;
+  overflow: hidden;
+  pointer-events: none;
+}
+.brunetti-site .bhero-bgphoto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 60% 35%;
+  filter: saturate(0.92) brightness(0.6);
+}
+.brunetti-site .bhero-bgphoto::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(100deg, rgba(6, 6, 8, 0.94) 0%, rgba(6, 6, 8, 0.78) 30%, rgba(6, 6, 8, 0.32) 58%, rgba(6, 6, 8, 0.62) 100%),
+    linear-gradient(to top, rgba(6, 6, 8, 0.85) 0%, rgba(6, 6, 8, 0) 26%, rgba(6, 6, 8, 0) 74%, rgba(6, 6, 8, 0.7) 100%);
+}
+/* Modo claro: sin el velo/filtro oscuro — la foto queda transparente, tal cual. */
+[data-theme="light"] .brunetti-site .bhero-bgphoto img { filter: none; }
+[data-theme="light"] .brunetti-site .bhero-bgphoto::after { background: none; }
 .brunetti-site .bhero::before {
   content: "";
   position: absolute;
@@ -493,7 +518,11 @@
 .brunetti-site .bhero-figwrap {
   position: relative;
   justify-self: center;
+  align-self: end;
   width: min(420px, 80vw);
+  /* Cuelga el recorte hacia el borde inferior del hero (donde empieza la
+     siguiente sección); el padding-bottom de .bhero lo recorta en overflow:hidden. */
+  margin-bottom: calc(-1 * clamp(3rem, 8vh, 6rem));
   will-change: transform;
 }
 .brunetti-site .bhero-figure {
@@ -525,6 +554,39 @@
   inset: 0;
   background: linear-gradient(to top, rgba(6, 6, 8, 0.72) 2%, rgba(6, 6, 8, 0.05) 45%, rgba(6, 6, 8, 0.25) 100%);
   pointer-events: none;
+}
+/* Recorte flotante sin marco: la imagen ya trae fondo transparente,
+   así que se elimina el recuadro/overlay y se deja "flotar" sobre el bhero-bgphoto. */
+.brunetti-site .bhero-figure--cutout {
+  aspect-ratio: auto;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: none;
+  overflow: visible;
+}
+.brunetti-site .bhero-figure--cutout .bhero-fig-link {
+  overflow: visible;
+  border-radius: 0;
+}
+.brunetti-site .bhero-figure--cutout img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  object-position: center bottom;
+  transform: none;
+  filter: drop-shadow(0 25px 40px rgba(0, 0, 0, 0.55));
+}
+.brunetti-site .bhero-figure--cutout::after { display: none; }
+.brunetti-site .bhero-figure--cutout .fig-tag {
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85), 0 0 3px rgba(0, 0, 0, 0.6);
+}
+/* El tag flota sobre la FOTO (no sobre el fondo sólido), así que su color
+   se mantiene claro siempre, sin importar data-theme — igual que el resto
+   del retrato. En claro el --gold-bright del hero pasa a un dorado oscuro
+   pensado para el fondo crema, que queda ilegible sobre la capa oscura. */
+[data-theme="light"] .brunetti-site .bhero-figure--cutout .fig-tag span {
+  color: #e7c87e;
 }
 .brunetti-site .bhero-figure .fig-tag {
   position: absolute;
@@ -1355,7 +1417,7 @@
    ============================================================ */
 .brunetti-site .course-hero {
   position: relative;
-  min-height: 86svh;
+  min-height: 100svh;
   display: grid;
   align-items: center;
   overflow: hidden;
@@ -1367,11 +1429,48 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 36%;
-  transform: scale(1.06);
-  animation: bruKenburns 18s ease-in-out infinite alternate;
+  object-position: 60% 32%;
+  filter: saturate(0.92) brightness(0.6);
 }
+[data-theme="light"] .brunetti-site .course-hero-bg img { filter: none; }
 @keyframes bruKenburns { to { transform: scale(1.16) translateY(-2%); } }
+.brunetti-site .course-hero-figwrap {
+  position: absolute;
+  right: clamp(0.5rem, 3vw, 3rem);
+  bottom: 0;
+  z-index: 1;
+  /* Alto Y ancho acotados a la vez: en pantallas anchas manda el alto (no debe
+     tocar el navbar), en pantallas angostas manda el ancho. object-fit:contain
+     hace que la imagen siempre escale dentro de lo que sea más restrictivo. */
+  width: min(460px, 34vw);
+  height: min(74vh, 640px);
+  pointer-events: none;
+}
+.brunetti-site .course-hero-figwrap img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: drop-shadow(0 25px 40px rgba(0, 0, 0, 0.55));
+}
+/* Tablet/móvil: la figura se queda SIEMPRE a la derecha con el mismo margen
+   (clamp del right no cambia) — solo se achica y pasa a un plano de fondo
+   detrás del texto, con fade en la base, en vez de ir al costado. */
+@media (max-width: 1080px) {
+  .brunetti-site .course-hero-figwrap {
+    z-index: 0;
+    width: min(300px, 48vw);
+    height: min(58vh, 520px);
+  }
+  .brunetti-site .course-hero-figwrap img {
+    -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 94%);
+    mask-image: linear-gradient(to bottom, black 55%, transparent 94%);
+  }
+}
+@media (max-width: 640px) {
+  .brunetti-site .course-hero-figwrap { width: min(220px, 52vw); height: min(46vh, 400px); opacity: 0.6; }
+}
 .brunetti-site .course-hero::after {
   content: "";
   position: absolute;
@@ -1382,11 +1481,11 @@
     linear-gradient(to right, rgba(6,6,8,0.95) 20%, rgba(6,6,8,0.7) 55%, rgba(6,6,8,0.55) 100%),
     linear-gradient(to top, rgba(6,6,8,0.9), transparent 60%);
 }
-.brunetti-site .course-hero-inner { width: var(--b-maxw); margin: 0 auto; max-width: 760px; }
+.brunetti-site .course-hero-inner { position: relative; z-index: 2; width: var(--b-maxw); margin: 0 auto; max-width: 760px; }
 .brunetti-site .course-hero .bhero-kicker { animation: bruFadeUp 0.8s var(--ease-out) 0.1s both; }
 .brunetti-site .course-hero h1 {
   margin: 0.4rem 0 0;
-  font-size: clamp(2.8rem, 8vw, 6rem);
+  font-size: clamp(2.1rem, 5vw, 3.8rem);
   font-weight: 700;
   line-height: 0.96;
   letter-spacing: 0.01em;
@@ -1625,14 +1724,57 @@
     padding-bottom: clamp(2.5rem, 7vh, 4rem);
     text-align: center;
   }
+  /* En móvil el hero mide su contenido (texto + retrato apilados), mucho más
+     alto que una pantalla. Si la foto cubriera todo ese alto con object-fit:cover
+     quedaría recortada a una tira casi sin detalle; se fija como banda superior
+     con altura acotada y se funde hacia abajo con el fondo sólido de .bhero. */
+  .brunetti-site .bhero-bgphoto {
+    top: 0;
+    bottom: auto;
+    height: min(820px, 94vh);
+  }
+  .brunetti-site .bhero-bgphoto img { object-position: 58% 30%; }
+  .brunetti-site .bhero-bgphoto::after {
+    background:
+      linear-gradient(180deg, rgba(6, 6, 8, 0.55) 0%, rgba(6, 6, 8, 0.35) 35%, rgba(6, 6, 8, 0.92) 100%),
+      linear-gradient(100deg, rgba(6, 6, 8, 0.88) 0%, rgba(6, 6, 8, 0.45) 55%, rgba(6, 6, 8, 0.7) 100%);
+  }
   .brunetti-site .bhero-grid { grid-template-columns: 1fr; gap: 2rem; }
-  /* En móvil: kicker → foto → resto del texto.
-     display: contents hace que los hijos de .bhero-text fluyan como hermanos en .bhero-grid,
-     permitiendo reordenarlos con order. */
+  /* En móvil: nombre → kicker → foto → resto del texto. El nombre "Brunetti"
+     sube justo bajo el navbar (es el protagonista del titular) y el kicker
+     baja debajo, sobre la foto. display: contents hace que los hijos de
+     .bhero-text fluyan como hermanos en .bhero-grid, permitiendo reordenarlos
+     con order. */
   .brunetti-site .bhero-text { display: contents; text-align: center; }
-  .brunetti-site .bhero-kicker { order: 1; margin-left: auto; margin-right: auto; }
-  .brunetti-site .bhero-name { order: 2; }
-  .brunetti-site .bhero-figwrap { order: 3; width: min(320px, 74vw); margin-inline: auto; margin-bottom: 1.5rem; }
+  .brunetti-site .bhero-name { order: 1; margin-bottom: 0.6rem; }
+  .brunetti-site .bhero-kicker { order: 2; margin: 0 auto 1.2rem; }
+  /* El retrato recortado debe ser el protagonista visual. Sin hang negativo
+     (a diferencia de desktop): en móvil el siguiente elemento es el propio
+     texto del hero (role/sub), no la siguiente sección, así que solaparlo
+     lo taparía.
+     .bhero-grid mide 92vw centrado (var(--b-maxw)), así que un ancho normal
+     ahí dentro deja un margen crema visible a los lados. .bhero-figwrap rompe
+     ese contenedor con el truco "full-bleed" (100vw + recentrado) para que
+     su fondo llegue a los bordes reales de la pantalla; adentro, .bhero-figure
+     se recentra con un max-width propio para no crecer descontroladamente en
+     teléfonos grandes/tablets (hasta los 940px de este breakpoint), donde un
+     100vw literal volvía la foto gigante y obligaba a scrollear para verla. */
+  .brunetti-site .bhero-figwrap {
+    order: 3;
+    width: 100vw;
+    /* margin en vez de position:relative+left/right: .bhero-figwrap es un
+       hijo de grid (.bhero-grid), donde el offset "left" de un elemento con
+       posición relativa se resuelve contra su propio grid-area, no contra el
+       ancho del contenedor — el truco clásico de breakout con left/right
+       queda descentrado ahí. Con margin puro (relativo al content-box del
+       grid container, igual en ambos casos) sí cancela correctamente. */
+    margin-inline: calc(50% - 50vw);
+    margin-bottom: 0.75rem;
+  }
+  .brunetti-site .bhero-figwrap .bhero-figure {
+    max-width: 460px;
+    margin-inline: auto;
+  }
   .brunetti-site .bhero-role { order: 4; }
   .brunetti-site .bhero-sub { order: 5; margin-left: auto; margin-right: auto; }
   .brunetti-site .bhero-actions { order: 6; justify-content: center; }
@@ -2722,4 +2864,60 @@ body.dash-mode .float-theme-toggle { display: none; }
   --gold-soft: rgba(160, 124, 46, 0.14);
   --gold-glow: rgba(160, 124, 46, 0.18);
   --gold-line: rgba(160, 124, 46, 0.40);
+}
+
+/* ============================================================
+   HERO — ancla la paleta oscura sobre la foto de fondo
+   .bhero ahora vive siempre sobre bhero-bgphoto (foto oscura fija), así
+   que sus tokens de tinta/dorado quedan fijos en modo oscuro sin importar
+   data-theme (mismo patrón que .course-hero/.bteaser-inner con texto
+   plano). Debe ir DESPUÉS del bloque "MODO CLARO — DORADO PROFUNDO" de
+   arriba para ganar el empate de especificidad en claro.
+   ============================================================ */
+.brunetti-site .bhero {
+  --ink: #f6f5f3;
+  --ink-2: rgba(245, 244, 242, 0.66);
+  --ink-3: rgba(245, 244, 242, 0.42);
+  --gold: #c9a14e;
+  --gold-bright: #e7c87e;
+  --gold-deep: #9a7b34;
+  --gold-edge: rgba(214, 178, 102, 0.5);
+  --gold-soft: rgba(214, 178, 102, 0.14);
+  --gold-glow: rgba(201, 161, 78, 0.16);
+  --on-gold: #1c1606;
+  background: #0b0a09;
+}
+.brunetti-site .bhero .bhero-name span {
+  background: linear-gradient(180deg, #ffffff 28%, #f0d49a 66%, #c9a35b 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+.brunetti-site .bhero .bhero-role { color: var(--ink) !important; }
+.brunetti-site .bhero .bhero-sub { color: var(--ink-2) !important; }
+/* Modo claro: en móvil bhero-bgphoto no cubre todo el alto de .bhero (queda como
+   banda superior), así que el fondo sólido detrás debe seguir la paleta clara
+   en vez del negro fijo de arriba (pensado solo para el modo oscuro). Los
+   tokens de tinta/dorado también se voltean, si no el texto (forzado claro
+   arriba) queda ilegible sobre el fondo crema. */
+[data-theme="light"] .brunetti-site .bhero {
+  --ink: #211d15;
+  --ink-2: rgba(26, 24, 23, 0.82);
+  --ink-3: rgba(26, 24, 23, 0.62);
+  --gold: #927029;
+  --gold-bright: #8a6a22;
+  --gold-deep: #6f5519;
+  --on-gold: #fffdf6;
+  background: var(--bg);
+}
+[data-theme="light"] .brunetti-site .bhero .bhero-name span {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  -webkit-text-fill-color: white !important;
+  color: white !important;
+}
+[data-theme="light"] .brunetti-site .bhero .bhero-kicker {
+  color: white !important;
 }

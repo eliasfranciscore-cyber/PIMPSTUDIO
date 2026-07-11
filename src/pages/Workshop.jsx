@@ -7,6 +7,8 @@ import { WORKSHOP } from '../data/workshop.js'
 import SiteNav from '../components/SiteNav.jsx'
 import { addLocalEnrollment } from '../enrollmentsStore.js'
 import { Lamp } from '../components/ui/lamp.jsx'
+import { EditableText } from '../components/edit/EditableText.jsx'
+import WKC from '../data/content/workshop.json'
 import '../styles/workshop.css'
 
 /* ---------- helpers UI ---------- */
@@ -133,12 +135,12 @@ function VideoShowcase() {
       <Lamp className="bru-lamp--sec" />
       <div className="wks-container">
         <Reveal className="wks-head">
-          <span className="wks-eyebrow">{WK.video.eyebrow}</span>
-          <h2 className="wks-h2">{WK.video.title}</h2>
+          <span className="wks-eyebrow"><EditableText file="workshop" path="video.eyebrow">{WKC.video.eyebrow}</EditableText></span>
+          <h2 className="wks-h2"><EditableText file="workshop" path="video.title" as="span">{WKC.video.title}</EditableText></h2>
           <hr className="wks-rule" />
         </Reveal>
         <Reveal className="wks-vsl-frame">
-          <VideoEmbed src={WK.video.url} title={WK.video.title} />
+          <VideoEmbed src={WK.video.url} title={WKC.video.title} />
         </Reveal>
       </div>
     </section>
@@ -203,13 +205,13 @@ function Hero({ onReserve }) {
             <img className="wks-hero-logo" src="/assets/ascension-logo.webp" alt="ASCENSIÓN" />
             <div className="wks-hero-kicker">
               <span className="wks-chip"><Icon name="scissors" size={13} /> Edición barbería premium</span>
-              <span className="wks-eyebrow">{m.kicker}</span>
+              <span className="wks-eyebrow"><EditableText file="workshop" path="meta.kicker">{WKC.meta.kicker}</EditableText></span>
             </div>
             <h1>
-              {m.title1}
-              <span className="wks-hero-line2">{m.title2}</span>
+              <EditableText file="workshop" path="meta.title1">{WKC.meta.title1}</EditableText>
+              <span className="wks-hero-line2"><EditableText file="workshop" path="meta.title2">{WKC.meta.title2}</EditableText></span>
             </h1>
-            <p className="wks-hero-sub">{m.subtitle}</p>
+            <p className="wks-hero-sub"><EditableText file="workshop" path="meta.subtitle" as="span">{WKC.meta.subtitle}</EditableText></p>
             <div className="wks-hero-actions">
               <button className="wks-btn wks-btn-gold" onClick={onReserve}>
                 <Icon name="calendar" size={16} /> Asegura tu silla
@@ -251,8 +253,8 @@ function Transform() {
     <section className="wks-section" id="transformar">
       <div className="wks-container">
         <Reveal className="wks-head">
-          <span className="wks-eyebrow">¿A quién buscamos transformar?</span>
-          <h2 className="wks-h2">Si te sientes estancado en el sillón, este workshop es tu salida de emergencia.</h2>
+          <span className="wks-eyebrow"><EditableText file="workshop" path="transform.eyebrow">{WKC.transform.eyebrow}</EditableText></span>
+          <h2 className="wks-h2"><EditableText file="workshop" path="transform.h2" as="span">{WKC.transform.h2}</EditableText></h2>
           <hr className="wks-rule" />
         </Reveal>
         <div className="wks-transform-grid">
@@ -261,8 +263,8 @@ function Transform() {
               <span className="wks-tcard-num">{c.n}</span>
               <Bw src={WK.photos[c.photo]} alt={c.title} label={c.title} />
               <div className="wks-tcard-body">
-                <h3>{c.title}</h3>
-                <p>{c.body}</p>
+                <h3><EditableText file="workshop" path={`transform.cards.${i}.title`} as="span">{WKC.transform.cards[i].title}</EditableText></h3>
+                <p><EditableText file="workshop" path={`transform.cards.${i}.body`} as="span">{WKC.transform.cards[i].body}</EditableText></p>
               </div>
             </Reveal>
           ))}
@@ -279,12 +281,12 @@ function QuoteBlock() {
     <section className="wks-section wks-section-alt wks-quote">
       <div className="wks-container wks-quote-grid" ref={ref}>
         <div>
-          <span className="wks-eyebrow" style={{ marginBottom: "1.2rem", display: "inline-flex" }}>Diagnóstico de posicionamiento</span>
+          <span className="wks-eyebrow" style={{ marginBottom: "1.2rem", display: "inline-flex" }}><EditableText file="workshop" path="quote.eyebrow">{WKC.quote.eyebrow}</EditableText></span>
           <blockquote>
-            “El mejor barbero del mundo no sirve de nada si nadie sabe que existe. Tu técnica es el 50%,{" "}
-            <span className="q">tu visibilidad es el otro 50%.</span>”
+            “<EditableText file="workshop" path="quote.quotePrefix" as="span">{WKC.quote.quotePrefix}</EditableText>{" "}
+            <span className="q"><EditableText file="workshop" path="quote.quoteHighlight" as="span">{WKC.quote.quoteHighlight}</EditableText></span>”
           </blockquote>
-          <cite>Brunetti · Marca personal</cite>
+          <cite><EditableText file="workshop" path="quote.cite">{WKC.quote.cite}</EditableText></cite>
         </div>
         <div className={`wks-5050 ${seen ? "is-in" : ""}`}>
           <div className="wks-5050-row">
@@ -302,26 +304,27 @@ function QuoteBlock() {
 }
 
 /* ============================================================ FEATURE ROW */
-function FeatureRow({ data, reversed }) {
+function FeatureRow({ data, contentKey, reversed }) {
+  const c = WKC[contentKey]
   return (
     <section className="wks-section">
       <Lamp className="bru-lamp--sec" />
       <div className="wks-container">
         <Reveal className={`wks-feature ${reversed ? "is-rev" : ""}`}>
           <div className="wks-feature-media">
-            <Bw src={WK.photos[data.photo]} alt={data.title} label={data.eyebrow} />
+            <Bw src={WK.photos[data.photo]} alt={c.title} label={c.eyebrow} />
             <span className="wks-chip wks-feature-tag"><Icon name="bolt" size={12} /> En vivo</span>
           </div>
           <div className="wks-feature-body">
-            <span className="wks-eyebrow">{data.eyebrow}</span>
-            <h2 className="wks-h2" style={{ fontSize: "clamp(1.7rem,3.4vw,2.6rem)" }}>{data.title}</h2>
+            <span className="wks-eyebrow"><EditableText file="workshop" path={`${contentKey}.eyebrow`}>{c.eyebrow}</EditableText></span>
+            <h2 className="wks-h2" style={{ fontSize: "clamp(1.7rem,3.4vw,2.6rem)" }}><EditableText file="workshop" path={`${contentKey}.title`} as="span">{c.title}</EditableText></h2>
             <ul className="wks-detail-list">
-              {data.items.map((it) => (
+              {data.items.map((it, i) => (
                 <li key={it.h}>
                   <span className="ic"><Icon name={it.icon} size={18} /></span>
                   <div>
-                    <h4>{it.h}</h4>
-                    <p>{it.p}</p>
+                    <h4><EditableText file="workshop" path={`${contentKey}.items.${i}.h`} as="span">{c.items[i].h}</EditableText></h4>
+                    <p><EditableText file="workshop" path={`${contentKey}.items.${i}.p`} as="span">{c.items[i].p}</EditableText></p>
                   </div>
                 </li>
               ))}
@@ -341,8 +344,8 @@ function Programa() {
     <section className="wks-section wks-section-alt" id="programa">
       <div className="wks-container">
         <Reveal className="wks-head">
-          <span className="wks-eyebrow">El programa · 3 bloques</span>
-          <h2 className="wks-h2">No es un curso genérico. Es un sistema para barbería real.</h2>
+          <span className="wks-eyebrow"><EditableText file="workshop" path="programa.eyebrow">{WKC.programa.eyebrow}</EditableText></span>
+          <h2 className="wks-h2"><EditableText file="workshop" path="programa.h2" as="span">{WKC.programa.h2}</EditableText></h2>
           <hr className="wks-rule" />
         </Reveal>
         <div className="wks-modules">
@@ -350,7 +353,7 @@ function Programa() {
             {WK.modules.map((mm, i) => (
               <button key={mm.n} className={`wks-mod-tab ${i === active ? "is-active" : ""}`} onClick={() => setActive(i)}>
                 <span className="n">{mm.n}</span>
-                <span className="t">{mm.title}</span>
+                <span className="t"><EditableText file="workshop" path={`modules.${i}.title`}>{WKC.modules[i].title}</EditableText></span>
               </button>
             ))}
           </div>
@@ -360,12 +363,12 @@ function Programa() {
             </div>
             <div className="wks-mod-panel-body wks-fade-key">
               <span className="wks-eyebrow">{mod.n}</span>
-              <h3>{mod.title}</h3>
+              <h3><EditableText file="workshop" path={`modules.${active}.title`} as="span">{WKC.modules[active].title}</EditableText></h3>
               <ul className="wks-mod-points">
-                {mod.points.map((p) => (
+                {mod.points.map((p, i) => (
                   <li key={p.b}>
                     <span className="dot"><Icon name="check" size={12} /></span>
-                    <span><b>{p.b}.</b> <span>{p.s}</span></span>
+                    <span><b><EditableText file="workshop" path={`modules.${active}.points.${i}.b`}>{WKC.modules[active].points[i].b}</EditableText>.</b> <span><EditableText file="workshop" path={`modules.${active}.points.${i}.s`} as="span">{WKC.modules[active].points[i].s}</EditableText></span></span>
                   </li>
                 ))}
               </ul>
@@ -383,18 +386,18 @@ function Cronograma() {
     <section className="wks-section" id="cronograma">
       <div className="wks-container">
         <Reveal className="wks-head">
-          <span className="wks-eyebrow">Cronograma del guerrero</span>
-          <h2 className="wks-h2">Cuatro horas que cambian cómo te ven en redes.</h2>
+          <span className="wks-eyebrow"><EditableText file="workshop" path="cronograma.eyebrow">{WKC.cronograma.eyebrow}</EditableText></span>
+          <h2 className="wks-h2"><EditableText file="workshop" path="cronograma.h2" as="span">{WKC.cronograma.h2}</EditableText></h2>
           <hr className="wks-rule" />
         </Reveal>
         <Reveal className="wks-timeline">
-          {WK.timeline.map((t) => (
+          {WK.timeline.map((t, i) => (
             <div className="wks-tl-row" key={t.time}>
               <div className="wks-tl-time">{t.time}</div>
               <span className="wks-tl-dot" />
               <div className="wks-tl-main">
-                <b>{t.b}</b>
-                <span>{t.s}</span>
+                <b><EditableText file="workshop" path={`cronograma.timeline.${i}.b`}>{WKC.cronograma.timeline[i].b}</EditableText></b>
+                <span><EditableText file="workshop" path={`cronograma.timeline.${i}.s`}>{WKC.cronograma.timeline[i].s}</EditableText></span>
               </div>
             </div>
           ))}
@@ -412,13 +415,13 @@ function GiveKit() {
         <Reveal className="wks-panel">
           <div className="wks-panel-head">
             <span className="ic"><Icon name="award" size={20} /></span>
-            <h3>¿Qué te llevas a casa?</h3>
+            <h3><EditableText file="workshop" path="give.title" as="span">{WKC.give.title}</EditableText></h3>
           </div>
           <ul className="wks-give-list">
-            {WK.give.map((g) => (
+            {WK.give.map((g, i) => (
               <li key={g.b}>
                 <span className="ck"><Icon name="check" size={16} /></span>
-                <div><b>{g.b}</b><span>{g.s}</span></div>
+                <div><b><EditableText file="workshop" path={`give.items.${i}.b`}>{WKC.give.items[i].b}</EditableText></b><span><EditableText file="workshop" path={`give.items.${i}.s`}>{WKC.give.items[i].s}</EditableText></span></div>
               </li>
             ))}
           </ul>
@@ -426,13 +429,13 @@ function GiveKit() {
         <Reveal className="wks-panel" style={{ transitionDelay: "0.08s" }}>
           <div className="wks-panel-head">
             <span className="ic"><Icon name="bolt" size={20} /></span>
-            <h3>Kit de batalla</h3>
+            <h3><EditableText file="workshop" path="kit.title" as="span">{WKC.kit.title}</EditableText></h3>
           </div>
           <ul className="wks-give-list">
-            {WK.kit.map((g) => (
+            {WK.kit.map((g, i) => (
               <li key={g.b}>
                 <span className="ck"><Icon name="check" size={16} /></span>
-                <div><b>{g.b}</b><span>{g.s}</span></div>
+                <div><b><EditableText file="workshop" path={`kit.items.${i}.b`}>{WKC.kit.items[i].b}</EditableText></b><span><EditableText file="workshop" path={`kit.items.${i}.s`}>{WKC.kit.items[i].s}</EditableText></span></div>
               </li>
             ))}
           </ul>
@@ -464,7 +467,7 @@ function Pricing({ onReserve }) {
                 <span className="was">{formatCLP(m.priceWas)}</span>
                 <span className="wks-price-off">{m.off} OFF</span>
               </div>
-              <p className="wks-pricing-note">Un solo cliente nuevo de alta gama paga este curso. La inversión vuelve con la primera reserva.</p>
+              <p className="wks-pricing-note"><EditableText file="workshop" path="meta.pricingNote" as="span">{WKC.meta.pricingNote}</EditableText></p>
             </div>
             <div className="wks-cupos">
               <div className="wks-cupos-head">
@@ -472,7 +475,7 @@ function Pricing({ onReserve }) {
                 <span>{m.seatsTaken}/{m.seatsTotal} ocupados</span>
               </div>
               <div className="wks-cupos-bar"><i style={{ width: seen ? `${pct}%` : 0 }} /></div>
-              <span style={{ color: "var(--wk-muted)", fontSize: "0.78rem" }}>Exclusividad garantizada · solo 20 cupos por fecha.</span>
+              <span style={{ color: "var(--wk-muted)", fontSize: "0.78rem" }}><EditableText file="workshop" path="meta.exclusivityNote">{WKC.meta.exclusivityNote}</EditableText></span>
             </div>
           </div>
           <div className="wks-pricing-foot">
@@ -529,8 +532,8 @@ function Register({ formRef }) {
     <section className="wks-section" id="inscribir" ref={formRef}>
       <div className="wks-container">
         <Reveal className="wks-head is-center">
-          <span className="wks-eyebrow">Únete al cambio</span>
-          <h2 className="wks-h2">Escribe tu propia historia. Reserva tu cupo.</h2>
+          <span className="wks-eyebrow"><EditableText file="workshop" path="register.eyebrow">{WKC.register.eyebrow}</EditableText></span>
+          <h2 className="wks-h2"><EditableText file="workshop" path="register.h2" as="span">{WKC.register.h2}</EditableText></h2>
           <hr className="wks-rule" />
         </Reveal>
         <div className="wks-register-grid">
@@ -590,7 +593,7 @@ function Register({ formRef }) {
                 <Icon name="check" size={16} /> Inscríbete ahora · {formatCLP(m.priceNow)}
               </button>
               <p style={{ margin: 0, color: "var(--wk-muted-2)", fontSize: "0.76rem", textAlign: "center" }}>
-                Sin pago en este paso. Confirmamos tu cupo y coordinamos el resto por WhatsApp.
+                <EditableText file="workshop" path="register.formNote" as="span">{WKC.register.formNote}</EditableText>
               </p>
             </form>
           )}
@@ -607,19 +610,19 @@ function Faq() {
     <section className="wks-section wks-section-alt">
       <div className="wks-container">
         <Reveal className="wks-head is-center">
-          <span className="wks-eyebrow">¿Alguna duda?</span>
-          <h2 className="wks-h2">Hablemos ahora y despejemos el camino.</h2>
+          <span className="wks-eyebrow"><EditableText file="workshop" path="faq.eyebrow">{WKC.faq.eyebrow}</EditableText></span>
+          <h2 className="wks-h2"><EditableText file="workshop" path="faq.h2" as="span">{WKC.faq.h2}</EditableText></h2>
           <hr className="wks-rule" />
         </Reveal>
         <div className="wks-faq">
-          {WK.faq.map((f, i) => (
+          {WKC.faq.items.map((f, i) => (
             <div key={i} className={`wks-faq-item ${open === i ? "is-open" : ""}`}>
               <button className="wks-faq-q" onClick={() => setOpen(open === i ? -1 : i)}>
-                {f.q}
+                <EditableText file="workshop" path={`faq.items.${i}.q`} as="span">{f.q}</EditableText>
                 <span className="pm"><Icon name="plus" size={14} /></span>
               </button>
               <div className="wks-faq-a" style={{ maxHeight: open === i ? "240px" : 0 }}>
-                <p>{f.a}</p>
+                <p><EditableText file="workshop" path={`faq.items.${i}.a`} as="span">{f.a}</EditableText></p>
               </div>
             </div>
           ))}
@@ -646,8 +649,7 @@ function Footer({ onReserve }) {
           <div className="wks-footer-brand">
             <span className="mfooter-wordmark" aria-label="Brunetti Cutz">Brunetti Cutz</span>
             <p className="wks-footer-tag">
-              Workshop de marca personal para barberos. Convierte tu técnica en visibilidad,
-              y tu visibilidad en agenda real.
+              <EditableText file="workshop" path="footer.tagline" as="span">{WKC.footer.tagline}</EditableText>
             </p>
             <button className="wks-btn wks-btn-gold" onClick={onReserve}>
               <Icon name="calendar" size={16} /> Inscríbete ahora
@@ -707,8 +709,8 @@ export default function Workshop() {
         <Hero onReserve={reserve} />
         <Transform />
         <QuoteBlock />
-        <FeatureRow data={WK.experiencia} />
-        <FeatureRow data={WK.asesoria} reversed />
+        <FeatureRow data={WK.experiencia} contentKey="experiencia" />
+        <FeatureRow data={WK.asesoria} contentKey="asesoria" reversed />
         <VideoShowcase />
         <Programa />
         <Cronograma />

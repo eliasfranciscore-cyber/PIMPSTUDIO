@@ -22,3 +22,7 @@ Archivos en desuso/
 
 # graphify scratch/temp files
 graphify-out/.graphify_*
+
+# PDF viewer plugin scratch
+tmp/
+output/

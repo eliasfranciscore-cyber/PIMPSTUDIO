@@ -1,0 +1,67 @@
+{
+  "hero": {
+    "kicker": "Formación profesional · Bruno Herrera",
+    "title1": "Curso Brunetti",
+    "title2": "Visagismo & Barbería",
+    "sub": "Aprende a leer el rostro, dominar la técnica y construir tu marca personal. 6 módulos pensados para barberos que quieren dejar de copiar tendencias y empezar a diseñar imagen.",
+    "ctaPrimary": "ACCEDER AL CURSO — $9.990",
+    "ctaSecondary": "VER PROGRAMA",
+    "stat1Label": "Módulos",
+    "stat2Label": "Lecciones",
+    "stat3Label": "Online",
+    "stat4Label": "Acceso al material"
+  },
+  "intro": {
+    "kicker": "Por qué este curso",
+    "h2": "De cortar pelo a diseñar imagen",
+    "body": "Bruno comparte el mismo método que aplica en su estudio: visagismo, técnica de precisión, dirección de estilo y construcción de marca personal. Un programa práctico para que eleves tu trabajo, tu imagen y tu negocio.",
+    "includes": [
+      { "b": "Método de visagismo aplicado", "s": "Lee proporciones y rasgos para decidir cada corte con criterio, no por moda." },
+      { "b": "Técnica de precisión", "s": "Degradados, texturas y acabados explicados paso a paso." },
+      { "b": "Marca personal & contenido", "s": "Cómo mostrar tu trabajo y construir una identidad reconocible." },
+      { "b": "Crecimiento & negocio", "s": "Mentalidad y orden para profesionalizar tu servicio." }
+    ]
+  },
+  "curriculum": {
+    "kicker": "6 módulos · 21 lecciones",
+    "h2": "El temario completo",
+    "body": "Toca cada módulo para ver sus lecciones y contenidos.",
+    "modules": [
+      {
+        "t": "Bienvenida",
+        "d": "Quién soy y qué vas a lograr aquí — el método, la comunidad y cómo aprovechar Skool.",
+        "lessons": ["Mi historia como barbero — por qué creé esto", "Qué vas a lograr en esta comunidad", "Cómo usar Skool en 3 minutos (en español)"]
+      },
+      {
+        "t": "El Protocolo Pre-Corte",
+        "d": "Por qué el 90% falla antes de tomar la máquina — las 5 preguntas que cambian la experiencia del cliente.",
+        "lessons": ["El error que comete el 90% antes de cortar", "Las 5 preguntas explicadas una por una", "Las 5 preguntas en vivo con cliente real", "Cómo el protocolo cambia lo que cobrás"]
+      },
+      {
+        "t": "El Sistema de Fade",
+        "d": "Low, mid y high fade desde cero — lectura del cráneo, ejecución y corrección de errores.",
+        "lessons": ["Cómo leer el cráneo antes de empezar", "Low fade — paso a paso", "Mid fade y high fade — las diferencias clave", "Cómo borrar manchas y líneas duras"]
+      },
+      {
+        "t": "El Orden del Corte",
+        "d": "Patrón de crecimiento, secciones y zonas anatómicas — un sistema que da resultados consistentes.",
+        "lessons": ["Por qué el orden importa más que la técnica", "Secciones anatómicas: occipital, parietal y temporal", "El mapa del cráneo — zonas y orden de trabajo"]
+      },
+      {
+        "t": "Marca Personal",
+        "d": "Cómo posicionarte como EL barbero de tu ciudad — qué publicar y cómo documentar tu trabajo.",
+        "lessons": ["El barbero que no se ve no existe", "Qué publicar en TikTok e Instagram como barbero", "Cómo documentar un corte en 60 segundos"]
+      },
+      {
+        "t": "Cómo Cobrar Más",
+        "d": "De $12.000 a $20.000 — el caso real de Brunetti, la mentalidad y el método paso a paso.",
+        "lessons": ["Por qué los barberos cobran poco", "El caso Brunetti — de $12.000 a $20.000", "Cómo comunicar la subida sin perder clientes", "Tu plan de los próximos 30 días"]
+      }
+    ]
+  },
+  "checkout": {
+    "kicker": "Acceso inmediato",
+    "h2": "Empieza hoy mismo",
+    "body": "Un pago único. Acceso de por vida a los 6 módulos en la comunidad Brunetti en Skool."
+  }
+}

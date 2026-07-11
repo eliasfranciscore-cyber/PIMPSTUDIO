@@ -1,43 +1,37 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useBrunettiFx, scrollToId } from '../components/brunetti.jsx'
 import SiteNav from '../components/SiteNav.jsx'
 import ModuleFooter from '../components/ModuleFooter.jsx'
 import { Lamp } from '../components/ui/lamp.jsx'
 import { CLP } from '../data.js'
+import { EditableText, EditContext } from '../components/edit/EditableText.jsx'
+import HERO from '../data/content/home-hero.json'
+import VISAGISMO from '../data/content/home-visagismo.json'
+import ESTILO_TEASER from '../data/content/home-estilo-teaser.json'
+import SOBRE from '../data/content/home-sobre.json'
+import SERVICIOS_INTRO from '../data/content/home-servicios.json'
+import TRANSFORMACIONES from '../data/content/home-transformaciones.json'
+import EXPERIENCIAS from '../data/content/home-experiencias.json'
+import CURSOS_TEASER from '../data/content/home-cursos-teaser.json'
+import TESTIMONIOS_INTRO from '../data/content/home-testimonios.json'
+import CONTACTO from '../data/content/home-contacto.json'
 
 /* ============================================================
    BRUNETTI — Landing de marca personal (Bruno Herrera)
    Recreación 1:1 del design handoff en React.
    ============================================================ */
 
-const PILLARS = [
-  {
-    num: '01', title: 'Análisis de fisonomía facial',
-    body: 'Estudiamos la forma de tu rostro, proporciones y rasgos para entender qué líneas, volúmenes y largos te favorecen realmente.',
-    icon: (<><circle cx="12" cy="12" r="9" /><path d="M9 10h.01M15 10h.01M8.5 15c1 1 2.2 1.4 3.5 1.4s2.5-.4 3.5-1.4" /></>),
-  },
-  {
-    num: '02', title: 'Dirección de estilo personal',
-    body: 'Definimos una imagen coherente con tu personalidad, tu trabajo y tu día a día — no una tendencia pasajera.',
-    icon: (<path d="M12 3v18M5 8l7-5 7 5M5 8v8l7 5 7-5V8" />),
-  },
-  {
-    num: '03', title: 'Cortes a medida según tu rostro',
-    body: 'Técnica de precisión aplicada a tu fisonomía: cada degradado, textura y línea trabaja a favor de tus rasgos.',
-    icon: (<path d="M14 4l6 6M3 21l3-1 11-11-2-2L4 18z" />),
-  },
-  {
-    num: '04', title: 'Transformación de imagen completa',
-    body: 'Un cambio integral pensado para elevar cómo te ves y cómo te sientes, con seguimiento y recomendaciones.',
-    icon: (<><path d="M3 12a9 9 0 1 0 9-9M3 12l3-3M3 12l3 3" /><path d="M12 8v4l3 2" /></>),
-  },
-  {
-    num: '05', title: 'Asesoría para creadores y figuras públicas',
-    body: 'Imagen pensada para cámara y contenido: una identidad visual reconocible que potencia tu marca personal.',
-    icon: (<><path d="M23 7l-7 5 7 5V7z" /><rect x="1" y="5" width="15" height="14" rx="2" /></>),
-  },
+// Los íconos son SVG fijos (no son copy editable); el número/título/cuerpo
+// de cada pilar sí viven en JSON (home-visagismo.json) y llegan por índice.
+const PILLAR_ICONS = [
+  (<><circle cx="12" cy="12" r="9" /><path d="M9 10h.01M15 10h.01M8.5 15c1 1 2.2 1.4 3.5 1.4s2.5-.4 3.5-1.4" /></>),
+  (<path d="M12 3v18M5 8l7-5 7 5M5 8v8l7 5 7-5V8" />),
+  (<path d="M14 4l6 6M3 21l3-1 11-11-2-2L4 18z" />),
+  (<><path d="M3 12a9 9 0 1 0 9-9M3 12l3-3M3 12l3 3" /><path d="M12 8v4l3 2" /></>),
+  (<><path d="M23 7l-7 5 7 5V7z" /><rect x="1" y="5" width="15" height="14" rx="2" /></>),
 ]
+const PILLARS = VISAGISMO.pillars.map((p, i) => ({ ...p, icon: PILLAR_ICONS[i] }))
 
 // Respaldo solo para cuando /api/services no responde (ver graceful degradation
 // en CLAUDE.md). La fuente real son los servicios activos configurados en el
@@ -70,21 +64,13 @@ function toDisplayService(svc, featuredId) {
   }
 }
 
-const CARDS = [
-  { cat: 'Visagismo', title: 'Asesoría de Imagen Visagista', img: '/assets/bruno-feature.jpg', body: 'Una consulta personalizada con Bruno Herrera donde analizamos tu fisonomía, estilo de vida y objetivos para definir el corte y la imagen que realmente te representan. No es solo un corte: es una dirección de estilo.' },
-  { cat: 'Corte', title: 'Corte a Medida', img: '/assets/gallery-1.jpg', body: 'Corte de precisión ejecutado con técnicas avanzadas y lectura del rostro. Definición limpia, transiciones cuidadas y un acabado pensado para favorecer tus rasgos.' },
-  { cat: 'Corte + Barba', title: 'Perfilado de Barba', img: '/assets/gallery-2.jpg', body: 'Diseño y perfilado de barba con navaja y productos premium. Definimos líneas, simetría y textura para complementar tu rostro y tu corte.' },
-  { cat: 'Transformación', title: 'Cambio de Imagen', img: '/assets/gallery-3.jpg', body: 'Un cambio integral de imagen pensado para elevar cómo te ves y cómo te sientes, con recomendaciones de mantenimiento y estilo a futuro.' },
-  { cat: 'Formación', title: 'Curso Profesional', img: '/assets/workshop-2026.jpg', body: 'Programa de 6 módulos para barberos que quieren elevar su técnica, su imagen y su negocio. Visagismo, técnica, marca personal y contenido aplicables desde el primer día.' },
-  { cat: 'Marca personal', title: 'Contenido de Marca', img: '/assets/bruno-portrait.jpg', body: 'Asesoría de imagen pensada para cámara y redes: una identidad visual reconocible que potencia tu marca personal como creador o figura pública.' },
-]
+// Las imágenes son rutas fijas (no son copy editable); cat/título/cuerpo de
+// cada tarjeta sí vive en JSON (home-experiencias.json) y llega por índice.
+const CARD_IMAGES = ['/assets/bruno-feature.jpg', '/assets/gallery-1.jpg', '/assets/gallery-2.jpg', '/assets/gallery-3.jpg', '/assets/workshop-2026.jpg', '/assets/bruno-portrait.jpg']
+const CARDS = EXPERIENCIAS.cards.map((c, i) => ({ ...c, img: CARD_IMAGES[i] }))
 
-const TESTIMONIALS = [
-  { quote: 'Llegué sin saber qué corte me quedaba y salí con el mejor look de mi vida. La asesoría visagista de Bruno es otro nivel.', name: 'Matías Fuentes', role: 'Asesoría de imagen · Visagista', img: '/assets/bruno-feature.jpg' },
-  { quote: 'Bruno no solo te corta el pelo, te dice qué te queda y por qué. Se nota que entiende de proporciones y de estilo.', name: 'Cristóbal Reyes', role: 'Corte de cabello y barba', img: '/assets/gallery-1.jpg' },
-  { quote: 'Tomé su curso y cambió mi forma de trabajar. La parte de visagismo y de marca personal vale oro para cualquier barbero.', name: 'Ignacio Soto', role: 'Alumno · Curso Brunetti', img: '/assets/workshop-2026.jpg' },
-  { quote: 'Atención impecable de principio a fin. El estudio se siente premium y la hora reservada siempre se respeta.', name: 'Felipe Carrasco', role: 'Cliente frecuente', img: '/assets/bruno-portrait.jpg' },
-]
+const TESTIMONIAL_IMAGES = ['/assets/bruno-feature.jpg', '/assets/gallery-1.jpg', '/assets/workshop-2026.jpg', '/assets/bruno-portrait.jpg']
+const TESTIMONIALS = TESTIMONIOS_INTRO.items.map((t, i) => ({ ...t, img: TESTIMONIAL_IMAGES[i] }))
 
 const NAME = 'Brunetti'.split('')
 
@@ -98,6 +84,7 @@ export default function Home() {
   const [tmReveal, setTmReveal] = useState(0) // contador para re-disparar animación de palabras
   const trackRef = useRef(null)
   const [services, setServices] = useState(FALLBACK_SERVICES)
+  const { editing } = useContext(EditContext)
 
   useBrunettiFx(rootRef)
 
@@ -240,49 +227,46 @@ export default function Home() {
       <main>
         {/* ============ HERO ============ */}
         <section id="hero" className="bhero">
+          <div className="bhero-bgphoto" aria-hidden="true">
+            <img src="/assets/bruno-hero-bg.webp" alt="" fetchpriority="high" decoding="async" />
+          </div>
           <Lamp className="bru-lamp--hero" />
           <div className="bhero-grid">
             <div className="bhero-text">
               <h1 className="bhero-name" aria-label="Brunetti">
                 {NAME.map((ch, i) => (<span key={i} style={{ '--l': i }}>{ch}</span>))}
               </h1>
-              <span className="bhero-kicker"><span className="dot" />Visagista - Barbero Premium</span>
-              <p className="bhero-role">Bruno Herrera — <b>director de imagen &amp; visagista</b></p>
-              <p className="bhero-sub">No es solo un corte: es leer tu rostro, tu estilo de vida y tu identidad para diseñar la imagen que realmente te representa. Técnica de precisión, dirección de estilo y una experiencia pensada al detalle.</p>
+              <span className="bhero-kicker"><span className="dot" /><EditableText file="home-hero" path="kicker">{HERO.kicker}</EditableText></span>
+              <p className="bhero-role">
+                <EditableText file="home-hero" path="rolePrefix">{HERO.rolePrefix}</EditableText>
+                <b><EditableText file="home-hero" path="roleHighlight">{HERO.roleHighlight}</EditableText></b>
+              </p>
+              <p className="bhero-sub"><EditableText file="home-hero" path="sub" as="span">{HERO.sub}</EditableText></p>
               <div className="bhero-actions">
-                <a className="btn btn-primary" onClick={goReserve}>RESERVAR ASESORÍA</a>
-                <a className="btn btn-ghost" onClick={goCursos}>VER CURSOS</a>
+                <a className="btn btn-primary" onClick={goReserve}><EditableText file="home-hero" path="ctaPrimary">{HERO.ctaPrimary}</EditableText></a>
+                <a className="btn btn-ghost" onClick={goCursos}><EditableText file="home-hero" path="ctaSecondary">{HERO.ctaSecondary}</EditableText></a>
               </div>
               <div className="bhero-meta">
-                <div className="stat"><strong>Visagista</strong><span>Especialista en rostro</span></div>
-                <div className="stat"><strong>A medida</strong><span>Cada corte único</span></div>
-                <div className="stat"><strong>Premium</strong><span>Experiencia completa</span></div>
+                <div className="stat"><strong><EditableText file="home-hero" path="stat1Label">{HERO.stat1Label}</EditableText></strong><span><EditableText file="home-hero" path="stat1Sub">{HERO.stat1Sub}</EditableText></span></div>
+                <div className="stat"><strong><EditableText file="home-hero" path="stat2Label">{HERO.stat2Label}</EditableText></strong><span><EditableText file="home-hero" path="stat2Sub">{HERO.stat2Sub}</EditableText></span></div>
+                <div className="stat"><strong><EditableText file="home-hero" path="stat3Label">{HERO.stat3Label}</EditableText></strong><span><EditableText file="home-hero" path="stat3Sub">{HERO.stat3Sub}</EditableText></span></div>
               </div>
             </div>
 
-            <div className="bhero-figwrap" data-parallax>
-              <div className="bhero-figure" data-tilt>
+            <div className="bhero-figwrap">
+              <div className="bhero-figure bhero-figure--cutout" data-tilt>
                 <a className="bhero-fig-link" href="https://instagram.com/brunetticutz" target="_blank" rel="noopener noreferrer" aria-label="Ver Instagram de @brunetticutz">
-                  <img src="/assets/bruno-hero.jpg" alt="Bruno Herrera, Brunetti — visagista" fetchpriority="high" decoding="async" />
+                  <img src="/assets/bruno-hero-cutout.webp" alt="Bruno Herrera, Brunetti — visagista" fetchpriority="high" decoding="async" />
+                  <div className="fig-tag">
+                    <span><EditableText file="home-hero" path="figHandle">{HERO.figHandle}</EditableText></span>
+                  </div>
                 </a>
-                <div className="fig-tag">
-                  <b>Bruno Herrera</b>
-                  <span>@brunetticutz</span>
-                </div>
-              </div>
-              <div className="bhero-chip c1">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 4-6 8-6s8 2 8 6" /></svg>
-                Asesoría de imagen 1:1
-              </div>
-              <div className="bhero-chip c2">
-                <svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6 4.4 2.3 7.2-6.3-4.6L5.7 21l2.3-7.2-6-4.4h7.6z" /></svg>
-                Visagismo profesional
               </div>
             </div>
           </div>
 
           <div className="bhero-cue">
-            <span>Desliza</span>
+            <span><EditableText file="home-hero" path="scrollCue">{HERO.scrollCue}</EditableText></span>
             <div className="mouse" />
           </div>
         </section>
@@ -296,9 +280,9 @@ export default function Home() {
         <section id="visagismo" className="bsection">
           <div className="bwrap">
             <div className="bhead" data-reveal>
-              <p className="kicker">El método Brunetti</p>
-              <h2>Visagismo: el arte de cortar para tu rostro, no para la moda</h2>
-              <p>Cada rostro tiene proporciones, líneas y rasgos únicos. El visagismo estudia esa fisonomía para diseñar un corte y una imagen que armonicen contigo. Esto es lo que trabajamos en cada asesoría.</p>
+              <p className="kicker"><EditableText file="home-visagismo" path="kicker">{VISAGISMO.kicker}</EditableText></p>
+              <h2><EditableText file="home-visagismo" path="h2" as="span">{VISAGISMO.h2}</EditableText></h2>
+              <p><EditableText file="home-visagismo" path="body" as="span">{VISAGISMO.body}</EditableText></p>
             </div>
             <div className="visagismo-grid">
               {PILLARS.map((p, i) => (
@@ -306,8 +290,8 @@ export default function Home() {
                   <div className="picon"><svg viewBox="0 0 24 24">{p.icon}</svg></div>
                   <div>
                     <span className="num">{p.num}</span>
-                    <h3>{p.title}</h3>
-                    <p>{p.body}</p>
+                    <h3><EditableText file="home-visagismo" path={`pillars.${i}.title`} as="span">{p.title}</EditableText></h3>
+                    <p><EditableText file="home-visagismo" path={`pillars.${i}.body`} as="span">{p.body}</EditableText></p>
                   </div>
                 </article>
               ))}
@@ -321,15 +305,15 @@ export default function Home() {
             <div className="bteaser" data-reveal="scale">
               <div className="bteaser-bg"><img src="/assets/estilo-teaser.jpg" alt="Asesoría de visagismo Brunetti" loading="lazy" decoding="async" /></div>
               <div className="bteaser-inner">
-                <p className="kicker">Nuevo · Visagismo interactivo</p>
-                <h2>Encuentra tu estilo según tu rostro</h2>
-                <p>Haz tu autodiagnóstico de visagismo: elige la forma de tu rostro y descubre los cortes que más te favorecen. Luego explora la galería de estilos de Bruno.</p>
+                <p className="kicker"><EditableText file="home-estilo-teaser" path="kicker">{ESTILO_TEASER.kicker}</EditableText></p>
+                <h2><EditableText file="home-estilo-teaser" path="h2" as="span">{ESTILO_TEASER.h2}</EditableText></h2>
+                <p><EditableText file="home-estilo-teaser" path="body" as="span">{ESTILO_TEASER.body}</EditableText></p>
                 <div className="bteaser-modchips">
-                  <span>6 formas de rostro</span>
-                  <span>Cortes recomendados</span>
-                  <span>Galería filtrable</span>
+                  <span><EditableText file="home-estilo-teaser" path="chip1">{ESTILO_TEASER.chip1}</EditableText></span>
+                  <span><EditableText file="home-estilo-teaser" path="chip2">{ESTILO_TEASER.chip2}</EditableText></span>
+                  <span><EditableText file="home-estilo-teaser" path="chip3">{ESTILO_TEASER.chip3}</EditableText></span>
                 </div>
-                <a className="btn btn-primary" onClick={goStyle}>ENCUENTRA TU ESTILO</a>
+                <a className="btn btn-primary" onClick={goStyle}><EditableText file="home-estilo-teaser" path="cta">{ESTILO_TEASER.cta}</EditableText></a>
               </div>
             </div>
           </div>
@@ -341,17 +325,17 @@ export default function Home() {
           <div className="bwrap babout">
             <figure className="babout-figure" data-reveal="left">
               <img src="/assets/workshop-2026.jpg" alt="Bruno Herrera con su comunidad de barberos" loading="lazy" decoding="async" />
-              <figcaption className="sig">Bruno Herrera · Brunetti</figcaption>
+              <figcaption className="sig"><EditableText file="home-sobre" path="figCaption">{SOBRE.figCaption}</EditableText></figcaption>
             </figure>
             <div className="babout-body" data-reveal="right">
-              <p className="kicker" style={{ letterSpacing: '0.3em', textTransform: 'uppercase', fontSize: '0.72rem', color: 'var(--gold-bright)', margin: '0 0 0.8rem' }}>Sobre Bruno</p>
-              <h2>Pasión por la barbería, obsesión por el detalle</h2>
-              <p><span className="lead">Bruno es un visagista premium apasionado por la barbería.</span> Su trabajo va más allá del corte: combina técnica, lectura del rostro y dirección de estilo para transformar la imagen de cada persona que se sienta en su silla.</p>
-              <p>Además de atender en el estudio, Bruno dicta cursos personalizados y comparte su conocimiento con la nueva generación de barberos. Crecimiento personal, contenido de marca y enseñanza son parte de su sello: cree en formar profesionales, no solo en hacer cortes.</p>
+              <p className="kicker" style={{ letterSpacing: '0.3em', textTransform: 'uppercase', fontSize: '0.72rem', color: 'var(--gold-bright)', margin: '0 0 0.8rem' }}><EditableText file="home-sobre" path="kicker">{SOBRE.kicker}</EditableText></p>
+              <h2><EditableText file="home-sobre" path="h2" as="span">{SOBRE.h2}</EditableText></h2>
+              <p><span className="lead"><EditableText file="home-sobre" path="leadText" as="span">{SOBRE.leadText}</EditableText></span> <EditableText file="home-sobre" path="bodyText" as="span">{SOBRE.bodyText}</EditableText></p>
+              <p><EditableText file="home-sobre" path="bodyText2" as="span">{SOBRE.bodyText2}</EditableText></p>
               <div className="babout-stats">
-                <div className="st"><strong data-count="6">0</strong><span>Módulos de curso</span></div>
-                <div className="st"><strong data-count="5">0</strong><span>Pilares de visagismo</span></div>
-                <div className="st"><strong data-count="100" data-suffix="%">0</strong><span>Diseño a medida</span></div>
+                <div className="st"><strong data-count="6">0</strong><span><EditableText file="home-sobre" path="stat1Label">{SOBRE.stat1Label}</EditableText></span></div>
+                <div className="st"><strong data-count="5">0</strong><span><EditableText file="home-sobre" path="stat2Label">{SOBRE.stat2Label}</EditableText></span></div>
+                <div className="st"><strong data-count="100" data-suffix="%">0</strong><span><EditableText file="home-sobre" path="stat3Label">{SOBRE.stat3Label}</EditableText></span></div>
               </div>
             </div>
           </div>
@@ -361,9 +345,9 @@ export default function Home() {
         <section id="servicios" className="bsection">
           <div className="bwrap">
             <div className="bhead center" data-reveal>
-              <p className="kicker">Reserva con Bruno</p>
-              <h2>Servicios Brunetti</h2>
-              <p>Atención personalizada de principio a fin. Reserva directamente tu hora con Bruno Herrera.</p>
+              <p className="kicker"><EditableText file="home-servicios" path="kicker">{SERVICIOS_INTRO.kicker}</EditableText></p>
+              <h2><EditableText file="home-servicios" path="h2" as="span">{SERVICIOS_INTRO.h2}</EditableText></h2>
+              <p><EditableText file="home-servicios" path="body" as="span">{SERVICIOS_INTRO.body}</EditableText></p>
             </div>
             <div className="bserv-grid">
               {services.map((s, i) => (
@@ -386,16 +370,16 @@ export default function Home() {
         {/* ============ TRANSFORMACIONES ============ */}
         <section className="feature-section compare-section" id="transformaciones">
           <div className="feature-head" data-reveal>
-            <p className="kicker">Antes / Después</p>
-            <h2>La transformación Brunetti</h2>
-            <p>Arrastra el control para ver el cambio. Así se ve la diferencia de un trabajo leído al rostro.</p>
+            <p className="kicker"><EditableText file="home-transformaciones" path="kicker">{TRANSFORMACIONES.kicker}</EditableText></p>
+            <h2><EditableText file="home-transformaciones" path="h2" as="span">{TRANSFORMACIONES.h2}</EditableText></h2>
+            <p><EditableText file="home-transformaciones" path="body" as="span">{TRANSFORMACIONES.body}</EditableText></p>
           </div>
           <div className="compare" data-reveal="scale">
             <div className="cmp-frame" id="compare-frame">
               <img className="cmp-img cmp-after" src="/assets/compare-after.jpg" alt="Después del corte" loading="lazy" decoding="async" />
               <img className="cmp-img cmp-before" src="/assets/compare-before.jpg" alt="Antes del corte" loading="lazy" decoding="async" />
-              <span className="cmp-tag before">Antes</span>
-              <span className="cmp-tag after">Después</span>
+              <span className="cmp-tag before"><EditableText file="home-transformaciones" path="tagBefore">{TRANSFORMACIONES.tagBefore}</EditableText></span>
+              <span className="cmp-tag after"><EditableText file="home-transformaciones" path="tagAfter">{TRANSFORMACIONES.tagAfter}</EditableText></span>
               <div className="cmp-divider" />
               <div className="cmp-handle">
                 <svg viewBox="0 0 24 24"><path d="M8 7l-4 5 4 5M16 7l4 5-4 5" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -407,9 +391,9 @@ export default function Home() {
         {/* ============ EXPERIENCIAS (carousel) ============ */}
         <section className="feature-section apple-carousel" id="experiencias">
           <div className="feature-head" data-reveal>
-            <p className="kicker">Explora</p>
-            <h2>El trabajo de Brunetti</h2>
-            <p>Desliza para conocer cada servicio. Toca cualquier tarjeta para ver el detalle.</p>
+            <p className="kicker"><EditableText file="home-experiencias" path="kicker">{EXPERIENCIAS.kicker}</EditableText></p>
+            <h2><EditableText file="home-experiencias" path="h2" as="span">{EXPERIENCIAS.h2}</EditableText></h2>
+            <p><EditableText file="home-experiencias" path="body" as="span">{EXPERIENCIAS.body}</EditableText></p>
           </div>
           <div className="ac-arrows">
             <button className="ac-arrow" type="button" aria-label="Anterior" onClick={() => scrollTrack(-1)}>
@@ -421,11 +405,14 @@ export default function Home() {
           </div>
           <div className="ac-track" ref={trackRef}>
             {CARDS.map((c, i) => (
-              <article className="ac-card" tabIndex={0} key={c.title}
+              <article className="ac-card" tabIndex={0} key={i}
                 onClick={() => setModal(i)}
                 onKeyDown={(e) => { if (e.key === 'Enter') setModal(i) }}>
                 <img src={c.img} alt={c.title} loading="lazy" />
-                <div className="ac-text"><p className="ac-cat">{c.cat}</p><h3 className="ac-title">{c.title}</h3></div>
+                <div className="ac-text">
+                  <p className="ac-cat"><EditableText file="home-experiencias" path={`cards.${i}.cat`}>{c.cat}</EditableText></p>
+                  <h3 className="ac-title"><EditableText file="home-experiencias" path={`cards.${i}.title`}>{c.title}</EditableText></h3>
+                </div>
               </article>
             ))}
           </div>
@@ -438,15 +425,15 @@ export default function Home() {
             <div className="bteaser" data-reveal="scale">
               <div className="bteaser-bg"><img src="/assets/workshop-2026.jpg" alt="Workshop Brunetti con su comunidad de barberos" loading="lazy" decoding="async" /></div>
               <div className="bteaser-inner">
-                <p className="kicker">Formación profesional</p>
-                <h2>Aprende visagismo y barbería con Bruno</h2>
-                <p>Un programa pensado para barberos que quieren elevar su técnica, su imagen y su negocio. Teoría, práctica y dirección de estilo aplicables desde el primer día.</p>
+                <p className="kicker"><EditableText file="home-cursos-teaser" path="kicker">{CURSOS_TEASER.kicker}</EditableText></p>
+                <h2><EditableText file="home-cursos-teaser" path="h2" as="span">{CURSOS_TEASER.h2}</EditableText></h2>
+                <p><EditableText file="home-cursos-teaser" path="body" as="span">{CURSOS_TEASER.body}</EditableText></p>
                 <div className="bteaser-modchips">
-                  <span>6 módulos completos</span>
-                  <span>Teoría + práctica</span>
-                  <span>Certificado</span>
+                  <span><EditableText file="home-cursos-teaser" path="chip1">{CURSOS_TEASER.chip1}</EditableText></span>
+                  <span><EditableText file="home-cursos-teaser" path="chip2">{CURSOS_TEASER.chip2}</EditableText></span>
+                  <span><EditableText file="home-cursos-teaser" path="chip3">{CURSOS_TEASER.chip3}</EditableText></span>
                 </div>
-                <a className="btn btn-primary" onClick={goCursos}>VER CURSO &amp; INSCRIBIRME</a>
+                <a className="btn btn-primary" onClick={goCursos}><EditableText file="home-cursos-teaser" path="cta">{CURSOS_TEASER.cta}</EditableText></a>
               </div>
             </div>
           </div>
@@ -455,8 +442,8 @@ export default function Home() {
         {/* ============ TESTIMONIOS ============ */}
         <section className="feature-section testimonials-section" id="opiniones">
           <div className="feature-head" data-reveal>
-            <p className="kicker">Opiniones</p>
-            <h2>Lo que dicen sus clientes</h2>
+            <p className="kicker"><EditableText file="home-testimonios" path="kicker">{TESTIMONIOS_INTRO.kicker}</EditableText></p>
+            <h2><EditableText file="home-testimonios" path="h2" as="span">{TESTIMONIOS_INTRO.h2}</EditableText></h2>
           </div>
           <div className="testimonials" data-reveal>
             <div className="tm-stage">
@@ -467,14 +454,23 @@ export default function Home() {
               ))}
             </div>
             <div className="tm-body">
-              <p className="tm-quote" key={tmReveal}>
-                {tm.quote.split(' ').map((w, i) => (
-                  <TmWord key={i} delay={40 + i * 24}>{w}</TmWord>
-                ))}
-              </p>
+              {editing ? (
+                // En modo edición mostramos el texto plano y editable, sin la
+                // animación palabra por palabra (que no convive bien con
+                // contentEditable).
+                <p className="tm-quote">
+                  <EditableText file="home-testimonios" path={`items.${tmIdx}.quote`} as="span">{tm.quote}</EditableText>
+                </p>
+              ) : (
+                <p className="tm-quote" key={tmReveal}>
+                  {tm.quote.split(' ').map((w, i) => (
+                    <TmWord key={i} delay={40 + i * 24}>{w}</TmWord>
+                  ))}
+                </p>
+              )}
               <div className="tm-meta">
-                <strong className="tm-name">{tm.name}</strong>
-                <span className="tm-role">{tm.role}</span>
+                <strong className="tm-name"><EditableText file="home-testimonios" path={`items.${tmIdx}.name`}>{tm.name}</EditableText></strong>
+                <span className="tm-role"><EditableText file="home-testimonios" path={`items.${tmIdx}.role`}>{tm.role}</EditableText></span>
               </div>
               <div className="tm-controls">
                 <button className="tm-btn" type="button" aria-label="Anterior" onClick={() => tmGo(-1)}>
@@ -492,35 +488,35 @@ export default function Home() {
         <section id="contacto" className="bsection">
           <div className="bwrap">
             <div className="bhead center" data-reveal>
-              <p className="kicker">Hablemos</p>
-              <h2>Contacto &amp; reservas</h2>
-              <p>Agenda tu hora con Bruno o escríbele directo. La transformación parte por una conversación.</p>
+              <p className="kicker"><EditableText file="home-contacto" path="kicker">{CONTACTO.kicker}</EditableText></p>
+              <h2><EditableText file="home-contacto" path="h2" as="span">{CONTACTO.h2}</EditableText></h2>
+              <p><EditableText file="home-contacto" path="body" as="span">{CONTACTO.body}</EditableText></p>
             </div>
             <div className="bcontact-grid">
               <div className="bcard" data-reveal="left">
-                <h3>Brunetti Studio</h3>
+                <h3><EditableText file="home-contacto" path="cardTitle">{CONTACTO.cardTitle}</EditableText></h3>
                 <ul className="bcontact-list">
-                  <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>Lunes a Sábado · 10:00 – 20:00</li>
+                  <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg><EditableText file="home-contacto" path="hours">{CONTACTO.hours}</EditableText></li>
                   <li><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8.1 9.5a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z" /></svg><a href="tel:+56987483279">(+56) 9 8748 3279</a></li>
                   <li><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M22 6l-10 7L2 6" /></svg><a href="mailto:hola@brunetti.cl">hola@brunetti.cl</a></li>
                 </ul>
                 <div className="bcontact-actions" style={{ marginTop: '1.4rem', display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
-                  <a className="btn btn-primary" onClick={goReserve}>RESERVAR HORA</a>
-                  <a className="btn btn-ghost" onClick={goCursos}>VER CURSOS</a>
+                  <a className="btn btn-primary" onClick={goReserve}><EditableText file="home-contacto" path="ctaReserve">{CONTACTO.ctaReserve}</EditableText></a>
+                  <a className="btn btn-ghost" onClick={goCursos}><EditableText file="home-contacto" path="ctaCursos">{CONTACTO.ctaCursos}</EditableText></a>
                 </div>
               </div>
               <div className="bsocial" data-reveal="right">
                 <a className="bwa-btn" href="https://wa.me/56987483279?text=Hola%20Bruno%2C%20quiero%20agendar%20una%20hora." target="_blank" rel="noopener noreferrer">
                   <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" /></svg>
-                  Escríbele por WhatsApp
+                  <EditableText file="home-contacto" path="waLabel">{CONTACTO.waLabel}</EditableText>
                 </a>
                 <a className="bsocial-ig" href="https://instagram.com/brunetticutz" target="_blank" rel="noopener noreferrer">
                   <span className="ig-ic">
                     <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none" /></svg>
                   </span>
                   <span>
-                    <b>@brunetticutz</b>
-                    <span>Síguelo en Instagram</span>
+                    <b><EditableText file="home-contacto" path="igHandle">{CONTACTO.igHandle}</EditableText></b>
+                    <span><EditableText file="home-contacto" path="igLabel">{CONTACTO.igLabel}</EditableText></span>
                   </span>
                 </a>
                 <div className="bcard" style={{ padding: '1.2rem' }}>
@@ -557,9 +553,9 @@ export default function Home() {
             <>
               <img className="ac-m-img" src={CARDS[modal].img} alt={CARDS[modal].title} />
               <div className="ac-modal-body">
-                <p className="ac-cat">{CARDS[modal].cat}</p>
-                <h3>{CARDS[modal].title}</h3>
-                <p className="ac-m-body-text">{CARDS[modal].body}</p>
+                <p className="ac-cat"><EditableText file="home-experiencias" path={`cards.${modal}.cat`}>{CARDS[modal].cat}</EditableText></p>
+                <h3><EditableText file="home-experiencias" path={`cards.${modal}.title`} as="span">{CARDS[modal].title}</EditableText></h3>
+                <p className="ac-m-body-text"><EditableText file="home-experiencias" path={`cards.${modal}.body`} as="span">{CARDS[modal].body}</EditableText></p>
               </div>
             </>
           )}
