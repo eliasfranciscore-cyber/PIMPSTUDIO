@@ -5,17 +5,17 @@ import { CLP, CLPk, barberById } from '../data.js'
 /**
  * DashboardResumen — reemplaza el bloque `{tab === "resumen"}` del Dashboard.
  *
- * Resumen ampliado y responsivo (web + PWA iOS) con más métricas:
- * ingresos del día, reservas del día, ticket promedio, ocupación, gastos del
- * mes, barberos activos, clientes nuevos y ROI de marketing, más paneles de
- * ingresos por día, ranking de barberos, agenda del día, gastos por categoría,
- * marketing/origen de clientes y equipo en turno.
+ * Todas las métricas se calculan en vivo desde los datos reales del negocio
+ * (sin fallback a cifras de ejemplo): ingresos del día, reservas, ticket
+ * promedio, ocupación de la agenda de hoy, gastos del mes, barberos activos,
+ * clientes nuevos/recurrentes, ranking, gastos por categoría y horas pico.
  *
  * Props:
- *  metrics:  objeto METRICS de data.js (ingresos por día, canales, promos, etc.)
- *  bookings: reservas del día (para la agenda y los totales en vivo)
- *  barbers:  lista de barberos (para ranking, equipo y "activos")
- *  expenses: gastos (para el gráfico por categoría) — opcional
+ *  bookings:   reservas (para los totales del día, el ranking y el histórico)
+ *  barbers:    lista de barberos (para ranking, equipo y "activos")
+ *  expenses:   gastos (para el gráfico por categoría del mes en curso)
+ *  clients:    clientes (para calcular retención/recurrencia)
+ *  todaySlots: horarios de la agenda de hoy (booked/free/blocked) para la ocupación real
  */
 
 const STATUS_DOT = { confirmada: 'var(--green, #6fbf86)', pendiente: 'var(--gold)', 'en curso': '#7ea8ff', completada: 'var(--muted-2)', cancelada: 'var(--red, #d99a8f)' }
@@ -146,38 +146,44 @@ function TopSvc({ data = [], bookings = [] }) {
   )
 }
 
-export default function DashboardResumen({ metrics = {}, bookings = [], barbers = [], expenses = [] }) {
-  const m = metrics
-  const todayKey = new Date().toISOString().slice(0, 10)
+// Componentes locales, no UTC (ver Dashboard.jsx isoDate): en Chile
+// toISOString() adelanta la fecha durante la noche.
+function localDateKey(date) {
+  const y = date.getFullYear()
+  const m = String(date.getMonth() + 1).padStart(2, "0")
+  const d = String(date.getDate()).padStart(2, "0")
+  return `${y}-${m}-${d}`
+}
+
+export default function DashboardResumen({ bookings = [], barbers = [], expenses = [], clients = [], todaySlots = [] }) {
+  const todayKey = localDateKey(new Date())
+  const monthKey = todayKey.slice(0, 7)
   const today = useMemo(() => bookings.filter((b) => !b.date || b.date === todayKey).sort((a, b) => String(a.time).localeCompare(String(b.time))), [bookings, todayKey])
 
   const dayValid = today.filter((b) => b.status !== 'cancelada')
-  const revenueDay = dayValid.reduce((s, b) => s + Number(b.price || 0), 0) || m.revenueDay || 0
-  const avgTicket = dayValid.length ? Math.round(revenueDay / dayValid.length) : (m.avgTicket || 0)
+  const revenueDay = dayValid.reduce((s, b) => s + Number(b.price || 0), 0)
+  const avgTicket = dayValid.length ? Math.round(revenueDay / dayValid.length) : 0
   const activeBarbers = barbers.filter((b) => b.active !== false)
 
   const ranking = useMemo(() => {
-    const live = barbers.map((b) => {
+    return barbers.map((b) => {
       const own = bookings.filter((x) => Number(x.barberId) === Number(b.id) && x.status !== 'cancelada')
       return { id: b.id, cuts: own.length, rev: own.reduce((s, x) => s + Number(x.price || 0), 0) }
-    }).filter((r) => r.rev || r.cuts).sort((a, b) => b.rev - a.rev)
-    return (live.length ? live : (m.barberRanking || [])).slice(0, 5)
-  }, [barbers, bookings, m.barberRanking])
+    }).filter((r) => r.rev || r.cuts).sort((a, b) => b.rev - a.rev).slice(0, 5)
+  }, [barbers, bookings])
   const maxRev = Math.max(1, ...ranking.map((r) => r.rev))
 
-  // Gastos por categoría (en vivo si hay expenses, si no usa fallback de metrics)
+  // Gastos del mes en curso, por categoría.
   const expenseCats = useMemo(() => {
-    if (expenses.length) {
-      const grouped = Object.values(expenses.reduce((acc, e) => {
-        const k = e.category || 'Otros'
-        acc[k] = acc[k] || { name: k, amount: 0 }
-        acc[k].amount += Number(e.amount || 0)
-        return acc
-      }, {})).sort((a, b) => b.amount - a.amount)
-      return grouped.map((c, i) => ({ ...c, color: CAT_COLORS[i % CAT_COLORS.length] }))
-    }
-    return m.expenseCats || []
-  }, [expenses, m.expenseCats])
+    const monthExpenses = expenses.filter((e) => (e.date || '').startsWith(monthKey))
+    const grouped = Object.values(monthExpenses.reduce((acc, e) => {
+      const k = e.category || 'Otros'
+      acc[k] = acc[k] || { name: k, amount: 0 }
+      acc[k].amount += Number(e.amount || 0)
+      return acc
+    }, {})).sort((a, b) => b.amount - a.amount)
+    return grouped.map((c, i) => ({ ...c, color: CAT_COLORS[i % CAT_COLORS.length] }))
+  }, [expenses, monthKey])
   const expTotal = expenseCats.reduce((s, c) => s + c.amount, 0)
   let acc = 0
   const stops = expenseCats.map((c) => {
@@ -185,9 +191,41 @@ export default function DashboardResumen({ metrics = {}, bookings = [], barbers 
     return `${c.color} ${start}deg ${end}deg`
   }).join(', ')
 
-  const revByDay = m.revenueByDay || []
-  const channels = m.channels || []
-  const promos = m.promos || []
+  // Ingresos de los últimos 7 días con reservas (en vez de un gráfico fijo).
+  const DOW = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
+  const revByDay = useMemo(() => {
+    const valid = bookings.filter((b) => b.status !== 'cancelada' && b.date)
+    const byDate = valid.reduce((acc2, b) => {
+      acc2[b.date] = (acc2[b.date] || 0) + Number(b.price || 0)
+      return acc2
+    }, {})
+    return Object.keys(byDate).sort().slice(-7).map((date) => ({
+      d: DOW[new Date(`${date}T00:00:00`).getDay()],
+      v: byDate[date],
+    }))
+  }, [bookings])
+
+  const monthRevenue = useMemo(() => bookings
+    .filter((b) => b.status !== 'cancelada' && (b.date || '').startsWith(monthKey))
+    .reduce((s, b) => s + Number(b.price || 0), 0), [bookings, monthKey])
+  const netMarginPct = monthRevenue ? Math.round(((monthRevenue - expTotal) / monthRevenue) * 100) : 0
+
+  // Ocupación real de hoy = horas reservadas / (reservadas + libres) según la
+  // agenda del día (excluye las horas bloqueadas, que no son capacidad).
+  const bookedToday = todaySlots.filter((s) => s.state === 'booked').length
+  const freeToday = todaySlots.filter((s) => s.state === 'free').length
+  const occupancy = (bookedToday + freeToday) ? Math.round((bookedToday / (bookedToday + freeToday)) * 100) : 0
+
+  const recurringClients = clients.filter((c) => Number(c.visits || 0) >= 2)
+  const retention = clients.length ? Math.round((recurringClients.length / clients.length) * 100) : 0
+
+  // "Nuevo" = tuvo una reserva hoy pero ninguna reserva anterior en el historial cargado.
+  const newClients = useMemo(() => {
+    const seenBefore = new Set(bookings.filter((b) => b.date && b.date < todayKey).map((b) => b.phone))
+    const todaysPhones = new Set(dayValid.map((b) => b.phone).filter(Boolean))
+    return [...todaysPhones].filter((p) => !seenBefore.has(p)).length
+  }, [bookings, dayValid, todayKey])
+
   const dateLabel = new Date().toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' })
 
   return (
@@ -201,14 +239,14 @@ export default function DashboardResumen({ metrics = {}, bookings = [], barbers 
       </div>
 
       <div className="psn-kpis">
-        <Kpi icon="wallet"   label="Ingresos del día" value={CLP(revenueDay)} delta={m.revenueDayDelta} accent />
-        <Kpi icon="calendar" label="Reservas del día" value={dayValid.length || today.length} delta={m.bookingsDayDelta} />
-        <Kpi icon="chart"    label="Ticket promedio"  value={CLP(avgTicket)} delta={m.avgTicketDelta} />
-        <Kpi icon="trend"    label="Ocupación"        value={m.occupancy ?? 0} suffix="%" delta={m.occupancyDelta} />
-        <Kpi icon="wallet"   label="Gastos del mes"   value={CLP(expTotal || m.expensesMonth || 0)} delta={m.expensesDelta} />
+        <Kpi icon="wallet"   label="Ingresos del día" value={CLP(revenueDay)} accent />
+        <Kpi icon="calendar" label="Reservas del día" value={dayValid.length} />
+        <Kpi icon="chart"    label="Ticket promedio"  value={CLP(avgTicket)} />
+        <Kpi icon="trend"    label="Ocupación"        value={occupancy} suffix="%" />
+        <Kpi icon="wallet"   label="Gastos del mes"   value={CLP(expTotal)} />
         <Kpi icon="users"    label="Barberos activos" value={`${activeBarbers.length}`} suffix={`/${barbers.length}`} />
-        <Kpi icon="user"     label="Clientes nuevos"  value={m.newClients ?? 0} delta={m.newClientsDelta} accent />
-        <Kpi icon="spark"    label="ROI marketing"    value={m.marketingRoi ?? 0} suffix="x" delta={m.marketingRoiDelta} />
+        <Kpi icon="user"     label="Clientes nuevos"  value={newClients} accent />
+        <Kpi icon="spark"    label="Clientes recurrentes" value={retention} suffix="%" />
       </div>
 
       <div className="psn-bento">
@@ -274,37 +312,18 @@ export default function DashboardResumen({ metrics = {}, bookings = [], barbers 
           </div>
         </div>
 
-        <div className="card psn-panel span-8">
-          <div className="psn-panel-head"><h3 className="font-display">Marketing · origen de clientes</h3>{m.marketingRoi != null && <span className="chip chip-gold">ROI {m.marketingRoi}x</span>}</div>
-          <div className="psn-mkt">
-            <div style={{ display: 'grid', gap: '.7rem' }}>
-              {channels.map((c) => (
-                <div key={c.name} className="psn-chan">
-                  <div className="lbl"><span><span className="dot" style={{ background: c.color }} />{c.name}</span><span>{c.pct}%</span></div>
-                  <div className="bar"><i style={{ width: `${c.pct}%`, background: c.color }} /></div>
-                </div>
-              ))}
-            </div>
-            <div className="psn-promos">
-              {promos.map((p) => (
-                <div key={p.name} className="row"><div className="l"><b>{p.name}</b><span>{p.uses} usos</span></div><span className="chip chip-green">{p.status}</span></div>
-              ))}
-            </div>
-          </div>
-        </div>
-
         <div className="card psn-panel span-5">
-          <div className="psn-panel-head"><h3 className="font-display">Ocupación</h3><span className="chip">{m.occupancy ?? 0}% hoy</span></div>
+          <div className="psn-panel-head"><h3 className="font-display">Ocupación</h3><span className="chip">{occupancy}% hoy</span></div>
           <div className="psn-ring-wrap">
-            <OccupancyRing pct={m.occupancy ?? 0} />
+            <OccupancyRing pct={occupancy} />
             <div className="psn-ring-stats">
               <div className="psn-ring-stat">
                 <div className="lbl">Retención</div>
-                <div className="val">{m.retention ?? 0}%</div>
+                <div className="val">{retention}%</div>
               </div>
               <div className="psn-ring-stat">
                 <div className="lbl">Margen neto</div>
-                <div className="val">{m.netMarginPct ?? 0}%</div>
+                <div className="val">{netMarginPct}%</div>
               </div>
             </div>
           </div>
@@ -312,12 +331,12 @@ export default function DashboardResumen({ metrics = {}, bookings = [], barbers 
 
         <div className="card psn-panel span-7">
           <div className="psn-panel-head"><h3 className="font-display">Servicios más pedidos</h3><span className="chip chip-gold"><Icon name="scissors" size={12} /> Top 5</span></div>
-          <TopSvc data={m.topServices ?? []} bookings={bookings} />
+          <TopSvc data={[]} bookings={bookings} />
         </div>
 
         <div className="card psn-panel span-12">
           <div className="psn-panel-head"><h3 className="font-display">Horas pico</h3><span style={{ fontSize: '.73rem', color: 'var(--muted)' }}>Distribución de reservas por hora</span></div>
-          <PeakHours data={m.peakHours ?? []} bookings={bookings} />
+          <PeakHours data={[]} bookings={bookings} />
         </div>
 
       </div>

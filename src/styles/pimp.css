@@ -2266,6 +2266,8 @@ select.input { text-overflow: ellipsis; }
   font-size: 0.8rem;
 }
 [data-theme="light"] .notif-pill { background: rgba(0,0,0,0.03); }
+.notif-pill:disabled { opacity: .6; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* Burger (mobile only) */
 .burger-btn {

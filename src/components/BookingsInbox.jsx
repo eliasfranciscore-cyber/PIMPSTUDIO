@@ -199,7 +199,12 @@ export default function BookingsInbox({ bookings = [], barbers = [], barber, adm
   const [deleteTarget, setDeleteTarget] = useState(null)
   const prevStatus = useRef({})
 
-  const todayKey = new Date().toISOString().slice(0, 10)
+  // Componentes locales, no UTC: toISOString() adelanta la fecha durante la
+  // noche en Chile (UTC-3/-4), lo que desalineaba "hoy" en el inbox de reservas.
+  const todayKey = (() => {
+    const d = new Date()
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
+  })()
   const idOf = (b) => b.id ?? `${b.barberId}-${b.time}`
   // Con un solo barbero (Brunetti) no tiene sentido el filtro ni la columna de barbero.
   const multiBarber = barbers.length > 1

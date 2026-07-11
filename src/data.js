@@ -75,62 +75,6 @@ export const CLIENT_APPTS = [
   { id: 4, date: "2026-03-18", time: "18:00", barberId: 6, service: "Asesoría de Imagen · Visagista", price: 39990, status: "completada", when: "past" },
 ]
 
-export const METRICS = {
-  revenueWeek: 4286000,
-  revenueWeekDelta: 12.4,
-  bookingsWeek: 187,
-  bookingsWeekDelta: 8.1,
-  avgTicket: 22920,
-  avgTicketDelta: 3.2,
-  occupancy: 78,
-  occupancyDelta: 5.0,
-  newClients: 42,
-  newClientsDelta: 14.2,
-  returningClients: 145,
-  // Métricas del día / mes para el Resumen ampliado (DashboardResumen).
-  // El componente calcula en vivo desde bookings/expenses y usa esto como fallback.
-  revenueDay: 248910,
-  revenueDayDelta: 12.4,
-  bookingsDayDelta: 8.1,
-  expensesMonth: 850000,
-  expensesDelta: -4.2,
-  marketingRoi: 3.8,
-  marketingRoiDelta: 0.6,
-  revenueByDay: [
-    { d: "Lun", v: 540000 }, { d: "Mar", v: 612000 }, { d: "Mié", v: 705000 },
-    { d: "Jue", v: 668000 }, { d: "Vie", v: 820000 }, { d: "Sáb", v: 941000 },
-  ],
-  barberRanking: [
-    { id: 6, cuts: 187, rev: 4286000 },
-  ],
-  channels: [
-    { name: "Instagram",      pct: 38, color: "#c9a14e" },
-    { name: "Recomendación",  pct: 27, color: "#d9d6cf" },
-    { name: "Google Maps",    pct: 18, color: "#8d8a84" },
-    { name: "Walk-in",        pct: 11, color: "#5a5852" },
-    { name: "TNE estudiante", pct: 6,  color: "#3a3935" },
-  ],
-  promos: [
-    { name: "Descuento TNE 20%",   uses: 64, status: "activa" },
-    { name: "Pack Corte + Barba",  uses: 38, status: "activa" },
-    { name: "1ª visita -15%",      uses: 21, status: "activa" },
-  ],
-  topServices: [
-    { name: "Corte clásico",   count: 89, rev: 1441000 },
-    { name: "Corte + Barba",   count: 52, rev: 1248000 },
-    { name: "Fade premium",    count: 31, rev: 868000  },
-    { name: "Barba perfilada", count: 21, rev: 378000  },
-    { name: "Asesoría imagen", count: 11, rev: 352000  },
-  ],
-  peakHours: [
-    { h: "9",  v: 2 }, { h: "10", v: 5 }, { h: "11", v: 9  }, { h: "12", v: 12 },
-    { h: "13", v: 8 }, { h: "14", v: 6 }, { h: "15", v: 7  }, { h: "16", v: 11 },
-    { h: "17", v: 14 }, { h: "18", v: 10 }, { h: "19", v: 4 },
-  ],
-  retention: 74,
-  netMarginPct: 68,
-}
-
 export function CLP(n) { return "$" + Number(n || 0).toLocaleString("es-CL") }
 export function CLPk(n) { return "$" + (Math.round(Number(n) / 1000)).toLocaleString("es-CL") + "k" }
 export function barberById(id) { return BARBERS.find((b) => b.id === id) || null }

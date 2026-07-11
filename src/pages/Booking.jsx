@@ -11,6 +11,16 @@ function localBlockKey(barberId, date, slot) {
   return `${barberId}|${date}|${slot}`
 }
 
+// Componentes locales, no UTC: en Chile (UTC-3/-4) toISOString() hace
+// rollover al día siguiente durante la noche, lo que corría la ventana de
+// reserva un día antes de lo esperado para quien reserva de noche.
+function localDateKey(date) {
+  const y = date.getFullYear()
+  const m = String(date.getMonth() + 1).padStart(2, "0")
+  const d = String(date.getDate()).padStart(2, "0")
+  return `${y}-${m}-${d}`
+}
+
 function readLocalBlocks() {
   try { return JSON.parse(localStorage.getItem("ps_availability_blocks") || "{}") } catch { return {} }
 }
@@ -76,14 +86,25 @@ export default function Booking() {
 
   const firstDow = new Date(year, month, 1).getDay()
   const daysInMonth = new Date(year, month + 1, 0).getDate()
-  const todayKey = new Date().toISOString().split("T")[0]
+  const todayKey = localDateKey(new Date())
+  // El cliente solo puede reservar dentro de los próximos MAX_LEAD_DAYS días:
+  // más allá de eso el barbero todavía no publicó su disponibilidad de esa
+  // semana (ver agenda del panel interno, que se administra semana a semana).
+  const MAX_LEAD_DAYS = 7
+  const maxDate = new Date()
+  maxDate.setDate(maxDate.getDate() + MAX_LEAD_DAYS)
+  const maxDateKey = localDateKey(maxDate)
   const cells = []
   for (let i = 0; i < firstDow; i++) cells.push(null)
   for (let d = 1; d <= daysInMonth; d++) cells.push(d)
 
   const dk = (d) => `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`
   const isPast = (d) => dk(d) < todayKey
-  const isSunday = (d) => new Date(year, month, d).getDay() === 0
+  const isTooFar = (d) => dk(d) > maxDateKey
+  // No tiene sentido dejar avanzar de mes si ningún día del mes siguiente cae
+  // dentro de la ventana de 7 días (p. ej. a inicios de mes).
+  const nextMonthFirstKey = `${month === 11 ? year + 1 : year}-${String(month === 11 ? 1 : month + 2).padStart(2, "0")}-01`
+  const canGoNextMonth = month < 11 && nextMonthFirstKey <= maxDateKey
 
   const confirm = async () => {
     setSaving(true)
@@ -228,9 +249,9 @@ export default function Booking() {
                   <span className="font-display booking-cal-month" style={{ fontWeight: 600, fontSize: ".85rem", letterSpacing: ".02em" }}>{MONTHS_ES[month]} {year}</span>
                   <button
                     onClick={() => setMonth((mm) => Math.min(11, mm + 1))}
-                    disabled={month >= 11}
+                    disabled={!canGoNextMonth}
                     aria-label="Mes siguiente"
-                    style={{ background: "none", border: 0, color: "var(--gold-lt)", padding: 2, opacity: month >= 11 ? 0.3 : 1, cursor: month >= 11 ? "default" : "pointer" }}
+                    style={{ background: "none", border: 0, color: "var(--gold-lt)", padding: 2, opacity: !canGoNextMonth ? 0.3 : 1, cursor: !canGoNextMonth ? "default" : "pointer" }}
                   ><Icon name="arrowRight" size={16} /></button>
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(7,1fr)", gap: ".2rem", marginBottom: ".3rem" }}>
@@ -240,7 +261,7 @@ export default function Booking() {
                   {cells.map((d, i) => {
                     if (!d) return <div key={i} />
                     const k = dk(d)
-                    const disabled = isPast(d) || isSunday(d)
+                    const disabled = isPast(d) || isTooFar(d)
                     const sel = dateKey === k
                     return (
                       <button key={i} disabled={disabled} onClick={() => { setDateKey(k); setSlot(null) }} className="booking-cal-day" style={{
@@ -253,7 +274,7 @@ export default function Booking() {
                     )
                   })}
                 </div>
-                <div style={{ fontSize: ".6rem", color: "var(--muted-2)", textAlign: "center", marginTop: ".3rem" }}>Dom cerrado</div>
+                <div style={{ fontSize: ".6rem", color: "var(--muted-2)", textAlign: "center", marginTop: ".3rem" }}>Reservas hasta {MAX_LEAD_DAYS} días antes</div>
               </div>
 
               {/* HORAS DISPONIBLES */}

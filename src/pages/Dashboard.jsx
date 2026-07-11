@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Brandmark, Icon, Stat } from '../components/ui.jsx'
 import { ThemeProvider, ThemeToggle, useTheme } from '../components/theme.jsx'
 import MobileDock from '../components/MobileDock.jsx'
-import { BARBERS, CLIENTS, EXPENSES, METRICS, SERVICES, TODAY_BOOKINGS, barberById, CLP, CLPk, isAdminUser } from '../data.js'
+import { BARBERS, CLIENTS, EXPENSES, SERVICES, TODAY_BOOKINGS, barberById, CLP, CLPk, isAdminUser } from '../data.js'
 import { mergeBookings, readLocalBookings } from '../bookingsStore.js'
 import { mergeEnrollments } from '../enrollmentsStore.js'
 import BookingsInbox from '../components/BookingsInbox.jsx'
@@ -30,7 +30,13 @@ function getSvcIcon(svc) {
 }
 
 function isoDate(date) {
-  return date.toISOString().slice(0, 10)
+  // Componentes locales, no UTC: en Chile (UTC-3/-4) toISOString() hace
+  // rollover al día siguiente durante la noche, lo que desalineaba "hoy" y
+  // la semana activa de la agenda para quien la usa después del atardecer.
+  const y = date.getFullYear()
+  const m = String(date.getMonth() + 1).padStart(2, "0")
+  const d = String(date.getDate()).padStart(2, "0")
+  return `${y}-${m}-${d}`
 }
 
 function buildWeek(offset = 0) {
@@ -38,7 +44,8 @@ function buildWeek(offset = 0) {
   const monday = new Date(now)
   const day = monday.getDay() || 7
   monday.setDate(now.getDate() - day + 1 + offset * 7)
-  return Array.from({ length: 6 }, (_, i) => {
+  // Atiende los 7 días de la semana, incluido domingo.
+  return Array.from({ length: 7 }, (_, i) => {
     const date = new Date(monday)
     date.setDate(monday.getDate() + i)
     return { key: isoDate(date), label: `${DAY_LABELS[date.getDay()]} ${date.getDate()}` }
@@ -94,6 +101,7 @@ export default function Dashboard() {
   const [weekOffset, setWeekOffset] = useState(0)
   const [availability, setAvailability] = useState({})
   const [agendaBusy, setAgendaBusy] = useState("")
+  const [agendaError, setAgendaError] = useState("")
   const [barber, setBarber] = useState(null)
   const [barbers, setBarbers] = useState(BARBERS.map((item) => ({ ...item, active: true })))
   const [bookings, setBookings] = useState(mergeBookings(TODAY_BOOKINGS.map((item, index) => ({ ...item, id: index + 1, date: isoDate(new Date()) }))))
@@ -117,20 +125,30 @@ export default function Dashboard() {
   const [dockShortcuts, setDockShortcuts] = useState(() => { try { const s = JSON.parse(localStorage.getItem("ps_dock_shortcuts") || "null"); return Array.isArray(s) && s.length ? s : ["resumen", "agenda", "reservas", "clientes"] } catch { return ["resumen", "agenda", "reservas", "clientes"] } })
   useEffect(() => { try { localStorage.setItem("ps_nav_settings", JSON.stringify(navSettings)) } catch {} }, [navSettings])
   useEffect(() => { try { localStorage.setItem("ps_dock_shortcuts", JSON.stringify(dockShortcuts)) } catch {} }, [dockShortcuts])
-  const m = METRICS
   const admin = isAdminUser(barber)
   const canViewFinance = admin || barber?.canViewFinance
   const canEditServices = admin || barber?.canEditServices
   const canManageTeam = admin || barber?.canManageTeam
   const completedBookings = bookings.filter((item) => item.status === "completada" || item.status === "confirmada" || item.status === "en curso")
   const revenueTotal = completedBookings.reduce((sum, item) => sum + Number(item.price || 0), 0)
-  const avgTicket = completedBookings.length ? Math.round(revenueTotal / completedBookings.length) : m.avgTicket
+  const avgTicket = completedBookings.length ? Math.round(revenueTotal / completedBookings.length) : 0
   const visibleBookings = admin ? bookings : bookings.filter((item) => Number(item.barberId) === Number(barber?.id))
   const ranking = barbers.map((b) => {
     const own = bookings.filter((item) => Number(item.barberId) === Number(b.id) && item.status !== "cancelada")
     return { id: b.id, cuts: own.filter((item) => item.status === "completada").length || own.length, rev: own.reduce((sum, item) => sum + Number(item.price || 0), 0) }
   }).filter((item) => item.cuts || item.rev).sort((a, b) => b.rev - a.rev)
-  const maxRev = Math.max(1, ...ranking.map((r) => r.rev), ...m.barberRanking.map((r) => r.rev))
+  const maxRev = Math.max(1, ...ranking.map((r) => r.rev))
+  const todayKeyNow = isoDate(new Date())
+  const monthKeyNow = todayKeyNow.slice(0, 7)
+  const monthExpensesTotal = expenses.filter((e) => (e.date || "").startsWith(monthKeyNow)).reduce((sum, e) => sum + Number(e.amount || 0), 0)
+  // "Nuevo" = su primera reserva registrada cae dentro de los bookings cargados
+  // (no tiene ninguna anterior a hoy).
+  const newClientsCount = (() => {
+    const seenBefore = new Set(bookings.filter((b) => b.date && b.date < todayKeyNow).map((b) => b.phone))
+    const todaysPhones = new Set(bookings.filter((b) => b.date === todayKeyNow && b.status !== "cancelada").map((b) => b.phone).filter(Boolean))
+    return [...todaysPhones].filter((p) => !seenBefore.has(p)).length
+  })()
+  const recurringPct = clients.length ? Math.round((clients.filter((c) => Number(c.visits || 0) >= 2).length / clients.length) * 100) : 0
   const revenueByService = Object.values(completedBookings.reduce((acc, item) => {
     const key = item.service || "Servicio"
     acc[key] = acc[key] || { name: key, total: 0 }
@@ -186,11 +204,16 @@ export default function Dashboard() {
     fetch("/api/expenses", { headers }).then((r) => r.json()).then((data) => { if (data.expenses?.length) setExpenses(data.expenses) }).catch(() => {})
   }, [])
 
-  const logout = (reason = "") => {
+  const logout = (reason) => {
+    // onClick={onLogout} en varios botones invoca esta función pasando el evento
+    // del click como primer argumento: sin este guard, `reason` sería un
+    // PointerEvent, y navigate() intentaría meterlo en el state del history,
+    // lo que revienta con "DataCloneError" y aborta la navegación en silencio.
+    const msg = typeof reason === "string" ? reason : ""
     localStorage.removeItem("ps_barber")
     localStorage.removeItem("ps_barber_token")
     localStorage.removeItem("ps_last_act")
-    navigate("/ingreso", reason ? { state: { msg: reason } } : undefined)
+    navigate("/ingreso", msg ? { state: { msg } } : undefined)
   }
 
   // Timeout de sesión por inactividad: 30 min sin interacción → logout automático
@@ -236,6 +259,24 @@ export default function Dashboard() {
     if (!barber) return
     loadAgenda()
   }, [barber, agendaBarber, weekOffset])
+
+  // Recarga manual desde el topbar: en la PWA instalada no hay pull-to-refresh
+  // ni recarga de página, así que sin esto la única forma de ver una reserva
+  // nueva era cerrar y volver a abrir la app.
+  const [refreshing, setRefreshing] = useState(false)
+  const refreshAll = async () => {
+    if (refreshing) return
+    setRefreshing(true)
+    const headers = authHeaders()
+    await Promise.all([
+      fetch("/api/clients", { headers }).then((r) => r.json()).then((data) => { if (data.clients?.length) setClients(data.clients) }).catch(() => {}),
+      fetch("/api/bookings", { headers }).then((r) => r.json()).then((data) => { if (data.bookings) setBookings(mergeBookings(data.bookings)) }).catch(() => {}),
+      fetch("/api/services?includeInactive=true", { headers }).then((r) => r.json()).then((data) => { if (data.services?.length) setServices(data.services) }).catch(() => {}),
+      fetch("/api/expenses", { headers }).then((r) => r.json()).then((data) => { if (data.expenses?.length) setExpenses(data.expenses) }).catch(() => {}),
+      loadAgenda(),
+    ])
+    setRefreshing(false)
+  }
 
   // Service worker + aviso al barbero cuando entra una reserva suya.
   // El localStorage sincroniza entre pestañas del mismo navegador (evento
@@ -403,15 +444,19 @@ export default function Dashboard() {
     fetch(`/api/clients?phone=${client.phone}`, { method: "DELETE", headers: authHeaders() }).catch(() => {})
   }
 
+  // Actualiza en el momento (optimista) y solo revierte si la API falla.
+  // Antes recargaba TODA la semana (6 fetch en serie) después de cada click,
+  // lo que hacía que activar/desactivar una hora se sintiera lento.
   const toggleSlot = async (dayKey, slot, state) => {
     if (state === "booked") return
     const busyKey = `${dayKey}-${slot}`
     setAgendaBusy(busyKey)
+    setAgendaError("")
     const method = state === "blocked" ? "DELETE" : "POST"
     const body = JSON.stringify({ barberId: agendaBarber, date: dayKey, slot, reason: "Bloqueado desde agenda interna" })
     const previous = availability
-    const localBlocks = readLocalBlocks()
     const key = localBlockKey(agendaBarber, dayKey, slot)
+    const localBlocks = readLocalBlocks()
     if (state === "blocked") delete localBlocks[key]
     else localBlocks[key] = { barberId: agendaBarber, date: dayKey, slot }
     writeLocalBlocks(localBlocks)
@@ -420,37 +465,111 @@ export default function Dashboard() {
       [dayKey]: (current[dayKey] || []).map((item) => item.slot === slot ? { ...item, available: state === "blocked", state: state === "blocked" ? "free" : "blocked" } : item),
     }))
     const res = await fetch("/api/availability", { method, headers: authHeaders({ "Content-Type": "application/json" }), body }).catch(() => null)
-    if (res && !res.ok) setAvailability(previous)
-    await loadAgenda()
+    if (!res || !res.ok) {
+      // Si el servidor no confirmó el cambio, revertimos tanto el estado
+      // visible como el respaldo local: sin esto quedaban desincronizados
+      // (la UI mostraba "libre" pero el próximo reload volvía a mostrarlo
+      // bloqueado porque el localStorage sí había quedado guardado).
+      const revertBlocks = readLocalBlocks()
+      if (state === "blocked") revertBlocks[key] = { barberId: agendaBarber, date: dayKey, slot }
+      else delete revertBlocks[key]
+      writeLocalBlocks(revertBlocks)
+      setAvailability(previous)
+      setAgendaError(res?.status === 401 || res?.status === 403
+        ? "Tu sesión expiró. Vuelve a iniciar sesión para editar la agenda."
+        : "No se pudo guardar el cambio en el servidor. Revisa tu conexión e inténtalo de nuevo.")
+    }
     setAgendaBusy("")
   }
 
-  // Bloquea/habilita varios horarios de una sola vez (mañana, tarde o el día completo).
+  // Bloquea/habilita varios horarios de una sola vez (mañana, tarde, día completo
+  // o la semana entera). Actualiza la UI al instante y dispara los requests en
+  // paralelo (antes iban uno por uno, en serie, lo que multiplicaba la espera
+  // por la cantidad de horarios tocados).
   const bulkAgenda = async (scope, mode) => {
-    const slots = AGENDA_SLOTS.filter((t) => {
+    const days = scope === "week" ? weekDays.map((d) => d.key) : [agendaDayKey]
+    const wantsBlocked = mode === "block"
+    const slotsInScope = AGENDA_SLOTS.filter((t) => {
       if (scope === "morning") return Number(t.slice(0, 2)) < 12
       if (scope === "afternoon") return Number(t.slice(0, 2)) >= 12
       return true
     })
     setAgendaBusy(`bulk-${scope}-${mode}`)
+    setAgendaError("")
     const localBlocks = readLocalBlocks()
-    const dayAvailability = availability[agendaDayKey] || []
-    for (const slot of slots) {
-      const slotInfo = dayAvailability.find((item) => item.slot === slot)
-      const state = slotInfo?.state || (slotInfo?.available === false ? "blocked" : "free")
-      if (state === "booked") continue
-      const wantsBlocked = mode === "block"
-      if ((wantsBlocked && state === "blocked") || (!wantsBlocked && state === "free")) continue
-      const key = localBlockKey(agendaBarber, agendaDayKey, slot)
-      if (wantsBlocked) localBlocks[key] = { barberId: agendaBarber, date: agendaDayKey, slot }
-      else delete localBlocks[key]
-      const method = wantsBlocked ? "POST" : "DELETE"
-      const body = JSON.stringify({ barberId: agendaBarber, date: agendaDayKey, slot, reason: "Bloqueado desde agenda interna" })
-      await fetch("/api/availability", { method, headers: authHeaders({ "Content-Type": "application/json" }), body }).catch(() => null)
+    const ops = []
+    const nextAvailability = { ...availability }
+    for (const dayKey of days) {
+      const dayAvailability = availability[dayKey] || []
+      nextAvailability[dayKey] = dayAvailability.map((item) => {
+        if (!slotsInScope.includes(item.slot) || item.state === "booked") return item
+        if ((wantsBlocked && item.state === "blocked") || (!wantsBlocked && item.state === "free")) return item
+        const key = localBlockKey(agendaBarber, dayKey, item.slot)
+        if (wantsBlocked) localBlocks[key] = { barberId: agendaBarber, date: dayKey, slot: item.slot }
+        else delete localBlocks[key]
+        ops.push({ dayKey, slot: item.slot })
+        return { ...item, available: !wantsBlocked, state: wantsBlocked ? "blocked" : "free" }
+      })
     }
     writeLocalBlocks(localBlocks)
-    await loadAgenda()
+    setAvailability(nextAvailability)
+    const results = await Promise.all(ops.map(({ dayKey, slot }) =>
+      fetch("/api/availability", {
+        method: wantsBlocked ? "POST" : "DELETE",
+        headers: authHeaders({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ barberId: agendaBarber, date: dayKey, slot, reason: "Bloqueado desde agenda interna" }),
+      }).then((res) => ({ dayKey, slot, ok: res.ok, status: res.status })).catch(() => ({ dayKey, slot, ok: false, status: 0 }))
+    ))
+    const failed = results.filter((r) => !r.ok)
+    if (failed.length) {
+      // Revierte solo los horarios que el servidor rechazó (state + respaldo
+      // local), dejando los que sí se guardaron.
+      const revertBlocks = readLocalBlocks()
+      // El valor previo al intento es el opuesto de lo que quisimos aplicar:
+      // si queríamos bloquear (wantsBlocked) es porque antes estaba libre, y
+      // viceversa.
+      const prevState = wantsBlocked ? "free" : "blocked"
+      const prevAvailable = wantsBlocked
+      setAvailability((current) => {
+        const next = { ...current }
+        for (const { dayKey, slot } of failed) {
+          const key = localBlockKey(agendaBarber, dayKey, slot)
+          if (prevState === "blocked") revertBlocks[key] = { barberId: agendaBarber, date: dayKey, slot }
+          else delete revertBlocks[key]
+          next[dayKey] = (next[dayKey] || []).map((item) => item.slot === slot
+            ? { ...item, available: prevAvailable, state: prevState }
+            : item)
+        }
+        return next
+      })
+      writeLocalBlocks(revertBlocks)
+      setAgendaError(failed.some((r) => r.status === 401 || r.status === 403)
+        ? "Tu sesión expiró. Vuelve a iniciar sesión para editar la agenda."
+        : `No se pudieron guardar ${failed.length} de ${ops.length} horarios. Revisa tu conexión e inténtalo de nuevo.`)
+    }
     setAgendaBusy("")
+  }
+
+  // Totales de la semana visible (no solo del día seleccionado): permite ver
+  // de un vistazo cuántas horas quedan libres/bloqueadas antes de publicar la
+  // semana siguiente.
+  const weekStats = weekDays.reduce((acc, d) => {
+    const daySlots = availability[d.key] || []
+    acc.booked += daySlots.filter((s) => s.state === "booked").length
+    acc.free += daySlots.filter((s) => s.state === "free").length
+    acc.blocked += daySlots.filter((s) => s.state === "blocked").length
+    return acc
+  }, { booked: 0, free: 0, blocked: 0 })
+
+  // El cliente solo puede reservar dentro de los próximos 7 días, así que la
+  // agenda del barbero se administra semana por semana: "esta semana" y la
+  // "semana siguiente" (la única que tiene sentido dejar preparada con
+  // anticipación). Cambiar de semana reubica el día seleccionado si el
+  // actual no pertenece a la semana nueva.
+  const goToWeek = (offset) => {
+    const wd = buildWeek(offset)
+    setWeekOffset(offset)
+    if (!wd.some((d) => d.key === agendaDayKey)) setAgendaDayKey(wd[0].key)
   }
 
   if (!barber) return null
@@ -473,34 +592,52 @@ export default function Dashboard() {
           setTab={setTab}
           nav={visibleNav}
           notifCount={visibleBookings.filter((b) => b.status === 'pendiente').length}
+          onRefresh={refreshAll}
+          refreshing={refreshing}
         />
 
         {/* RESUMEN */}
         {tab === "resumen" && (
-          <DashboardResumen metrics={m} bookings={bookings} barbers={barbers} expenses={expenses} />
+          <DashboardResumen bookings={bookings} barbers={barbers} expenses={expenses} clients={clients} todaySlots={availability[isoDate(new Date())] || []} />
         )}
 
         {/* AGENDA */}
         {tab === "agenda" && agendaDayKey && (
           <div className="animate-in" style={{ display: "grid", gap: "1.1rem" }}>
+            {agendaError && (
+              <div className="card" style={{ padding: ".8rem 1rem", display: "flex", alignItems: "center", justifyContent: "space-between", gap: ".8rem", border: "1px solid rgba(217,154,143,.4)", background: "rgba(217,154,143,.08)" }}>
+                <span style={{ fontSize: ".82rem", color: "#d99a8f" }}>{agendaError}</span>
+                <button type="button" className="btn btn-dark btn-sm" onClick={() => setAgendaError("")}>Cerrar</button>
+              </div>
+            )}
             <div className="agenda-controls">
               {/* Selector de barbero retirado: la agenda es exclusiva de Brunetti.
                   (Se conserva agendaBarber fijado a Bruno para la API de disponibilidad.) */}
+              {/* La agenda se administra semana por semana: el cliente solo puede
+                  reservar dentro de los próximos 7 días, así que no tiene sentido
+                  exponer más de "esta semana" y la "semana siguiente". */}
+              <div className="agenda-bulk-actions">
+                <button type="button" className={`btn btn-sm ${weekOffset === 0 ? "btn-gold" : "btn-dark"}`} onClick={() => goToWeek(0)}>
+                  Esta semana
+                </button>
+                <button type="button" className={`btn btn-sm ${weekOffset === 1 ? "btn-gold" : "btn-dark"}`} onClick={() => goToWeek(1)}>
+                  Semana siguiente
+                </button>
+              </div>
               <div className="agenda-day-scroll">
-                {Array.from({ length: 30 }, (_, i) => {
-                  const d = new Date()
-                  d.setDate(d.getDate() + i)
-                  const k = isoDate(d)
-                  const isActive = k === agendaDayKey
+                {weekDays.map((d) => {
+                  const isActive = d.key === agendaDayKey
+                  const isToday = d.key === isoDate(new Date())
+                  const [dow, num] = d.label.split(" ")
                   return (
                     <button
-                      key={k}
+                      key={d.key}
                       type="button"
                       className={`agenda-day-pill ${isActive ? "is-active" : ""}`}
-                      onClick={() => setAgendaDayKey(k)}
+                      onClick={() => setAgendaDayKey(d.key)}
                     >
-                      <span className="agenda-day-pill-dow">{i === 0 ? "Hoy" : i === 1 ? "Mañ" : DAY_LABELS[d.getDay()]}</span>
-                      <span className="agenda-day-pill-num">{d.getDate()}</span>
+                      <span className="agenda-day-pill-dow">{isToday ? "Hoy" : dow}</span>
+                      <span className="agenda-day-pill-num">{num}</span>
                     </button>
                   )
                 })}
@@ -517,6 +654,12 @@ export default function Dashboard() {
                 </button>
                 <button type="button" className="btn btn-gold btn-sm" disabled={!!agendaBusy} onClick={() => bulkAgenda("day", "enable")}>
                   <Icon name="check" size={13} /> Habilitar día completo
+                </button>
+                <button type="button" className="btn btn-dark btn-sm" disabled={!!agendaBusy} onClick={() => bulkAgenda("week", "block")}>
+                  <Icon name="close" size={13} /> Bloquear semana completa
+                </button>
+                <button type="button" className="btn btn-gold btn-sm" disabled={!!agendaBusy} onClick={() => bulkAgenda("week", "enable")}>
+                  <Icon name="check" size={13} /> Habilitar semana completa
                 </button>
               </div>
             </div>
@@ -557,9 +700,9 @@ export default function Dashboard() {
               })}
             </Panel>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3,minmax(0,1fr))", gap: ".6rem" }}>
-              <Stat icon="calendar" label="Reservados" value={(availability[agendaDayKey] || []).filter((item) => item.state === "booked").length} />
-              <Stat icon="clock"    label="Disponibles" value={(availability[agendaDayKey] || []).filter((item) => item.state === "free").length} suffix="h" />
-              <Stat icon="trend"    label="Bloqueados" value={(availability[agendaDayKey] || []).filter((item) => item.state === "blocked").length} accent />
+              <Stat icon="calendar" label={`Reservados · ${weekOffset === 0 ? "esta semana" : "próx. semana"}`} value={weekStats.booked} />
+              <Stat icon="clock"    label={`Disponibles · ${weekOffset === 0 ? "esta semana" : "próx. semana"}`} value={weekStats.free} suffix="h" />
+              <Stat icon="trend"    label={`Bloqueados · ${weekOffset === 0 ? "esta semana" : "próx. semana"}`} value={weekStats.blocked} accent />
             </div>
           </div>
         )}
@@ -581,17 +724,22 @@ export default function Dashboard() {
         {tab === "finanzas" && (
           <div className="animate-in" style={{ display: "grid", gap: "1.1rem" }}>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: "1rem" }}>
-              <Stat icon="wallet"   label="Ingresos agenda" value={CLP(revenueTotal)} delta={9.6} accent />
-              <Stat icon="chart"    label="Ticket promedio" value={CLP(avgTicket)} delta={3.2} />
-              <Stat icon="scissors" label="Servicios"       value={completedBookings.length} delta={6.4} />
-              <Stat icon="trend"    label="Proyección"      value={CLP(revenueTotal * 4)} delta={6.3} />
+              <Stat icon="wallet"   label="Ingresos agenda" value={CLP(revenueTotal)} accent />
+              <Stat icon="chart"    label="Ticket promedio" value={CLP(avgTicket)} />
+              <Stat icon="scissors" label="Servicios"       value={completedBookings.length} />
+              <Stat icon="wallet"   label="Gastos del mes"  value={CLP(monthExpensesTotal)} />
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: "1.1rem" }}>
-              <Panel title="Ingresos por día"><BarChart data={revenueByDate.length ? revenueByDate : m.revenueByDay} fmt={CLP} /></Panel>
+              <Panel title="Ingresos por día">
+                {revenueByDate.length
+                  ? <BarChart data={revenueByDate} fmt={CLP} />
+                  : <p style={{ color: "var(--muted)", fontSize: ".84rem" }}>Sin datos aún.</p>}
+              </Panel>
               <Panel title="Ingresos por servicio">
                 <div style={{ display: "grid", gap: ".75rem" }}>
-                  {(revenueByService.length ? revenueByService : [["Corte de cabello", 38], ["Corte + barba", 26], ["Químicos / color", 18], ["Brunetti premium", 12], ["Perfilado barba", 6]].map(([name, pct]) => ({ name, total: pct }))).slice(0, 5).map((item) => {
-                    const p = revenueByService.length ? Math.round((item.total / Math.max(1, revenueTotal)) * 100) : item.total
+                  {!revenueByService.length && <p style={{ color: "var(--muted)", fontSize: ".84rem" }}>Sin datos aún.</p>}
+                  {revenueByService.slice(0, 5).map((item) => {
+                    const p = Math.round((item.total / Math.max(1, revenueTotal)) * 100)
                     return (
                       <div key={item.name} style={{ display: "grid", gap: ".3rem" }}>
                         <div style={{ display: "flex", justifyContent: "space-between", fontSize: ".82rem" }}><span style={{ color: "var(--ink-soft)" }}>{item.name}</span><span className="gold-text" style={{ fontWeight: 600 }}>{p}%</span></div>
@@ -604,7 +752,8 @@ export default function Dashboard() {
             </div>
             <Panel title="Ingresos por barbero">
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(160px,1fr))", gap: ".8rem" }}>
-                {(ranking.length ? ranking : m.barberRanking).map((r) => {
+                {!ranking.length && <p style={{ color: "var(--muted)", fontSize: ".84rem" }}>Sin datos aún.</p>}
+                {ranking.map((r) => {
                   const b = barbers.find((item) => item.id === r.id) || barberById(r.id)
                   return (
                     <div key={r.id} style={{ padding: "1rem", border: "1px solid var(--hair)", borderRadius: 12, background: "rgba(0,0,0,0.25)" }}>
@@ -826,39 +975,26 @@ export default function Dashboard() {
         {tab === "marketing" && (
           <div className="animate-in" style={{ display: "grid", gap: "1.1rem" }}>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: "1rem" }}>
-              <Stat icon="user"     label="Clientes nuevos" value={m.newClients}  delta={14.2} accent />
-              <Stat icon="trend"    label="Recurrencia"     value="77"            suffix="%" delta={4.1} />
-              <Stat icon="gift"     label="Promos activas"  value="3" />
-              <Stat icon="star"     label="Reseñas"         value="4.9"           suffix="★" delta={1.2} />
+              <Stat icon="user"  label="Clientes nuevos hoy" value={newClientsCount} accent />
+              <Stat icon="trend" label="Recurrencia"         value={recurringPct} suffix="%" />
+              <Stat icon="users" label="Clientes activos"    value={activeClients.length} />
+              <Stat icon="star"  label="Clientes frecuentes" value={topClients.length} />
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: "1.1rem" }}>
-              <Panel title="Origen de clientes">
-                <div style={{ display: "grid", gap: ".7rem" }}>
-                  {m.channels.map((c) => (
-                    <div key={c.name} style={{ display: "grid", gap: ".3rem" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: ".82rem" }}>
-                        <span style={{ display: "inline-flex", gap: ".5rem", alignItems: "center", color: "var(--ink-soft)" }}><span style={{ width: 10, height: 10, borderRadius: 3, background: c.color }} />{c.name}</span>
-                        <span style={{ color: "var(--muted)" }}>{c.pct}%</span>
-                      </div>
-                      <div style={{ height: 6, borderRadius: 99, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}><div style={{ height: "100%", width: `${c.pct}%`, background: c.color, borderRadius: 99 }} /></div>
-                    </div>
-                  ))}
-                </div>
-              </Panel>
-              <Panel title="Promociones activas">
-                <div style={{ display: "grid", gap: ".7rem" }}>
-                  {m.promos.map((p) => (
-                    <div key={p.name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: ".8rem", border: "1px solid var(--hair)", borderRadius: 10, background: "rgba(0,0,0,0.2)" }}>
-                      <div>
-                        <div style={{ fontSize: ".88rem", fontWeight: 500 }}>{p.name}</div>
-                        <div style={{ fontSize: ".72rem", color: "var(--muted)" }}>{p.uses} usos</div>
-                      </div>
-                      <span className="chip chip-gold" style={{ fontSize: ".66rem" }}>{p.status}</span>
-                    </div>
-                  ))}
-                </div>
-              </Panel>
-            </div>
+            {/* Origen de clientes / promociones se retiraron: no hay ningún dato
+                real que las respalde todavía (no se registra canal de captación
+                ni códigos de promo). Mejor no mostrar nada que inventar cifras. */}
+            <Panel title="Clientes frecuentes" action={<span className="chip chip-gold">3+ visitas</span>}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(200px,1fr))", gap: ".8rem" }}>
+                {!topClients.length && <p style={{ color: "var(--muted)", fontSize: ".84rem" }}>Sin datos aún.</p>}
+                {topClients.slice(0, 8).map((c) => (
+                  <div key={clientKey(c)} style={{ padding: "1rem", border: "1px solid var(--hair)", borderRadius: 12, background: "rgba(0,0,0,0.25)" }}>
+                    <span style={{ fontSize: ".85rem", fontWeight: 500, display: "block", marginBottom: ".3rem" }}>{c.name}</span>
+                    <span className="font-display gold-text" style={{ fontSize: "1.05rem", fontWeight: 700 }}>{CLP(c.totalSpent || 0)}</span>
+                    <span style={{ fontSize: ".72rem", color: "var(--muted-2)", display: "block", marginTop: ".2rem" }}>{c.visits} visitas</span>
+                  </div>
+                ))}
+              </div>
+            </Panel>
           </div>
         )}
       </main>
@@ -1555,7 +1691,7 @@ function DashboardShell({ tab, setTab, nav, dockItems, barber, onLogout, childre
   )
 }
 
-function DashboardTopbar({ title, barber, onLogout, tab, setTab, nav, notifCount = 0 }) {
+function DashboardTopbar({ title, barber, onLogout, tab, setTab, nav, notifCount = 0, onRefresh, refreshing = false }) {
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
   useEffect(() => {
@@ -1587,6 +1723,17 @@ function DashboardTopbar({ title, barber, onLogout, tab, setTab, nav, notifCount
       </div>
       <div className="dashboard-topbar-actions">
         <ThemeToggle />
+        <button
+          type="button"
+          className="notif-pill"
+          title={refreshing ? 'Actualizando…' : 'Actualizar datos'}
+          aria-label="Actualizar datos"
+          onClick={onRefresh}
+          disabled={refreshing}
+          style={{ cursor: refreshing ? 'default' : 'pointer' }}
+        >
+          <Icon name="refresh" size={14} style={refreshing ? { animation: 'spin 0.8s linear infinite' } : undefined} />
+        </button>
         <button
           type="button"
           className="notif-pill"

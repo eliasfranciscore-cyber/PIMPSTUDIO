@@ -7,7 +7,11 @@ import { readLocalBookings, cancelLocalBooking, isCancelled } from '../bookingsS
 // Combina las citas (API/demo) con las reservas locales del cliente para que su
 // reserva recién hecha aparezca de inmediato en "Próxima cita" / historial.
 function withLocalAppts(appts, phone) {
-  const todayKey = new Date().toISOString().slice(0, 10)
+  // Componentes locales, no UTC: toISOString() adelanta la fecha durante la
+  // noche en Chile (UTC-3/-4), lo que corría citas de "próxima" a "pasada"
+  // antes de tiempo.
+  const now = new Date()
+  const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`
   const clean = String(phone || "").replace(/\D/g, "")
   const local = readLocalBookings()
     .filter((b) => String(b.phone || "").replace(/\D/g, "") === clean)

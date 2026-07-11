@@ -3,6 +3,15 @@ import { requireInternal } from "./_auth.js"
 import { notifyBarber } from "./push.js"
 
 const MIN_CANCEL_NOTICE_HOURS = 10
+const MAX_LEAD_DAYS = 7
+const BUSINESS_TZ = "America/Santiago"
+
+// Vercel ejecuta las funciones en UTC: calcular "hoy" con new Date() ahí
+// corre la fecha un día durante la noche/madrugada en Chile. Formateamos en
+// la zona horaria del negocio para que coincida con lo que ve el cliente.
+function businessDateKey(date) {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: BUSINESS_TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(date)
+}
 
 const DEMO_BOOKINGS = [
   { id: 1, time: "09:00", date: "2026-06-12", client: "Carlos Rodriguez", phone: "987654321", service: "Corte + perfilado de barba", barberId: 4, price: 22990, status: "confirmada" },
@@ -56,6 +65,16 @@ export default async function handler(req, res) {
       const { phone, barberId, serviceId, date, time } = req.body || {}
       if (!phone || !barberId || !serviceId || !date || !time) {
         return res.status(400).json({ error: "Datos incompletos" })
+      }
+      // El cliente solo puede reservar dentro de los próximos MAX_LEAD_DAYS días
+      // (el front ya lo oculta, pero validamos también acá para no depender
+      // solo de la UI).
+      const todayKey = businessDateKey(new Date())
+      const maxDate = new Date()
+      maxDate.setDate(maxDate.getDate() + MAX_LEAD_DAYS)
+      const maxDateKey = businessDateKey(maxDate)
+      if (date < todayKey || date > maxDateKey) {
+        return res.status(422).json({ error: `Solo puedes reservar dentro de los próximos ${MAX_LEAD_DAYS} días.` })
       }
       const cleanPhone = String(phone).replace(/\D/g, "")
       const [user] = await sql`SELECT id FROM users WHERE phone = ${cleanPhone}`

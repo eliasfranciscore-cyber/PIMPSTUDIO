@@ -4,6 +4,7 @@ import { useBrunettiFx, scrollToId } from '../components/brunetti.jsx'
 import SiteNav from '../components/SiteNav.jsx'
 import ModuleFooter from '../components/ModuleFooter.jsx'
 import { Lamp } from '../components/ui/lamp.jsx'
+import { CLP } from '../data.js'
 
 /* ============================================================
    BRUNETTI — Landing de marca personal (Bruno Herrera)
@@ -38,11 +39,33 @@ const PILLARS = [
   },
 ]
 
-const SERVICES = [
-  { id: 10, tag: 'Visagismo', featured: true, title: 'Asesoría de Imagen — Visagista', desc: 'Consulta personalizada donde analizamos tu fisonomía, estilo de vida y objetivos para definir el corte y la imagen que te representan.', price: '$39.990', dur: '120 min', cta: 'Reservar asesoría' },
-  { id: 11, tag: 'Corte', title: 'Corte de cabello', desc: 'Corte de precisión ejecutado con técnicas avanzadas, pensado para favorecer tus rasgos y tu estilo.', price: '$19.990', dur: '60 min', cta: 'Reservar corte' },
-  { id: 12, tag: 'Corte + Barba', title: 'Corte de cabello y barba', desc: 'Servicio premium completo: corte a medida y perfilado de barba para un acabado impecable y armónico.', price: '$29.990', dur: '90 min', cta: 'Reservar combo' },
+// Respaldo solo para cuando /api/services no responde (ver graceful degradation
+// en CLAUDE.md). La fuente real son los servicios activos configurados en el
+// panel interno — antes esta lista vivía hardcodeada acá y nunca reflejaba
+// los precios ni el ocultar/mostrar que hacía el barbero desde Servicios.
+const FALLBACK_SERVICES = [
+  { id: 10, tag: 'Visagismo', featured: true, title: 'Asesoría de Imagen — Visagista', desc: 'Consulta personalizada donde analizamos tu fisonomía, estilo de vida y objetivos para definir el corte y la imagen que te representan.', price: '$39.990', dur: '120 min', cta: 'Reservar hora' },
+  { id: 11, tag: 'Corte', title: 'Corte de cabello', desc: 'Corte de precisión ejecutado con técnicas avanzadas, pensado para favorecer tus rasgos y tu estilo.', price: '$19.990', dur: '60 min', cta: 'Reservar hora' },
+  { id: 12, tag: 'Corte + Barba', title: 'Corte de cabello y barba', desc: 'Servicio premium completo: corte a medida y perfilado de barba para un acabado impecable y armónico.', price: '$29.990', dur: '90 min', cta: 'Reservar hora' },
 ]
+
+const CAT_TAG = { premium: 'Premium', quimico: 'Color', general: 'Corte' }
+
+function toDisplayService(svc, i, list) {
+  const featured = svc.cat === 'premium'
+    ? true
+    : !list.some((s) => s.cat === 'premium') && i === 0
+  return {
+    id: svc.id,
+    tag: CAT_TAG[svc.cat] || (svc.cat ? svc.cat[0].toUpperCase() + svc.cat.slice(1) : 'Servicio'),
+    featured,
+    title: svc.name,
+    desc: svc.desc || '',
+    price: CLP(svc.price),
+    dur: `${svc.min} min`,
+    cta: 'Reservar hora',
+  }
+}
 
 const CARDS = [
   { cat: 'Visagismo', title: 'Asesoría de Imagen Visagista', img: '/assets/bruno-feature.jpg', body: 'Una consulta personalizada con Bruno Herrera donde analizamos tu fisonomía, estilo de vida y objetivos para definir el corte y la imagen que realmente te representan. No es solo un corte: es una dirección de estilo.' },
@@ -71,8 +94,20 @@ export default function Home() {
   const [tmIdx, setTmIdx] = useState(0)
   const [tmReveal, setTmReveal] = useState(0) // contador para re-disparar animación de palabras
   const trackRef = useRef(null)
+  const [services, setServices] = useState(FALLBACK_SERVICES)
 
   useBrunettiFx(rootRef)
+
+  // Servicios reales configurados en el panel interno: precio, visibilidad
+  // (oculto/publicado) y textos vienen todos de acá, no de una lista fija.
+  useEffect(() => {
+    fetch('/api/services')
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.services?.length) setServices(data.services.map(toDisplayService))
+      })
+      .catch(() => {})
+  }, [])
 
   const goReserve = () => navigate('/reservar')
   const bookService = (id) => { try { localStorage.setItem('ps_pending_service', String(id)) } catch (e) {} navigate('/reservar') }
@@ -305,7 +340,7 @@ export default function Home() {
               <p>Atención personalizada de principio a fin. Reserva directamente tu hora con Bruno Herrera.</p>
             </div>
             <div className="bserv-grid">
-              {SERVICES.map((s, i) => (
+              {services.map((s, i) => (
                 <article className={`bserv${s.featured ? ' featured' : ''}`} data-reveal style={{ '--i': i }} key={s.title}>
                   {s.featured && <span className="badge">Insignia</span>}
                   <span className="stag">{s.tag}</span>
