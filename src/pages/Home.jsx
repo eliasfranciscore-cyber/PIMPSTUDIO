@@ -124,7 +124,12 @@ export default function Home() {
       .then((data) => {
         if (data.services?.length) {
           const featuredId = pickFeaturedId(data.services)
-          setServices(data.services.map((svc) => toDisplayService(svc, featuredId)))
+          const mapped = data.services.map((svc) => toDisplayService(svc, featuredId))
+          // La landing es una vitrina, no el catálogo completo: destacado
+          // primero (si hay) y hasta 2 más, igual que la curaduría original.
+          const featured = mapped.find((s) => s.featured)
+          const rest = mapped.filter((s) => !s.featured)
+          setServices(featured ? [featured, ...rest.slice(0, 2)] : mapped.slice(0, 3))
         }
       })
       .catch(() => {})
