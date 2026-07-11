@@ -101,6 +101,21 @@ export default function Home() {
 
   useBrunettiFx(rootRef)
 
+  // El scroll-reveal (useBrunettiFx) arma su IntersectionObserver una sola
+  // vez al montar, sobre los 3 servicios de respaldo. Cuando llegan los
+  // reales y reemplazan esos nodos, las tarjetas nuevas nunca quedan
+  // observadas y se quedan invisibles (opacity:0) para siempre — con la
+  // grilla ocupando igual su espacio, se veía como huecos negros gigantes.
+  // Como esta sección carga después del montaje, la revelamos a mano en vez
+  // de depender del observer genérico.
+  useEffect(() => {
+    if (services === FALLBACK_SERVICES) return
+    const t = setTimeout(() => {
+      document.querySelectorAll('.bserv-grid [data-reveal]').forEach((n) => n.classList.add('is-in'))
+    }, 30)
+    return () => clearTimeout(t)
+  }, [services])
+
   // Servicios reales configurados en el panel interno: precio, visibilidad
   // (oculto/publicado) y textos vienen todos de acá, no de una lista fija.
   useEffect(() => {
@@ -347,7 +362,7 @@ export default function Home() {
             </div>
             <div className="bserv-grid">
               {services.map((s, i) => (
-                <article className={`bserv${s.featured ? ' featured' : ''}`} data-reveal style={{ '--i': i }} key={s.title}>
+                <article className={`bserv${s.featured ? ' featured' : ''}`} data-reveal style={{ '--i': i }} key={s.id ?? s.title}>
                   {s.featured && <span className="badge">Insignia</span>}
                   <span className="stag">{s.tag}</span>
                   <h3>{s.title}</h3>
