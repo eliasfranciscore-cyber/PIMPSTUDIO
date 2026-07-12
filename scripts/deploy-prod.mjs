@@ -27,8 +27,12 @@ function run(cmd, args, opts = {}) {
 
 console.log('\n▲ Desplegando a producción (vercel --prod)…\n')
 
-// `vercel deploy --prod` imprime el PROGRESO por stderr y la URL final por
-// stdout, así que capturamos stdout y nos quedamos con la última línea https://.
+// `vercel deploy --prod` imprime el progreso por stderr y termina con un
+// bloque JSON por stdout (`{ status, deployment: { url, target, ... } }`).
+// Parseamos ESE json en vez de buscar líneas "https://" sueltas: el formato
+// de texto plano de la CLI ha cambiado más de una vez (labels antes de la
+// URL, nueva CLI embebida durante el build, etc.) y romper el matching de
+// líneas nos ha dejado con el deploy hecho pero el dominio sin re-apuntar.
 let deployOut
 try {
   deployOut = run('npx', ['vercel', 'deploy', '--prod', '--yes'], {
@@ -39,12 +43,26 @@ try {
   process.exit(1)
 }
 
-const url = deployOut
-  .trim()
-  .split('\n')
-  .map((l) => l.trim())
-  .filter((l) => l.startsWith('https://'))
-  .pop()
+let url
+const jsonMatch = deployOut.match(/\{[\s\S]*\}/)
+if (jsonMatch) {
+  try {
+    const parsed = JSON.parse(jsonMatch[0])
+    if (parsed.deployment?.target !== 'production') {
+      console.error(`\n✗ El deployment no quedó como "production" (target: ${parsed.deployment?.target}).\n`)
+      process.exit(1)
+    }
+    url = parsed.deployment?.url
+  } catch {
+    // cae al fallback de abajo
+  }
+}
+if (!url) {
+  // Fallback: cualquier URL *.vercel.app del deployment (no del inspector ni del alias corto),
+  // buscada como substring en vez de exigir que la línea completa empiece con "https://".
+  const matches = [...deployOut.matchAll(/https:\/\/[a-z0-9.-]+\.vercel\.app/gi)]
+  url = matches.map((m) => m[0]).find((u) => !u.includes('vercel.com'))
+}
 
 if (!url) {
   console.error('\n✗ No pude leer la URL del deployment desde la salida de Vercel.\n')
