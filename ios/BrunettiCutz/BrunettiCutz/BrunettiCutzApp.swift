@@ -3,7 +3,8 @@ import SwiftUI
 @main
 struct BrunettiCutzApp: App {
     @State private var session = SessionStore()
-    @State private var selectedTab: AppTab = .resumen
+    @State private var selectedTab: AppTab = .hoy
+    @State private var backgroundedAt: Date?
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some Scene {
@@ -12,7 +13,23 @@ struct BrunettiCutzApp: App {
                 .environment(session)
                 .onAppear(perform: applyPendingIntent)
                 .onChange(of: scenePhase) { _, phase in
-                    if phase == .active { applyPendingIntent() }
+                    switch phase {
+                    case .background:
+                        if session.isAuthenticated {
+                            backgroundedAt = .now
+                        }
+                    case .active:
+                        applyPendingIntent()
+                        if let bg = backgroundedAt,
+                           Date.now.timeIntervalSince(bg) > 300,
+                           session.isAuthenticated,
+                           session.canUseBiometrics && session.biometricEnabled {
+                            session.lock()
+                        }
+                        backgroundedAt = nil
+                    default:
+                        break
+                    }
                 }
         }
     }

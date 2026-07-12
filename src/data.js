@@ -84,3 +84,29 @@ export function isAdminUser(user) {
   const haystack = `${user?.name || ""} ${user?.code || ""} ${user?.role || ""}`.toLowerCase()
   return haystack.includes("brunetti") || haystack.includes("bruno") || haystack.includes("admin")
 }
+
+// --- Utilidades de fecha (locales, no UTC) -------------------------------
+// toISOString() usa UTC: en Chile (UTC-3/-4) hace rollover al día siguiente
+// de noche, desalineando "hoy". Estas usan componentes locales.
+export function isoDate(date = new Date()) {
+  const y = date.getFullYear()
+  const m = String(date.getMonth() + 1).padStart(2, "0")
+  const d = String(date.getDate()).padStart(2, "0")
+  return `${y}-${m}-${d}`
+}
+
+// Semana (Lun→Dom) desplazada `offset` semanas. Devuelve 7 días con
+// { key: "YYYY-MM-DD", label: "Lun 6", dow: "Lun", num: 6 }.
+export function buildWeek(offset = 0) {
+  const now = new Date()
+  const monday = new Date(now)
+  const day = monday.getDay() || 7
+  monday.setDate(now.getDate() - day + 1 + offset * 7)
+  return Array.from({ length: 7 }, (_, i) => {
+    const date = new Date(monday)
+    date.setDate(monday.getDate() + i)
+    const dow = DAYS_ES[date.getDay()]
+    const num = date.getDate()
+    return { key: isoDate(date), label: `${dow} ${num}`, dow, num }
+  })
+}

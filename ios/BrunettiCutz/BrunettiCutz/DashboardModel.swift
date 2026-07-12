@@ -28,6 +28,10 @@ final class DashboardModel {
     var clientHistory: [Booking] = []
     var dashboardFocus: DashboardFocus = .dia
 
+    init() {
+        loadCache()
+    }
+
     var dateKey: String { isoDate(selectedDate) }
 
     var todayBookings: [Booking] {
@@ -56,6 +60,35 @@ final class DashboardModel {
         completedBookings.isEmpty ? 0 : revenueTotal / completedBookings.count
     }
 
+    var weeklyBookings: [Booking] {
+        let calendar = Calendar.current
+        let start = calendar.startOfDay(for: selectedDate)
+        guard let end = calendar.date(byAdding: .day, value: 7, to: start) else { return [] }
+        return bookings.filter { booking in
+            guard let date = parseISODate(booking.date ?? dateKey) else { return false }
+            return date >= start && date < end
+        }
+    }
+
+    var weeklyRevenue: Int {
+        weeklyBookings.filter { $0.status != .cancelada }.reduce(0) { $0 + $1.price }
+    }
+
+    var cancellationRate: Double {
+        guard !bookings.isEmpty else { return 0 }
+        return Double(bookings.filter { $0.status == .cancelada }.count) / Double(bookings.count)
+    }
+
+    var repeatClientRate: Double {
+        guard !clients.isEmpty else { return 0 }
+        let repeaters = clients.filter { ($0.visits ?? 0) > 1 }.count
+        return Double(repeaters) / Double(clients.count)
+    }
+
+    var nextBooking: Booking? {
+        todayBookings.first { $0.status != .cancelada }
+    }
+
     var occupancy: Double {
         guard !slots.isEmpty else { return 0 }
         let busy = slots.filter { $0.resolvedState != .free }.count
@@ -82,6 +115,7 @@ final class DashboardModel {
         if let value = await loadedEnrollments, !value.isEmpty { enrollments = value }
         if let value = await loadedSlots, !value.isEmpty { slots = value }
         message = "Actualizado \(Date.now.formatted(date: .omitted, time: .shortened))"
+        saveCache()
     }
 
     func refreshAgenda(api: APIClient, barberId: Int) async {
@@ -95,6 +129,20 @@ final class DashboardModel {
         bookings = bookings.map { $0.id == booking.id ? Booking(id: $0.id, time: $0.time, date: $0.date, client: $0.client, phone: $0.phone, service: $0.service, barberId: $0.barberId, price: $0.price, status: status) : $0 }
         do {
             _ = try await api.updateBooking(booking, status: status)
+        } catch {
+            bookings = previous
+            message = "No se pudo actualizar la reserva"
+        }
+    }
+
+    func saveBookingEdits(_ edited: Booking, api: APIClient) async {
+        let previous = bookings
+        bookings = bookings.map { $0.id == edited.id ? edited : $0 }
+        do {
+            _ = try await api.updateBooking(edited, status: edited.status)
+            selectedBooking = nil
+            message = "Reserva actualizada"
+            saveCache()
         } catch {
             bookings = previous
             message = "No se pudo actualizar la reserva"
@@ -159,6 +207,14 @@ final class DashboardModel {
         }
     }
 
+    func applyClientToBookingDraft(_ client: Client) {
+        guard var draft = bookingDraft else { return }
+        draft.clientName = client.name
+        draft.phone = client.phone
+        draft.email = client.email ?? ""
+        bookingDraft = draft
+    }
+
     func saveService(_ service: ServiceItem, api: APIClient) async {
         let isNew = !services.contains { $0.id == service.id }
         if let saved = try? await api.saveService(service, isNew: isNew) {
@@ -197,6 +253,33 @@ final class DashboardModel {
             try await api.setSlot(barberId: barberId, date: dateKey, slot: slot.slot, blocked: shouldBlock)
             await refreshAgenda(api: api, barberId: barberId)
         } catch {
+            message = "No se pudo cambiar el bloque"
+        }
+    }
+
+    func setSlots(_ targetSlots: [AvailabilitySlot], blocked: Bool, api: APIClient, barberId: Int) async {
+        let editable = targetSlots.filter { $0.resolvedState != .booked }
+        guard !editable.isEmpty else {
+            message = "No hay horas libres para cambiar"
+            return
+        }
+
+        let previous = slots
+        let ids = Set(editable.map(\.id))
+        slots = slots.map {
+            ids.contains($0.id)
+            ? AvailabilitySlot(slot: $0.slot, available: !blocked, state: blocked ? .blocked : .free)
+            : $0
+        }
+
+        do {
+            for slot in editable {
+                try await api.setSlot(barberId: barberId, date: dateKey, slot: slot.slot, blocked: blocked)
+            }
+            message = blocked ? "\(editable.count) hora(s) bloqueadas" : "\(editable.count) hora(s) abiertas"
+            await refreshAgenda(api: api, barberId: barberId)
+        } catch {
+            slots = previous
             message = "No se pudo cambiar el bloque"
         }
     }
@@ -249,6 +332,42 @@ final class DashboardModel {
         selectedClient = client
     }
 
+    // MARK: - Disk cache
+
+    private var cacheDir: URL {
+        FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent("brunetti", isDirectory: true)
+    }
+
+    private func saveCache() {
+        let dir = cacheDir
+        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        let enc = JSONEncoder()
+        try? enc.encode(bookings).write(to: dir.appendingPathComponent("bookings.json"))
+        try? enc.encode(clients).write(to: dir.appendingPathComponent("clients.json"))
+        try? enc.encode(services).write(to: dir.appendingPathComponent("services.json"))
+        try? enc.encode(expenses).write(to: dir.appendingPathComponent("expenses.json"))
+        try? enc.encode(enrollments).write(to: dir.appendingPathComponent("enrollments.json"))
+        try? enc.encode(barbers).write(to: dir.appendingPathComponent("barbers.json"))
+    }
+
+    private func loadCache() {
+        let dir = cacheDir
+        let dec = JSONDecoder()
+        if let d = try? Data(contentsOf: dir.appendingPathComponent("bookings.json")),
+           let v = try? dec.decode([Booking].self, from: d), !v.isEmpty { bookings = v }
+        if let d = try? Data(contentsOf: dir.appendingPathComponent("clients.json")),
+           let v = try? dec.decode([Client].self, from: d), !v.isEmpty { clients = v }
+        if let d = try? Data(contentsOf: dir.appendingPathComponent("services.json")),
+           let v = try? dec.decode([ServiceItem].self, from: d), !v.isEmpty { services = v }
+        if let d = try? Data(contentsOf: dir.appendingPathComponent("expenses.json")),
+           let v = try? dec.decode([Expense].self, from: d), !v.isEmpty { expenses = v }
+        if let d = try? Data(contentsOf: dir.appendingPathComponent("enrollments.json")),
+           let v = try? dec.decode([Enrollment].self, from: d), !v.isEmpty { enrollments = v }
+        if let d = try? Data(contentsOf: dir.appendingPathComponent("barbers.json")),
+           let v = try? dec.decode([Barber].self, from: d), !v.isEmpty { barbers = v }
+    }
+
     private func upsertService(_ service: ServiceItem) {
         if let index = services.firstIndex(where: { $0.id == service.id }) {
             services[index] = service
@@ -256,6 +375,14 @@ final class DashboardModel {
             services.insert(service, at: 0)
         }
     }
+}
+
+private func parseISODate(_ value: String) -> Date? {
+    let formatter = DateFormatter()
+    formatter.calendar = Calendar(identifier: .gregorian)
+    formatter.locale = Locale(identifier: "en_US_POSIX")
+    formatter.dateFormat = "yyyy-MM-dd"
+    return formatter.date(from: value)
 }
 
 enum DashboardFocus: String, CaseIterable, Identifiable {

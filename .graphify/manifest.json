@@ -1,0 +1,438 @@
+{
+  "api/_auth.js": {
+    "mtime": 1782522899931.935,
+    "hash": "843d7fbfc4db0926f1a24fed2db792dd"
+  },
+  "api/auth-barber.js": {
+    "mtime": 1782522899932.178,
+    "hash": "3f696cc642350720147b1aadc13a3bef"
+  },
+  "api/auth-login.js": {
+    "mtime": 1781237703000,
+    "hash": "f0128edc2257ad4d283d39d40e8c6014"
+  },
+  "api/availability.js": {
+    "mtime": 1781239358000,
+    "hash": "916d4b818cfcdcb55978db480763db24"
+  },
+  "api/barbers.js": {
+    "mtime": 1781238164000,
+    "hash": "80924df7ecf1f104245ccd92cd78b5cd"
+  },
+  "api/bookings.js": {
+    "mtime": 1782522899932.327,
+    "hash": "09d149464da53db104687b78b3642463"
+  },
+  "api/clients.js": {
+    "mtime": 1781238478000,
+    "hash": "8b7f1601d832c7a7320fb0dff08bd5a0"
+  },
+  "api/enrollments.js": {
+    "mtime": 1782522194087.5806,
+    "hash": "623ea74a27f48da1c567fdb06ce8691d"
+  },
+  "api/expenses.js": {
+    "mtime": 1781238478000,
+    "hash": "bc4b6bdc135cb75cd95635071c10d885"
+  },
+  "api/fintoc-payments.js": {
+    "mtime": 1782700419016.928,
+    "hash": "8f048a1f5bb7f98f7d7656ddfee421d7"
+  },
+  "api/push.js": {
+    "mtime": 1782522194087.8386,
+    "hash": "f6cd86b3854bbf6e4f3321cfbfe4aad1"
+  },
+  "api/register-client.js": {
+    "mtime": 1782522899932.4568,
+    "hash": "aa2c8ac0c0dbc111671fa1209f170cf3"
+  },
+  "api/services.js": {
+    "mtime": 1781238478000,
+    "hash": "b9d5a1c7695c6ef07b2f5e1c2644fccd"
+  },
+  "db/schema.sql": {
+    "mtime": 1782522899932.714,
+    "hash": "7559de5dc7f3d908ab3328a1b147b7bc"
+  },
+  "db/seed.sql": {
+    "mtime": 1781237718000,
+    "hash": "23e8d5c8b4fdec0858e4508fb7a97adf"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/APIClient.swift": {
+    "mtime": 1783043141007.3298,
+    "hash": "f55ef535d7de68cddee87cfab5675e76"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/BrunettiAppIntents.swift": {
+    "mtime": 1783199963319.8687,
+    "hash": "46f3b477bbcdc404b989c0f77b43a586"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/BrunettiCutzApp.swift": {
+    "mtime": 1783285217252.7383,
+    "hash": "d77137dd0ddf38760b1e1a74c4c117ee"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/DashboardModel.swift": {
+    "mtime": 1783287169983.702,
+    "hash": "624d752fd0bb17bf7559dbd641d0701e"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/DashboardView.swift": {
+    "mtime": 1783288053786.1545,
+    "hash": "b699830f2f6ee8f0bf67e4b50c1c60d5"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/DemoData.swift": {
+    "mtime": 1783287169984.8564,
+    "hash": "bab945451e7ecf6378397eab11ca0b10"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/DesignSystem.swift": {
+    "mtime": 1783288146776.269,
+    "hash": "8d3d877a68cc136047ceba7faf1a01de"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/DetailSheets.swift": {
+    "mtime": 1783288124022.9902,
+    "hash": "363f4aefab55c3b7c35327d6a35270f4"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/LoginView.swift": {
+    "mtime": 1783288036199.4226,
+    "hash": "6de550e78439d50706c4e75d8134daa5"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Models.swift": {
+    "mtime": 1783199953130.8022,
+    "hash": "9fea34f6a4acad84bc498e715794fec2"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/ModuleViews.swift": {
+    "mtime": 1783288146775.5774,
+    "hash": "0526653d4293b211727e197a4e6d9691"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/SessionStore.swift": {
+    "mtime": 1783288173207.054,
+    "hash": "11fcd65a147ac56ccfbb281cfd633f2f"
+  },
+  "postcss.config.js": {
+    "mtime": 1782522899941.205,
+    "hash": "ef3ba2a81ba19f8ea5ddf625521e96f0"
+  },
+  "public/sw.js": {
+    "mtime": 1782685632932.3962,
+    "hash": "544fcc7f6c81847758aca7b5a306e7f0"
+  },
+  "src/App.jsx": {
+    "mtime": 1782686874152.2598,
+    "hash": "be4bf64285877552ee825f0afa948562"
+  },
+  "src/bookingsStore.js": {
+    "mtime": 1782686874152.9998,
+    "hash": "791acf3577f65be3d3ce98eedf7637e2"
+  },
+  "src/components/BarberModal.jsx": {
+    "mtime": 1782686874166.458,
+    "hash": "34db8bb888eb593d9687afd50736d5c8"
+  },
+  "src/components/BarberShowcase.jsx": {
+    "mtime": 1782686874155.2734,
+    "hash": "b8baf870791352a85cf36d45660fcde1"
+  },
+  "src/components/BookingsInbox.jsx": {
+    "mtime": 1782686874157.0186,
+    "hash": "1f963e09e68986d11013f5dd4b871a71"
+  },
+  "src/components/ClientModal.jsx": {
+    "mtime": 1782686874157.7996,
+    "hash": "29ad3edc81d0444c32187d7bc47a7e08"
+  },
+  "src/components/DashboardResumen.jsx": {
+    "mtime": 1782686874168.2375,
+    "hash": "d696b83a231cb021d8f48cad4b7f2c19"
+  },
+  "src/components/FintocCheckout.jsx": {
+    "mtime": 1782699796762.9849,
+    "hash": "e858b1dc9fc71a85d27872d7a62ba75b"
+  },
+  "src/components/GlareCard.jsx": {
+    "mtime": 1782686874170.0273,
+    "hash": "c8f8978e41fec8ad0bbaa98ee55510ad"
+  },
+  "src/components/IconsExtra.jsx": {
+    "mtime": 1782686874154.195,
+    "hash": "74e32aaabcab5eb1ad6f7b2309c2aaa0"
+  },
+  "src/components/MobileDock.jsx": {
+    "mtime": 1782686874161.81,
+    "hash": "f4691291bcb1e191a1c15ac40fbca255"
+  },
+  "src/components/ModuleFooter.jsx": {
+    "mtime": 1782686874163.2395,
+    "hash": "b512a0db13e679d1a3371c268f26cc04"
+  },
+  "src/components/SiteNav.jsx": {
+    "mtime": 1782688629829.754,
+    "hash": "9a68087657452eca124387356f16952f"
+  },
+  "src/components/brunetti.jsx": {
+    "mtime": 1782686874154.8528,
+    "hash": "30d191961090e830a8a8b4911effabcf"
+  },
+  "src/components/liquidShowcase.jsx": {
+    "mtime": 1782686874164.521,
+    "hash": "c1fa5ced9e51247af9eb135be69b91ae"
+  },
+  "src/components/theme.jsx": {
+    "mtime": 1782688629830.9587,
+    "hash": "ea919cd5fc8f57b54d15f6e2552917c4"
+  },
+  "src/components/ui.jsx": {
+    "mtime": 1782686874155.8699,
+    "hash": "a45f1efb1fddf694c2121b78d8857fee"
+  },
+  "src/components/ui/lamp.jsx": {
+    "mtime": 1782686874153.8066,
+    "hash": "f89b02ca2d0dcd3d8fb34440ae601ca7"
+  },
+  "src/data.js": {
+    "mtime": 1782686874172.5508,
+    "hash": "844f566e5d1ec110bdccce7ed0ba4911"
+  },
+  "src/data/estilo.js": {
+    "mtime": 1782686874171.7861,
+    "hash": "9a34688e684fdf1305c7d0ce500a8682"
+  },
+  "src/data/workshop.js": {
+    "mtime": 1782690243801.1453,
+    "hash": "6d6aef9d62afeae7e310de285b685d7f"
+  },
+  "src/enrollmentsStore.js": {
+    "mtime": 1782686874173.0208,
+    "hash": "e6b502351223d9964ae9bf8e17bc6e92"
+  },
+  "src/main.jsx": {
+    "mtime": 1782686874173.3237,
+    "hash": "fa09f92bf84f0f879d5f118545f0e4f5"
+  },
+  "src/pages/Account.jsx": {
+    "mtime": 1782686874185.5723,
+    "hash": "3190a9a3943b014ce8a82fcb5ab30312"
+  },
+  "src/pages/BarberLogin.jsx": {
+    "mtime": 1782686874174.2415,
+    "hash": "ec9017c0886e63a56a742ab2208a4771"
+  },
+  "src/pages/Booking.jsx": {
+    "mtime": 1782686874175.1533,
+    "hash": "9836cd279fb8904fdeff5773fc55f2d2"
+  },
+  "src/pages/Cursos.jsx": {
+    "mtime": 1782697786781.1216,
+    "hash": "1874bc4fbd236811591ebf856b141524"
+  },
+  "src/pages/Dashboard.jsx": {
+    "mtime": 1782686874178.752,
+    "hash": "90e45bac39fbd3873ade05354ee9ef35"
+  },
+  "src/pages/EncuentraEstilo.jsx": {
+    "mtime": 1782686874182.3032,
+    "hash": "93eb0bef0c773d00f2fce661ef38273c"
+  },
+  "src/pages/Home.jsx": {
+    "mtime": 1782688629833.3364,
+    "hash": "9508c662ad8a1b22eff5454e91bcc0df"
+  },
+  "src/pages/Login.jsx": {
+    "mtime": 1782686874180.2288,
+    "hash": "61423707271a059b9925830747ca0f12"
+  },
+  "src/pages/Workshop.jsx": {
+    "mtime": 1782688629836.162,
+    "hash": "1b3c79fd0c65096b5c9f4188ba083b7e"
+  },
+  "src/push.js": {
+    "mtime": 1782686874186.13,
+    "hash": "f448d37ae7f2220344d2f63852f2f5cb"
+  },
+  "tailwind.config.js": {
+    "mtime": 1782522899953.721,
+    "hash": "1b7e818f114dad25484ff5613ea20db5"
+  },
+  "vite.config.js": {
+    "mtime": 1782699804701.816,
+    "hash": "6a68c0ebf79d6482aba7d0de369b4a21"
+  },
+  "CHANGELOG_IMPLEMENTACION.md": {
+    "mtime": 1782522899931.437,
+    "hash": "8821dc65ef6d88a32b3d71aa793563c1"
+  },
+  "IMPLEMENTATION_PLAN.md": {
+    "mtime": 1782522899931.602,
+    "hash": "c7939d7b6e3bcae608c29ddac479a104"
+  },
+  "README.md": {
+    "mtime": 1782522899931.7717,
+    "hash": "0683f76e1b8d1fdf512f1d595283c15d"
+  },
+  "graphify-out/GRAPH_REPORT.md": {
+    "mtime": 1783198556614.5088,
+    "hash": "99e7c3a4d60fc6ab6afba7e3589dcad4"
+  },
+  "graphify-out/graph.html": {
+    "mtime": 1783198560301.9229,
+    "hash": "a1c83133770d124f9dc0bbf91bdf1959"
+  },
+  "index.html": {
+    "mtime": 1782671634272.8865,
+    "hash": "c32fd878366b74df8cd04c2dc7a0b6da"
+  },
+  "ios/BrunettiCutz/README.md": {
+    "mtime": 1783043288801.2676,
+    "hash": "86efe85cefb81ae936c5928a1caf3be8"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/AppIcon.appiconset/icon-1024.png": {
+    "mtime": 1783042947272.2893,
+    "hash": "e31906c4fb990838d34cd63de4d33793"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/AppIcon.appiconset/icon-120.png": {
+    "mtime": 1783042947186.475,
+    "hash": "232b44bf006185cf3cd8213be67bf35e"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/AppIcon.appiconset/icon-152.png": {
+    "mtime": 1783042947203.7715,
+    "hash": "3d8ce0cd50e7d14ccf40ef6cd2c60a08"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/AppIcon.appiconset/icon-167.png": {
+    "mtime": 1783042947221.9607,
+    "hash": "d23e38e935153f30d35cf80e799d3b9a"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/AppIcon.appiconset/icon-180.png": {
+    "mtime": 1783042947239.3992,
+    "hash": "12f86646322efd11cfba91341f6645da"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/AppIcon.appiconset/icon-192.png": {
+    "mtime": 1783041374678.6714,
+    "hash": "1b83e9e3d4bf63f1318c3a47ad207932"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/AppIcon.appiconset/icon-40.png": {
+    "mtime": 1783042947065.2178,
+    "hash": "2e38c457251218bdce87f6db54cbaa30"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/AppIcon.appiconset/icon-512.png": {
+    "mtime": 1783041374680.4705,
+    "hash": "bf874ecd24b7fa37afe6f813051043f7"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/AppIcon.appiconset/icon-58.png": {
+    "mtime": 1783042947082.9856,
+    "hash": "1b60eb8fc51ddf40eb9325a417c5b536"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/AppIcon.appiconset/icon-60.png": {
+    "mtime": 1783042947100.6829,
+    "hash": "65f43c57e47c7a6af33a2b7629460aa5"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/AppIcon.appiconset/icon-76.png": {
+    "mtime": 1783042947137.2983,
+    "hash": "57ada7a2a28d5046f08c3cd7aa16c6c3"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/AppIcon.appiconset/icon-80.png": {
+    "mtime": 1783042947154.007,
+    "hash": "3d289fa6c5de2f29960483996538bb41"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/AppIcon.appiconset/icon-87.png": {
+    "mtime": 1783042947170.293,
+    "hash": "3896a31aa84450b874db22497ec1ef8a"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/BrandHero.imageset/bruno-hero.jpg": {
+    "mtime": 1783287977264.6426,
+    "hash": "6d83488c80e01cabf4ddd734e469148c"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/GalleryInterior.imageset/gallery-2.jpg": {
+    "mtime": 1783041374674.666,
+    "hash": "6d83488c80e01cabf4ddd734e469148c"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/LogoIcon.imageset/brunetti-logo-icon-512.png": {
+    "mtime": 1783287134551.4324,
+    "hash": "47fea1fe71c55f3e7525b7e0c3142ad5"
+  },
+  "public/assets/PIMP_STUDIO_LOGO.svg": {
+    "mtime": 1782685632922.6958,
+    "hash": "9c247082de8ce6758ba4fc6e9353fc5f"
+  },
+  "public/assets/ascension-logo.webp": {
+    "mtime": 1782685632928.8582,
+    "hash": "d92f129e84b5e9e80434860b71f1df2d"
+  },
+  "public/assets/brunetti-logo-icon-180.png": {
+    "mtime": 1782685632923.3489,
+    "hash": "2ee3eecc6812f1189ad39c7f745dfe32"
+  },
+  "public/assets/brunetti-logo-icon-192.png": {
+    "mtime": 1782685632927.6538,
+    "hash": "1b83e9e3d4bf63f1318c3a47ad207932"
+  },
+  "public/assets/brunetti-logo-icon-512.png": {
+    "mtime": 1782685632916.5955,
+    "hash": "bf874ecd24b7fa37afe6f813051043f7"
+  },
+  "public/assets/brunetti-logo-icon.svg": {
+    "mtime": 1782685632931.2866,
+    "hash": "5039c4819202c8571b8205b29a13d04d"
+  },
+  "public/assets/brunetti-logo-lockup-v2.svg": {
+    "mtime": 1782688629825.0933,
+    "hash": "0698272cdcc7ec79fd3790a5d363b310"
+  },
+  "public/assets/brunetti-logo-lockup.svg": {
+    "mtime": 1782685632919.2278,
+    "hash": "811d52b1bc779da212adac9a9ab9f978"
+  },
+  "public/assets/brunetti-logo-mark.svg": {
+    "mtime": 1782609253902.0112,
+    "hash": "ca4650aa05f1b0823e576a5ce245ac4c"
+  },
+  "public/assets/brunetti-logo-monogram.svg": {
+    "mtime": 1782685632918.5205,
+    "hash": "c7f4d0556f8567f11f93d448494d3561"
+  },
+  "public/assets/brunetti-logo-text.svg": {
+    "mtime": 1782609253902.217,
+    "hash": "554ed5e7b4b822701e601426186634ef"
+  },
+  "public/assets/brunetti-wordmark.svg": {
+    "mtime": 1782685632921.0874,
+    "hash": "44f2e6216f355569c2eaabbc4af61c32"
+  },
+  "public/assets/bruno-feature.jpg": {
+    "mtime": 1782685632924.014,
+    "hash": "4e6aae7df869c34701bf145339fd9f1b"
+  },
+  "public/assets/bruno-hero.jpg": {
+    "mtime": 1782685632924.638,
+    "hash": "fd05f3769ec616cd996a2a0910eb9917"
+  },
+  "public/assets/bruno-portrait.jpg": {
+    "mtime": 1782685632926.63,
+    "hash": "62e87b2d75e627a88b3d87f489a7a697"
+  },
+  "public/assets/estilo-teaser.jpg": {
+    "mtime": 1782685632922.0576,
+    "hash": "4e6aae7df869c34701bf145339fd9f1b"
+  },
+  "public/assets/gallery-1.jpg": {
+    "mtime": 1782685632917.581,
+    "hash": "96ea0ca89e6c2c231089b12f86fd6f51"
+  },
+  "public/assets/gallery-2.jpg": {
+    "mtime": 1782685632919.9236,
+    "hash": "6d83488c80e01cabf4ddd734e469148c"
+  },
+  "public/assets/gallery-3.jpg": {
+    "mtime": 1782685632920.4995,
+    "hash": "e27b4bd09b7a608b8151623bbfd648f6"
+  },
+  "public/assets/pimp-studio-logo.jpg": {
+    "mtime": 1782685632930.6887,
+    "hash": "c685d8656fe24042572176e9de7b4aaf"
+  },
+  "public/assets/pimp-studio-mark.svg": {
+    "mtime": 1782685632928.3542,
+    "hash": "271d134b3865677f3971c6b3a2e50893"
+  },
+  "public/assets/workshop-2026.jpg": {
+    "mtime": 1782685632929.6602,
+    "hash": "539b55efc60e4d1c587bcf68aa19fed2"
+  }
+}

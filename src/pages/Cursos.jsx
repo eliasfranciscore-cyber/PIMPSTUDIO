@@ -6,6 +6,7 @@ import ModuleFooter from '../components/ModuleFooter.jsx'
 import { Lamp } from '../components/ui/lamp.jsx'
 import FintocCheckout from '../components/FintocCheckout.jsx'
 import { EditableText } from '../components/edit/EditableText.jsx'
+import { Editable } from '../components/edit/Editable.jsx'
 import CURSOS from '../data/content/cursos.json'
 
 /* ================================================================
@@ -54,7 +55,7 @@ export default function Cursos() {
       <main>
         {/* ============ HERO ============ */}
         <section className="course-hero">
-          <div className="course-hero-bg" aria-hidden="true"><img src="/assets/bruno-hero-bg.webp" alt="" fetchpriority="high" decoding="async" /></div>
+          <div className="course-hero-bg" aria-hidden="true"><Editable as="img" editId="cursos:heroBg" src="/assets/bruno-hero-bg.webp" alt="" fetchpriority="high" decoding="async" /></div>
           <div className="course-hero-inner">
             <span className="bhero-kicker"><span className="dot" /><EditableText file="cursos" path="hero.kicker">{CURSOS.hero.kicker}</EditableText></span>
             <h1><EditableText file="cursos" path="hero.title1">{CURSOS.hero.title1}</EditableText><br /><EditableText file="cursos" path="hero.title2">{CURSOS.hero.title2}</EditableText></h1>
@@ -71,7 +72,7 @@ export default function Cursos() {
             </div>
           </div>
           <div className="course-hero-figwrap" aria-hidden="true">
-            <img src="/assets/cursos-hero-cutout.webp" alt="" />
+            <Editable as="img" editId="cursos:heroCutout" src="/assets/cursos-hero-cutout.webp" alt="" />
           </div>
         </section>
 

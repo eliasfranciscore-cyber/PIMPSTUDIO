@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "branchName": "desarrollo",
+  "worktreePath": "/Users/elija/Documents/GitHub/PIMPSTUDIO-desarrollo",
+  "upstream": "origin/desarrollo",
+  "mergeBase": "aad8b7e301147fd24f490e7b7c776b33f135e936",
+  "firstSeenHead": "aad8b7e301147fd24f490e7b7c776b33f135e936",
+  "lastSeenHead": "aad8b7e301147fd24f490e7b7c776b33f135e936",
+  "lastAnalyzedHead": "aad8b7e301147fd24f490e7b7c776b33f135e936",
+  "stale": false,
+  "staleReason": null,
+  "staleSince": null,
+  "lifecycleEvent": null,
+  "createdAt": "2026-07-09T23:59:50.124Z",
+  "updatedAt": "2026-07-09T23:59:50.124Z"
+}

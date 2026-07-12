@@ -59,6 +59,12 @@ CREATE TABLE IF NOT EXISTS bookings (
   UNIQUE (barber_id, booking_date, booking_time)
 );
 
+-- Para bases existentes (idempotente): reservas manuales del panel pueden
+-- llevar servicio/precio personalizado (service_id queda NULL en ese caso).
+-- ⚠️ Ejecutar en la consola de Neon ANTES de desplegar la API que los usa.
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS custom_service VARCHAR(200);
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS custom_price  INTEGER;
+
 CREATE TABLE IF NOT EXISTS availability_blocks (
   id         SERIAL PRIMARY KEY,
   barber_id  INTEGER REFERENCES barbers(id),

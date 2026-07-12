@@ -6,7 +6,7 @@ import { Icon } from './ui.jsx'
  * - 6 accesos directos: 2 a la izq, FAB central (abre menú completo), 2 a la der,
  *   y un botón final (config). El centro permite navegar a todos los módulos.
  */
-export default function MobileDock({ tab, setTab, nav, shortcuts: shortcutItems }) {
+export default function MobileDock({ tab, setTab, nav, shortcuts: shortcutItems, onNewBooking }) {
   const [sheetOpen, setSheetOpen] = useState(false)
 
   useEffect(() => {
@@ -75,6 +75,15 @@ export default function MobileDock({ tab, setTab, nav, shortcuts: shortcutItems 
       />
 
       <div className={`dock-sheet ${sheetOpen ? 'is-open' : ''}`} role="dialog" aria-modal="true" aria-label="Menú completo">
+        {onNewBooking && (
+          <button
+            type="button"
+            className="btn btn-gold btn-block dock-sheet-cta"
+            onClick={() => { setSheetOpen(false); onNewBooking() }}
+          >
+            <Icon name="calendar" size={16} /> Nueva reserva
+          </button>
+        )}
         <div className="dock-sheet-grid">
           {nav.map(([id, ic, label]) => (
             <button

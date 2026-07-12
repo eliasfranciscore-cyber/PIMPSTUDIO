@@ -3,11 +3,16 @@ import { useNavigate } from 'react-router-dom'
 import { Brandmark, Icon, Stat } from '../components/ui.jsx'
 import { ThemeProvider, ThemeToggle, useTheme } from '../components/theme.jsx'
 import MobileDock from '../components/MobileDock.jsx'
-import { BARBERS, CLIENTS, EXPENSES, SERVICES, TODAY_BOOKINGS, barberById, CLP, CLPk, isAdminUser } from '../data.js'
-import { mergeBookings, readLocalBookings } from '../bookingsStore.js'
+import { BARBERS, CLIENTS, EXPENSES, SERVICES, TODAY_BOOKINGS, barberById, CLP, CLPk, isAdminUser, cleanPhone } from '../data.js'
+import { addLocalBooking, mergeBookings, readLocalBookings } from '../bookingsStore.js'
 import { mergeEnrollments } from '../enrollmentsStore.js'
 import BookingsInbox from '../components/BookingsInbox.jsx'
 import DashboardResumen from '../components/DashboardResumen.jsx'
+import NewBookingModal from '../components/NewBookingModal.jsx'
+import GlobalSearch from '../components/GlobalSearch.jsx'
+import NewClientModal from '../components/NewClientModal.jsx'
+import ExpensesModule, { EXPENSE_CATEGORIES, CATEGORY_META } from '../components/ExpensesModule.jsx'
+import { KpiTile, AnimatedRing } from '../components/DashKit.jsx'
 import ClientModal from '../components/ClientModal.jsx'
 import BarberModal from '../components/BarberModal.jsx'
 import {
@@ -114,10 +119,14 @@ export default function Dashboard() {
   const [services, setServices] = useState(SERVICES.map((item) => ({ ...item, active: true })))
   const [expenses, setExpenses] = useState(EXPENSES)
   const [serviceDraft, setServiceDraft] = useState({ name: "", price: "", min: 60, cat: "general", desc: "", tne: false })
-  const [expenseDraft, setExpenseDraft] = useState({ date: new Date().toISOString().slice(0, 10), category: "Insumos", detail: "", amount: "" })
-  const [expenseOpen, setExpenseOpen] = useState(false)
+  const [expenseBudgets, setExpenseBudgets] = useState(() => { try { return JSON.parse(localStorage.getItem("ps_expense_budgets") || "{}") } catch { return {} } })
+  useEffect(() => { try { localStorage.setItem("ps_expense_budgets", JSON.stringify(expenseBudgets)) } catch {} }, [expenseBudgets])
   const [serviceOpen, setServiceOpen] = useState(false)
+  const [newBookingOpen, setNewBookingOpen] = useState(false)
+  const [newClientOpen, setNewClientOpen] = useState(false)
+  const [inboxFocus, setInboxFocus] = useState(null)
   const [editSvcId, setEditSvcId] = useState(null)
+  const [deleteSvc, setDeleteSvc] = useState(null)
   const [barberDraft, setBarberDraft] = useState({ name: "", code: "", role: "Barbero", tier: "general", pin: "1234", canViewFinance: false, canManageTeam: false, canEditServices: false, canManageBlocks: true })
   // Preferencias de navegación (persisten por dispositivo): qué módulos se ven y
   // qué 4 atajos van en el dock. Se aplican al nav/dock reales.
@@ -350,14 +359,32 @@ export default function Dashboard() {
     if (!payload.id) setServiceDraft({ name: "", price: "", min: 60, cat: "general", desc: "", tne: false })
   }
 
-  const saveExpense = async () => {
-    if (!expenseDraft.detail || !expenseDraft.amount) return
-    const payload = { ...expenseDraft, amount: Number(expenseDraft.amount), owner: barber?.name || "Brunetti" }
+  // Borra un servicio (optimista con revert). La API materializa nombre/precio
+  // en las reservas históricas antes de borrar, así que el historial se conserva.
+  const deleteService = async (service) => {
+    setEditSvcId(null)
+    setServices((items) => items.filter((item) => item.id !== service.id))
+    const res = await fetch(`/api/services?id=${service.id}`, { method: "DELETE", headers: authHeaders() }).catch(() => null)
+    if (res && !res.ok) setServices((items) => [service, ...items].sort((a, b) => a.id - b.id))
+  }
+
+  const createExpense = async (draft) => {
+    const payload = { ...draft, amount: Number(draft.amount), owner: barber?.name || "Brunetti" }
     const res = await fetch("/api/expenses", { method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload) }).catch(() => null)
     const json = res ? await res.json().catch(() => ({})) : {}
     setExpenses((items) => [json.expense || { ...payload, id: Date.now() }, ...items])
-    setExpenseDraft({ date: new Date().toISOString().slice(0, 10), category: "Insumos", detail: "", amount: "" })
-    setExpenseOpen(false)
+  }
+  const updateExpense = async (expense) => {
+    const prev = expenses
+    setExpenses((items) => items.map((item) => item.id === expense.id ? { ...item, ...expense } : item))
+    const res = await fetch("/api/expenses", { method: "PATCH", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(expense) }).catch(() => null)
+    if (res && !res.ok) setExpenses(prev)
+  }
+  const deleteExpense = async (expense) => {
+    const prev = expenses
+    setExpenses((items) => items.filter((item) => item.id !== expense.id))
+    const res = await fetch(`/api/expenses?id=${expense.id}`, { method: "DELETE", headers: authHeaders() }).catch(() => null)
+    if (res && !res.ok) setExpenses(prev)
   }
 
   const saveBarber = async (payload) => {
@@ -395,6 +422,28 @@ export default function Dashboard() {
     a.download = `brunetti-${name}-${new Date().toISOString().slice(0, 10)}.csv`
     document.body.appendChild(a); a.click(); a.remove()
     setTimeout(() => URL.revokeObjectURL(url), 1000)
+  }
+
+  // Reserva manual desde el panel (modo interno del POST: sin límite de 7
+  // días, servicio/precio personalizado). Espeja el patrón del flujo público:
+  // si la API responde error real (409, validación) se muestra en el modal;
+  // si está offline, se guarda localmente igual (demo/dev).
+  const createBooking = async (draft) => {
+    const res = await fetch("/api/bookings", {
+      method: "POST",
+      headers: authHeaders({ "Content-Type": "application/json" }),
+      body: JSON.stringify(draft),
+    }).catch(() => null)
+    if (res) {
+      const json = await res.json().catch(() => ({}))
+      if (!res.ok) return { ok: false, error: json.error || "No se pudo crear la reserva" }
+      addLocalBooking({ ...draft, id: json.booking?.id })
+    } else {
+      addLocalBooking(draft)
+    }
+    setBookings((current) => mergeBookings(current))
+    loadAgenda()
+    return { ok: true }
   }
 
   const updateBookingStatus = async (booking, status) => {
@@ -442,6 +491,28 @@ export default function Dashboard() {
     setSelectedClient(null)
     setClientEditing(false)
     fetch(`/api/clients?phone=${client.phone}`, { method: "DELETE", headers: authHeaders() }).catch(() => {})
+  }
+  // Alta manual (upsert por teléfono). Prepende el cliente devuelto; si ya
+  // existía lo actualiza en su lugar. Fallback offline con registro local.
+  const upsertClientLocal = (client) => setClients((list) => {
+    const idx = list.findIndex((c) => cleanPhone(c.phone) === cleanPhone(client.phone))
+    if (idx >= 0) { const copy = [...list]; copy[idx] = { ...copy[idx], ...client }; return copy }
+    return [client, ...list]
+  })
+  const createClient = async (draft) => {
+    let saved = null
+    try {
+      const res = await fetch("/api/clients", { method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(draft) })
+      if (res.headers.get("content-type")?.includes("application/json")) {
+        const json = await res.json()
+        if (!res.ok || json.ok === false) throw new Error(json.error || "No se pudo guardar el cliente.")
+        saved = json.client
+      }
+    } catch (err) {
+      if (err instanceof TypeError) saved = null // red caída → fallback offline
+      else throw err                             // error de validación real → propaga al modal
+    }
+    upsertClientLocal(saved || { ...draft, visits: 0, totalSpent: 0, status: "nuevo" })
   }
 
   // Actualiza en el momento (optimista) y solo revierte si la API falla.
@@ -582,6 +653,7 @@ export default function Dashboard() {
       dockItems={dockItems}
       barber={barber}
       onLogout={logout}
+      onNewBooking={() => setNewBookingOpen(true)}
     >
       <main className="dashboard-main">
         <DashboardTopbar
@@ -594,11 +666,19 @@ export default function Dashboard() {
           notifCount={visibleBookings.filter((b) => b.status === 'pendiente').length}
           onRefresh={refreshAll}
           refreshing={refreshing}
+          search={(
+            <GlobalSearch
+              clients={clients}
+              bookings={visibleBookings}
+              onPickClient={(c) => { setTab('clientes'); openClient(c) }}
+              onPickBooking={(b) => { setTab('reservas'); setInboxFocus({ day: b.date, ts: Date.now() }) }}
+            />
+          )}
         />
 
         {/* RESUMEN */}
         {tab === "resumen" && (
-          <DashboardResumen bookings={bookings} barbers={barbers} expenses={expenses} clients={clients} todaySlots={availability[isoDate(new Date())] || []} />
+          <DashboardResumen bookings={bookings} barbers={barbers} expenses={expenses} clients={clients} todaySlots={availability[isoDate(new Date())] || []} onNewBooking={() => setNewBookingOpen(true)} />
         )}
 
         {/* AGENDA */}
@@ -610,6 +690,43 @@ export default function Dashboard() {
                 <button type="button" className="btn btn-dark btn-sm" onClick={() => setAgendaError("")}>Cerrar</button>
               </div>
             )}
+            {/* HERO: ocupación del día + KPIs de la semana + próximo slot libre. */}
+            {(() => {
+              const daySlots = availability[agendaDayKey] || []
+              const bookedDay = daySlots.filter((s) => s.state === "booked").length
+              const freeDay = daySlots.filter((s) => s.state === "free").length
+              const dayOcc = (bookedDay + freeDay) ? Math.round((bookedDay / (bookedDay + freeDay)) * 100) : 0
+              const todayIso = isoDate(new Date())
+              const now = new Date()
+              const nowHM = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`
+              const nextFreeToday = (availability[todayIso] || []).filter((s) => s.state === "free").map((s) => s.slot).sort().find((slot) => slot >= nowHM)
+              const dayLabel = weekDays.find((d) => d.key === agendaDayKey)?.label || agendaDayKey
+              const weekSuffix = weekOffset === 0 ? "esta semana" : "próx. semana"
+              return (
+                <div className="dk-hero">
+                  <div className="dk-hero-grid cols-5 dk-stagger">
+                    <div style={{ display: "flex", alignItems: "center", gap: ".9rem" }}>
+                      <AnimatedRing pct={dayOcc} size={80} label="del día" />
+                      <div>
+                        <h2 className="dk-hero-title">Agenda de Brunetti</h2>
+                        <span className="dk-hero-sub">{dayLabel} · {bookedDay}/{bookedDay + freeDay} horas reservadas</span>
+                        {nextFreeToday && (
+                          <div className="dk-hero-sub" style={{ marginTop: ".25rem", color: "var(--gold-lt)" }}>
+                            <Icon name="clock" size={11} /> Próximo libre hoy: <b>{nextFreeToday}</b>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <KpiTile icon="calendar" label={`Reservados · ${weekSuffix}`} value={weekStats.booked} />
+                    <KpiTile icon="clock" label={`Disponibles · ${weekSuffix}`} value={weekStats.free} suffix="h" color="var(--green, #6fbf86)" />
+                    <KpiTile icon="trend" label={`Bloqueados · ${weekSuffix}`} value={weekStats.blocked} color="var(--red, #d99a8f)" />
+                    <button className="btn btn-gold" style={{ display: "inline-flex", alignItems: "center", gap: ".5rem", alignSelf: "center" }} onClick={() => setNewBookingOpen(true)}>
+                      <Icon name="calendar" size={16} /> Nueva reserva
+                    </button>
+                  </div>
+                </div>
+              )
+            })()}
             <div className="agenda-controls">
               {/* Selector de barbero retirado: la agenda es exclusiva de Brunetti.
                   (Se conserva agendaBarber fijado a Bruno para la API de disponibilidad.) */}
@@ -699,11 +816,6 @@ export default function Dashboard() {
                 )
               })}
             </Panel>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3,minmax(0,1fr))", gap: ".6rem" }}>
-              <Stat icon="calendar" label={`Reservados · ${weekOffset === 0 ? "esta semana" : "próx. semana"}`} value={weekStats.booked} />
-              <Stat icon="clock"    label={`Disponibles · ${weekOffset === 0 ? "esta semana" : "próx. semana"}`} value={weekStats.free} suffix="h" />
-              <Stat icon="trend"    label={`Bloqueados · ${weekOffset === 0 ? "esta semana" : "próx. semana"}`} value={weekStats.blocked} accent />
-            </div>
           </div>
         )}
 
@@ -714,9 +826,12 @@ export default function Dashboard() {
             barbers={barbers}
             barber={barber}
             admin={admin}
+            slotsPerDay={AGENDA_SLOTS.length}
             onStatus={(bk, status) => updateBookingStatus(bk, status)}
             onDelete={deleteBooking}
             onReschedule={() => setTab("agenda")}
+            onNewBooking={() => setNewBookingOpen(true)}
+            focus={inboxFocus}
           />
         )}
 
@@ -771,6 +886,9 @@ export default function Dashboard() {
         {/* CLIENTES */}
         {tab === "clientes" && (
           <div className="animate-in" style={{ display: "grid", gap: "1.1rem" }}>
+            <button className="btn btn-gold btn-block" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: ".5rem" }} onClick={() => setNewClientOpen(true)}>
+              <Icon name="user" size={16} /> Nuevo cliente
+            </button>
             <div className="client-filter-grid">
               <button type="button" className={`client-filter-card ${clientFilter === "active" ? "is-active" : ""}`} onClick={() => setClientFilter((f) => f === "active" ? "all" : "active")}>
                 <Icon name="user" size={18} />
@@ -859,6 +977,9 @@ export default function Dashboard() {
                             <button className={svc.active === false ? "chip" : "chip chip-gold"} onClick={() => saveService({ ...svc, active: svc.active === false })}>{svc.active === false ? "Oculto" : "Activo"}</button>
                             <button className="btn btn-gold btn-sm" style={{ flex: 1 }} onClick={() => { saveService(svc); setEditSvcId(null) }}><Icon name="check" size={14} /> Guardar</button>
                             <button className="btn btn-dark btn-sm" onClick={() => setEditSvcId(null)}><Icon name="close" size={14} /></button>
+                            {admin && (
+                              <button className="btn btn-sm psn-res-delete" title="Eliminar servicio" onClick={() => setDeleteSvc(svc)}><Icon name="close" size={14} /></button>
+                            )}
                           </div>
                         </div>
                       )}
@@ -872,49 +993,45 @@ export default function Dashboard() {
 
         {/* GASTOS */}
         {tab === "gastos" && admin && (
-          <div className="animate-in" style={{ display: "grid", gap: "1.1rem" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: "1rem" }}>
-              <Stat icon="wallet" label="Gastos mes" value={CLP(expenses.reduce((sum, item) => sum + Number(item.amount || 0), 0))} accent />
-              <Stat icon="chart" label="Registros" value={expenses.length} />
-            </div>
-            <button className="btn btn-gold btn-block" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: ".5rem" }} onClick={() => setExpenseOpen(true)}>
-              <Icon name="wallet" size={16} /> Ingresar gasto
-            </button>
-            <Panel title="Ultimos gastos">
-              <div style={{ display: "grid", gap: ".55rem" }}>
-                {expenses.map((expense) => (
-                  <div key={expense.id} className="admin-row">
-                    <div><strong>{expense.category}</strong><span>{expense.detail}</span></div>
-                    <div><strong>{CLP(expense.amount)}</strong><span>{expense.date}</span></div>
-                    <span className="chip">{expense.owner}</span>
-                  </div>
-                ))}
-              </div>
-            </Panel>
-          </div>
+          <ExpensesModule
+            expenses={expenses}
+            budgets={expenseBudgets}
+            onCreate={createExpense}
+            onUpdate={updateExpense}
+            onDelete={deleteExpense}
+          />
         )}
 
-        {/* MODAL INGRESAR GASTO */}
-        {expenseOpen && (
-          <div style={{ position: "fixed", inset: 0, zIndex: 1200, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }} onClick={() => setExpenseOpen(false)}>
-            <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)" }} />
-            <div className="card" style={{ position: "relative", width: "100%", maxWidth: 420, padding: "1.6rem", display: "grid", gap: "1.1rem", zIndex: 1 }} onClick={(e) => e.stopPropagation()}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <h3 className="font-display" style={{ margin: 0, fontSize: "1.1rem" }}>Ingresar gasto</h3>
-                <button style={{ background: "none", border: 0, color: "var(--muted)", cursor: "pointer", padding: ".3rem" }} onClick={() => setExpenseOpen(false)} aria-label="Cerrar">
-                  <Icon name="close" size={18} />
-                </button>
-              </div>
-              <div className="admin-form-grid">
-                <input className="input" type="date" value={expenseDraft.date} onChange={(e) => setExpenseDraft({ ...expenseDraft, date: e.target.value })} />
-                <select className="input" value={expenseDraft.category} onChange={(e) => setExpenseDraft({ ...expenseDraft, category: e.target.value })}>
-                  {["Insumos", "Equipamiento", "Arriendo", "Marketing", "Personal", "Servicios", "Otros"].map((c) => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                </select>
-                <input className="input" placeholder="Detalle del gasto" value={expenseDraft.detail} onChange={(e) => setExpenseDraft({ ...expenseDraft, detail: e.target.value })} />
-                <input className="input" placeholder="Monto" inputMode="numeric" value={expenseDraft.amount} onChange={(e) => setExpenseDraft({ ...expenseDraft, amount: e.target.value.replace(/\D/g, "") })} />
-                <button className="btn btn-gold btn-block" onClick={saveExpense}><Icon name="check" size={15} /> Registrar</button>
+        {/* MODAL NUEVA RESERVA (accesible desde cualquier pestaña: hero, dock, inbox) */}
+        <NewBookingModal
+          open={newBookingOpen}
+          onClose={() => setNewBookingOpen(false)}
+          clients={clients}
+          services={services}
+          defaultBarberId={agendaBarber || 6}
+          agendaSlots={AGENDA_SLOTS}
+          onCreate={createBooking}
+        />
+
+        {/* MODAL NUEVO CLIENTE */}
+        <NewClientModal
+          open={newClientOpen}
+          onClose={() => setNewClientOpen(false)}
+          clients={clients}
+          onCreate={createClient}
+        />
+
+        {/* CONFIRMAR ELIMINAR SERVICIO */}
+        {deleteSvc && (
+          <div className="psn-modal psn-modal-top" role="alertdialog" aria-modal="true">
+            <button className="psn-scrim" aria-label="Cerrar" onClick={() => setDeleteSvc(null)} />
+            <div className="psn-modal-card psn-confirm">
+              <span className="psn-confirm-ic"><Icon name="close" size={22} /></span>
+              <h3 className="font-display">¿Eliminar “{deleteSvc.name}”?</h3>
+              <p>Las reservas existentes conservarán su nombre y precio. Esta acción no se puede deshacer.</p>
+              <div className="psn-confirm-actions">
+                <button className="btn btn-ghost btn-block" onClick={() => setDeleteSvc(null)}>Volver</button>
+                <button className="btn btn-danger btn-block" onClick={() => { deleteService(deleteSvc); setDeleteSvc(null) }}>Sí, eliminar</button>
               </div>
             </div>
           </div>
@@ -968,6 +1085,8 @@ export default function Dashboard() {
             setNavSettings={setNavSettings}
             dockShortcuts={dockShortcuts}
             setDockShortcuts={setDockShortcuts}
+            expenseBudgets={expenseBudgets}
+            setExpenseBudgets={setExpenseBudgets}
           />
         )}
 
@@ -1013,6 +1132,7 @@ const CFG_SECTIONS = [
   { id: "notificaciones",icon: "bell",     label: "Notificaciones" },
   { id: "whatsapp",      icon: "whatsapp", label: "WhatsApp" },
   { id: "negocio",       icon: "scissors", label: "Negocio" },
+  { id: "presupuestos",  icon: "wallet",   label: "Presupuestos" },
   { id: "equipo",        icon: "key",      label: "Equipo y permisos" },
   { id: "datos",         icon: "wallet",   label: "Datos y respaldos" },
   { id: "acerca",        icon: "spark",    label: "Acerca de" },
@@ -1228,10 +1348,13 @@ function isStrongPassword(pw) {
   return /^[A-Za-z0-9]{8,64}$/.test(pw) && /[A-Z]/.test(pw) && /[0-9]/.test(pw)
 }
 
-function ConfigPanel({ brunettiOnly, barber, barbers, admin, canManageTeam, barberDraft, setBarberDraft, saveBarber, updateBarberLocal, deleteBarber, onExport, onLogout, nav, navSettings, setNavSettings, dockShortcuts, setDockShortcuts }) {
+function ConfigPanel({ brunettiOnly, barber, barbers, admin, canManageTeam, barberDraft, setBarberDraft, saveBarber, updateBarberLocal, deleteBarber, onExport, onLogout, nav, navSettings, setNavSettings, dockShortcuts, setDockShortcuts, expenseBudgets = {}, setExpenseBudgets = () => {} }) {
   const [section, setSection] = useState(null)
   // En modo "solo Brunetti" se oculta la gestión de Equipo/barberos (código conservado).
-  const sections = brunettiOnly ? CFG_SECTIONS.filter((s) => s.id !== "equipo") : CFG_SECTIONS
+  // Presupuestos es exclusivo de admin (gestiona finanzas del negocio).
+  const sections = CFG_SECTIONS
+    .filter((s) => brunettiOnly ? s.id !== "equipo" : true)
+    .filter((s) => s.id !== "presupuestos" || admin)
   const [teamModal, setTeamModal] = useState(null) // null=cerrado; {barber:null}=crear; {barber:obj}=editar
   const [biz, setBiz] = useState(() => {
     try { return { name: "Brunetti Barber Studio", address: "Maipú, Santiago", phone: "+56 9 1234 5678", waPhone: "+56 9 1234 5678", ...JSON.parse(localStorage.getItem("ps_biz") || "{}") } } catch { return { name: "Brunetti Barber Studio", address: "Maipú, Santiago", phone: "+56 9 1234 5678", waPhone: "+56 9 1234 5678" } }
@@ -1553,6 +1676,39 @@ function ConfigPanel({ brunettiOnly, barber, barbers, admin, canManageTeam, barb
           </div>
         )}
 
+        {/* PRESUPUESTOS por categoría (se guarda en este dispositivo) */}
+        {section === "presupuestos" && (
+          <div style={{ display: "grid", gap: "1.4rem" }}>
+            <div className="cfg-card">
+              <p className="cfg-card-head">Presupuesto mensual por categoría</p>
+              <p style={{ fontSize: ".78rem", color: "var(--muted)", margin: "0 0 .8rem" }}>
+                Define un tope por categoría para activar el semáforo de gastos. Se guarda en este dispositivo.
+              </p>
+              <div style={{ display: "grid", gap: ".6rem" }}>
+                {EXPENSE_CATEGORIES.map((cat) => {
+                  const m = CATEGORY_META[cat]
+                  return (
+                    <div key={cat} style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
+                      <span className="dk-badge" style={{ "--c": m.color, minWidth: 130 }}><Icon name={m.icon} size={12} /> {cat}</span>
+                      <input
+                        className="input"
+                        inputMode="numeric"
+                        placeholder="Sin presupuesto"
+                        style={{ flex: 1 }}
+                        value={expenseBudgets[cat] ? String(expenseBudgets[cat]) : ""}
+                        onChange={(e) => {
+                          const v = e.target.value.replace(/\D/g, "")
+                          setExpenseBudgets((b) => { const next = { ...b }; if (v) next[cat] = Number(v); else delete next[cat]; return next })
+                        }}
+                      />
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* EQUIPO */}
         {section === "equipo" && (
           <div style={{ display: "grid", gap: "1.4rem" }}>
@@ -1663,7 +1819,7 @@ function ConfigPanel({ brunettiOnly, barber, barbers, admin, canManageTeam, barb
 /* ============================================================
    Shell + Topbar — UI envoltura responsive
    ============================================================ */
-function DashboardShell({ tab, setTab, nav, dockItems, barber, onLogout, children }) {
+function DashboardShell({ tab, setTab, nav, dockItems, barber, onLogout, onNewBooking, children }) {
   return (
     <div className="dashboard-shell">
       <aside className="dashboard-sidebar">
@@ -1686,12 +1842,12 @@ function DashboardShell({ tab, setTab, nav, dockItems, barber, onLogout, childre
         </div>
       </aside>
       {children}
-      <MobileDock tab={tab} setTab={setTab} nav={nav} shortcuts={dockItems} />
+      <MobileDock tab={tab} setTab={setTab} nav={nav} shortcuts={dockItems} onNewBooking={onNewBooking} />
     </div>
   )
 }
 
-function DashboardTopbar({ title, barber, onLogout, tab, setTab, nav, notifCount = 0, onRefresh, refreshing = false }) {
+function DashboardTopbar({ title, barber, onLogout, tab, setTab, nav, notifCount = 0, onRefresh, refreshing = false, search = null }) {
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
   useEffect(() => {
@@ -1722,6 +1878,7 @@ function DashboardTopbar({ title, barber, onLogout, tab, setTab, nav, notifCount
         </div>
       </div>
       <div className="dashboard-topbar-actions">
+        {search}
         <ThemeToggle />
         <button
           type="button"

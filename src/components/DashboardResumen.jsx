@@ -1,14 +1,15 @@
 import React, { useMemo } from 'react'
 import { Icon } from './IconsExtra.jsx'
 import { CLP, CLPk, barberById } from '../data.js'
+import { CountUp, KpiTile, Sparkline, Donut, AnimatedRing } from './DashKit.jsx'
 
 /**
  * DashboardResumen — reemplaza el bloque `{tab === "resumen"}` del Dashboard.
  *
- * Todas las métricas se calculan en vivo desde los datos reales del negocio
- * (sin fallback a cifras de ejemplo): ingresos del día, reservas, ticket
- * promedio, ocupación de la agenda de hoy, gastos del mes, barberos activos,
- * clientes nuevos/recurrentes, ranking, gastos por categoría y horas pico.
+ * Rediseño DashKit: hero interactivo (ingresos con count-up, próxima cita,
+ * anillo de ocupación, sparkline de 7 días y botón de reserva manual) + fila
+ * de KPIs animados + bento re-skin. Todas las métricas se calculan en vivo
+ * desde los datos reales del negocio (sin fallback a cifras de ejemplo).
  *
  * Props:
  *  bookings:   reservas (para los totales del día, el ranking y el histórico)
@@ -16,30 +17,12 @@ import { CLP, CLPk, barberById } from '../data.js'
  *  expenses:   gastos (para el gráfico por categoría del mes en curso)
  *  clients:    clientes (para calcular retención/recurrencia)
  *  todaySlots: horarios de la agenda de hoy (booked/free/blocked) para la ocupación real
+ *  onNewBooking: abre el modal de reserva manual
  */
 
 const STATUS_DOT = { confirmada: 'var(--green, #6fbf86)', pendiente: 'var(--gold)', 'en curso': '#7ea8ff', completada: 'var(--muted-2)', cancelada: 'var(--red, #d99a8f)' }
 const CAT_COLORS = ['#c9a14e', '#9c7a32', '#e6cd90', '#8d8a84', '#5a5852']
 const LOGO = '/assets/pimp-studio-logo.jpg'
-
-function Kpi({ icon, label, value, suffix, delta, accent }) {
-  const up = delta >= 0
-  return (
-    <div className={`psn-kpi ${accent ? 'accent' : ''}`}>
-      <div className="psn-kpi-top">
-        <span className="psn-kpi-label">{label}</span>
-        <span className="psn-kpi-ic"><Icon name={icon} size={16} /></span>
-      </div>
-      <div className="psn-kpi-val">{value}{suffix && <small>{suffix}</small>}</div>
-      {delta != null && (
-        <div className={`psn-kpi-delta ${up ? 'up' : 'down'}`}>
-          <Icon name="trend" size={13} style={{ transform: up ? 'none' : 'scaleY(-1)' }} />
-          {up ? '+' : ''}{delta}% <span>vs. ant.</span>
-        </div>
-      )}
-    </div>
-  )
-}
 
 function Bars({ data }) {
   const max = Math.max(1, ...data.map((d) => d.v))
@@ -62,32 +45,6 @@ function getSvcIconByName(name) {
   if (n.includes('quim') || n.includes('color') || n.includes('platin')) return 'spark'
   if (n.includes('fade') || n.includes('degra')) return 'trend'
   return 'scissors'
-}
-
-function OccupancyRing({ pct = 0 }) {
-  const r = 38, circ = 2 * Math.PI * r
-  const [loaded, setLoaded] = React.useState(false)
-  React.useEffect(() => { const t = setTimeout(() => setLoaded(true), 220); return () => clearTimeout(t) }, [])
-  const dash = (Math.min(pct, 100) / 100) * circ
-  return (
-    <svg width="96" height="96" viewBox="0 0 96 96" style={{ overflow: 'visible', flexShrink: 0 }}>
-      <defs>
-        <linearGradient id="rGrad" x1="0%" y1="100%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#9a7b34" />
-          <stop offset="100%" stopColor="#e9d7a0" />
-        </linearGradient>
-      </defs>
-      <circle cx="48" cy="48" r={r} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="10" />
-      <circle cx="48" cy="48" r={r} fill="none"
-        stroke="url(#rGrad)" strokeWidth="10" strokeLinecap="round"
-        strokeDasharray={`${loaded ? dash : 0} ${circ}`}
-        transform="rotate(-90 48 48)"
-        style={{ transition: 'stroke-dasharray 1.4s cubic-bezier(.2,.7,.3,1)' }}
-      />
-      <text x="48" y="45" textAnchor="middle" fontSize="17" fontWeight="700" fontFamily="var(--font-display)" fill="var(--gold-lt)">{pct}%</text>
-      <text x="48" y="59" textAnchor="middle" fontSize="8.5" fill="var(--muted)">ocupación</text>
-    </svg>
-  )
 }
 
 function PeakHours({ data = [], bookings = [] }) {
@@ -155,7 +112,7 @@ function localDateKey(date) {
   return `${y}-${m}-${d}`
 }
 
-export default function DashboardResumen({ bookings = [], barbers = [], expenses = [], clients = [], todaySlots = [] }) {
+export default function DashboardResumen({ bookings = [], barbers = [], expenses = [], clients = [], todaySlots = [], onNewBooking }) {
   const todayKey = localDateKey(new Date())
   const monthKey = todayKey.slice(0, 7)
   const today = useMemo(() => bookings.filter((b) => !b.date || b.date === todayKey).sort((a, b) => String(a.time).localeCompare(String(b.time))), [bookings, todayKey])
@@ -185,11 +142,6 @@ export default function DashboardResumen({ bookings = [], barbers = [], expenses
     return grouped.map((c, i) => ({ ...c, color: CAT_COLORS[i % CAT_COLORS.length] }))
   }, [expenses, monthKey])
   const expTotal = expenseCats.reduce((s, c) => s + c.amount, 0)
-  let acc = 0
-  const stops = expenseCats.map((c) => {
-    const start = (acc / (expTotal || 1)) * 360; acc += c.amount; const end = (acc / (expTotal || 1)) * 360
-    return `${c.color} ${start}deg ${end}deg`
-  }).join(', ')
 
   // Ingresos de los últimos 7 días con reservas (en vez de un gráfico fijo).
   const DOW = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
@@ -226,27 +178,87 @@ export default function DashboardResumen({ bookings = [], barbers = [], expenses
     return [...todaysPhones].filter((p) => !seenBefore.has(p)).length
   }, [bookings, dayValid, todayKey])
 
+  // Próxima cita de hoy: la primera activa cuya hora aún no pasa.
+  const now = new Date()
+  const nowMin = now.getHours() * 60 + now.getMinutes()
+  const nextAppt = useMemo(() => {
+    return today
+      .filter((b) => b.status !== 'cancelada' && b.status !== 'completada')
+      .find((b) => {
+        const [h, m] = String(b.time).split(':').map(Number)
+        return (h * 60 + (m || 0)) >= nowMin
+      }) || null
+  }, [today, nowMin])
+  const nextEta = (() => {
+    if (!nextAppt) return ''
+    const [h, m] = String(nextAppt.time).split(':').map(Number)
+    const diff = (h * 60 + (m || 0)) - nowMin
+    if (diff <= 0) return 'ahora'
+    return diff >= 60 ? `en ${Math.floor(diff / 60)}h ${diff % 60}m` : `en ${diff}m`
+  })()
+
   const dateLabel = new Date().toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' })
 
   return (
     <div className="animate-in psn-dash">
-      <div className="psn-mod-head">
-        <div>
-          <h2 className="font-display">Resumen del estudio</h2>
-          <p>Panel administrador · {dateLabel}</p>
+
+      {/* HERO */}
+      <div className="dk-hero">
+        <div className="dk-hero-grid dk-stagger">
+          <div>
+            <h2 className="dk-hero-title" style={{ fontSize: '1.35rem' }}>Resumen del estudio</h2>
+            <span className="dk-hero-sub" style={{ textTransform: 'capitalize' }}>{dateLabel}</span>
+            <div className="dk-hero-big" style={{ marginTop: '.55rem' }}>
+              <CountUp value={revenueDay} format={CLP} />
+              <small>hoy · <CountUp value={dayValid.length} /> reservas</small>
+            </div>
+            {revByDay.length > 1 && (
+              <div style={{ marginTop: '.4rem', display: 'flex', alignItems: 'center', gap: '.6rem' }}>
+                <Sparkline data={revByDay.map((d) => d.v)} width={150} height={36} />
+                <span className="dk-hero-sub">últimos 7 días</span>
+              </div>
+            )}
+          </div>
+
+          <div>
+            <span className="dk-kpi-lbl"><Icon name="clock" size={12} /> Próxima cita</span>
+            {nextAppt ? (
+              <div style={{ marginTop: '.3rem' }}>
+                <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', color: 'var(--gold-lt)', display: 'flex', alignItems: 'baseline', gap: '.5rem' }}>
+                  {nextAppt.time}
+                  {nextEta && <em style={{ fontStyle: 'normal', fontSize: '.66rem', color: '#9fd7af', background: 'rgba(111,191,134,.14)', padding: '.14rem .5rem', borderRadius: 99 }}>{nextEta}</em>}
+                </div>
+                <div className="dk-hero-sub" style={{ marginTop: '.15rem' }}>{nextAppt.client} · {nextAppt.service}</div>
+              </div>
+            ) : (
+              <div className="dk-hero-sub" style={{ marginTop: '.4rem', fontSize: '.9rem' }}>Sin próximas citas hoy</div>
+            )}
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '.7rem' }}>
+            <AnimatedRing pct={occupancy} size={84} />
+            <div>
+              <b style={{ fontFamily: 'var(--font-display)', fontSize: '1.05rem' }}>{bookedToday}/{bookedToday + freeToday}</b>
+              <div className="dk-hero-sub">horas de hoy</div>
+            </div>
+          </div>
+
+          {onNewBooking && (
+            <button className="btn btn-gold" style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', justifySelf: 'end', alignSelf: 'center' }} onClick={onNewBooking}>
+              <Icon name="calendar" size={16} /> Nueva reserva
+            </button>
+          )}
         </div>
-        <span className="chip chip-gold"><Icon name="spark" size={13} /> Datos de hoy</span>
       </div>
 
-      <div className="psn-kpis">
-        <Kpi icon="wallet"   label="Ingresos del día" value={CLP(revenueDay)} accent />
-        <Kpi icon="calendar" label="Reservas del día" value={dayValid.length} />
-        <Kpi icon="chart"    label="Ticket promedio"  value={CLP(avgTicket)} />
-        <Kpi icon="trend"    label="Ocupación"        value={occupancy} suffix="%" />
-        <Kpi icon="wallet"   label="Gastos del mes"   value={CLP(expTotal)} />
-        <Kpi icon="users"    label="Barberos activos" value={`${activeBarbers.length}`} suffix={`/${barbers.length}`} />
-        <Kpi icon="user"     label="Clientes nuevos"  value={newClients} accent />
-        <Kpi icon="spark"    label="Clientes recurrentes" value={retention} suffix="%" />
+      {/* KPIs */}
+      <div className="psn-kpis dk-stagger" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))' }}>
+        <KpiTile icon="chart"  label="Ticket promedio"      value={avgTicket} format={CLP} />
+        <KpiTile icon="wallet" label="Gastos del mes"       value={expTotal} format={CLP} color="var(--red, #d99a8f)" />
+        <KpiTile icon="trend"  label="Margen neto"          value={netMarginPct} suffix="%" color="var(--green, #6fbf86)" />
+        <KpiTile icon="users"  label="Barberos activos"     value={activeBarbers.length} suffix={`/${barbers.length}`} color="#7ea8ff" />
+        <KpiTile icon="user"   label="Clientes nuevos"      value={newClients} />
+        <KpiTile icon="spark"  label="Clientes recurrentes" value={retention} suffix="%" color="var(--gold-lt)" />
       </div>
 
       <div className="psn-bento">
@@ -301,13 +313,16 @@ export default function DashboardResumen({ bookings = [], barbers = [], expenses
         <div className="card psn-panel span-4">
           <div className="psn-panel-head"><h3 className="font-display">Gastos del mes</h3><span className="chip">{CLP(expTotal)}</span></div>
           <div className="psn-donut-wrap">
-            <div className="psn-donut" style={{ background: `conic-gradient(${stops || 'var(--muted-2) 0deg 360deg'})` }}>
-              <div className="psn-donut-c"><b>{CLPk(expTotal)}</b><span>total</span></div>
-            </div>
+            <Donut
+              items={expenseCats.map((c) => ({ label: c.name, value: c.amount, color: c.color }))}
+              size={120} thickness={14}
+              centerLabel={CLPk(expTotal)} centerSub="total"
+            />
             <div className="psn-donut-legend">
               {expenseCats.map((c) => (
                 <div key={c.name} className="row"><span className="dot" style={{ background: c.color }} />{c.name}<span>{CLP(c.amount)}</span></div>
               ))}
+              {!expenseCats.length && <div style={{ color: 'var(--muted)', fontSize: '.8rem' }}>Sin gastos este mes.</div>}
             </div>
           </div>
         </div>
@@ -315,15 +330,15 @@ export default function DashboardResumen({ bookings = [], barbers = [], expenses
         <div className="card psn-panel span-5">
           <div className="psn-panel-head"><h3 className="font-display">Ocupación</h3><span className="chip">{occupancy}% hoy</span></div>
           <div className="psn-ring-wrap">
-            <OccupancyRing pct={occupancy} />
+            <AnimatedRing pct={occupancy} size={96} />
             <div className="psn-ring-stats">
               <div className="psn-ring-stat">
                 <div className="lbl">Retención</div>
-                <div className="val">{retention}%</div>
+                <div className="val"><CountUp value={retention} />%</div>
               </div>
               <div className="psn-ring-stat">
                 <div className="lbl">Margen neto</div>
-                <div className="val">{netMarginPct}%</div>
+                <div className="val"><CountUp value={netMarginPct} />%</div>
               </div>
             </div>
           </div>

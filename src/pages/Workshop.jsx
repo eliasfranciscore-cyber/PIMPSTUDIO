@@ -8,6 +8,7 @@ import SiteNav from '../components/SiteNav.jsx'
 import { addLocalEnrollment } from '../enrollmentsStore.js'
 import { Lamp } from '../components/ui/lamp.jsx'
 import { EditableText } from '../components/edit/EditableText.jsx'
+import { Editable } from '../components/edit/Editable.jsx'
 import WKC from '../data/content/workshop.json'
 import '../styles/workshop.css'
 
@@ -68,12 +69,17 @@ function Reveal({ children, className = "", style, as = "div" }) {
   );
 }
 
-/* Imagen B/N con fallback a placeholder si falla la carga */
-function Bw({ src, alt, label = "Foto", className = "", innerClass = "" }) {
+/* Imagen B/N con fallback a placeholder si falla la carga.
+   Con `editId` la imagen es editable (mover/redimensionar/reemplazar) desde el
+   editor visual; sin él, se renderiza plana como antes. */
+function Bw({ src, alt, label = "Foto", className = "", innerClass = "", editId }) {
   const [failed, setFailed] = useState(false);
+  const imgProps = { src, alt, loading: "lazy", onError: () => setFailed(true), className: innerClass };
   return (
     <div className={`wks-img ${className} ${failed ? "is-failed" : ""}`} data-label={label}>
-      {!failed && <img src={src} alt={alt} loading="lazy" onError={() => setFailed(true)} className={innerClass} />}
+      {!failed && (editId
+        ? <Editable as="img" editId={editId} {...imgProps} />
+        : <img {...imgProps} />)}
     </div>
   );
 }
@@ -196,13 +202,13 @@ function Hero({ onReserve }) {
   return (
     <section className="wks-hero" id="top">
       <div className={`wks-hero-media ${failed ? "is-failed" : ""}`}>
-        {!failed && <img src={WK.photos.hero} alt="Barbería premium" onError={() => setFailed(true)} />}
+        {!failed && <Editable as="img" editId="workshop:hero" src={WK.photos.hero} alt="Barbería premium" onError={() => setFailed(true)} />}
       </div>
       <div className="wks-hero-overlay" />
       <div className="wks-hero-inner">
         <div className="wks-container wks-hero-grid">
           <div>
-            <img className="wks-hero-logo" src="/assets/ascension-logo.webp" alt="ASCENSIÓN" />
+            <Editable as="img" editId="workshop:logo" className="wks-hero-logo" src="/assets/ascension-logo.webp" alt="ASCENSIÓN" />
             <div className="wks-hero-kicker">
               <span className="wks-chip"><Icon name="scissors" size={13} /> Edición barbería premium</span>
               <span className="wks-eyebrow"><EditableText file="workshop" path="meta.kicker">{WKC.meta.kicker}</EditableText></span>
@@ -261,7 +267,7 @@ function Transform() {
           {WK.transform.map((c, i) => (
             <Reveal key={c.n} className="wks-tcard" style={{ transitionDelay: `${i * 0.08}s` }}>
               <span className="wks-tcard-num">{c.n}</span>
-              <Bw src={WK.photos[c.photo]} alt={c.title} label={c.title} />
+              <Bw src={WK.photos[c.photo]} alt={c.title} label={c.title} editId={`workshop:card:${c.photo}`} />
               <div className="wks-tcard-body">
                 <h3><EditableText file="workshop" path={`transform.cards.${i}.title`} as="span">{WKC.transform.cards[i].title}</EditableText></h3>
                 <p><EditableText file="workshop" path={`transform.cards.${i}.body`} as="span">{WKC.transform.cards[i].body}</EditableText></p>
@@ -312,7 +318,7 @@ function FeatureRow({ data, contentKey, reversed }) {
       <div className="wks-container">
         <Reveal className={`wks-feature ${reversed ? "is-rev" : ""}`}>
           <div className="wks-feature-media">
-            <Bw src={WK.photos[data.photo]} alt={c.title} label={c.eyebrow} />
+            <Bw src={WK.photos[data.photo]} alt={c.title} label={c.eyebrow} editId={`workshop:feat:${data.photo}`} />
             <span className="wks-chip wks-feature-tag"><Icon name="bolt" size={12} /> En vivo</span>
           </div>
           <div className="wks-feature-body">
@@ -359,7 +365,7 @@ function Programa() {
           </div>
           <div className="wks-mod-panel" key={active}>
             <div className="wks-mod-panel-media wks-fade-key">
-              <Bw src={WK.photos[mod.photo]} alt={mod.title} label={mod.title} />
+              <Bw src={WK.photos[mod.photo]} alt={mod.title} label={mod.title} editId={`workshop:mod:${mod.photo}`} />
             </div>
             <div className="wks-mod-panel-body wks-fade-key">
               <span className="wks-eyebrow">{mod.n}</span>
@@ -455,7 +461,7 @@ function Pricing({ onReserve }) {
   return (
     <section className="wks-section wks-pricing" id="precio">
       <div className={`wks-pricing-bg ${failed ? "is-failed" : ""}`}>
-        {!failed && <img src={WK.photos.pricing} alt="" onError={() => setFailed(true)} />}
+        {!failed && <Editable as="img" editId="workshop:pricingBg" src={WK.photos.pricing} alt="" onError={() => setFailed(true)} />}
       </div>
       <div className="wks-container">
         <div className="wks-pricing-card" ref={ref}>

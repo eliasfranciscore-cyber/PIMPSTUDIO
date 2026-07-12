@@ -1,0 +1,24 @@
+{
+  "workshop:logo": {
+    "width": 321
+  },
+  "workshop:meta.title1": {
+    "fontSize": 120
+  },
+  "workshop:meta.title2": {
+    "fontSize": 117,
+    "offset": {
+      "x": 3,
+      "y": -60
+    }
+  },
+  "workshop:meta.subtitle": {
+    "color": "#ffffff"
+  },
+  "workshop:card:cobrar": {
+    "src": "/assets/uploads/f0d7f8b8-5e3b-496b-baf5-68db5326f6c5-jpg-mrgubb6k.jpg"
+  },
+  "workshop:card:marca": {
+    "src": "/assets/uploads/img-7119-jpg-mrgudg5i.jpg"
+  }
+}

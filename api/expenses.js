@@ -47,6 +47,31 @@ export default async function handler(req, res) {
       return res.json({ ok: true, expense })
     }
 
+    if (req.method === "PATCH") {
+      const { id, date, category, detail, amount } = req.body || {}
+      if (!Number(id)) return res.status(400).json({ ok: false, error: "id requerido" })
+      const amt = amount != null && amount !== "" ? Math.round(Number(amount)) : null
+      if (amt != null && (!Number.isFinite(amt) || amt <= 0)) return res.status(400).json({ ok: false, error: "Monto invalido" })
+      const [expense] = await sql`
+        UPDATE expenses SET
+          expense_date = COALESCE(${date ? String(date).slice(0, 10) : null}, expense_date),
+          category = COALESCE(${String(category || "").trim() || null}, category),
+          detail = COALESCE(${String(detail || "").trim() || null}, detail),
+          amount = COALESCE(${amt}, amount)
+        WHERE id = ${Number(id)}
+        RETURNING id, expense_date::text as date, category, detail, amount, owner
+      `
+      if (!expense) return res.status(404).json({ ok: false, error: "Gasto no encontrado" })
+      return res.json({ ok: true, expense })
+    }
+
+    if (req.method === "DELETE") {
+      const id = Number(req.query.id)
+      if (!id) return res.status(400).json({ ok: false, error: "id requerido" })
+      await sql`DELETE FROM expenses WHERE id = ${id}`
+      return res.json({ ok: true })
+    }
+
     return res.status(405).json({ ok: false, error: "Method not allowed" })
   } catch (err) {
     console.error("expenses error:", err)
@@ -58,6 +83,8 @@ export default async function handler(req, res) {
       if (payload.error) return res.status(400).json({ ok: false, error: payload.error })
       return res.json({ ok: true, expense: { id: Date.now(), ...payload } })
     }
+    if (req.method === "PATCH") return res.json({ ok: true, expense: req.body })
+    if (req.method === "DELETE") return res.json({ ok: true })
     return res.status(500).json({ ok: false, error: "No se pudo procesar gastos" })
   }
 }

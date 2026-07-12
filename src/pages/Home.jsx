@@ -6,6 +6,7 @@ import ModuleFooter from '../components/ModuleFooter.jsx'
 import { Lamp } from '../components/ui/lamp.jsx'
 import { CLP } from '../data.js'
 import { EditableText, EditContext } from '../components/edit/EditableText.jsx'
+import { Editable } from '../components/edit/Editable.jsx'
 import HERO from '../data/content/home-hero.json'
 import VISAGISMO from '../data/content/home-visagismo.json'
 import ESTILO_TEASER from '../data/content/home-estilo-teaser.json'
@@ -228,7 +229,7 @@ export default function Home() {
         {/* ============ HERO ============ */}
         <section id="hero" className="bhero">
           <div className="bhero-bgphoto" aria-hidden="true">
-            <img src="/assets/bruno-hero-bg.webp" alt="" fetchpriority="high" decoding="async" />
+            <Editable as="img" editId="home-hero:bg" src="/assets/bruno-hero-bg.webp" alt="" fetchpriority="high" decoding="async" />
           </div>
           <Lamp className="bru-lamp--hero" />
           <div className="bhero-grid">
@@ -256,7 +257,7 @@ export default function Home() {
             <div className="bhero-figwrap">
               <div className="bhero-figure bhero-figure--cutout" data-tilt>
                 <a className="bhero-fig-link" href="https://instagram.com/brunetticutz" target="_blank" rel="noopener noreferrer" aria-label="Ver Instagram de @brunetticutz">
-                  <img src="/assets/bruno-hero-cutout.webp" alt="Bruno Herrera, Brunetti — visagista" fetchpriority="high" decoding="async" />
+                  <Editable as="img" editId="home-hero:cutout" src="/assets/bruno-hero-cutout.webp" alt="Bruno Herrera, Brunetti — visagista" fetchpriority="high" decoding="async" />
                   <div className="fig-tag">
                     <span><EditableText file="home-hero" path="figHandle">{HERO.figHandle}</EditableText></span>
                   </div>
@@ -303,7 +304,7 @@ export default function Home() {
         <section className="bsection" id="estilo-teaser">
           <div className="bwrap">
             <div className="bteaser" data-reveal="scale">
-              <div className="bteaser-bg"><img src="/assets/estilo-teaser.jpg" alt="Asesoría de visagismo Brunetti" loading="lazy" decoding="async" /></div>
+              <div className="bteaser-bg"><Editable as="img" editId="home-estilo:teaserBg" src="/assets/estilo-teaser.jpg" alt="Asesoría de visagismo Brunetti" loading="lazy" decoding="async" /></div>
               <div className="bteaser-inner">
                 <p className="kicker"><EditableText file="home-estilo-teaser" path="kicker">{ESTILO_TEASER.kicker}</EditableText></p>
                 <h2><EditableText file="home-estilo-teaser" path="h2" as="span">{ESTILO_TEASER.h2}</EditableText></h2>
@@ -324,7 +325,7 @@ export default function Home() {
           <Lamp className="bru-lamp--sec" />
           <div className="bwrap babout">
             <figure className="babout-figure" data-reveal="left">
-              <img src="/assets/workshop-2026.jpg" alt="Bruno Herrera con su comunidad de barberos" loading="lazy" decoding="async" />
+              <Editable as="img" editId="home-sobre:figure" src="/assets/workshop-2026.jpg" alt="Bruno Herrera con su comunidad de barberos" loading="lazy" decoding="async" />
               <figcaption className="sig"><EditableText file="home-sobre" path="figCaption">{SOBRE.figCaption}</EditableText></figcaption>
             </figure>
             <div className="babout-body" data-reveal="right">
@@ -376,8 +377,8 @@ export default function Home() {
           </div>
           <div className="compare" data-reveal="scale">
             <div className="cmp-frame" id="compare-frame">
-              <img className="cmp-img cmp-after" src="/assets/compare-after.jpg" alt="Después del corte" loading="lazy" decoding="async" />
-              <img className="cmp-img cmp-before" src="/assets/compare-before.jpg" alt="Antes del corte" loading="lazy" decoding="async" />
+              <Editable as="img" editId="home:compareAfter" className="cmp-img cmp-after" src="/assets/compare-after.jpg" alt="Después del corte" loading="lazy" decoding="async" />
+              <Editable as="img" editId="home:compareBefore" className="cmp-img cmp-before" src="/assets/compare-before.jpg" alt="Antes del corte" loading="lazy" decoding="async" />
               <span className="cmp-tag before"><EditableText file="home-transformaciones" path="tagBefore">{TRANSFORMACIONES.tagBefore}</EditableText></span>
               <span className="cmp-tag after"><EditableText file="home-transformaciones" path="tagAfter">{TRANSFORMACIONES.tagAfter}</EditableText></span>
               <div className="cmp-divider" />
@@ -423,7 +424,7 @@ export default function Home() {
           <Lamp className="bru-lamp--sec" />
           <div className="bwrap">
             <div className="bteaser" data-reveal="scale">
-              <div className="bteaser-bg"><img src="/assets/workshop-2026.jpg" alt="Workshop Brunetti con su comunidad de barberos" loading="lazy" decoding="async" /></div>
+              <div className="bteaser-bg"><Editable as="img" editId="home-cursos:teaserBg" src="/assets/workshop-2026.jpg" alt="Workshop Brunetti con su comunidad de barberos" loading="lazy" decoding="async" /></div>
               <div className="bteaser-inner">
                 <p className="kicker"><EditableText file="home-cursos-teaser" path="kicker">{CURSOS_TEASER.kicker}</EditableText></p>
                 <h2><EditableText file="home-cursos-teaser" path="h2" as="span">{CURSOS_TEASER.h2}</EditableText></h2>

@@ -1,5 +1,5 @@
 import { neon } from "@neondatabase/serverless"
-import { requireInternal } from "./_auth.js"
+import { readSession, requireInternal } from "./_auth.js"
 import { notifyBarber } from "./push.js"
 
 const MIN_CANCEL_NOTICE_HOURS = 10
@@ -31,10 +31,11 @@ export default async function handler(req, res) {
         const bookings = await sql`
           SELECT b.id, b.booking_date::text as date, b.booking_time::text as time,
                  b.barber_id as "barberId", br.name as barber, u.name as client, u.phone,
-                 s.name as service, s.price, b.status
+                 COALESCE(b.custom_service, s.name) as service,
+                 COALESCE(b.custom_price, s.price)::int as price, b.status
           FROM bookings b
           JOIN users u ON b.client_id = u.id
-          JOIN services s ON b.service_id = s.id
+          LEFT JOIN services s ON b.service_id = s.id
           JOIN barbers br ON b.barber_id = br.id
           WHERE (${barberId || null}::int IS NULL OR b.barber_id = ${barberId || null}::int)
             AND (${date || null}::date IS NULL OR b.booking_date = ${date || null}::date)
@@ -46,14 +47,14 @@ export default async function handler(req, res) {
       const cleanPhone = String(phone).replace(/\D/g, "")
       const bookings = await sql`
         SELECT b.id, b.booking_date as date, b.booking_time as time,
-               b.barber_id as "barberId", s.name as service, b.status,
-               s.price,
+               b.barber_id as "barberId", COALESCE(b.custom_service, s.name) as service, b.status,
+               COALESCE(b.custom_price, s.price)::int as price,
                CASE WHEN b.booking_date > CURRENT_DATE THEN 'next'
                     WHEN b.booking_date = CURRENT_DATE THEN 'next'
                     ELSE 'past' END as "when"
         FROM bookings b
         JOIN users u ON b.client_id = u.id
-        JOIN services s ON b.service_id = s.id
+        LEFT JOIN services s ON b.service_id = s.id
         WHERE u.phone = ${cleanPhone}
         ORDER BY b.booking_date DESC, b.booking_time DESC
         LIMIT 20
@@ -62,6 +63,48 @@ export default async function handler(req, res) {
     }
 
     if (req.method === "POST") {
+      // Modo interno (panel): reserva manual con sesión de barbero. Sin límite
+      // de fecha (permite backfill), servicio existente o personalizado y
+      // precio editable (se congela en custom_price al momento de reservar).
+      const session = readSession(req)
+      if (session) {
+        const { client, phone, barberId, serviceId, service, price, date, time, status } = req.body || {}
+        const cleanPhone = String(phone || "").replace(/\D/g, "")
+        const allowed = new Set(["pendiente", "confirmada", "en curso", "completada", "cancelada"])
+        const st = allowed.has(status) ? status : "confirmada"
+        if (!String(client || "").trim()) return res.status(400).json({ ok: false, error: "Nombre del cliente requerido" })
+        if (cleanPhone.length !== 9) return res.status(400).json({ ok: false, error: "El teléfono debe tener 9 dígitos" })
+        if (!barberId || !/^\d{4}-\d{2}-\d{2}$/.test(String(date || "")) || !/^\d{2}:\d{2}/.test(String(time || ""))) {
+          return res.status(400).json({ ok: false, error: "Datos incompletos" })
+        }
+        if (!serviceId && !String(service || "").trim()) {
+          return res.status(400).json({ ok: false, error: "Elige un servicio o escribe uno personalizado" })
+        }
+        // Upsert del cliente por teléfono, sin pisar el email guardado.
+        const [user] = await sql`
+          INSERT INTO users (name, phone, updated_at)
+          VALUES (${String(client).trim()}, ${cleanPhone}, NOW())
+          ON CONFLICT (phone) DO UPDATE SET
+            name = COALESCE(NULLIF(EXCLUDED.name, ''), users.name),
+            updated_at = NOW()
+          RETURNING id
+        `
+        const [taken] = await sql`
+          SELECT id FROM bookings
+          WHERE barber_id = ${barberId} AND booking_date = ${date} AND booking_time = ${time}
+          AND status NOT IN ('cancelada')
+        `
+        if (taken) return res.status(409).json({ ok: false, error: "Ese horario ya está tomado" })
+        const customPrice = price != null && price !== "" && Number.isFinite(Number(price)) ? Math.round(Number(price)) : null
+        const [booking] = await sql`
+          INSERT INTO bookings (client_id, barber_id, service_id, booking_date, booking_time, status, custom_service, custom_price)
+          VALUES (${user.id}, ${Number(barberId)}, ${serviceId ? Number(serviceId) : null}, ${date}, ${time}, ${st},
+                  ${serviceId ? null : String(service).trim()}, ${customPrice})
+          RETURNING id, booking_date::text as date, booking_time::text as time, status
+        `
+        return res.json({ ok: true, booking: { ...booking, time: booking.time?.slice(0, 5) } })
+      }
+
       const { phone, barberId, serviceId, date, time } = req.body || {}
       if (!phone || !barberId || !serviceId || !date || !time) {
         return res.status(400).json({ error: "Datos incompletos" })
@@ -178,6 +221,9 @@ export default async function handler(req, res) {
   } catch (err) {
     console.error("bookings error:", err)
     if (req.method === "POST") {
+      // Un admin creando una reserva debe ver el error real; el flujo público
+      // conserva el éxito falso (el front tiene fallback local).
+      if (readSession(req)) return res.status(500).json({ ok: false, error: "No se pudo crear la reserva" })
       return res.json({ ok: true, booking: { id: Date.now(), status: "confirmada" } })
     }
     if (req.method === "PATCH") return res.json({ ok: true, booking: req.body })

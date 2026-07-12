@@ -5,6 +5,7 @@ import SiteNav from '../components/SiteNav.jsx'
 import ModuleFooter from '../components/ModuleFooter.jsx'
 import { FACE_SHAPES, GALLERY_CATS, GALLERY, HERO_PHOTOS, u } from '../data/estilo.js'
 import { EditableText } from '../components/edit/EditableText.jsx'
+import { Editable } from '../components/edit/Editable.jsx'
 import ESTILO from '../data/content/estilo.json'
 import '../styles/estilo.css'
 
@@ -98,7 +99,7 @@ function Hero() {
     <header className="ete-hero">
       <div className="ete-hero-media">
         {HERO_PHOTOS.map((file, i) => (
-          <img key={file} src={u(file)} alt={i === 0 ? 'Asesoría de imagen en Brunetti' : ''}
+          <Editable key={file} as="img" editId={`estilo-hero:${i}`} src={u(file)} alt={i === 0 ? 'Asesoría de imagen en Brunetti' : ''}
             className={i === heroIndex ? 'is-active' : ''}
             onError={(e) => { e.target.parentElement.style.background = 'linear-gradient(160deg,#1a1916,#0a0a09)' }} />
         ))}
@@ -275,7 +276,7 @@ function CtaBand({ onReserveService }) {
   return (
     <section className="ete-section ete-cta">
       <div className="ete-cta-bg">
-        <img src={u('estilo-textura-spiky.jpg')} alt="" aria-hidden="true"
+        <Editable as="img" editId="estilo:ctaBg" src={u('estilo-textura-spiky.jpg')} alt="" aria-hidden="true"
           onError={(e) => { e.target.parentElement.style.background = 'var(--bg-1)' }} />
       </div>
       <div className="ete-wrap">

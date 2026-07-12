@@ -212,6 +212,43 @@ Before `npx vercel --prod`:
 5. Push to `desarrollo` branch first (staging; domain auto-deployed)
 6. Then `npx vercel --prod` for production (`brunetticutz.cl`)
 
+## Visual Editor (dev-only)
+
+`npm run edit` launches Vite + a zero-dep save server (`scripts/content-server.mjs`, port 4101)
+and enables an in-browser visual editor. The floating **✎ Editar** button (bottom-right, with a
+server-status dot) toggles edit mode. Two independent layers:
+
+- **Content (text):** `EditableText` / `Editable` wrap a string bound to `file`+`path` in
+  `src/data/content/*.json`. Editing inline saves via `POST /save` → writes the JSON. Text is edited
+  in place (contentEditable).
+- **Overrides (layout/style/image):** every editable element carries a stable `editId`
+  (`"<file>:<path>"`). Clicking it selects it and opens the **Inspector** popup with tools:
+  **Mover** (offset drag/nudge 6px/X-Y, plus *Desanclar* → free absolute position; moved elements
+  get `z-index:50` so they overlap on top without reflowing neighbors), **Fuente** (font-size,
+  alignment, and **color** — picker + quick swatches — text only), **Imagen** (width/height, replace
+  via upload or pick an existing asset). Each change is stored per-`editId` in
+  `src/data/overrides/<file>.json` via
+  `POST /save-override`, and image uploads go to `public/assets/uploads/` via `POST /upload-image`.
+
+Key files: `src/components/edit/` → `context.js` (shared contexts), `OverridesProvider.jsx`
+(always-on layer that loads `src/data/overrides/*.json` via `import.meta.glob` and applies them),
+`Editable.jsx` (the primitive), `EditProvider.jsx` (dev-only UI: bar, selection overlay, Inspector),
+`useDragResize.js`. Mounted in `App.jsx` as `<OverridesProvider><EditProvider>…`.
+
+**Production:** overrides ship (the JSON is inlined into the build and applied by
+`OverridesProvider` in prod, same as text content). The editor UI lives behind
+`import.meta.env.DEV` and is tree-shaken out of the production bundle.
+
+**Coverage:** all `EditableText` usages are editable everywhere (text move/font/color/position come
+for free). Fixed editorial images are tagged with `<Editable as="img" editId="<page>:<name>" …/>`:
+Home (`home-hero:cutout`, `home-hero:bg`, `home-sobre:figure`, `home-estilo:teaserBg`,
+`home-cursos:teaserBg`, `home:compareBefore/After`), Cursos (`cursos:heroCutout`, `cursos:heroBg`),
+Encuentra tu estilo (`estilo-hero:<i>`, `estilo:ctaBg`), Workshop (`workshop:hero`, `workshop:logo`,
+`workshop:pricingBg`). Data-driven galleries/thumbnails (mapped `SmartImg` grids, recommendation
+cards, testimonial photos) are intentionally NOT tagged — their images come from data files
+(`src/data/*.js`), so edit those, not per-item overrides. To tag a new fixed image, wrap its `<img>`
+in `<Editable as="img" editId="…" …/>`. The native iOS app cannot be edited by this web tool.
+
 ## Native iOS App
 
 `ios/BrunettiCutz/` is a native SwiftUI companion app (barber dashboard client), separate from the web PWA above. It talks to the same `/api` backend.

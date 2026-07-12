@@ -65,6 +65,24 @@ export default async function handler(req, res) {
       return res.json({ ok: true, service })
     }
 
+    if (req.method === "DELETE") {
+      const id = Number(req.query.id || (req.body || {}).id)
+      if (!id) return res.status(400).json({ ok: false, error: "id requerido" })
+      // Materializa nombre/precio en las reservas históricas antes de borrar:
+      // el FK bookings.service_id no tiene ON DELETE y no queremos perder el
+      // historial (COALESCE respeta un custom_price ya congelado).
+      await sql`
+        UPDATE bookings SET
+          custom_service = COALESCE(bookings.custom_service, s.name),
+          custom_price = COALESCE(bookings.custom_price, s.price),
+          service_id = NULL
+        FROM services s
+        WHERE bookings.service_id = ${id} AND s.id = ${id}
+      `
+      await sql`DELETE FROM services WHERE id = ${id}`
+      return res.json({ ok: true })
+    }
+
     return res.status(405).json({ error: "Method not allowed" })
   } catch (err) {
     console.error("services error:", err)
@@ -73,6 +91,7 @@ export default async function handler(req, res) {
     if (!session) return
     if (req.method === "POST") return res.json({ ok: true, service: { id: Date.now(), ...(req.body || {}), active: true } })
     if (req.method === "PATCH") return res.json({ ok: true, service: req.body })
+    if (req.method === "DELETE") return res.json({ ok: true })
     return res.status(500).json({ ok: false, error: "No se pudo procesar servicios" })
   }
 }

@@ -1,177 +1,316 @@
-# Graph Report - .  (2026-06-26)
+# Graph Report - PIMPSTUDIO-desarrollo  (2026-07-11)
 
 ## Corpus Check
-- 3 files · ~0 words
+- 113 files · ~467,877 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 467 nodes · 705 edges · 39 communities (26 shown, 13 thin omitted)
-- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 31 edges (avg confidence: 0.86)
+- 925 nodes · 1785 edges · 84 communities (45 shown, 39 thin omitted)
+- Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 54 edges (avg confidence: 0.82)
 - Token cost: 0 input · 0 output
 
+## Graph Freshness
+- Built from commit: `2476a7a6`
+- Run `git rev-parse HEAD` and compare to check if the graph is stale.
+- Run `graphify update .` after code changes (no API cost).
+
 ## Community Hubs (Navigation)
-- [[_COMMUNITY_Community 0|Community 0]]
-- [[_COMMUNITY_Community 1|Community 1]]
-- [[_COMMUNITY_Community 2|Community 2]]
-- [[_COMMUNITY_Community 3|Community 3]]
-- [[_COMMUNITY_Community 4|Community 4]]
-- [[_COMMUNITY_Community 5|Community 5]]
-- [[_COMMUNITY_Community 6|Community 6]]
-- [[_COMMUNITY_Community 7|Community 7]]
-- [[_COMMUNITY_Community 8|Community 8]]
-- [[_COMMUNITY_Community 9|Community 9]]
-- [[_COMMUNITY_Community 10|Community 10]]
-- [[_COMMUNITY_Community 11|Community 11]]
-- [[_COMMUNITY_Community 12|Community 12]]
-- [[_COMMUNITY_Community 13|Community 13]]
-- [[_COMMUNITY_Community 14|Community 14]]
-- [[_COMMUNITY_Community 15|Community 15]]
-- [[_COMMUNITY_Community 16|Community 16]]
-- [[_COMMUNITY_Community 17|Community 17]]
-- [[_COMMUNITY_Community 18|Community 18]]
-- [[_COMMUNITY_Community 19|Community 19]]
-- [[_COMMUNITY_Community 20|Community 20]]
-- [[_COMMUNITY_Community 22|Community 22]]
-- [[_COMMUNITY_Community 23|Community 23]]
-- [[_COMMUNITY_Community 24|Community 24]]
-- [[_COMMUNITY_Community 25|Community 25]]
-- [[_COMMUNITY_Community 26|Community 26]]
-- [[_COMMUNITY_Community 27|Community 27]]
-- [[_COMMUNITY_Community 28|Community 28]]
-- [[_COMMUNITY_Community 29|Community 29]]
-- [[_COMMUNITY_Community 30|Community 30]]
-- [[_COMMUNITY_Community 31|Community 31]]
-- [[_COMMUNITY_Community 37|Community 37]]
-- [[_COMMUNITY_Community 38|Community 38]]
+- iOS Data Models
+- iOS API Client
+- Backend Auth & Project Docs
+- Workshop Page & Content
+- Vercel API Handlers
+- Cursos.jsx
+- Legacy Static Site (web/app.js)
+- UI Components & Login
+- package.json Config
+- iOS Detail Sheets & Module Views
+- Fintoc Checkout & Site Nav
+- Booking Page & Static Data
+- iOS Agenda & Reservations Views
+- Dashboard Analytics & Barber Showcase
+- workshop.js
+- EncuentraEstilo (Style Finder) Page
+- Auth & Booking Concepts
+- ui.jsx
+- iOS App Intents & Shortcuts
+- iOS Design System
+- data.js
+- iOS Booking Sheet & Reminders
+- Bookings Store & Account Page
+- index.html PWA Setup
+- AppTab
+- iOS Codable Keys
+- Bruno Hero Image Assets
+- iOS Dashboard & Login Views
+- Estilo Teaser Image Assets
+- Legacy ELIJA Agent Docs
+- BookingsInbox.jsx
+- enrollmentsStore.js
+- DashboardModel
+- ELIJA Agent Knowledge Base
+- vercel.json Config
+- Register Client API
+- Fintoc Payments API
+- Proposal Generator Script
+- CSS Stylesheets
+- Claude Dev Wrapper Script
+- Proposal Templates & Inbox Demo
+- DetailSheets.swift
+- Implementation Plan & CSS Scope
+- Gallery Image 1
+- Gallery Image 2
+- Gallery Image 3
+- PIMP Studio Logo Assets
+- SettingsView
+- Vite Config & Fintoc Mock
+- Legacy Contact & Cursos Pages
+- SwiftUI
+- NewBookingModal.jsx
+- Bruno Feature Image
+- Bruno Portrait Image
+- Workshop 2026 Image
+- Legacy Clientes Page
+- Legacy Index Page
+- Pagina HTML Booking Reserva
+- Pagina HTML Cliente Reserva y Perfil
+- api/barbers.js (team/permissions listing)
+- api/enrollments.js (course/workshop enrollments)
+- api/register-client.js (public client registration fallback)
+- Brunetti single-barber rebrand
+- Hero gooey-effect removal
+- Light-mode polish pass
+- ADMIN_API_TOKEN env var
+- brunetticutz.cl (production domain)
+- Native iOS features (dashboard, agenda, clients, workshop, settings)
+- Liquid Glass with fallback for older systems
+- pimpstudio.cl (308 redirect to apex)
+- vercel dev --listen 3003 (local API server)
+- CSS Scoped Under brunetti-site Class
+- BrunettiCutz iOS app (SwiftUI, native)
+- BrunettiCutz.xcodeproj
+- cl.brunetticutz.internal (bundle id)
+- ELIJA agent layer (docs/knowledge/skills/scripts)
+- server.js (legacy local SQLite backend)
+- Archivos en desuso/ (legacy, gitignored)
+- Brunetti · Barber Studio — Web + Panel (README)
+- src/styles/estilo.css
 
 ## God Nodes (most connected - your core abstractions)
-1. `requireInternal()` - 18 edges
-2. `Icon()` - 11 edges
-3. `CLP()` - 10 edges
-4. `enablePush()` - 9 edges
-5. `ELIJA Agente Personal de Trabajo README` - 9 edges
-6. `Hero Photo: Brunetti Barber in Action` - 9 edges
-7. `barberById()` - 8 edges
-8. `PIMP STUDIO Logo (JPG, used as brand header/footer image)` - 8 edges
-9. `estilo-teaser.jpg (style module teaser image)` - 8 edges
-10. `readLocalBookings()` - 7 edges
+1. `DashboardModel` - 56 edges
+2. `APIClient` - 34 edges
+3. `CLP()` - 24 edges
+4. `Client` - 22 edges
+5. `SessionStore` - 21 edges
+6. `requireInternal()` - 20 edges
+7. `BookingStatus` - 19 edges
+8. `Dashboard()` - 19 edges
+9. `ServiceItem` - 16 edges
+10. `Barber` - 15 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `index.html theme bootstrap script` --semantically_similar_to--> `santiagoHour()`  [INFERRED] [semantically similar]
-  index.html → src/components/theme.jsx
 - `PIMP STUDIO Logo (JPG, used as brand header/footer image)` --semantically_similar_to--> `PIMP STUDIO Logo JPG (web/assets copy)`  [INFERRED] [semantically similar]
   public/assets/pimp-studio-logo.jpg → web/assets/pimp-studio-logo.jpg
-- `Home()` --implements--> `Brunetti single-barber rebrand`  [INFERRED]
-  src/pages/Home.jsx → CHANGELOG_IMPLEMENTACION.md
-- `Skill Web Profesional ELIJA` --semantically_similar_to--> `Alcance Funcional Plataforma Web Barberia`  [INFERRED] [semantically similar]
-  skills/web-profesional/SKILL.md → docs/PROJECT_SCOPE.md
 - `Dashboard Page (Client Panel)` --references--> `PIMP STUDIO Logo (JPG, used as brand header/footer image)`  [EXTRACTED]
   web/dashboard.html → public/assets/pimp-studio-logo.jpg
+- `Gallery Image 1 (barbershop work/style photo)` --semantically_similar_to--> `Gallery Image 1 (web/assets copy)`  [INFERRED] [semantically similar]
+  public/assets/gallery-1.jpg → web/assets/gallery-1.jpg
+- `Gallery Image 2 (barbershop work/style photo)` --semantically_similar_to--> `Gallery Image 2 (web/assets copy)`  [INFERRED] [semantically similar]
+  public/assets/gallery-2.png → web/assets/gallery-2.png
+- `Gallery Image 3 (barbershop work/style photo)` --semantically_similar_to--> `Gallery Image 3 (web/assets copy)`  [INFERRED] [semantically similar]
+  public/assets/gallery-3.jpg → web/assets/gallery-3.jpg
 
 ## Import Cycles
 - None detected.
 
-## Communities (39 total, 13 thin omitted)
+## Hyperedges (group relationships)
+- **PIMP STUDIO Brand Asset Set (logo JPG + mark SVG + logo SVG used across all pages)** — public_assets_pimp_studio_logo_jpg, public_assets_pimp_studio_mark_svg, public_assets_pimp_studio_logo_svg [INFERRED 0.75]
 
-### Community 0 - "Community 0"
-Cohesion: 0.07
-Nodes (34): Bars(), CAT_COLORS, DashboardResumen(), STATUS_DOT, TopSvc(), GlareCard(), Icon(), PATHS (+26 more)
+## Communities (84 total, 39 thin omitted)
 
-### Community 1 - "Community 1"
+### Community 0 - "iOS Data Models"
 Cohesion: 0.08
-Nodes (36): b64url(), BARBER_PROFILES, fallbackLogin(), fallbackPasswords(), handleChangePassword(), handleLogin(), handler(), isAdmin() (+28 more)
+Nodes (20): App, ColorScheme, Data, Foundation, BrunettiCutzApp, RootView, AppTab, Date (+12 more)
 
-### Community 2 - "Community 2"
+### Community 1 - "iOS API Client"
 Cohesion: 0.09
-Nodes (25): AGENDA_SLOTS, buildWeek(), CFG_SECTIONS, ConfigPanel(), Dashboard(), DAY_LABELS, isStrongPassword(), CLIENTS (+17 more)
+Nodes (30): Any, Decodable, Error, APIClient, APIError, badStatus, invalidURL, missingData (+22 more)
 
-### Community 3 - "Community 3"
-Cohesion: 0.08
-Nodes (19): NAV, SiteNav(), CARDS, NAME, PILLARS, SERVICES, TESTIMONIALS, formatCLP() (+11 more)
-
-### Community 4 - "Community 4"
-Cohesion: 0.08
-Nodes (12): ALL_MODULE_IDS, emptyBarber, MODULES, PERMS, Brandmark(), Emblem(), Icon(), ICONS (+4 more)
-
-### Community 5 - "Community 5"
-Cohesion: 0.13
-Nodes (29): addAppointment(), boot(), digitsOnly(), ensureSeedData(), escapeHtml(), FIGMA_BARBERS, FIGMA_SERVICES, formatCLP() (+21 more)
-
-### Community 6 - "Community 6"
-Cohesion: 0.08
-Nodes (22): CHANGELOG de implementación, Brunetti single-barber rebrand, Hero gooey-effect removal, Light-mode polish pass, autoTheme(), FloatingThemeToggle(), santiagoHour(), ThemeCtx (+14 more)
-
-### Community 7 - "Community 7"
-Cohesion: 0.10
-Nodes (20): dependencies, @neondatabase/serverless, react, react-dom, react-router-dom, @vercel/analytics, web-push, devDependencies (+12 more)
-
-### Community 8 - "Community 8"
+### Community 2 - "Backend Auth & Project Docs"
 Cohesion: 0.14
-Nodes (14): scrollToId(), useBrunettiFx(), ICONS, ModuleFooter(), Cursos(), INCLUDES, LEVELS, MODULES (+6 more)
+Nodes (14): Account, App(), BarberLogin, Booking, Cursos, Dashboard, EncuentraEstilo, isStandaloneLaunch() (+6 more)
 
-### Community 9 - "Community 9"
-Cohesion: 0.22
-Nodes (17): Identidad del Agente ELIJA, Availability Slots and Block Management, Online Booking Reservation Flow, ELIJA Personal Work Agent, Conocimiento de la Empresa, Roadmap de Integraciones, Sistema Operativo de ELIJA, Priority Matrix P1 P2 P3 (+9 more)
+### Community 3 - "Workshop Page & Content"
+Cohesion: 0.06
+Nodes (35): FEATURE_CARDS, TESTIMONIALS, WK_BASE, WK_DIAS, WK_ED, WK_MESES, WORKSHOP, WORKSHOP_DATES (+27 more)
 
-### Community 10 - "Community 10"
-Cohesion: 0.15
-Nodes (6): FACE_SHAPES, GALLERY, GALLERY_CATS, u(), Reveal(), useReveal()
+### Community 4 - "Vercel API Handlers"
+Cohesion: 0.08
+Nodes (42): b64url(), BARBER_PROFILES, fallbackLogin(), fallbackPasswords(), handleChangePassword(), handleLogin(), handler(), isAdmin() (+34 more)
 
-### Community 11 - "Community 11"
+### Community 5 - "Cursos.jsx"
+Cohesion: 0.12
+Nodes (30): CLIENTS, EXPENSES, isAdminUser(), TODAY_BOOKINGS, AGENDA_SLOTS, buildWeek(), CFG_SECTIONS, ConfigPanel() (+22 more)
+
+### Community 6 - "Legacy Static Site (web/app.js)"
+Cohesion: 0.07
+Nodes (26): API Error Handling, Architecture, Backend (Vercel Functions), Build & Deployment, Build for production, Common Tasks, Database (PostgreSQL), Database schema setup (after cloning) (+18 more)
+
+### Community 7 - "UI Components & Login"
+Cohesion: 0.19
+Nodes (12): FACE_SHAPES, GALLERY, GALLERY_CATS, HERO_PHOTOS, u(), CtaBand(), EncuentraEstilo(), Hero() (+4 more)
+
+### Community 8 - "package.json Config"
+Cohesion: 0.08
+Nodes (25): dependencies, framer-motion, @neondatabase/serverless, react-dom, react-router-dom, @vercel/analytics, web-push, devDependencies (+17 more)
+
+### Community 9 - "iOS Detail Sheets & Module Views"
+Cohesion: 0.21
+Nodes (29): Codable, Hashable, Identifiable, DemoData, Booking, APIEndpointStatus, APIHealth, AvailabilitySlot (+21 more)
+
+### Community 10 - "Fintoc Checkout & Site Nav"
+Cohesion: 0.12
+Nodes (16): EditContext, NAV, SiteNav(), Lamp(), CARD_IMAGES, CARDS, CAT_TAG, FALLBACK_SERVICES (+8 more)
+
+### Community 11 - "Booking Page & Static Data"
+Cohesion: 0.08
+Nodes (25): 2026-06-12 - Base operativa clientes, agenda y panel interno, 2026-06-13 - Rediseño UI para web y componentes responsivos, 2026-06-22 - Marca personal Brunetti (un solo barbero) + módulo Cursos + panel interno solo-Brunetti, 2026-06-24 - Hero Brunetti sin efecto gooey + modo claro pulido en todos los módulos, Archivos modificados, Archivos modificados, Archivos modificados, Archivos principales tocados (+17 more)
+
+### Community 12 - "iOS Agenda & Reservations Views"
+Cohesion: 0.09
+Nodes (44): Charts, isoDate(), Date, BarberChartMode, ingresos, servicios, BarberDashboardCharts, BookingRow (+36 more)
+
+### Community 13 - "Dashboard Analytics & Barber Showcase"
+Cohesion: 0.10
+Nodes (28): react, Bars(), CAT_COLORS, DashboardResumen(), getSvcIconByName(), localDateKey(), PeakHours(), STATUS_DOT (+20 more)
+
+### Community 14 - "workshop.js"
+Cohesion: 0.29
+Nodes (7): autoTheme(), FloatingThemeToggle(), santiagoHour(), ThemeCtx, ThemeProvider(), ThemeToggle(), useTheme()
+
+### Community 15 - "EncuentraEstilo (Style Finder) Page"
+Cohesion: 0.60
+Nodes (5): BARBERS, BarberLogin(), clearLockout(), getLockout(), setLockout()
+
+### Community 16 - "Auth & Booking Concepts"
 Cohesion: 0.24
-Nodes (16): PIMP STUDIO Logo (JPG, used as brand header/footer image), Admin Key Authentication (shared internal password pattern), Barber Availability Management (barber sets available slots per day), Barber Authentication Flow (username/password, sets active barber session), Dual Authentication System (client auth via phone vs barber/admin auth via username+password), Phone Number as Client Identity (celular = ID de cliente), Manual Slot Blocking (admin blocks time slots per barber per day), TNE Discount (20% for Tarjeta Nacional Estudiantil, non-Bruno services) (+8 more)
+Nodes (16): Admin Key Authentication (shared internal password pattern), Barber Availability Management (barber sets available slots per day), Barber Authentication Flow (username/password, sets active barber session), Dual Authentication System (client auth via phone vs barber/admin auth via username+password), Phone Number as Client Identity (celular = ID de cliente), Manual Slot Blocking (admin blocks time slots per barber per day), TNE Discount (20% for Tarjeta Nacional Estudiantil, non-Bruno services), PIMP STUDIO Logo (JPG, used as brand header/footer image) (+8 more)
 
-### Community 12 - "Community 12"
+### Community 17 - "ui.jsx"
+Cohesion: 0.10
+Nodes (16): ALL_MODULE_IDS, BarberModal(), emptyBarber, MODULES, PERMS, MobileDock(), Brandmark(), Emblem() (+8 more)
+
+### Community 18 - "iOS App Intents & Shortcuts"
 Cohesion: 0.15
-Nodes (14): fs, handleLocalRegisterClient(), http, LOCAL_CLIENTS_FILE, MIME, normalizePath(), path, PORT (+6 more)
+Nodes (12): AppEnum, AppIntent, AppIntents, AppShortcut, AppShortcutsProvider, DisplayRepresentation, IntentResult, AppTab (+4 more)
 
-### Community 13 - "Community 13"
-Cohesion: 0.13
-Nodes (13): FEATURE_CARDS, TESTIMONIALS, WK_BASE, WK_DIAS, WK_ED, WK_MESES, WORKSHOP, WORKSHOP_DATES (+5 more)
+### Community 19 - "iOS Design System"
+Cohesion: 0.11
+Nodes (25): Axis, ButtonRole, CGFloat, BrunettiTheme, EmptyPanel, GlassActionButton, GlassField, GlassFormField (+17 more)
 
-### Community 14 - "Community 14"
-Cohesion: 0.23
-Nodes (9): FILTER_MAP, FILTERS, initialsOf(), ResCard(), ResModal(), resolveBarber(), STATUS_LABEL, STATUS_OPTIONS (+1 more)
+### Community 20 - "data.js"
+Cohesion: 0.18
+Nodes (16): GlareCard(), ALL_SLOTS, CAT_LABEL, CLIENT_APPTS, DAYS_ES, MONTHS_ES, SERVICE_BARBERS, SERVICES (+8 more)
 
-### Community 15 - "Community 15"
+### Community 21 - "iOS Booking Sheet & Reminders"
+Cohesion: 0.17
+Nodes (19): ASSETS_DIR, CONTENT_DIR, CORS, fileFromEditId(), fileQueues, handleListAssets(), handleSave(), handleSaveOverride() (+11 more)
+
+### Community 22 - "Bookings Store & Account Page"
+Cohesion: 0.41
+Nodes (10): addLocalBooking(), cancelKeyOf(), cancelLocalBooking(), isCancelled(), mergeBookings(), readCancelledKeys(), readLocalBookings(), writeLocalBookings() (+2 more)
+
+### Community 23 - "index.html PWA Setup"
+Cohesion: 0.22
+Nodes (9): apple-touch-icon PNG 180 rationale, Blackletter fonts (Pirata One, Manufacturing Consent), format-detection=telephone=no meta rationale, ps_theme_manual / ps_theme localStorage keys, theme-color meta dynamic sync rationale, index.html (entry, meta/PWA/no-flash theme), Hero image LCP preload (bruno-hero.jpg), No-flash theme init script (Santiago timezone based) (+1 more)
+
+### Community 24 - "AppTab"
+Cohesion: 0.25
+Nodes (8): EditingContext, OverridesContext, Editable(), styleFromOverride(), EditableText(), DevEditProvider(), EditProvider(), beginDrag()
+
+### Community 25 - "iOS Codable Keys"
+Cohesion: 0.18
+Nodes (11): CodingKey, CodingKeys, createdAt, edition, email, id, level, message (+3 more)
+
+### Community 26 - "Bruno Hero Image Assets"
 Cohesion: 0.29
 Nodes (11): Background text: 'El cliente...' (partially visible), Barber (Bruno Brunetti), Dark patterned barber cape, Client in barber cape receiving haircut, Green barber comb (tool), Context: live demo or barbering course/event, Lapel/headset microphone worn by barber, Hero Photo: Brunetti Barber in Action (+3 more)
 
-### Community 16 - "Community 16"
+### Community 27 - "iOS Dashboard & Login Views"
+Cohesion: 0.33
+Nodes (3): editor, ROOT, vite
+
+### Community 28 - "Estilo Teaser Image Assets"
 Cohesion: 0.29
 Nodes (10): Barber / Instructor (PIMP & STUDIOS branded, tattooed, glasses, mic), Barbershop / studio interior with white brick wall, Client seated in barber chair wearing cape, Haircut / styling service in progress, estilo-teaser.jpg (style module teaser image), PIMP & STUDIOS brand logo (on barber shirt), Mood: professional, focused, editorial photography, Ring light (professional studio lighting behind barber) (+2 more)
 
-### Community 18 - "Community 18"
+### Community 30 - "BookingsInbox.jsx"
+Cohesion: 0.14
+Nodes (19): BookingsInbox(), CalendarModal(), FILTER_MAP, FILTERS, initialsOf(), ResCard(), ResModal(), resolveBarber() (+11 more)
+
+### Community 32 - "DashboardModel"
+Cohesion: 0.16
+Nodes (11): DashboardModel, Date, Double, String, URL, ClientSheet, EnrollmentSheet, ExpenseSheet (+3 more)
+
+### Community 33 - "ELIJA Agent Knowledge Base"
+Cohesion: 0.22
+Nodes (8): Base de datos (Neon), Brunetti · Barber Studio — Web + Panel, Deploy, Estructura, Puesta en marcha (PC nuevo), Requisitos, Scripts, Variables de entorno
+
+### Community 34 - "vercel.json Config"
+Cohesion: 0.33
+Nodes (5): buildCommand, framework, headers, outputDirectory, rewrites
+
+### Community 36 - "Fintoc Payments API"
+Cohesion: 0.25
+Nodes (7): Abrir en Xcode, APIs usadas, Brunetti Cutz iOS, Build nativo e IPA, Funciones nativas incluidas, Servidor local, Sesion interna y fallback
+
+### Community 37 - "Proposal Generator Script"
+Cohesion: 0.38
+Nodes (5): Context, SafariView, URL, SFSafariViewController, UIViewControllerRepresentable
+
+### Community 38 - "CSS Stylesheets"
+Cohesion: 0.16
+Nodes (11): scrollToId(), useBrunettiFx(), CHECKOUT_ITEMS, FintocCheckout(), ICONS, ModuleFooter(), Cursos(), INCLUDE_ICONS (+3 more)
+
+### Community 41 - "DetailSheets.swift"
+Cohesion: 0.13
+Nodes (21): BookingDraftSheet, BookingSheet, encoded(), reminderDate(), scheduleReminder(), StatusChoiceButton, Booking, Bool (+13 more)
+
+### Community 43 - "Implementation Plan & CSS Scope"
 Cohesion: 0.40
-Nodes (4): buildCommand, framework, outputDirectory, rewrites
+Nodes (4): Decisiones clave (confirmadas con el usuario), Estado / Checklist por fases, Notas de retoma (si se corta), Plan de implementación — Rediseño Brunetti (marca personal Bruno Herrera)
 
-### Community 19 - "Community 19"
-Cohesion: 0.83
-Nodes (3): extraer_contexto(), main(), sugerir_alcance()
+### Community 48 - "SettingsView"
+Cohesion: 0.12
+Nodes (16): CaseIterable, DashboardFocus, dia, semana, workshop, AppTab, clientes, finanzas (+8 more)
 
-### Community 20 - "Community 20"
-Cohesion: 0.67
-Nodes (3): Propuesta Comercial Demo, Transcripcion Demo Cliente, Propuesta Comercial Base Template
+### Community 51 - "SwiftUI"
+Cohesion: 0.22
+Nodes (8): DashboardView, ModuleHost, AppTab, Int, LoginView, Bool, SafariServices, SwiftUI
+
+### Community 52 - "NewBookingModal.jsx"
+Cohesion: 0.33
+Nodes (7): DEFAULT_SLOTS, NewBookingModal(), STATUS_OPTIONS, svcIcon(), todayKey(), NewClientModal(), cleanPhone()
 
 ## Knowledge Gaps
-- **122 isolated node(s):** `ALL_SLOTS`, `STATIC_BARBERS`, `DEMO_BOOKINGS`, `DEMO_CLIENTS`, `DEMO_EXPENSES` (+117 more)
+- **250 isolated node(s):** `dev-wrapper.sh script`, `NVM_DIR`, `ALL_SLOTS`, `STATIC_BARBERS`, `DEMO_BOOKINGS` (+245 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **13 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **39 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Icon()` connect `Community 4` to `Community 0`, `Community 2`, `Community 3`?**
-  _High betweenness centrality (0.081) - this node is a cross-community bridge._
-- **Why does `useTheme()` connect `Community 6` to `Community 2`, `Community 10`?**
-  _High betweenness centrality (0.042) - this node is a cross-community bridge._
-- **Why does `WORKSHOP` connect `Community 13` to `Community 3`?**
-  _High betweenness centrality (0.031) - this node is a cross-community bridge._
-- **What connects `ALL_SLOTS`, `STATIC_BARBERS`, `DEMO_BOOKINGS` to the rest of the system?**
-  _124 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.06778476589797344 - nodes in this community are weakly interconnected._
-- **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.08325624421831637 - nodes in this community are weakly interconnected._
-- **Should `Community 2` be split into smaller, more focused modules?**
-  _Cohesion score 0.08771929824561403 - nodes in this community are weakly interconnected._
+- **Why does `SwiftUI` connect `SwiftUI` to `iOS Data Models`, `DetailSheets.swift`, `iOS Detail Sheets & Module Views`, `iOS Agenda & Reservations Views`, `iOS Design System`?**
+  _High betweenness centrality (0.025) - this node is a cross-community bridge._
+- **Why does `DashboardModel` connect `DashboardModel` to `iOS Data Models`, `iOS API Client`, `iOS Detail Sheets & Module Views`, `DetailSheets.swift`, `iOS Agenda & Reservations Views`, `SettingsView`, `SwiftUI`?**
+  _High betweenness centrality (0.022) - this node is a cross-community bridge._
+- **Why does `react` connect `Dashboard Analytics & Barber Showcase` to `package.json Config`, `EncuentraEstilo (Style Finder) Page`?**
+  _High betweenness centrality (0.020) - this node is a cross-community bridge._
+- **What connects `dev-wrapper.sh script`, `NVM_DIR`, `ALL_SLOTS` to the rest of the system?**
+  _258 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `iOS Data Models` be split into smaller, more focused modules?**
+  _Cohesion score 0.08013937282229965 - nodes in this community are weakly interconnected._
+- **Should `iOS API Client` be split into smaller, more focused modules?**
+  _Cohesion score 0.08633879781420765 - nodes in this community are weakly interconnected._
+- **Should `Backend Auth & Project Docs` be split into smaller, more focused modules?**
+  _Cohesion score 0.13725490196078433 - nodes in this community are weakly interconnected._

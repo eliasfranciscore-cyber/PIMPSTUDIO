@@ -2,46 +2,31 @@ import Foundation
 import SwiftUI
 
 enum AppTab: String, CaseIterable, Identifiable, Sendable {
-    case resumen
-    case agenda
+    case hoy
     case reservas
-    case inscripciones
-    case finanzas
     case clientes
-    case servicios
-    case gastos
-    case marketing
-    case config
+    case finanzas
+    case mas
 
     var id: String { rawValue }
 
     var title: String {
         switch self {
-        case .resumen: "Resumen"
-        case .agenda: "Agenda"
+        case .hoy: "Hoy"
         case .reservas: "Reservas"
-        case .inscripciones: "Workshop"
-        case .finanzas: "Finanzas"
         case .clientes: "Clientes"
-        case .servicios: "Servicios"
-        case .gastos: "Gastos"
-        case .marketing: "Marketing"
-        case .config: "Config."
+        case .finanzas: "Finanzas"
+        case .mas: "Más"
         }
     }
 
     var symbol: String {
         switch self {
-        case .resumen: "square.grid.2x2.fill"
-        case .agenda: "calendar"
+        case .hoy: "sun.max.fill"
         case .reservas: "scissors"
-        case .inscripciones: "graduationcap.fill"
-        case .finanzas: "wallet.pass.fill"
         case .clientes: "person.2.fill"
-        case .servicios: "list.bullet.clipboard.fill"
-        case .gastos: "chart.pie.fill"
-        case .marketing: "megaphone.fill"
-        case .config: "gearshape.fill"
+        case .finanzas: "wallet.pass.fill"
+        case .mas: "ellipsis.circle.fill"
         }
     }
 }
