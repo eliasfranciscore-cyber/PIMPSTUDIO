@@ -61,6 +61,7 @@ Each file in `/api` exports a default handler: `async function handler(req, res)
 - `/api/expenses.js` — Finance tracking
 - `/api/fintoc-payments.js` — Unified payment checkout + webhook handler
 - `/api/push.js` — Web Push notifications
+- `/api/_email.js` — Booking confirmation email to clients (Resend REST API, no SDK)
 - `/api/availability.js` — Barber time slots
 
 **Graceful degradation:** All endpoints return demo data on database errors so the app remains usable offline.
@@ -99,6 +100,7 @@ Seed data in `db/seed.sql` (optional; most tables auto-create on first use).
 - `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` — Web Push keys
 - `VITE_VAPID_PUBLIC_KEY` — Public VAPID key exposed to frontend
 - `BLOB_READ_WRITE_TOKEN` — Vercel Blob (optional backup storage)
+- `RESEND_API_KEY`, `RESEND_FROM` — Resend email API for booking confirmations (optional; skipped if missing)
 - `BARBER_PASSWORDS` — JSON fallback: `{code: sha256_hex}` if DB is down
 
 ## Patterns & Conventions

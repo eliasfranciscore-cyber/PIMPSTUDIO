@@ -2,20 +2,20 @@ import React, { useState, useEffect, useRef } from 'react'
 
 export function Emblem({ size = 46 }) {
   return (
-    <span
+    <img
       className="pimp-mark"
-      style={{ width: size, height: size }}
-      aria-label="Brunetti"
-      role="img"
+      src="/assets/brunetti-hero-wordmark.webp"
+      alt="Brunetticutz"
+      style={{ height: size }}
     />
   )
 }
 
-export function Brandmark({ size = 44, sub = "Barber Studio", label = "BRUNETTI", onClick }) {
+export function Brandmark({ size = 44, sub = "Barber Studio", onClick }) {
   return (
     <div className="brandmark" onClick={onClick} style={{ cursor: onClick ? "pointer" : "default" }}>
       <Emblem size={size} />
-      <span className="wordmark">{label}<small>{sub}</small></span>
+      {sub && <small className="brandmark-sub">{sub}</small>}
     </div>
   )
 }

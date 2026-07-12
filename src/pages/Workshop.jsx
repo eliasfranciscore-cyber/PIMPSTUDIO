@@ -138,9 +138,9 @@ function VideoShowcase() {
   if (!WK.video) return null;
   return (
     <section className="wks-section wks-vsl">
-      <Lamp className="bru-lamp--sec" />
       <div className="wks-container">
         <Reveal className="wks-head">
+          <Lamp className="bru-lamp--sec" />
           <span className="wks-eyebrow"><EditableText file="workshop" path="video.eyebrow">{WKC.video.eyebrow}</EditableText></span>
           <h2 className="wks-h2"><EditableText file="workshop" path="video.title" as="span">{WKC.video.title}</EditableText></h2>
           <hr className="wks-rule" />
@@ -317,7 +317,6 @@ function FeatureRow({ data, contentKey, reversed }) {
   const c = WKC[contentKey]
   return (
     <section className="wks-section">
-      <Lamp className="bru-lamp--sec" />
       <div className="wks-container">
         <Reveal className={`wks-feature ${reversed ? "is-rev" : ""}`}>
           <div className="wks-feature-media">
@@ -325,6 +324,7 @@ function FeatureRow({ data, contentKey, reversed }) {
             <span className="wks-chip wks-feature-tag"><Icon name="bolt" size={12} /> En vivo</span>
           </div>
           <div className="wks-feature-body">
+            <Lamp className="bru-lamp--sec" />
             <span className="wks-eyebrow"><EditableText file="workshop" path={`${contentKey}.eyebrow`}>{c.eyebrow}</EditableText></span>
             <h2 className="wks-h2" style={{ fontSize: "clamp(1.7rem,3.4vw,2.6rem)" }}><EditableText file="workshop" path={`${contentKey}.title`} as="span">{c.title}</EditableText></h2>
             <ul className="wks-detail-list">
@@ -669,7 +669,7 @@ function Footer({ onReserve }) {
       <div className="wks-footer-wide">
         <div className="wks-footer-cols">
           <div className="wks-footer-brand">
-            <span className="mfooter-wordmark" aria-label="Brunetti Cutz">Brunetti Cutz</span>
+            <img className="mfooter-wordmark" src="/assets/brunetti-workshop-wordmark.webp" alt="Brunetticutz" />
             <p className="wks-footer-tag">
               <EditableText file="workshop" path="footer.tagline" as="span">{WKC.footer.tagline}</EditableText>
             </p>

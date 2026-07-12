@@ -460,6 +460,18 @@
   -webkit-text-fill-color: transparent;
 }
 @keyframes bruLetterUp { to { transform: translateY(0); opacity: 1; } }
+.brunetti-site .bhero-name--img {
+  background: none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  color: initial;
+}
+.brunetti-site .bhero-name-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.35));
+}
 .brunetti-site .bhero-role {
   margin: 0.7rem 0 0;
   font-size: clamp(1.05rem, 2.4vw, 1.55rem);
@@ -714,7 +726,7 @@
    ============================================================ */
 .brunetti-site .bsection { padding: clamp(4rem, 9vw, 7rem) 0; position: relative; }
 .brunetti-site .bwrap { width: var(--b-maxw); margin: 0 auto; }
-.brunetti-site .bhead { max-width: 720px; margin: 0 0 3rem; }
+.brunetti-site .bhead { position: relative; max-width: 720px; margin: 0 0 3rem; }
 .brunetti-site .bhead.center { margin-inline: auto; text-align: center; }
 .brunetti-site .bhead .kicker {
   margin: 0 0 0.8rem;
@@ -784,76 +796,101 @@
   box-shadow: 0 0 14px 3px rgba(231, 200, 126, 0.45);
 }
 
-.brunetti-site .visagismo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-.brunetti-site .visagismo-grid .pillar:first-child { grid-column: span 2; }
-.brunetti-site .pillar {
-  position: relative;
-  overflow: hidden;
-  padding: 1.3rem 1.35rem;
-  min-height: 168px;
-  border-radius: var(--g-radius);
-  background: linear-gradient(150deg, var(--g-tint-strong), var(--g-tint-soft));
-  -webkit-backdrop-filter: blur(var(--g-blur)) saturate(180%);
-  backdrop-filter: blur(var(--g-blur)) saturate(180%);
-  border: 1px solid var(--g-edge);
-  box-shadow: var(--g-spec), var(--g-drop-sm);
+/* Visagismo ahora cabe en una sola pantalla (min-height:100svh, igual que el
+   hero) y los 5 pilares viven en un riel horizontal con scroll-snap en vez de
+   una grilla apilada — reutiliza el mismo patrón que .apple-carousel. */
+.brunetti-site .bsection--full {
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  transition: transform 0.4s var(--ease-out), border-color 0.3s ease, box-shadow 0.3s ease;
+  justify-content: center;
+  gap: clamp(1.5rem, 4vh, 3rem);
+  padding: clamp(5rem, 10vh, 7rem) 0 clamp(2rem, 6vh, 4rem);
 }
-.brunetti-site .pillar:hover {
-  transform: translateY(-6px);
-  border-color: var(--gold-edge);
-  box-shadow: var(--g-spec), 0 22px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(201, 163, 91, 0.14);
-}
-.brunetti-site .pillar::before {
-  content: "";
+/* ============================================================
+   SPARKLES — fondo de partículas doradas (todo el home salvo el hero)
+   ============================================================ */
+.brunetti-site .bru-sparkles-zone { position: relative; }
+.brunetti-site .bru-sparkles--bg {
   position: absolute;
-  top: -40%;
-  right: -30%;
-  width: 60%;
-  height: 120%;
-  background: radial-gradient(circle, rgba(201, 163, 91, 0.18), transparent 70%);
-  opacity: 0;
-  transition: opacity 0.4s ease;
+  inset: 0;
+  z-index: 0;
   pointer-events: none;
 }
-.brunetti-site .pillar:hover::before { opacity: 1; }
-.brunetti-site .pillar .num {
-  font-size: 0.72rem;
-  letter-spacing: 0.22em;
-  color: var(--gold);
-  font-weight: 700;
-  text-transform: uppercase;
+.brunetti-site .bru-sparkles-zone > * { position: relative; z-index: 1; }
+.bru-sparkles { display: block; width: 100%; height: 100%; }
+
+/* ============================================================
+   INTERACTIVE SELECTOR — panel activo ancho + resto angostos (Visagismo)
+   ============================================================ */
+.brunetti-site .interactive-selector {
+  display: flex;
+  gap: 0.6rem;
+  width: 100%;
+  height: clamp(300px, 42vh, 440px);
 }
-.brunetti-site .pillar .picon {
-  width: 52px;
-  height: 52px;
-  border-radius: 16px;
-  display: grid;
-  place-items: center;
-  background: linear-gradient(150deg, rgba(201,163,91,0.18), rgba(201,163,91,0.06));
-  border: 1px solid var(--gold-soft);
-  margin-bottom: auto;
-  box-shadow: 0 0 18px rgba(201,163,91,0.18), inset 0 1px 0 rgba(255,255,255,0.12);
-  transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.35s var(--ease-out);
+.brunetti-site .is-panel {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: var(--g-radius);
+  border: 1px solid var(--g-edge);
+  background: #0c0b0a;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  transition: flex-grow 0.6s var(--ease-out);
 }
-.brunetti-site .pillar:hover .picon {
-  border-color: var(--gold-edge);
-  box-shadow: 0 0 28px rgba(201,163,91,0.32), inset 0 1px 0 rgba(255,255,255,0.18);
-  transform: translateY(-2px) scale(1.06) rotate(-3deg);
+.brunetti-site .is-panel.is-active { flex-grow: 3.6; }
+.brunetti-site .is-panel-bg { position: absolute; inset: 0; display: block; }
+.brunetti-site .is-panel-bg img { width: 100%; height: 100%; object-fit: cover; }
+.brunetti-site .is-panel-icon {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  background: linear-gradient(150deg, var(--g-tint-strong), var(--g-tint-soft));
 }
-.brunetti-site .pillar .picon svg { width: 24px; height: 24px; stroke: var(--gold-bright); fill: none; stroke-width: 1.6; }
-.brunetti-site .pillar h3 { margin: 1.1rem 0 0.5rem; font-size: 1.2rem; font-weight: 600; color: var(--ink); line-height: 1.2; }
-.brunetti-site .pillar p { margin: 0; color: var(--ink-2); font-size: 0.9rem; line-height: 1.55; }
-/* Primer pilar: decoración de lámpara-glow interna */
-/* (glow interno removido: se veía cortado por overflow:hidden de la card) */
+.brunetti-site .is-panel-icon svg { width: 40px; height: 40px; stroke: var(--gold-bright); fill: none; stroke-width: 1.4; opacity: 0.85; }
+.brunetti-site .is-panel::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(6, 6, 8, 0.94) 8%, rgba(6, 6, 8, 0.4) 50%, transparent 82%);
+}
+.brunetti-site .is-panel-content {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+  display: flex; flex-direction: column;
+  padding: 1.1rem 1rem;
+}
+.brunetti-site .is-num { font-size: 0.68rem; letter-spacing: 0.2em; color: var(--gold-bright); margin-bottom: 0.4rem; }
+.brunetti-site .is-title {
+  font-family: var(--font-display, "Sora", sans-serif); font-weight: 600; font-size: 1.02rem; color: #fff; line-height: 1.25;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.brunetti-site .is-panel.is-active .is-title { white-space: normal; }
+.brunetti-site .is-body {
+  display: block; margin-top: 0.4rem; max-width: 34ch;
+  color: rgba(255, 255, 255, 0.75); font-size: 0.82rem; line-height: 1.5;
+  opacity: 0; max-height: 0; overflow: hidden;
+  transition: opacity 0.35s ease 0.1s;
+}
+.brunetti-site .is-panel.is-active .is-body { opacity: 1; max-height: 220px; }
+@media (max-width: 760px) {
+  .brunetti-site .interactive-selector { flex-direction: column; height: auto; gap: 0.5rem; }
+  .brunetti-site .is-panel { flex: none; height: 62px; transition: height 0.5s var(--ease-out); }
+  .brunetti-site .is-panel.is-active { height: 260px; }
+  .brunetti-site .is-title { white-space: normal; }
+}
+[data-theme="light"] .brunetti-site .is-panel { background: #f1ebdb; }
+[data-theme="light"] .brunetti-site .is-panel::after {
+  background: linear-gradient(to top, rgba(20, 16, 8, 0.85) 8%, rgba(20, 16, 8, 0.3) 50%, transparent 82%);
+}
+
 
 /* ============================================================
    SOBRE BRUNO
    ============================================================ */
 .brunetti-site .babout { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+.brunetti-site .bru-scroll-perspective { perspective: 1200px; }
+.brunetti-site .bru-scroll-card { transform-style: preserve-3d; will-change: transform; }
 .brunetti-site .babout-figure {
   position: relative;
   border-radius: var(--g-radius-lg);
@@ -879,6 +916,7 @@
   inset: 0;
   background: linear-gradient(to top, rgba(6,6,8,0.7), transparent 50%);
 }
+.brunetti-site .babout-body { position: relative; }
 .brunetti-site .babout-body h2 {
   margin: 0 0 1.2rem;
   font-size: clamp(1.8rem, 4vw, 2.8rem);
@@ -1019,7 +1057,7 @@
   z-index: -1;
   background: linear-gradient(to top, rgba(6,6,8,0.94) 8%, rgba(6,6,8,0.55) 48%, rgba(6,6,8,0.4) 100%);
 }
-.brunetti-site .bteaser-inner { padding: clamp(1.6rem, 4vw, 3rem); max-width: 720px; }
+.brunetti-site .bteaser-inner { position: relative; padding: clamp(1.6rem, 4vw, 3rem); max-width: 720px; }
 .brunetti-site .bteaser-inner .kicker {
   margin: 0 0 0.7rem;
   letter-spacing: 0.28em;
@@ -1825,8 +1863,7 @@
   /* Los chips flotantes se solapaban con el tag del retrato en pantallas chicas. */
   .brunetti-site .bhero-chip { display: none; }
   .brunetti-site .bhero-cue { display: none; }
-  .brunetti-site .visagismo-grid { grid-template-columns: repeat(2, 1fr); }
-  .brunetti-site .visagismo-grid .pillar:first-child { grid-column: span 2; }
+  .brunetti-site .bsection--full { min-height: auto; }
   .brunetti-site .babout { grid-template-columns: 1fr; }
   .brunetti-site .babout-figure { max-width: 420px; }
   .brunetti-site .bserv-grid { grid-template-columns: 1fr; }
@@ -1888,8 +1925,6 @@
   .brunetti-site .tm-quote { min-height: auto; font-size: 1.2rem; }
 }
 @media (max-width: 560px) {
-  .brunetti-site .visagismo-grid { grid-template-columns: 1fr; }
-  .brunetti-site .visagismo-grid .pillar:first-child { grid-column: span 1; }
   /* Stats de "Sobre Bruno": que el 100% y los labels quepan sin recortarse. */
   .brunetti-site .babout-stats { grid-template-columns: repeat(3, 1fr); gap: 0.45rem; }
   .brunetti-site .babout-stats .st { padding: 0.7rem 0.4rem; text-align: center; }
@@ -1911,7 +1946,6 @@
   .brunetti-site .bhead,
   .brunetti-site .babout-body,
   .brunetti-site .bserv,
-  .brunetti-site .pillar,
   .brunetti-site .bteaser-inner,
   .brunetti-site .enroll-aside,
   .brunetti-site .location-info,
@@ -1931,7 +1965,6 @@
   .brunetti-site .include { flex-direction: column; align-items: center; text-align: center; }
   .brunetti-site .location-info ul { padding-left: 0; list-style-position: inside; }
   .brunetti-site .footer-wrap { justify-items: center; text-align: center; }
-  .brunetti-site .pillar .picon,
   .brunetti-site .bserv .stag { justify-content: center; }
   .brunetti-site .bsocial-ig {
     justify-content: center;
@@ -1950,7 +1983,6 @@
     min-width: 130px;
     text-align: center;
   }
-  .brunetti-site .pillar { align-items: center; }
 }
 
 /* ============================================================
@@ -1989,7 +2021,13 @@
 }
 .bru-lamp-inner { position: relative; width: 100%; height: 100%; transform-origin: 50% 0; }
 .bru-lamp--hero { top: 120px; height: 480px; --lamp-y: 140px; }
-.bru-lamp--sec  { top: 100px; height: 360px; --lamp-y: 100px; }
+/* .bru-lamp--sec ahora vive DENTRO del bloque del título (.bhead/.wks-head/
+   .babout-body), no del <section> completo — así el haz siempre queda justo
+   sobre el kicker sin importar cuánto contenido tenga la sección antes. */
+.bru-lamp--sec  { top: -30px; height: 200px; --lamp-y: 24px; }
+/* .bteaser recorta con overflow:hidden muy pegado al borde superior — con el
+   offset negativo normal el haz queda cortado. Versión compacta, sin negativo. */
+.bru-lamp--teaser { top: 4px; height: 140px; --lamp-y: 8px; }
 
 /* Filamento brillante (línea de la lámpara) */
 .bru-lamp-line {
@@ -2250,10 +2288,6 @@
   0%, 100% { box-shadow: 0 0 10px 1px rgba(231, 200, 126, 0.1), var(--g-drop, none); }
   50% { box-shadow: 0 0 26px 6px rgba(231, 200, 126, 0.32), 0 0 52px 12px rgba(231, 200, 126, 0.1), var(--g-drop, none); }
 }
-.brunetti-site .pillar {
-  animation: bruGlowBorder 4s ease-in-out infinite;
-  animation-delay: calc(var(--i, 0) * 0.55s);
-}
 .brunetti-site .bserv.featured {
   animation: bruGlowBorder 3.6s ease-in-out infinite 0.4s;
 }
@@ -2507,6 +2541,14 @@ body.dash-mode .float-theme-toggle { display: none; }
   -webkit-background-clip: text;
   background-clip: text;
 }
+/* Home, Tu estilo y Workshop usan el wordmark real (imagen); Cursos sigue en
+   texto (degradado azul, arriba) por no tener logo propio todavía. */
+img.mfooter-wordmark {
+  height: clamp(2rem, 5vw, 2.6rem);
+  width: auto;
+  display: block;
+  background: none;
+}
 .mfooter-tag { margin: 0; color: var(--ink-2, var(--muted)); font-size: 0.95rem; line-height: 1.6; max-width: 46ch; }
 .mfooter-cta { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.85rem 1.5rem; border-radius: var(--pill, 999px); border: 1px solid var(--gold-bright); background: var(--gold-grad); color: var(--on-gold); font-family: var(--font-display, "Sora", sans-serif); font-weight: 600; letter-spacing: 0.06em; font-size: 0.82rem; cursor: pointer; box-shadow: var(--g-spec, none), 0 8px 22px rgba(0, 0, 0, 0.32); transition: transform .2s, box-shadow .2s; }
 .mfooter-cta:hover { transform: translateY(-1px); box-shadow: var(--g-spec, none), 0 12px 30px rgba(0, 0, 0, 0.42); }
@@ -2572,7 +2614,6 @@ body.dash-mode .float-theme-toggle { display: none; }
 /* tm-body y mfooter: sin fondo en claro (flotan sobre el fondo de la página) */
 [data-theme="light"] .brunetti-site .tm-body { background: transparent; }
 [data-theme="light"] .mfooter { background: rgba(0, 0, 0, 0.035); }
-[data-theme="light"] .brunetti-site .pillar,
 [data-theme="light"] .brunetti-site .bserv,
 [data-theme="light"] .brunetti-site .bcard,
 [data-theme="light"] .brunetti-site .ac-card,
@@ -2582,7 +2623,6 @@ body.dash-mode .float-theme-toggle { display: none; }
 [data-theme="light"] .brunetti-site .enroll-aside,
 [data-theme="light"] .brunetti-site .enroll-form,
 [data-theme="light"] .brunetti-site .bteaser-inner { background: rgba(0, 0, 0, 0.035); }
-[data-theme="light"] .brunetti-site .pillar,
 [data-theme="light"] .brunetti-site .bserv,
 [data-theme="light"] .brunetti-site .bcard,
 [data-theme="light"] .brunetti-site .ac-card,
@@ -2591,7 +2631,6 @@ body.dash-mode .float-theme-toggle { display: none; }
 [data-theme="light"] .brunetti-site .bhero-sub,
 [data-theme="light"] .brunetti-site .bhero-role,
 [data-theme="light"] .brunetti-site .bsection p,
-[data-theme="light"] .brunetti-site .pillar p,
 [data-theme="light"] .brunetti-site .bserv .desc { color: #3a3633; }
 [data-theme="light"] .brunetti-site .bmarquee { border-color: rgba(0, 0, 0, 0.08); }
 

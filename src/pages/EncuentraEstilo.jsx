@@ -321,6 +321,7 @@ export default function EncuentraEstilo() {
         </div>
       </div>
       <ModuleFooter
+        logoSrc="/assets/brunetti-hero-wordmark.webp"
         links={[
           [() => smoothScroll('visagismo'), 'Visagismo'],
           [() => smoothScroll('galeria'), 'Galería'],

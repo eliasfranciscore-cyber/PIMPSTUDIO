@@ -83,8 +83,11 @@ export default function SiteNav({ onSection, scrolled: scrolledProp }) {
           aria-label="Brunetti Cutz — Barber Studio"
           onClick={(e) => { e.preventDefault(); navigate("/") }}
         >
-          <span className="site-nav-brand-word">Brunetti Cutz</span>
-          <span className="site-nav-brand-sub">Barber Studio</span>
+          <img
+            className="site-nav-brand-word"
+            src={isWorkshop ? "/assets/brunetti-workshop-wordmark.webp" : isCursos ? "/assets/brunetti-cursos-wordmark.webp" : "/assets/brunetti-hero-wordmark.webp"}
+            alt="Brunetticutz"
+          />
         </a>
         <nav className="home-nav-links">
           {NAV.map(([id, label]) => (

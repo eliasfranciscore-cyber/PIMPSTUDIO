@@ -161,18 +161,12 @@ input, select, textarea { font: inherit; }
   align-items: center;
   gap: 0.7rem;
 }
-.brandmark .wordmark {
-  font-family: var(--font-display);
-  font-weight: 600;
-  letter-spacing: 0.32em;
-  font-size: 0.92rem;
-}
-.brandmark .wordmark small {
+.brandmark-sub {
   display: block;
   letter-spacing: 0.3em;
   font-size: 0.56rem;
+  text-transform: uppercase;
   color: var(--muted);
-  margin-top: 3px;
 }
 
 /* ---------- Buttons ---------- */
@@ -2111,25 +2105,16 @@ select.input { text-overflow: ellipsis; }
 [data-theme="light"] .status-select option { color: #1a1817; background: #fff; }
 
 /* ============================================================
-   PIMP MARK (real logo as <img>) + brand head
+   PIMP MARK — wordmark dorado (Brunetticutz), altura fija y ancho auto
    ============================================================ */
 .pimp-mark {
-  width: 36px;
   height: 36px;
-  border-radius: 999px;
+  width: auto;
   display: inline-block;
-  background: #0a0a09;
-  background-image: url("/assets/brunetti-logo-monogram.svg");
-  background-size: 62%;
-  background-repeat: no-repeat;
-  background-position: center;
-  border: 1px solid var(--gold-line);
-  box-shadow: 0 2px 10px rgba(0,0,0,0.45);
   flex-shrink: 0;
 }
-.pimp-mark.lg { width: 64px; height: 64px; }
-.pimp-mark.xl { width: 96px; height: 96px; }
-[data-theme="light"] .pimp-mark { border-color: rgba(0,0,0,0.18); }
+.pimp-mark.lg { height: 64px; }
+.pimp-mark.xl { height: 96px; }
 
 /* ============================================================
    DASHBOARD V2 — sidebar fills vertical, header chip + dock
@@ -2833,7 +2818,7 @@ select.input { text-overflow: ellipsis; }
   }
   .dashboard-topbar-title { display: none; }
   .dashboard-topbar-left { gap: .4rem; }
-  .dashboard-topbar-left .pimp-mark { width: 32px; height: 32px; }
+  .dashboard-topbar-left .pimp-mark { height: 32px; }
   .burger-btn { padding: .4rem; }
   .notif-pill { font-size: .7rem; gap: .2rem; padding: .3rem .6rem; }
   .user-chip-btn { width: 32px; height: 32px; font-size: .8rem; }

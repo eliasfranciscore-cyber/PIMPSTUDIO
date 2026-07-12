@@ -1,33 +1,11 @@
 {
-  "home-hero:stat1Label": {
-    "color": "#ffffff"
+  "home-hero:roleHighlight": {
+    "fontSize": 27
   },
-  "home-hero:stat1Sub": {
-    "color": "#ffffff"
-  },
-  "home-hero:stat2Label": {
-    "color": "#ffffff"
-  },
-  "home-hero:stat2Sub": {
-    "color": "#ffffff"
-  },
-  "home-hero:stat3Label": {
-    "color": "#ffffff"
-  },
-  "home-hero:stat3Sub": {
-    "color": "#ffffff"
-  },
-  "home-hero:ctaSecondary": {
-    "color": "#ffffff"
-  },
-  "home-hero:sub": {
-    "color": "#ffffff"
+  "home-hero:wordmark": {
+    "width": 437
   },
   "home-hero:rolePrefix": {
-    "color": "#ffffff"
-  },
-  "home-hero:roleHighlight": {
-    "fontSize": 31,
-    "color": "#c9a14e"
+    "fontSize": 30
   }
 }

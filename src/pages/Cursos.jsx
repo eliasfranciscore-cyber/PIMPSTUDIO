@@ -142,9 +142,9 @@ export default function Cursos() {
 
         {/* ============ CHECKOUT ============ */}
         <section className="bsection bsection-lamp" id="inscripcion">
-          <Lamp className="bru-lamp--sec" />
           <div className="bwrap">
             <div className="bhead center" data-reveal>
+              <Lamp className="bru-lamp--sec" />
               <p className="kicker"><EditableText file="cursos" path="checkout.kicker">{CURSOS.checkout.kicker}</EditableText></p>
               <h2><EditableText file="cursos" path="checkout.h2" as="span">{CURSOS.checkout.h2}</EditableText></h2>
               <p><EditableText file="cursos" path="checkout.body" as="span">{CURSOS.checkout.body}</EditableText></p>
@@ -156,6 +156,7 @@ export default function Cursos() {
       </main>
 
       <ModuleFooter
+        logoSrc="/assets/brunetti-cursos-wordmark.webp"
         links={[
           [() => goAnchor('curriculum'), 'Programa'],
           [() => goAnchor('inscripcion'), 'Acceder'],

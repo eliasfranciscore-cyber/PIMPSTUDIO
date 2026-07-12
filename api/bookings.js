@@ -1,6 +1,7 @@
 import { neon } from "@neondatabase/serverless"
 import { readSession, requireInternal } from "./_auth.js"
 import { notifyBarber } from "./push.js"
+import { sendBookingConfirmationEmail } from "./_email.js"
 
 const MIN_CANCEL_NOTICE_HOURS = 10
 const MAX_LEAD_DAYS = 7
@@ -46,7 +47,7 @@ export default async function handler(req, res) {
       }
       const cleanPhone = String(phone).replace(/\D/g, "")
       const bookings = await sql`
-        SELECT b.id, b.booking_date as date, b.booking_time as time,
+        SELECT b.id, b.booking_date::text as date, b.booking_time::text as time,
                b.barber_id as "barberId", COALESCE(b.custom_service, s.name) as service, b.status,
                COALESCE(b.custom_price, s.price)::int as price,
                CASE WHEN b.booking_date > CURRENT_DATE THEN 'next'
@@ -59,7 +60,7 @@ export default async function handler(req, res) {
         ORDER BY b.booking_date DESC, b.booking_time DESC
         LIMIT 20
       `
-      return res.json({ ok: true, bookings })
+      return res.json({ ok: true, bookings: bookings.map((item) => ({ ...item, time: item.time?.slice(0, 5) })) })
     }
 
     if (req.method === "POST") {
@@ -137,12 +138,13 @@ export default async function handler(req, res) {
         RETURNING id, booking_date as date, booking_time as time, status
       `
 
-      // Aviso push SOLO al barbero de la reserva (su usuario). No bloquea la respuesta.
+      // Aviso push al barbero + correo de confirmación al cliente. Ninguno
+      // de los dos bloquea la respuesta ni la reserva ya creada.
       try {
         const [info] = await sql`
-          SELECT u.name as client, s.name as service
-          FROM users u, services s
-          WHERE u.id = ${user.id} AND s.id = ${serviceId}
+          SELECT u.name as client, u.email as email, s.name as service, s.price as price, br.name as barber
+          FROM users u, services s, barbers br
+          WHERE u.id = ${user.id} AND s.id = ${serviceId} AND br.id = ${barberId}
         `
         await notifyBarber(barberId, {
           title: "Nueva reserva",
@@ -150,8 +152,17 @@ export default async function handler(req, res) {
           url: "/panel",
           tag: `reserva-${booking.id}`,
         })
+        await sendBookingConfirmationEmail({
+          to: info?.email,
+          name: info?.client,
+          service: info?.service,
+          barber: info?.barber,
+          price: info?.price,
+          date,
+          time,
+        })
       } catch (notifyErr) {
-        console.error("notify barber error:", notifyErr)
+        console.error("notify barber/client error:", notifyErr)
       }
 
       return res.json({ ok: true, booking })

@@ -4,6 +4,9 @@ import { useBrunettiFx, scrollToId } from '../components/brunetti.jsx'
 import SiteNav from '../components/SiteNav.jsx'
 import ModuleFooter from '../components/ModuleFooter.jsx'
 import { Lamp } from '../components/ui/lamp.jsx'
+import { ContainerScroll } from '../components/ui/container-scroll-animation.jsx'
+import { InteractiveSelector } from '../components/ui/interactive-selector.jsx'
+import { Sparkles } from '../components/ui/sparkles.jsx'
 import { CLP } from '../data.js'
 import { EditableText, EditContext } from '../components/edit/EditableText.jsx'
 import { Editable } from '../components/edit/Editable.jsx'
@@ -72,8 +75,6 @@ const CARDS = EXPERIENCIAS.cards.map((c, i) => ({ ...c, img: CARD_IMAGES[i] }))
 
 const TESTIMONIAL_IMAGES = ['/assets/bruno-feature.jpg', '/assets/gallery-1.jpg', '/assets/workshop-2026.jpg', '/assets/bruno-portrait.jpg']
 const TESTIMONIALS = TESTIMONIOS_INTRO.items.map((t, i) => ({ ...t, img: TESTIMONIAL_IMAGES[i] }))
-
-const NAME = 'Brunetti'.split('')
 
 export default function Home() {
   const navigate = useNavigate()
@@ -234,8 +235,8 @@ export default function Home() {
           <Lamp className="bru-lamp--hero" />
           <div className="bhero-grid">
             <div className="bhero-text">
-              <h1 className="bhero-name" aria-label="Brunetti">
-                {NAME.map((ch, i) => (<span key={i} style={{ '--l': i }}>{ch}</span>))}
+              <h1 className="bhero-name bhero-name--img" aria-label="Brunetticutz">
+                <Editable as="img" editId="home-hero:wordmark" className="bhero-name-img" src="/assets/brunetti-hero-wordmark.webp" alt="Brunetticutz" fetchpriority="high" decoding="async" />
               </h1>
               <span className="bhero-kicker"><span className="dot" /><EditableText file="home-hero" path="kicker">{HERO.kicker}</EditableText></span>
               <p className="bhero-role">
@@ -272,31 +273,32 @@ export default function Home() {
           </div>
         </section>
 
+        <div className="bru-sparkles-zone">
+          <Sparkles className="bru-sparkles--bg" />
+
         {/* ============ MARQUEE ============ */}
         <div className="bmarquee" aria-hidden="true">
           <div className="bmarquee-track">{marquee}{marquee}</div>
         </div>
 
         {/* ============ VISAGISMO ============ */}
-        <section id="visagismo" className="bsection">
+        <section id="visagismo" className="bsection bsection--full">
           <div className="bwrap">
-            <div className="bhead" data-reveal>
+            <div className="bhead center" data-reveal>
               <p className="kicker"><EditableText file="home-visagismo" path="kicker">{VISAGISMO.kicker}</EditableText></p>
               <h2><EditableText file="home-visagismo" path="h2" as="span">{VISAGISMO.h2}</EditableText></h2>
               <p><EditableText file="home-visagismo" path="body" as="span">{VISAGISMO.body}</EditableText></p>
             </div>
-            <div className="visagismo-grid">
-              {PILLARS.map((p, i) => (
-                <article className="pillar" data-reveal style={{ '--i': i }} key={p.num}>
-                  <div className="picon"><svg viewBox="0 0 24 24">{p.icon}</svg></div>
-                  <div>
-                    <span className="num">{p.num}</span>
-                    <h3><EditableText file="home-visagismo" path={`pillars.${i}.title`} as="span">{p.title}</EditableText></h3>
-                    <p><EditableText file="home-visagismo" path={`pillars.${i}.body`} as="span">{p.body}</EditableText></p>
-                  </div>
-                </article>
-              ))}
-            </div>
+          </div>
+          <div className="bwrap">
+            <InteractiveSelector
+              items={PILLARS.map((p, i) => ({
+                num: p.num,
+                icon: p.icon,
+                title: <EditableText file="home-visagismo" path={`pillars.${i}.title`} as="span">{p.title}</EditableText>,
+                body: <EditableText file="home-visagismo" path={`pillars.${i}.body`} as="span">{p.body}</EditableText>,
+              }))}
+            />
           </div>
         </section>
 
@@ -322,13 +324,17 @@ export default function Home() {
 
         {/* ============ SOBRE BRUNO ============ */}
         <section id="sobre" className="bsection">
-          <Lamp className="bru-lamp--sec" />
           <div className="bwrap babout">
-            <figure className="babout-figure" data-reveal="left">
-              <Editable as="img" editId="home-sobre:figure" src="/assets/workshop-2026.jpg" alt="Bruno Herrera con su comunidad de barberos" loading="lazy" decoding="async" />
-              <figcaption className="sig"><EditableText file="home-sobre" path="figCaption">{SOBRE.figCaption}</EditableText></figcaption>
-            </figure>
+            <div data-reveal="left">
+              <ContainerScroll>
+                <figure className="babout-figure">
+                  <Editable as="img" editId="home-sobre:figure" src="/assets/workshop-2026.jpg" alt="Bruno Herrera con su comunidad de barberos" loading="lazy" decoding="async" />
+                  <figcaption className="sig"><EditableText file="home-sobre" path="figCaption">{SOBRE.figCaption}</EditableText></figcaption>
+                </figure>
+              </ContainerScroll>
+            </div>
             <div className="babout-body" data-reveal="right">
+              <Lamp className="bru-lamp--sec" />
               <p className="kicker" style={{ letterSpacing: '0.3em', textTransform: 'uppercase', fontSize: '0.72rem', color: 'var(--gold-bright)', margin: '0 0 0.8rem' }}><EditableText file="home-sobre" path="kicker">{SOBRE.kicker}</EditableText></p>
               <h2><EditableText file="home-sobre" path="h2" as="span">{SOBRE.h2}</EditableText></h2>
               <p><span className="lead"><EditableText file="home-sobre" path="leadText" as="span">{SOBRE.leadText}</EditableText></span> <EditableText file="home-sobre" path="bodyText" as="span">{SOBRE.bodyText}</EditableText></p>
@@ -421,11 +427,11 @@ export default function Home() {
 
         {/* ============ CURSOS TEASER ============ */}
         <section className="bsection" id="cursos-teaser">
-          <Lamp className="bru-lamp--sec" />
           <div className="bwrap">
             <div className="bteaser" data-reveal="scale">
               <div className="bteaser-bg"><Editable as="img" editId="home-cursos:teaserBg" src="/assets/workshop-2026.jpg" alt="Workshop Brunetti con su comunidad de barberos" loading="lazy" decoding="async" /></div>
               <div className="bteaser-inner">
+                <Lamp className="bru-lamp--teaser" />
                 <p className="kicker"><EditableText file="home-cursos-teaser" path="kicker">{CURSOS_TEASER.kicker}</EditableText></p>
                 <h2><EditableText file="home-cursos-teaser" path="h2" as="span">{CURSOS_TEASER.h2}</EditableText></h2>
                 <p><EditableText file="home-cursos-teaser" path="body" as="span">{CURSOS_TEASER.body}</EditableText></p>
@@ -527,10 +533,12 @@ export default function Home() {
             </div>
           </div>
         </section>
+        </div>
 
       </main>
 
       <ModuleFooter
+        logoSrc="/assets/brunetti-hero-wordmark.webp"
         links={[
           [() => navTo('visagismo'), 'Visagismo'],
           [() => navTo('servicios'), 'Servicios'],

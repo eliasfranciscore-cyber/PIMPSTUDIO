@@ -29,68 +29,26 @@
 }
 
 /* ------------------------------------------------------------------
-   Logotipo del navbar como TEXTO (no SVG): "Brunetti Cutz" en gótica
-   dorada + "Barber Studio" centrado debajo. Todo escala desde una sola
-   font-size en el contenedor (.brand-logo); los hijos usan em → mover el
-   logo entre desktop/móvil es cambiar UN número, sin romper el layout.
+   Logotipo del navbar: wordmark real (imagen), uno por módulo (dorado en
+   Home/Tu estilo, morado en Workshop, azul en Cursos — ver SiteNav.jsx).
+   Todo escala desde una sola font-size en el contenedor (.site-nav-brand);
+   el logo usa em → moverlo entre desktop/móvil es cambiar UN número.
    ------------------------------------------------------------------ */
 .home-nav .site-nav-brand {
   flex: 0 0 auto;
-  /* inline-block + text-align:center = shrink-wrap fiable al ancho del texto
-     más ancho ("Brunetti Cutz") y "Barber Studio" centrado debajo. Evita los
-     quirks de tamaño de un flex-column anidado. */
-  display: inline-block;
-  text-align: center;
+  display: inline-flex;
+  align-items: center;
   line-height: 1;
-  font-size: 17px;         /* unidad base: toda la marca escala desde aquí */
+  font-size: 17px;         /* unidad base: el logo escala desde aquí */
   text-decoration: none;
-  white-space: nowrap;
 }
 .home-nav.is-scrolled .site-nav-brand { font-size: 14.5px; }
 
 .home-nav .site-nav-brand-word {
+  height: 2.5em;
+  width: auto;
   display: block;
-  font-family: "Manufacturing Consent", "Pirata One", serif;
-  font-weight: 400;
-  font-size: 2.15em;
-  line-height: 0.92;
-  letter-spacing: 0.01em;
-  white-space: nowrap;
-  /* Gradiente dorado FIJO (no var(--gold-grad)): se mantiene dorado también
-     en /workshop (morado) y /cursos (azul), donde --gold-grad se remapea. */
-  background: linear-gradient(180deg, #f1e2b0 0%, #e9d7a0 18%, #c9a14e 50%, #9c7a32 78%, #7a5e26 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
   filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.4));
-}
-/* En /cursos y /workshop el logotipo adopta el degradado del módulo (azul/morado),
-   manteniendo el mismo recorte de texto y brillo. Dorado en el resto del sitio.
-   El recorte (background-clip:text + fill transparente) ya viene heredado arriba. */
-.cursos-page .site-nav-brand-word {
-  background: linear-gradient(180deg, #aab0f7 0%, #8b93f5 18%, #6b74f0 50%, #2730b8 78%, #0b129e 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-}
-.wks .site-nav-brand-word {
-  background: linear-gradient(180deg, #d9c2f9 0%, #c9a3f7 18%, #b483f3 50%, #8838d8 78%, #6b28b8 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-}
-.home-nav .site-nav-brand-sub {
-  display: block;
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 0.62em;
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
-  color: var(--muted);
-  white-space: nowrap;
-  margin-top: 0.3em;
-  /* El tracking añade un hueco a la DERECHA de la última letra → este padding
-     izquierdo lo compensa para que quede ópticamente centrado bajo la palabra. */
-  padding-left: 0.4em;
 }
 
 /* En desktop el logo debe quedar DENTRO de la píldora translúcida del navbar.
@@ -138,7 +96,7 @@
   .site-nav-barber-desktop { display: none !important; }
   .site-nav-burger {
     position: absolute;
-    right: clamp(1.1rem, 5.5vw, 2rem);
+    right: clamp(1.5rem, 7vw, 2.4rem);
     top: 50%;
     transform: translateY(-50%);
   }
@@ -265,6 +223,3 @@
   .wks-shell { padding-bottom: 5rem; }
   .estilo-page .mfooter { padding-bottom: 5rem; }
 }
-
-/* Modo claro: navbar "Barber Studio" debe ser blanco, no muted/gris */
-[data-theme="light"] .home-nav .site-nav-brand-sub { color: white !important; }

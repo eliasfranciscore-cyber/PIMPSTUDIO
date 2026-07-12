@@ -1045,8 +1045,8 @@
     "semantic_hash": ""
   },
   "scripts/deploy-prod.mjs": {
-    "mtime": 1783793555.1970782,
-    "ast_hash": "0887f704ca4bb26d58a02826edce619b",
+    "mtime": 1783822498.156327,
+    "ast_hash": "90da50935eba2d1c61df0d6e0fdaed8d",
     "semantic_hash": ""
   },
   "src/components/edit/Editable.jsx": {
