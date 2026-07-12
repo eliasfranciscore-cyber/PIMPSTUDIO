@@ -1419,6 +1419,12 @@
   position: relative;
   min-height: 100svh;
   display: grid;
+  /* minmax(0,1fr): sin esto, la columna implícita del grid se dimensiona por
+     el max-content de los hijos (p.ej. un título largo sin punto de quiebre
+     cómodo), ensanchando el grid más que el viewport — con overflow:hidden
+     eso se traduce en texto recortado contra el borde derecho. Mismo bug
+     y mismo fix que .wks-hero-grid en workshop.css. */
+  grid-template-columns: minmax(0, 1fr);
   align-items: center;
   overflow: hidden;
   isolation: isolate;
@@ -1470,6 +1476,43 @@
 }
 @media (max-width: 640px) {
   .brunetti-site .course-hero-figwrap { width: min(220px, 52vw); height: min(46vh, 400px); opacity: 0.6; }
+}
+/* Móvil real: el sujeto deja de ser un fondo tenue detrás del texto y pasa a
+   ser protagonista en el flujo, igual que en el hero de Home (mismo patrón:
+   display:contents en el contenedor de texto + order en los hijos, para
+   poder intercalar la figura entre el título y el resto del copy). Este
+   bloque va DESPUÉS de las reglas de arriba a propósito: con igual
+   especificidad, gana la que aparece última en el archivo. */
+@media (max-width: 940px) {
+  /* .course-hero-inner (display:contents) deja de aportar su padding-inline
+     propio — sin esto, kicker/título/sub/botones/cards quedan pegados al
+     borde real de la pantalla en vez de tener el margen que tenían antes. */
+  .brunetti-site .course-hero { padding-inline: 1.25rem; padding-top: clamp(6.5rem, 10vh, 7.5rem); }
+  .brunetti-site .course-hero-inner { display: contents; text-align: center; }
+  .brunetti-site .course-hero .bhero-kicker,
+  .brunetti-site .course-hero h1 { order: 1; }
+  /* El clamp base (5vw) usa el ancho de vw sin margen: en un teléfono angosto
+     "Visagismo & Barbería" no entra en una sola línea a ese tamaño. */
+  .brunetti-site .course-hero h1 { font-size: clamp(1.7rem, 7.5vw, 2.6rem); }
+  .brunetti-site .course-hero-figwrap {
+    order: 2;
+    position: static;
+    z-index: auto;
+    width: min(400px, 92.5vw);
+    height: auto;
+    max-height: 52.5vh;
+    margin: 0 auto 0.75rem;
+    opacity: 1;
+  }
+  .brunetti-site .course-hero-figwrap img {
+    height: auto;
+    max-height: 52.5vh;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .brunetti-site .course-hero .sub { order: 3; margin-left: auto; margin-right: auto; }
+  .brunetti-site .course-hero .actions { order: 4; justify-content: center; }
+  .brunetti-site .course-stats { order: 5; }
 }
 .brunetti-site .course-hero::after {
   content: "";
