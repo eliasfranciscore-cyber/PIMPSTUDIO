@@ -112,7 +112,7 @@ function localDateKey(date) {
   return `${y}-${m}-${d}`
 }
 
-export default function DashboardResumen({ bookings = [], barbers = [], expenses = [], clients = [], todaySlots = [], onNewBooking }) {
+export default function DashboardResumen({ bookings = [], barbers = [], expenses = [], clients = [], todaySlots = [], onNewBooking, onGoToPending }) {
   const todayKey = localDateKey(new Date())
   const monthKey = todayKey.slice(0, 7)
   const today = useMemo(() => bookings.filter((b) => !b.date || b.date === todayKey).sort((a, b) => String(a.time).localeCompare(String(b.time))), [bookings, todayKey])
@@ -143,19 +143,28 @@ export default function DashboardResumen({ bookings = [], barbers = [], expenses
   }, [expenses, monthKey])
   const expTotal = expenseCats.reduce((s, c) => s + c.amount, 0)
 
-  // Ingresos de los últimos 7 días con reservas (en vez de un gráfico fijo).
+  // Ingresos y volumen de reservas de los últimos 7 días con datos (en vez de
+  // un gráfico fijo) — misma ventana de fechas para ambas series, así las dos
+  // sparklines del hero son comparables día a día.
   const DOW = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
-  const revByDay = useMemo(() => {
+  const { revByDay, countByDay } = useMemo(() => {
     const valid = bookings.filter((b) => b.status !== 'cancelada' && b.date)
     const byDate = valid.reduce((acc2, b) => {
-      acc2[b.date] = (acc2[b.date] || 0) + Number(b.price || 0)
+      const cur = acc2[b.date] || { rev: 0, count: 0 }
+      cur.rev += Number(b.price || 0)
+      cur.count += 1
+      acc2[b.date] = cur
       return acc2
     }, {})
-    return Object.keys(byDate).sort().slice(-7).map((date) => ({
-      d: DOW[new Date(`${date}T00:00:00`).getDay()],
-      v: byDate[date],
-    }))
+    const dates = Object.keys(byDate).sort().slice(-7)
+    return {
+      revByDay: dates.map((date) => ({ d: DOW[new Date(`${date}T00:00:00`).getDay()], v: byDate[date].rev })),
+      countByDay: dates.map((date) => byDate[date].count),
+    }
   }, [bookings])
+
+  // Reservas pendientes de confirmar (cualquier fecha) — acceso rápido a Reservas.
+  const pendingCount = useMemo(() => bookings.filter((b) => b.status === 'pendiente').length, [bookings])
 
   const monthRevenue = useMemo(() => bookings
     .filter((b) => b.status !== 'cancelada' && (b.date || '').startsWith(monthKey))
@@ -206,16 +215,29 @@ export default function DashboardResumen({ bookings = [], barbers = [], expenses
       <div className="dk-hero">
         <div className="dk-hero-grid dk-stagger">
           <div>
-            <h2 className="dk-hero-title" style={{ fontSize: '1.35rem' }}>Resumen del estudio</h2>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem', flexWrap: 'wrap' }}>
+              <h2 className="dk-hero-title" style={{ fontSize: '1.35rem' }}>Resumen del estudio</h2>
+              {pendingCount > 0 && (
+                <button type="button" className="chip chip-gold" onClick={onGoToPending}>
+                  <Icon name="bell" size={12} /> {pendingCount} pendiente{pendingCount === 1 ? '' : 's'} de confirmar
+                </button>
+              )}
+            </div>
             <span className="dk-hero-sub" style={{ textTransform: 'capitalize' }}>{dateLabel}</span>
             <div className="dk-hero-big" style={{ marginTop: '.55rem' }}>
               <CountUp value={revenueDay} format={CLP} />
               <small>hoy · <CountUp value={dayValid.length} /> reservas</small>
             </div>
             {revByDay.length > 1 && (
-              <div style={{ marginTop: '.4rem', display: 'flex', alignItems: 'center', gap: '.6rem' }}>
-                <Sparkline data={revByDay.map((d) => d.v)} width={150} height={36} />
-                <span className="dk-hero-sub">últimos 7 días</span>
+              <div style={{ marginTop: '.4rem', display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem' }}>
+                  <Sparkline data={revByDay.map((d) => d.v)} width={120} height={32} />
+                  <span className="dk-hero-sub">ingresos · 7 días</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem' }}>
+                  <Sparkline data={countByDay} width={70} height={32} stroke="#7ea8ff" />
+                  <span className="dk-hero-sub">reservas · 7 días</span>
+                </div>
               </div>
             )}
           </div>
@@ -290,7 +312,7 @@ export default function DashboardResumen({ bookings = [], barbers = [], expenses
           </div>
         </div>
 
-        <div className="card psn-panel span-5">
+        <div className="card psn-panel span-7">
           <div className="psn-panel-head"><h3 className="font-display">Reservas del día</h3><span className="chip">{today.length} citas</span></div>
           <div className="psn-today">
             {today.map((bk) => {
@@ -310,7 +332,7 @@ export default function DashboardResumen({ bookings = [], barbers = [], expenses
           </div>
         </div>
 
-        <div className="card psn-panel span-4">
+        <div className="card psn-panel span-5">
           <div className="psn-panel-head"><h3 className="font-display">Gastos del mes</h3><span className="chip">{CLP(expTotal)}</span></div>
           <div className="psn-donut-wrap">
             <Donut
@@ -325,6 +347,11 @@ export default function DashboardResumen({ bookings = [], barbers = [], expenses
               {!expenseCats.length && <div style={{ color: 'var(--muted)', fontSize: '.8rem' }}>Sin gastos este mes.</div>}
             </div>
           </div>
+        </div>
+
+        <div className="card psn-panel span-7">
+          <div className="psn-panel-head"><h3 className="font-display">Servicios más pedidos</h3><span className="chip chip-gold"><Icon name="scissors" size={12} /> Top 5</span></div>
+          <TopSvc data={[]} bookings={bookings} />
         </div>
 
         <div className="card psn-panel span-5">
@@ -342,11 +369,6 @@ export default function DashboardResumen({ bookings = [], barbers = [], expenses
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="card psn-panel span-7">
-          <div className="psn-panel-head"><h3 className="font-display">Servicios más pedidos</h3><span className="chip chip-gold"><Icon name="scissors" size={12} /> Top 5</span></div>
-          <TopSvc data={[]} bookings={bookings} />
         </div>
 
         <div className="card psn-panel span-12">

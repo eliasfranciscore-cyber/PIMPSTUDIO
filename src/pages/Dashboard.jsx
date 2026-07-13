@@ -640,6 +640,11 @@ export default function Dashboard() {
   // ahora lleva al detalle real de esa reserva en vez de estar deshabilitada.
   const goToDayInReservas = (dayKey) => { setTab("reservas"); setInboxFocus({ day: dayKey, ts: Date.now() }) }
 
+  // Acceso rápido contextual desde Resumen: salta a Reservas con el filtro
+  // "Pendientes" ya aplicado y el rango en "Todas" (las pendientes pueden ser
+  // de cualquier fecha, no solo hoy).
+  const goToPendingInReservas = () => { setTab("reservas"); setInboxFocus({ day: isoDate(new Date()), ts: Date.now(), filter: "Pendientes", scope: "todas" }) }
+
   // Totales de la semana visible (no solo del día seleccionado): permite ver
   // de un vistazo cuántas horas quedan libres/bloqueadas antes de publicar la
   // semana siguiente.
@@ -697,7 +702,7 @@ export default function Dashboard() {
 
         {/* RESUMEN */}
         {tab === "resumen" && (
-          <DashboardResumen bookings={bookings} barbers={barbers} expenses={expenses} clients={clients} todaySlots={availability[isoDate(new Date())] || []} onNewBooking={() => setNewBookingOpen(true)} />
+          <DashboardResumen bookings={bookings} barbers={barbers} expenses={expenses} clients={clients} todaySlots={availability[isoDate(new Date())] || []} onNewBooking={() => setNewBookingOpen(true)} onGoToPending={goToPendingInReservas} />
         )}
 
         {/* AGENDA */}
