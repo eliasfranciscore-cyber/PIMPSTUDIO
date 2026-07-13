@@ -290,8 +290,8 @@
     "semantic_hash": ""
   },
   "src/data/workshop.js": {
-    "mtime": 1783825272.0724726,
-    "ast_hash": "030e54d88430e798b19b6130c70c8745",
+    "mtime": 1783904442.066146,
+    "ast_hash": "acefdd84b4411a8881eb739f7fca4f00",
     "semantic_hash": ""
   },
   "src/enrollmentsStore.js": {
@@ -320,8 +320,8 @@
     "semantic_hash": ""
   },
   "src/pages/Cursos.jsx": {
-    "mtime": 1783894518.572717,
-    "ast_hash": "52793a28b487c556dba22cddd30dd0f3",
+    "mtime": 1783903705.0590258,
+    "ast_hash": "7015c729e916f98c45076abe6a5d54f9",
     "semantic_hash": ""
   },
   "src/pages/Dashboard.jsx": {
@@ -330,13 +330,13 @@
     "semantic_hash": ""
   },
   "src/pages/EncuentraEstilo.jsx": {
-    "mtime": 1783892249.931764,
-    "ast_hash": "c36e2b6b78e61978ef80c0cde6a62437",
+    "mtime": 1783903763.905495,
+    "ast_hash": "865f5e1915f9945cbd5f90064b5787ff",
     "semantic_hash": ""
   },
   "src/pages/Home.jsx": {
-    "mtime": 1783896969.0691073,
-    "ast_hash": "a7b86312c1b78581b9a3d9fb1f0fb045",
+    "mtime": 1783903378.7958248,
+    "ast_hash": "adf73fd569921e0507ff402431daa05d",
     "semantic_hash": ""
   },
   "src/pages/Login.jsx": {
@@ -345,8 +345,8 @@
     "semantic_hash": ""
   },
   "src/pages/Workshop.jsx": {
-    "mtime": 1783894599.9981833,
-    "ast_hash": "14ed9b35ccd275c0c229a3989dac698c",
+    "mtime": 1783904456.8628037,
+    "ast_hash": "135ab71d55177a9ceabee69d87b6281d",
     "semantic_hash": ""
   },
   "src/push.js": {
@@ -940,8 +940,8 @@
     "semantic_hash": ""
   },
   "src/data/content/estilo.json": {
-    "mtime": 1783823103.535433,
-    "ast_hash": "356f245597810913fcf4ec6139c08109",
+    "mtime": 1783903902.1021516,
+    "ast_hash": "cca0d2205b275dbfabdd4f53afeb6216",
     "semantic_hash": ""
   },
   "src/data/content/home-contacto.json": {
@@ -990,13 +990,13 @@
     "semantic_hash": ""
   },
   "src/data/content/home-visagismo.json": {
-    "mtime": 1783740362.9784086,
-    "ast_hash": "d080630e47fe5725536115bc847af187",
+    "mtime": 1783901178.9610748,
+    "ast_hash": "9d0d84a99c87cbde89968a67ec6d3107",
     "semantic_hash": ""
   },
   "src/data/content/workshop.json": {
-    "mtime": 1783820424.8343015,
-    "ast_hash": "367654a7f8114bc046eb4d5bf91964b5",
+    "mtime": 1783904653.5684414,
+    "ast_hash": "83c31075bd5ecf56fc245bc2942b0a75",
     "semantic_hash": ""
   },
   "public/assets/bruno-hero-bg.webp": {
@@ -1055,8 +1055,8 @@
     "semantic_hash": ""
   },
   "src/data/overrides/workshop.json": {
-    "mtime": 1783878846.3185747,
-    "ast_hash": "28cc2db88d75f0b8f486055a34a1be56",
+    "mtime": 1783904452.7632916,
+    "ast_hash": "0d1f951b625794a95c29535480d59156",
     "semantic_hash": ""
   },
   "src/components/DashKit.jsx": {
@@ -1190,13 +1190,13 @@
     "semantic_hash": ""
   },
   "src/components/ui/interactive-selector.jsx": {
-    "mtime": 1783895563.3767638,
-    "ast_hash": "7f88774f6ba1229d79115dbb504c5c8a",
+    "mtime": 1783903350.0555863,
+    "ast_hash": "10d4ddc945000bcb57e0acb04171ee84",
     "semantic_hash": ""
   },
   "src/components/ui/sparkles.jsx": {
-    "mtime": 1783897118.9943771,
-    "ast_hash": "d4bc27ec9aa3ed488d125daf1f6e3cdb",
+    "mtime": 1783903433.5798821,
+    "ast_hash": "878087bac7d68974edd9f12b64dddb80",
     "semantic_hash": ""
   },
   "public/assets/brunetti-cursos-wordmark.webp": {
@@ -1212,6 +1212,51 @@
   "public/assets/brunetti-workshop-wordmark.webp": {
     "mtime": 1783891650.869807,
     "ast_hash": "59738d112e1a799c2050aa96292a658c",
+    "semantic_hash": ""
+  },
+  "public/assets/uploads/5-jpg-mriinh5h.jpg": {
+    "mtime": 1783904452.7586033,
+    "ast_hash": "6a3de1e54aa11b8890e511bde6b75447",
+    "semantic_hash": ""
+  },
+  "public/assets/visagismo-paso-1.jpg": {
+    "mtime": 1783903259.1941683,
+    "ast_hash": "9821d81b0b21779668b4f2899b51adf9",
+    "semantic_hash": ""
+  },
+  "public/assets/visagismo-paso-2.jpg": {
+    "mtime": 1783903259.2401226,
+    "ast_hash": "a52538314dab6ec8bff6a5f707638a73",
+    "semantic_hash": ""
+  },
+  "public/assets/visagismo-paso-3.jpg": {
+    "mtime": 1783903259.2891822,
+    "ast_hash": "725e615f277709f1cd90c6070a2cd3e2",
+    "semantic_hash": ""
+  },
+  "public/assets/visagismo-paso-4.jpg": {
+    "mtime": 1783903259.3360374,
+    "ast_hash": "c65e3667a042a3d2718ec08a6f71dbc1",
+    "semantic_hash": ""
+  },
+  "public/assets/visagismo-paso-5-poster.jpg": {
+    "mtime": 1783903314.6921217,
+    "ast_hash": "4b615aee09afc037e6eeaadadf7d72e3",
+    "semantic_hash": ""
+  },
+  "public/assets/workshop-bloque3-poster.jpg": {
+    "mtime": 1783904404.9523382,
+    "ast_hash": "5960ff24a57c86de33f42f373c3ca889",
+    "semantic_hash": ""
+  },
+  "public/assets/visagismo-paso-5.mp4": {
+    "mtime": 1783903299.9574888,
+    "ast_hash": "c0a10fe8bad17cba8a4b18c5ff54a39d",
+    "semantic_hash": ""
+  },
+  "public/assets/workshop-bloque3.mp4": {
+    "mtime": 1783904404.6279206,
+    "ast_hash": "b208129fe3d4be9c308c58e5077a0d2c",
     "semantic_hash": ""
   }
 }

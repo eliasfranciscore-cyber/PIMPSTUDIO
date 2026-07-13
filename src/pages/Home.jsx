@@ -83,7 +83,15 @@ function toDisplayService(svc, featuredId) {
 const CARD_IMAGES = ['/assets/bruno-feature.jpg', '/assets/gallery-1.jpg', '/assets/gallery-2.jpg', '/assets/gallery-3.jpg', '/assets/workshop-2026.jpg', '/assets/bruno-portrait.jpg']
 const CARDS = EXPERIENCIAS.cards.map((c, i) => ({ ...c, img: CARD_IMAGES[i] }))
 
-const TESTIMONIAL_IMAGES = ['/assets/bruno-feature.jpg', '/assets/gallery-1.jpg', '/assets/workshop-2026.jpg', '/assets/bruno-portrait.jpg']
+// Antes las 4 reseñas reutilizaban fotos de Bruno (el barbero) en vez de
+// clientes reales. Se reemplazan por fotos de la galería de "Tu estilo"
+// (/tu-estilo), eligiendo una persona distinta y reconocible por reseña.
+const TESTIMONIAL_IMAGES = [
+  '/assets/estilo/estilo-fade-clasico.jpg',
+  '/assets/estilo/estilo-side-part.jpg',
+  '/assets/estilo/estilo-textura-barba.jpg',
+  '/assets/estilo/estilo-skin-fade.jpg',
+]
 const TESTIMONIALS = TESTIMONIOS_INTRO.items.map((t, i) => ({ ...t, img: TESTIMONIAL_IMAGES[i] }))
 
 export default function Home() {

@@ -10,8 +10,8 @@
     "semantic_hash": ""
   },
   ".claude/settings.local.json": {
-    "mtime": 1783804678.3818083,
-    "ast_hash": "55cddc990daaa47cf4f12713fcb32d32",
+    "mtime": 1783883157.0714002,
+    "ast_hash": "a3134843ad72c8622d2a5cc2ae99015f",
     "semantic_hash": ""
   },
   "api/_auth.js": {
@@ -40,8 +40,8 @@
     "semantic_hash": "80924df7ecf1f104245ccd92cd78b5cd"
   },
   "api/bookings.js": {
-    "mtime": 1783806770.2433765,
-    "ast_hash": "e93a30a22885cedfe5f8957082ddb07d",
+    "mtime": 1783888425.6594763,
+    "ast_hash": "89c6d7940d07f3ec8ea1eecea24a14df",
     "semantic_hash": ""
   },
   "api/clients.js": {
@@ -50,8 +50,8 @@
     "semantic_hash": ""
   },
   "api/enrollments.js": {
-    "mtime": 1783679841.4325376,
-    "ast_hash": "5bba08864a93d7ac37b8b24e92cf51e4",
+    "mtime": 1783892044.4723868,
+    "ast_hash": "bdde5c46a1138288dc757fefa66b9380",
     "semantic_hash": ""
   },
   "api/expenses.js": {
@@ -245,14 +245,14 @@
     "semantic_hash": ""
   },
   "src/components/ModuleFooter.jsx": {
-    "mtime": 1782686874.1632395,
-    "ast_hash": "b512a0db13e679d1a3371c268f26cc04",
-    "semantic_hash": "b512a0db13e679d1a3371c268f26cc04"
+    "mtime": 1783892170.776803,
+    "ast_hash": "eb084fce63c42bf20c998d6285dfe031",
+    "semantic_hash": ""
   },
   "src/components/SiteNav.jsx": {
-    "mtime": 1782688629.8297539,
-    "ast_hash": "9a68087657452eca124387356f16952f",
-    "semantic_hash": "9a68087657452eca124387356f16952f"
+    "mtime": 1783892599.0165138,
+    "ast_hash": "d4aca1e3d88b1c7fb5751e69a87d9613",
+    "semantic_hash": ""
   },
   "src/components/brunetti.jsx": {
     "mtime": 1782686874.1548529,
@@ -270,8 +270,8 @@
     "semantic_hash": "ea919cd5fc8f57b54d15f6e2552917c4"
   },
   "src/components/ui.jsx": {
-    "mtime": 1783734022.6806252,
-    "ast_hash": "afdf4ef81001a3500822942304d22907",
+    "mtime": 1783889022.7275429,
+    "ast_hash": "a97112fe11e82d9687a48b7021cff412",
     "semantic_hash": ""
   },
   "src/components/ui/lamp.jsx": {
@@ -320,8 +320,8 @@
     "semantic_hash": ""
   },
   "src/pages/Cursos.jsx": {
-    "mtime": 1783825755.007647,
-    "ast_hash": "5dd1f95f21837e9475d28d0fe88b8235",
+    "mtime": 1783894518.572717,
+    "ast_hash": "52793a28b487c556dba22cddd30dd0f3",
     "semantic_hash": ""
   },
   "src/pages/Dashboard.jsx": {
@@ -330,23 +330,23 @@
     "semantic_hash": ""
   },
   "src/pages/EncuentraEstilo.jsx": {
-    "mtime": 1783797432.7702675,
-    "ast_hash": "a7b65ea597ce2eb11ca52b850eb19f2e",
+    "mtime": 1783892249.931764,
+    "ast_hash": "c36e2b6b78e61978ef80c0cde6a62437",
     "semantic_hash": ""
   },
   "src/pages/Home.jsx": {
-    "mtime": 1783797372.5285764,
-    "ast_hash": "054148c3507bb9082759318252fc3cf0",
+    "mtime": 1783896969.0691073,
+    "ast_hash": "a7b86312c1b78581b9a3d9fb1f0fb045",
     "semantic_hash": ""
   },
   "src/pages/Login.jsx": {
-    "mtime": 1782686874.180229,
-    "ast_hash": "61423707271a059b9925830747ca0f12",
-    "semantic_hash": "61423707271a059b9925830747ca0f12"
+    "mtime": 1783889349.4615223,
+    "ast_hash": "168b0be989c6b7f6607a6485b866c505",
+    "semantic_hash": ""
   },
   "src/pages/Workshop.jsx": {
-    "mtime": 1783878059.8192108,
-    "ast_hash": "86a78644f6ed9c5a9a7992283334662b",
+    "mtime": 1783894599.9981833,
+    "ast_hash": "14ed9b35ccd275c0c229a3989dac698c",
     "semantic_hash": ""
   },
   "src/push.js": {
@@ -375,8 +375,8 @@
     "semantic_hash": "8821dc65ef6d88a32b3d71aa793563c1"
   },
   "CLAUDE.md": {
-    "mtime": 1783797679.4448051,
-    "ast_hash": "50b246e4f6a1b046e3258599273556f7",
+    "mtime": 1783884360.6963422,
+    "ast_hash": "a97f3186f0dca25ba0f04032d87e9d8c",
     "semantic_hash": ""
   },
   "IMPLEMENTATION_PLAN.md": {
@@ -494,11 +494,6 @@
     "ast_hash": "47fea1fe71c55f3e7525b7e0c3142ad5",
     "semantic_hash": ""
   },
-  "public/assets/PIMP_STUDIO_LOGO.svg": {
-    "mtime": 1782685632.9226959,
-    "ast_hash": "9c247082de8ce6758ba4fc6e9353fc5f",
-    "semantic_hash": "9c247082de8ce6758ba4fc6e9353fc5f"
-  },
   "public/assets/ascension-logo.webp": {
     "mtime": 1782685632.9288583,
     "ast_hash": "d92f129e84b5e9e80434860b71f1df2d",
@@ -523,31 +518,6 @@
     "mtime": 1782685632.9312866,
     "ast_hash": "5039c4819202c8571b8205b29a13d04d",
     "semantic_hash": "5039c4819202c8571b8205b29a13d04d"
-  },
-  "public/assets/brunetti-logo-lockup-v2.svg": {
-    "mtime": 1782688629.825093,
-    "ast_hash": "0698272cdcc7ec79fd3790a5d363b310",
-    "semantic_hash": "0698272cdcc7ec79fd3790a5d363b310"
-  },
-  "public/assets/brunetti-logo-lockup.svg": {
-    "mtime": 1782685632.9192278,
-    "ast_hash": "811d52b1bc779da212adac9a9ab9f978",
-    "semantic_hash": "811d52b1bc779da212adac9a9ab9f978"
-  },
-  "public/assets/brunetti-logo-mark.svg": {
-    "mtime": 1782609253.9020114,
-    "ast_hash": "ca4650aa05f1b0823e576a5ce245ac4c",
-    "semantic_hash": "ca4650aa05f1b0823e576a5ce245ac4c"
-  },
-  "public/assets/brunetti-logo-monogram.svg": {
-    "mtime": 1782685632.9185207,
-    "ast_hash": "c7f4d0556f8567f11f93d448494d3561",
-    "semantic_hash": "c7f4d0556f8567f11f93d448494d3561"
-  },
-  "public/assets/brunetti-logo-text.svg": {
-    "mtime": 1782609253.9022171,
-    "ast_hash": "554ed5e7b4b822701e601426186634ef",
-    "semantic_hash": "554ed5e7b4b822701e601426186634ef"
   },
   "public/assets/brunetti-wordmark.svg": {
     "mtime": 1782685632.9210875,
@@ -1075,13 +1045,13 @@
     "semantic_hash": ""
   },
   "src/data/overrides/home-hero.json": {
-    "mtime": 1783820238.8448436,
-    "ast_hash": "f8a30f8fe1c45dfa497ccd3d700a34c9",
+    "mtime": 1783889412.1585793,
+    "ast_hash": "fce4dca860574373022e26aa19ad53c9",
     "semantic_hash": ""
   },
   "src/data/overrides/home-visagismo.json": {
-    "mtime": 1783820461.5969388,
-    "ast_hash": "ac4eab815b048f93effc33b6921e9201",
+    "mtime": 1783891438.112002,
+    "ast_hash": "634cd697d1a326ffdac98d8abaa63b37",
     "semantic_hash": ""
   },
   "src/data/overrides/workshop.json": {
@@ -1207,6 +1177,41 @@
   "public/assets/workshop-hero-bg.webp": {
     "mtime": 1783825256.3557076,
     "ast_hash": "7db478e0ecb654a48221ebad1f974680",
+    "semantic_hash": ""
+  },
+  "api/_email.js": {
+    "mtime": 1783892017.3505049,
+    "ast_hash": "00746d5ee6cd3614a1c8b70923ad1af2",
+    "semantic_hash": ""
+  },
+  "src/components/ui/container-scroll-animation.jsx": {
+    "mtime": 1783891321.83792,
+    "ast_hash": "4e948267f999a5e14b450de145117143",
+    "semantic_hash": ""
+  },
+  "src/components/ui/interactive-selector.jsx": {
+    "mtime": 1783895563.3767638,
+    "ast_hash": "7f88774f6ba1229d79115dbb504c5c8a",
+    "semantic_hash": ""
+  },
+  "src/components/ui/sparkles.jsx": {
+    "mtime": 1783897118.9943771,
+    "ast_hash": "d4bc27ec9aa3ed488d125daf1f6e3cdb",
+    "semantic_hash": ""
+  },
+  "public/assets/brunetti-cursos-wordmark.webp": {
+    "mtime": 1783892476.0866573,
+    "ast_hash": "0ac675699e954cb9f08c9accc7800419",
+    "semantic_hash": ""
+  },
+  "public/assets/brunetti-hero-wordmark.webp": {
+    "mtime": 1783883341.08176,
+    "ast_hash": "32260f4551d4b265afff627b73683ebd",
+    "semantic_hash": ""
+  },
+  "public/assets/brunetti-workshop-wordmark.webp": {
+    "mtime": 1783891650.869807,
+    "ast_hash": "59738d112e1a799c2050aa96292a658c",
     "semantic_hash": ""
   }
 }
