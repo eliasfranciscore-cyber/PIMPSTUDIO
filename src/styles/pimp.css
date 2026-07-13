@@ -657,6 +657,40 @@ select.input { text-overflow: ellipsis; }
   border-color: var(--gold-line);
   background: rgba(201,161,78,.06);
 }
+/* Encabezado de columnas: mismo grid que .client-row para que alinee, oculto
+   en móvil (ahí el card de 2 líneas ya se entiende sin cabecera). */
+.client-table-head { display: none; }
+@media (min-width: 1024px) {
+  .client-table-head {
+    display: grid;
+    grid-template-columns: minmax(180px, 1.5fr) 90px 120px auto;
+    gap: .7rem;
+    padding: 0 .78rem .4rem;
+  }
+  .client-table-head button {
+    background: none;
+    border: 0;
+    padding: 0;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: .2rem;
+    font-family: var(--font-display);
+    font-size: .66rem;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .client-table-head button:hover,
+  .client-table-head button.is-sorted { color: var(--gold-lt); }
+  /* Filas más compactas y acción de editar que solo aparece al pasar el
+     mouse: en desktop no hace falta un botón siempre visible por fila. */
+  .client-row { padding: .58rem .78rem; }
+  .client-row-edit { opacity: 0; transition: opacity .15s ease; }
+  .client-row:hover .client-row-edit,
+  .client-row:focus-within .client-row-edit { opacity: 1; }
+}
 .client-row strong,
 .client-profile strong,
 .history-row strong {

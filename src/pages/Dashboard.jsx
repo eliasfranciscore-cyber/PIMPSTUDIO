@@ -113,6 +113,7 @@ export default function Dashboard() {
   const [clients, setClients] = useState(CLIENTS)
   const [clientQuery, setClientQuery] = useState("")
   const [clientFilter, setClientFilter] = useState("all")
+  const [clientSort, setClientSort] = useState({ key: "name", dir: "asc" })
   const [selectedClient, setSelectedClient] = useState(null)
   const [clientHistory, setClientHistory] = useState([])
   const [clientEditing, setClientEditing] = useState(false)
@@ -186,6 +187,19 @@ export default function Dashboard() {
     if (clientFilter === "inactive") return clientActivityOf(client) === "inactive"
     if (clientFilter === "top") return Number(client.visits || 0) >= 3
     return true
+  })
+  // Encabezado de columna clickeable: mismo criterio dos veces = invierte el
+  // orden; distinto criterio = orden por defecto (nombre asc, el resto desc
+  // porque lo útil ahí es ver primero al que más visita/gasta).
+  const toggleClientSort = (key) => {
+    setClientSort((s) => s.key === key ? { key, dir: s.dir === "asc" ? "desc" : "asc" } : { key, dir: key === "name" ? "asc" : "desc" })
+  }
+  const sortedClients = [...filteredClients].sort((a, b) => {
+    const dir = clientSort.dir === "asc" ? 1 : -1
+    if (clientSort.key === "visits") return ((a.visits || 0) - (b.visits || 0)) * dir
+    if (clientSort.key === "totalSpent") return ((a.totalSpent || 0) - (b.totalSpent || 0)) * dir
+    if (clientSort.key === "lastVisit") return ((a.lastVisit || "") > (b.lastVisit || "") ? 1 : -1) * dir
+    return (a.name || "").localeCompare(b.name || "") * dir
   })
 
   // Modo panel: bloquea el scroll del body para que el scroll viva dentro de
@@ -886,33 +900,49 @@ export default function Dashboard() {
         {/* CLIENTES */}
         {tab === "clientes" && (
           <div className="animate-in" style={{ display: "grid", gap: "1.1rem" }}>
-            <button className="btn btn-gold btn-block" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: ".5rem" }} onClick={() => setNewClientOpen(true)}>
-              <Icon name="user" size={16} /> Nuevo cliente
-            </button>
             <div className="client-filter-grid">
               <button type="button" className={`client-filter-card ${clientFilter === "active" ? "is-active" : ""}`} onClick={() => setClientFilter((f) => f === "active" ? "all" : "active")}>
-                <Icon name="user" size={18} />
-                <strong>{activeClients.length}</strong>
-                <span>Activos</span>
+                <span className="cf-ic"><Icon name="user" size={16} /></span>
+                <span className="cf-body"><strong>{activeClients.length}</strong><span className="cf-label">Activos</span></span>
               </button>
               <button type="button" className={`client-filter-card ${clientFilter === "inactive" ? "is-active" : ""}`} onClick={() => setClientFilter((f) => f === "inactive" ? "all" : "inactive")}>
-                <Icon name="clock" size={18} />
-                <strong>{inactiveClients.length}</strong>
-                <span>Inactivos 30+ días</span>
+                <span className="cf-ic"><Icon name="clock" size={16} /></span>
+                <span className="cf-body"><strong>{inactiveClients.length}</strong><span className="cf-label">Inactivos 30+ días</span></span>
               </button>
               <button type="button" className={`client-filter-card ${clientFilter === "top" ? "is-active" : ""}`} onClick={() => setClientFilter((f) => f === "top" ? "all" : "top")}>
-                <Icon name="star" size={18} />
-                <strong>{topClients.length}</strong>
-                <span>Más activos</span>
+                <span className="cf-ic"><Icon name="star" size={16} /></span>
+                <span className="cf-body"><strong>{topClients.length}</strong><span className="cf-label">Más activos</span></span>
               </button>
             </div>
-            <Panel title="Panel de clientes" action={<span className="chip chip-gold">Telefono como ID</span>}>
+            <Panel
+              title="Panel de clientes"
+              action={(
+                <div style={{ display: "flex", gap: ".5rem", alignItems: "center" }}>
+                  <span className="chip chip-gold">Teléfono como ID</span>
+                  <button className="btn btn-gold btn-sm" onClick={() => setNewClientOpen(true)}>
+                    <Icon name="user" size={14} /> Nuevo
+                  </button>
+                </div>
+              )}
+            >
               <div className="client-search">
                 <Icon name="user" size={15} />
                 <input value={clientQuery} onChange={(e) => setClientQuery(e.target.value)} placeholder="Buscar por nombre, telefono o correo" />
               </div>
+              <div className="client-table-head">
+                <button type="button" onClick={() => toggleClientSort("name")} className={clientSort.key === "name" ? "is-sorted" : ""}>
+                  Cliente {clientSort.key === "name" && (clientSort.dir === "asc" ? "↑" : "↓")}
+                </button>
+                <button type="button" onClick={() => toggleClientSort("visits")} className={clientSort.key === "visits" ? "is-sorted" : ""}>
+                  Visitas {clientSort.key === "visits" && (clientSort.dir === "asc" ? "↑" : "↓")}
+                </button>
+                <button type="button" onClick={() => toggleClientSort("totalSpent")} className={clientSort.key === "totalSpent" ? "is-sorted" : ""}>
+                  Total {clientSort.key === "totalSpent" && (clientSort.dir === "asc" ? "↑" : "↓")}
+                </button>
+                <span />
+              </div>
               <div className="client-list">
-                {filteredClients.map((client) => (
+                {sortedClients.map((client) => (
                   <div key={client.id || client.phone} className="client-row" onClick={() => openClient(client)} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter') openClient(client) }}>
                     <div style={{ minWidth: 0 }}>
                       <strong>{client.name}</strong>
@@ -925,7 +955,7 @@ export default function Dashboard() {
                     </button>
                   </div>
                 ))}
-                {!filteredClients.length && (
+                {!sortedClients.length && (
                   <div className="empty-state">No hay clientes que coincidan con la busqueda.</div>
                 )}
               </div>

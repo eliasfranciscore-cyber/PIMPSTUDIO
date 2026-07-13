@@ -391,27 +391,34 @@ a.home-footer-access { display: inline-flex; align-items: center; gap: .4rem; te
 [data-theme="light"] .psn-modal-card.psn-client-modal,
 [data-theme="light"] .psn-modal-card.psn-barber-modal { background: #fff; }
 
-/* === Filtros de clientes (cuadrados, clicables) === */
-.client-filter-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; }
+/* === Filtros de clientes (chips horizontales compactos, clicables) ===
+   Antes eran cuadrados aspect-ratio:1 (~280px de lado en desktop) con el
+   número perdido en el centro de mucho vacío. Ahora es una fila de chips de
+   56px con ícono + número + label — visible de un vistazo, sin aire muerto. */
+.client-filter-grid { display: flex; gap: .6rem; flex-wrap: wrap; }
 .client-filter-card {
-  aspect-ratio: 1;
-  display: grid;
-  align-content: center;
-  justify-items: center;
-  gap: .3rem;
-  padding: .8rem;
-  border-radius: 16px;
+  flex: 1 1 150px;
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  min-height: 56px;
+  padding: .5rem .85rem;
+  border-radius: 12px;
   border: 1px solid var(--hair);
   background: var(--panel);
   color: var(--ink);
   cursor: pointer;
-  transition: border-color .18s, background .18s, box-shadow .18s;
+  transition: border-color .18s, background .18s, box-shadow .18s, transform .1s ease-out;
 }
 .client-filter-card:hover { border-color: var(--gold-line); background: rgba(201,161,78,.05); }
+.client-filter-card:active { transform: scale(.97); }
 .client-filter-card.is-active { border-color: var(--gold-line); background: rgba(201,161,78,.12); box-shadow: 0 0 0 1px var(--gold-line) inset; color: var(--gold-lt); }
-.client-filter-card strong { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; }
-.client-filter-card span { font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); text-align: center; }
-.client-filter-card.is-active span { color: var(--gold-lt); }
+.client-filter-card .cf-ic { width: 34px; height: 34px; border-radius: 9px; background: rgba(201,161,78,.12); display: grid; place-items: center; color: var(--gold); flex-shrink: 0; }
+.client-filter-card.is-active .cf-ic { color: var(--gold-lt); }
+.client-filter-card .cf-body { display: grid; text-align: left; line-height: 1.18; }
+.client-filter-card strong { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; }
+.client-filter-card .cf-label { font-size: .64rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+.client-filter-card.is-active .cf-label { color: var(--gold-lt); }
 [data-theme="light"] .client-filter-card { background: #fff; }
 
 /* === Service card grid === */
