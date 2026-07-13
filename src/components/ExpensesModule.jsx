@@ -30,7 +30,21 @@ export const EXPENSE_CATEGORIES = Object.keys(CATEGORY_META)
 const metaOf = (cat) => CATEGORY_META[cat] || CATEGORY_META.Otros
 
 const monthKey = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+const daysInMonth = (ym) => { const [y, m] = ym.split('-').map(Number); return new Date(y, m, 0).getDate() }
 const badgeClass = 'dk-badge'
+
+function exportExpensesCSV(rows, ym) {
+  const esc = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`
+  const toCSV = (headers, list) => [headers.join(','), ...list.map((r) => r.map(esc).join(','))].join('\n')
+  const csv = toCSV(['Fecha', 'Categoria', 'Detalle', 'Monto'], rows.map((e) => [e.date, e.category, e.detail, e.amount]))
+  const blob = new Blob([`﻿${csv}`], { type: 'text/csv;charset=utf-8;' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `brunetti-gastos-${ym}.csv`
+  document.body.appendChild(a); a.click(); a.remove()
+  setTimeout(() => URL.revokeObjectURL(url), 1000)
+}
 
 function ExpenseModal({ open, initial, onClose, onSave }) {
   const [form, setForm] = useState({ date: '', category: 'Insumos', detail: '', amount: '' })
@@ -62,9 +76,9 @@ function ExpenseModal({ open, initial, onClose, onSave }) {
   }
 
   return createPortal((
-    <div className="psn-modal" role="dialog" aria-modal="true">
+    <div className="psn-modal is-drawer" role="dialog" aria-modal="true">
       <button className="psn-scrim" aria-label="Cerrar" onClick={onClose} />
-      <div className="psn-modal-card psn-newbk">
+      <div className="psn-modal-card psn-newbk psn-drawer-card">
         <button className="psn-close" onClick={onClose} aria-label="Cerrar"><Icon name="close" size={17} /></button>
         <h3><Icon name="wallet" size={20} /> {initial ? 'Editar gasto' : 'Nuevo gasto'}</h3>
 
@@ -108,8 +122,18 @@ function ExpenseModal({ open, initial, onClose, onSave }) {
 export default function ExpensesModule({ expenses = [], budgets = {}, onCreate = () => {}, onUpdate = () => {}, onDelete = () => {} }) {
   const [modal, setModal] = useState(null)     // null | {} (nuevo) | expense (editar)
   const [confirmDel, setConfirmDel] = useState(null)
+  const [ym, setYm] = useState(() => monthKey())
+  const [categoryFilter, setCategoryFilter] = useState('all')
 
-  const ym = monthKey()
+  const shiftMonth = (delta) => {
+    const [y, m] = ym.split('-').map(Number)
+    setYm(monthKey(new Date(y, m - 1 + delta, 1)))
+  }
+  const monthLabel = (() => {
+    const [y, m] = ym.split('-').map(Number)
+    return new Date(y, m - 1, 1).toLocaleDateString('es-CL', { month: 'long', year: 'numeric' })
+  })()
+
   const monthExpenses = useMemo(
     () => expenses.filter((e) => String(e.date || '').slice(0, 7) === ym),
     [expenses, ym]
@@ -121,8 +145,15 @@ export default function ExpensesModule({ expenses = [], budgets = {}, onCreate =
     return m
   }, [monthExpenses])
 
-  const daysElapsed = new Date().getDate()
+  // Días para el promedio diario: si es el mes en curso, los transcurridos;
+  // si es un mes pasado, el mes completo (ya cerrado).
+  const daysElapsed = ym === monthKey() ? new Date().getDate() : daysInMonth(ym)
   const dailyAvg = daysElapsed ? Math.round(monthTotal / daysElapsed) : 0
+
+  const filteredMovements = useMemo(() => {
+    let list = categoryFilter === 'all' ? monthExpenses : monthExpenses.filter((e) => (e.category || 'Otros') === categoryFilter)
+    return [...list].sort((a, b) => (b.date || '').localeCompare(a.date || ''))
+  }, [monthExpenses, categoryFilter])
   const topCat = Object.entries(byCategory).sort((a, b) => b[1] - a[1])[0]
   const budgetTotal = EXPENSE_CATEGORIES.reduce((s, c) => s + (Number(budgets[c]) || 0), 0)
   const budgetPct = budgetTotal ? (monthTotal / budgetTotal) * 100 : 0
@@ -141,7 +172,11 @@ export default function ExpensesModule({ expenses = [], budgets = {}, onCreate =
       <div className="dk-hero">
         <div className="dk-hero-grid cols-5 dk-stagger">
           <div>
-            <span className="dk-hero-sub">Gastos de {new Date().toLocaleDateString('es-CL', { month: 'long' })}</span>
+            <div className="dk-month-stepper">
+              <button type="button" onClick={() => shiftMonth(-1)} aria-label="Mes anterior"><Icon name="arrowLeft" size={13} /></button>
+              <span className="dk-hero-sub">Gastos de {monthLabel}</span>
+              <button type="button" onClick={() => shiftMonth(1)} disabled={ym >= monthKey()} aria-label="Mes siguiente"><Icon name="arrowRight" size={13} /></button>
+            </div>
             <h2 className="dk-hero-big"><CountUp value={monthTotal} format={CLP} /></h2>
             {budgetTotal > 0 && (
               <div style={{ marginTop: '.4rem', maxWidth: 220 }}>
@@ -201,12 +236,25 @@ export default function ExpensesModule({ expenses = [], budgets = {}, onCreate =
       {/* (e) LISTA de movimientos */}
       <div className="dk-panel">
         <div className="dk-panel-head">
-          <h3>Movimientos</h3>
-          <span className="chip">{expenses.length} en total</span>
+          <h3>Movimientos de {monthLabel}</h3>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem' }}>
+            <span className="chip">{filteredMovements.length} de {monthExpenses.length}</span>
+            <button type="button" className="btn btn-dark btn-sm" onClick={() => exportExpensesCSV(filteredMovements, ym)}>
+              <Icon name="wallet" size={13} /> Exportar CSV
+            </button>
+          </div>
+        </div>
+        <div className="dk-cat-filter">
+          <button type="button" className={categoryFilter === 'all' ? 'is-on' : ''} onClick={() => setCategoryFilter('all')}>Todas</button>
+          {EXPENSE_CATEGORIES.filter((c) => byCategory[c] > 0).map((c) => (
+            <button key={c} type="button" className={categoryFilter === c ? 'is-on' : ''} style={{ '--c': metaOf(c).color }} onClick={() => setCategoryFilter((f) => f === c ? 'all' : c)}>
+              <Icon name={metaOf(c).icon} size={12} /> {c}
+            </button>
+          ))}
         </div>
         <div className="dk-mov-list">
-          {expenses.length === 0 && <div className="empty-state">Aún no hay gastos registrados.</div>}
-          {expenses.map((e) => {
+          {filteredMovements.length === 0 && <div className="empty-state">Sin gastos que coincidan en {monthLabel}.</div>}
+          {filteredMovements.map((e) => {
             const m = metaOf(e.category)
             return (
               <div key={e.id} className="dk-mov-row">

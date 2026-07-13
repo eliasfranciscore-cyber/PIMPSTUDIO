@@ -114,6 +114,8 @@ export default function Dashboard() {
   const [clientQuery, setClientQuery] = useState("")
   const [clientFilter, setClientFilter] = useState("all")
   const [clientSort, setClientSort] = useState({ key: "name", dir: "asc" })
+  const [financePeriod, setFinancePeriod] = useState("mes") // "semana" | "mes" | "año"
+  const [financeSort, setFinanceSort] = useState({ key: "date", dir: "desc" })
   const [selectedClient, setSelectedClient] = useState(null)
   const [clientHistory, setClientHistory] = useState([])
   const [clientEditing, setClientEditing] = useState(false)
@@ -139,12 +141,22 @@ export default function Dashboard() {
   const canViewFinance = admin || barber?.canViewFinance
   const canEditServices = admin || barber?.canEditServices
   const canManageTeam = admin || barber?.canManageTeam
-  const completedBookings = bookings.filter((item) => item.status === "completada" || item.status === "confirmada" || item.status === "en curso")
+  // Periodo de Finanzas (semana/mes/año): fecha de corte desde la que se
+  // cuentan ingresos, ranking y movimientos. Semana empieza el lunes.
+  const periodStartKey = (() => {
+    const d = new Date()
+    if (financePeriod === "semana") { const dow = d.getDay() || 7; d.setDate(d.getDate() - dow + 1) }
+    else if (financePeriod === "mes") d.setDate(1)
+    else d.setMonth(0, 1)
+    d.setHours(0, 0, 0, 0)
+    return isoDate(d)
+  })()
+  const completedBookings = bookings.filter((item) => (item.status === "completada" || item.status === "confirmada" || item.status === "en curso") && (item.date || "") >= periodStartKey)
   const revenueTotal = completedBookings.reduce((sum, item) => sum + Number(item.price || 0), 0)
   const avgTicket = completedBookings.length ? Math.round(revenueTotal / completedBookings.length) : 0
   const visibleBookings = admin ? bookings : bookings.filter((item) => Number(item.barberId) === Number(barber?.id))
   const ranking = barbers.map((b) => {
-    const own = bookings.filter((item) => Number(item.barberId) === Number(b.id) && item.status !== "cancelada")
+    const own = bookings.filter((item) => Number(item.barberId) === Number(b.id) && item.status !== "cancelada" && (item.date || "") >= periodStartKey)
     return { id: b.id, cuts: own.filter((item) => item.status === "completada").length || own.length, rev: own.reduce((sum, item) => sum + Number(item.price || 0), 0) }
   }).filter((item) => item.cuts || item.rev).sort((a, b) => b.rev - a.rev)
   const maxRev = Math.max(1, ...ranking.map((r) => r.rev))
@@ -194,6 +206,21 @@ export default function Dashboard() {
   const toggleClientSort = (key) => {
     setClientSort((s) => s.key === key ? { key, dir: s.dir === "asc" ? "desc" : "asc" } : { key, dir: key === "name" ? "asc" : "desc" })
   }
+  const toggleFinanceSort = (key) => {
+    setFinanceSort((s) => s.key === key ? { key, dir: s.dir === "asc" ? "desc" : "asc" } : { key, dir: key === "date" || key === "price" ? "desc" : "asc" })
+  }
+  const sortedFinanceRows = [...completedBookings].sort((a, b) => {
+    const dir = financeSort.dir === "asc" ? 1 : -1
+    if (financeSort.key === "price") return ((a.price || 0) - (b.price || 0)) * dir
+    if (financeSort.key === "client") return (a.client || "").localeCompare(b.client || "") * dir
+    if (financeSort.key === "service") return (a.service || "").localeCompare(b.service || "") * dir
+    if (financeSort.key === "barber") {
+      const an = barberById(a.barberId)?.short || ""
+      const bn = barberById(b.barberId)?.short || ""
+      return an.localeCompare(bn) * dir
+    }
+    return `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`) * dir
+  })
   const sortedClients = [...filteredClients].sort((a, b) => {
     const dir = clientSort.dir === "asc" ? 1 : -1
     if (clientSort.key === "visits") return ((a.visits || 0) - (b.visits || 0)) * dir
@@ -427,6 +454,7 @@ export default function Dashboard() {
     let name = "datos", csv = ""
     if (type === "Clientes") { name = "clientes"; csv = toCSV(["Nombre", "Telefono", "Email", "Visitas", "Total", "Ultima visita", "Estado"], clients.map((c) => [c.name, c.phone, c.email, c.visits, c.totalSpent, c.lastVisit, c.status])) }
     else if (type === "Reservas") { name = "reservas"; csv = toCSV(["Fecha", "Hora", "Cliente", "Telefono", "Servicio", "Barbero", "Precio", "Estado"], bookings.map((b) => { const bb = barberById(b.barberId); return [b.date, b.time, b.client, b.phone, b.service, bb?.short || bb?.name || "", b.price, b.status] })) }
+    else if (type === "Finanzas") { name = `finanzas-${financePeriod}`; csv = toCSV(["Fecha", "Hora", "Cliente", "Servicio", "Barbero", "Precio", "Estado"], sortedFinanceRows.map((b) => { const bb = barberById(b.barberId); return [b.date, b.time, b.client, b.service, bb?.short || bb?.name || "", b.price, b.status] })) }
     else if (type === "Gastos") { name = "gastos"; csv = toCSV(["Fecha", "Categoria", "Detalle", "Monto", "Responsable"], expenses.map((e) => [e.date, e.category, e.detail, e.amount, e.owner])) }
     else if (type === "Servicios") { name = "servicios"; csv = toCSV(["Nombre", "Precio", "Minutos", "Categoria", "Estado"], services.map((s) => [s.name, s.price, s.min, s.cat, s.active === false ? "oculto" : "publicado"])) }
     const blob = new Blob([`﻿${csv}`], { type: "text/csv;charset=utf-8;" })
@@ -899,8 +927,19 @@ export default function Dashboard() {
         {/* FINANZAS */}
         {tab === "finanzas" && (
           <div className="animate-in" style={{ display: "grid", gap: "1.1rem" }}>
+            <div className="fin-toolbar">
+              <div className="psn-seg" role="group" aria-label="Periodo">
+                <button type="button" className={financePeriod === "semana" ? "is-on" : ""} onClick={() => setFinancePeriod("semana")}>Semana</button>
+                <button type="button" className={financePeriod === "mes" ? "is-on" : ""} onClick={() => setFinancePeriod("mes")}>Mes</button>
+                <button type="button" className={financePeriod === "año" ? "is-on" : ""} onClick={() => setFinancePeriod("año")}>Año</button>
+              </div>
+              <button type="button" className="btn btn-dark btn-sm" onClick={() => exportCSV("Finanzas")}>
+                <Icon name="wallet" size={13} /> Exportar CSV
+              </button>
+            </div>
+
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: "1rem" }}>
-              <Stat icon="wallet"   label="Ingresos agenda" value={CLP(revenueTotal)} accent />
+              <Stat icon="wallet"   label="Ingresos del periodo" value={CLP(revenueTotal)} accent />
               <Stat icon="chart"    label="Ticket promedio" value={CLP(avgTicket)} />
               <Stat icon="scissors" label="Servicios"       value={completedBookings.length} />
               <Stat icon="wallet"   label="Gastos del mes"  value={CLP(monthExpensesTotal)} />
@@ -909,11 +948,11 @@ export default function Dashboard() {
               <Panel title="Ingresos por día">
                 {revenueByDate.length
                   ? <BarChart data={revenueByDate} fmt={CLP} />
-                  : <p style={{ color: "var(--muted)", fontSize: ".84rem" }}>Sin datos aún.</p>}
+                  : <p style={{ color: "var(--muted)", fontSize: ".84rem" }}>Sin datos en este periodo.</p>}
               </Panel>
               <Panel title="Ingresos por servicio">
                 <div style={{ display: "grid", gap: ".75rem" }}>
-                  {!revenueByService.length && <p style={{ color: "var(--muted)", fontSize: ".84rem" }}>Sin datos aún.</p>}
+                  {!revenueByService.length && <p style={{ color: "var(--muted)", fontSize: ".84rem" }}>Sin datos en este periodo.</p>}
                   {revenueByService.slice(0, 5).map((item) => {
                     const p = Math.round((item.total / Math.max(1, revenueTotal)) * 100)
                     return (
@@ -928,7 +967,7 @@ export default function Dashboard() {
             </div>
             <Panel title="Ingresos por barbero">
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(160px,1fr))", gap: ".8rem" }}>
-                {!ranking.length && <p style={{ color: "var(--muted)", fontSize: ".84rem" }}>Sin datos aún.</p>}
+                {!ranking.length && <p style={{ color: "var(--muted)", fontSize: ".84rem" }}>Sin datos en este periodo.</p>}
                 {ranking.map((r) => {
                   const b = barbers.find((item) => item.id === r.id) || barberById(r.id)
                   return (
@@ -939,6 +978,41 @@ export default function Dashboard() {
                     </div>
                   )
                 })}
+              </div>
+            </Panel>
+
+            <Panel title="Movimientos" action={<span className="chip">{sortedFinanceRows.length} en el periodo</span>}>
+              <div className="fin-table-head" style={{ gridTemplateColumns: admin ? "100px 1.3fr 1.1fr 110px 90px 100px" : "100px 1.3fr 1.1fr 90px 100px" }}>
+                <button type="button" onClick={() => toggleFinanceSort("date")} className={financeSort.key === "date" ? "is-sorted" : ""}>Fecha {financeSort.key === "date" && (financeSort.dir === "asc" ? "↑" : "↓")}</button>
+                <button type="button" onClick={() => toggleFinanceSort("client")} className={financeSort.key === "client" ? "is-sorted" : ""}>Cliente {financeSort.key === "client" && (financeSort.dir === "asc" ? "↑" : "↓")}</button>
+                <button type="button" onClick={() => toggleFinanceSort("service")} className={financeSort.key === "service" ? "is-sorted" : ""}>Servicio {financeSort.key === "service" && (financeSort.dir === "asc" ? "↑" : "↓")}</button>
+                {admin && <button type="button" onClick={() => toggleFinanceSort("barber")} className={financeSort.key === "barber" ? "is-sorted" : ""}>Barbero {financeSort.key === "barber" && (financeSort.dir === "asc" ? "↑" : "↓")}</button>}
+                <button type="button" onClick={() => toggleFinanceSort("price")} className={financeSort.key === "price" ? "is-sorted" : ""}>Precio {financeSort.key === "price" && (financeSort.dir === "asc" ? "↑" : "↓")}</button>
+                <span>Estado</span>
+              </div>
+              <div className="fin-mov-scroll">
+                <div className="fin-mov-list">
+                  {sortedFinanceRows.map((b) => {
+                    const bb = barberById(b.barberId)
+                    return (
+                      <div key={b.id} className="fin-row" style={{ gridTemplateColumns: admin ? "100px 1.3fr 1.1fr 110px 90px 100px" : "100px 1.3fr 1.1fr 90px 100px" }}>
+                        <div><strong>{b.date?.slice(5)}</strong><span>{b.time}</span></div>
+                        <div><strong>{b.client}</strong></div>
+                        <div><span>{b.service}</span></div>
+                        {admin && <div><span>{bb?.short || bb?.name || "—"}</span></div>}
+                        <div><strong className="gold-text">{CLP(b.price)}</strong></div>
+                        <span className="chip">{b.status}</span>
+                      </div>
+                    )
+                  })}
+                  {!sortedFinanceRows.length && <div className="empty-state">Sin movimientos en este periodo.</div>}
+                </div>
+                {sortedFinanceRows.length > 0 && (
+                  <div className="fin-row-total">
+                    <span>Total del periodo</span>
+                    <b className="gold-text">{CLP(revenueTotal)}</b>
+                  </div>
+                )}
               </div>
             </Panel>
           </div>
@@ -1839,7 +1913,7 @@ function ConfigPanel({ brunettiOnly, barber, barbers, admin, canManageTeam, barb
             <div className="cfg-card">
               <p className="cfg-card-head">Exportar datos</p>
               <div style={{ display: "grid", gap: ".7rem" }}>
-                {[["Clientes","CSV con historial y contactos","user"],["Reservas","Historial completo de citas","calendar"],["Gastos","Registro de egresos por categoria","wallet"],["Servicios","Catalogo actual publicado","scissors"]].map(([label, sub, icon]) => (
+                {[["Clientes","CSV con historial y contactos","user"],["Reservas","Historial completo de citas","calendar"],["Finanzas","Movimientos de ingresos del periodo activo","chart"],["Gastos","Registro de egresos por categoria","wallet"],["Servicios","Catalogo actual publicado","scissors"]].map(([label, sub, icon]) => (
                   <div key={label} className="cfg-setting-row">
                     <div>
                       <div className="cfg-setting-label">{label}</div>

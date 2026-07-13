@@ -59,6 +59,13 @@
 
 /* ---------- Modal barbero ---------- */
 .psn-modal { position: fixed; inset: 0; z-index: 140; display: grid; place-items: center; padding: 1.2rem; }
+/* Drawer lateral (formularios largos: Gastos, etc.) en vez de modal centrado
+   — desliza desde el borde derecho, ocupa el alto completo. */
+.psn-modal.is-drawer { justify-content: flex-end; align-items: stretch; padding: 0; }
+.psn-drawer-card.psn-modal-card { width: min(440px, 100%); max-width: 100%; height: 100%; max-height: 100%; margin: 0; border-radius: 20px 0 0 20px; animation: psnDrawerIn .3s cubic-bezier(.2,.7,.3,1); }
+@keyframes psnDrawerIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+@media (prefers-reduced-motion: reduce) { .psn-drawer-card.psn-modal-card { animation: none; } }
+@media (max-width: 560px) { .psn-drawer-card.psn-modal-card { border-radius: 0; } }
 .psn-scrim { position: absolute; inset: 0; background: rgba(6,6,8,.62); backdrop-filter: blur(14px); border: 0; cursor: pointer; }
 .psn-modal-card { position: relative; z-index: 1; width: min(440px, 100%); max-height: 90vh; overflow-y: auto; border-radius: 28px; padding: 2rem 1.6rem 1.6rem; text-align: center; background: linear-gradient(160deg, var(--g-tint-strong, rgba(255,255,255,.13)), var(--g-tint-soft, rgba(255,255,255,.045))); backdrop-filter: blur(30px) saturate(180%); border: 1px solid var(--g-edge, rgba(255,255,255,.16)); box-shadow: var(--g-spec, inset 0 1px 0 rgba(255,255,255,.34)), 0 30px 80px rgba(0,0,0,.6); }
 .psn-back { position: absolute; top: 1rem; left: 1rem; display: inline-flex; align-items: center; gap: .3rem; font-size: .78rem; color: var(--ink-soft); background: rgba(8,8,7,.5); border: 1px solid var(--g-edge, rgba(255,255,255,.16)); border-radius: 999px; padding: .4rem .7rem; cursor: pointer; backdrop-filter: blur(10px); transition: all .15s; }
@@ -400,6 +407,36 @@ a.home-footer-access { display: inline-flex; align-items: center; gap: .4rem; te
 .psn-client-hrow .svc { font-size: .85rem; font-weight: 500; }
 .psn-client-hrow .meta { font-size: .72rem; color: var(--muted); }
 
+/* ---------- Finanzas: selector de periodo + tabla de movimientos ----------
+   Antes Finanzas mostraba totales "de siempre" sin recorte de fechas y sin
+   listado — solo charts. Ahora hay un periodo (semana/mes/año) que recorta
+   ingresos/ranking, más una tabla densa ordenable con total sticky al pie. */
+.fin-toolbar { display: flex; align-items: center; justify-content: space-between; gap: .8rem; flex-wrap: wrap; }
+.fin-table-head { display: grid; gap: .7rem; padding: 0 .78rem .4rem; }
+.fin-table-head button { background: none; border: 0; padding: 0; text-align: left; display: flex; align-items: center; gap: .2rem; font-family: var(--font-display); font-size: .66rem; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); cursor: pointer; }
+.fin-table-head button:hover, .fin-table-head button.is-sorted { color: var(--gold-lt); }
+.fin-table-head span { font-size: .66rem; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+.fin-mov-scroll { max-height: 460px; overflow-y: auto; }
+.fin-mov-list { display: grid; gap: .55rem; }
+.fin-row { display: grid; gap: .7rem; align-items: center; padding: .6rem .78rem; border: 1px solid var(--hair); border-radius: var(--r-sm); background: rgba(255,255,255,.02); transition: border-color .15s, background .15s; }
+.fin-row:hover { border-color: var(--gold-line); background: rgba(201,161,78,.06); }
+.fin-row strong { display: block; font-size: .85rem; color: var(--ink); font-weight: 500; }
+.fin-row span { display: block; font-size: .72rem; color: var(--muted); margin-top: .1rem; }
+.fin-row .chip { justify-self: end; text-transform: capitalize; }
+.fin-row-total { display: flex; justify-content: space-between; align-items: center; padding: .7rem .9rem; margin-top: .55rem; border-radius: 10px; background: rgba(14,14,12,.94); border: 1px solid var(--gold-line); position: sticky; bottom: 0; font-size: .85rem; backdrop-filter: blur(10px); }
+.fin-row-total span { color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-size: .68rem; }
+[data-theme="light"] .fin-row { background: #fff; }
+[data-theme="light"] .fin-row-total { background: rgba(255,255,255,.96); }
+/* Mobile: la tabla no reflowea a cards (6 columnas de datos heterogéneos no
+   caben en 2 líneas legibles) — en vez de eso scrollea horizontal, con la
+   cabecera de columnas oculta (ya redundante al lado del dato en la fila). */
+@media (max-width: 760px) {
+  .fin-table-head { display: none; }
+  .fin-mov-scroll { overflow-x: auto; }
+  .fin-mov-list { min-width: 560px; }
+  .fin-row-total { min-width: 560px; }
+}
+
 /* ---------- Booking: selección de barbero (Bruno destacado arriba) ---------- */
 .booking-barber { border: 1px solid rgba(255,255,255,.1); background: rgba(0,0,0,.3); border-radius: 12px; padding: .8rem; display: grid; gap: .45rem; place-items: center; text-align: center; cursor: pointer; color: inherit; transition: border-color .2s, background .2s, transform .12s; width: 100%; }
 .booking-barber:active { transform: scale(.98); }
@@ -581,8 +618,20 @@ a.home-footer-access { display: inline-flex; align-items: center; gap: .4rem; te
 
 /* --- Módulo de gastos: panel genérico --- */
 .dk-panel { border: 1px solid var(--hair); border-radius: 16px; background: var(--panel, rgba(255,255,255,.02)); padding: 1rem 1.1rem; }
-.dk-panel-head { display: flex; align-items: center; justify-content: space-between; gap: .6rem; margin-bottom: .8rem; }
+.dk-panel-head { display: flex; align-items: center; justify-content: space-between; gap: .6rem; margin-bottom: .8rem; flex-wrap: wrap; }
 .dk-panel-head h3 { margin: 0; font-family: var(--font-display); font-size: 1rem; color: var(--ink); }
+
+/* --- Selector de mes (Gastos) --- */
+.dk-month-stepper { display: flex; align-items: center; gap: .4rem; margin-bottom: .1rem; }
+.dk-month-stepper button { border: 1px solid var(--hair-2); background: rgba(255,255,255,.02); color: var(--muted); width: 22px; height: 22px; border-radius: 7px; display: grid; place-items: center; cursor: pointer; flex-shrink: 0; }
+.dk-month-stepper button:hover:not(:disabled) { border-color: var(--gold-line); color: var(--gold-lt); }
+.dk-month-stepper button:disabled { opacity: .35; cursor: default; }
+
+/* --- Filtro de categoría (Gastos: lista de movimientos) --- */
+.dk-cat-filter { display: flex; gap: .4rem; flex-wrap: wrap; margin-bottom: .8rem; }
+.dk-cat-filter button { display: inline-flex; align-items: center; gap: .35rem; padding: .35rem .7rem; border-radius: 999px; border: 1px solid var(--hair-2); background: rgba(255,255,255,.02); color: var(--muted); font-size: .78rem; cursor: pointer; transition: border-color .15s, background .15s, color .15s; }
+.dk-cat-filter button:hover { color: var(--ink); }
+.dk-cat-filter button.is-on { border-color: var(--c, var(--gold-line)); background: color-mix(in srgb, var(--c, var(--gold)) 14%, transparent); color: var(--c, var(--gold-lt)); }
 
 /* --- Semáforo de presupuestos --- */
 .dk-budget-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: .7rem; }
