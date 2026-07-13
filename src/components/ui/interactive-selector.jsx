@@ -23,8 +23,18 @@ export function InteractiveSelector({ items, className = "" }) {
           aria-pressed={i === active}
         >
           <span className="is-panel-bg" aria-hidden="true">
-            {item.image ? (
-              <img src={item.image} alt="" />
+            {item.video ? (
+              <video
+                src={item.video}
+                poster={item.poster}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+              />
+            ) : item.image ? (
+              <img src={item.image} alt="" loading="lazy" decoding="async" />
             ) : (
               <span className="is-panel-icon"><svg viewBox="0 0 24 24">{item.icon}</svg></span>
             )}

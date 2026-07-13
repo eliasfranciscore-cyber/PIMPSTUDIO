@@ -13,7 +13,7 @@
   },
   "transform": {
     "eyebrow": "¿A quién buscamos transformar?",
-    "h2": "Si te sientes estancado en el sillón, este workshop es tu salida de emergencia.",
+    "h2": "Si te sientes Estancado en el Sillón, este Workshop es tu Salida de Emergencia.",
     "cards": [
       {
         "title": "Cobrar más",
@@ -37,7 +37,7 @@
   },
   "experiencia": {
     "eyebrow": "De servicio a experiencia premium",
-    "title": "Para cobrar como un experto, debes verte y sentirte como uno.",
+    "title": "Para Cobrar Como un Experto, Debes Verte y Sentirte Como Uno.",
     "items": [
       {
         "h": "Amenities de lujo",
@@ -51,7 +51,7 @@
   },
   "asesoria": {
     "eyebrow": "Asesoría de imagen · el caso real",
-    "title": "Una simulación de asesoría High-Ticket, grabada frente a la cámara.",
+    "title": "Una Simulación de Asesoría High-Ticket, Grabada Frente a la Cámara.",
     "items": [
       {
         "h": "Escucha activa",
@@ -69,7 +69,7 @@
   },
   "programa": {
     "eyebrow": "El programa · 3 bloques",
-    "h2": "No es un curso genérico. Es un sistema para barbería real."
+    "h2": "No es un Curso Genérico. Es un Sistema para Barbería Real."
   },
   "modules": [
     {

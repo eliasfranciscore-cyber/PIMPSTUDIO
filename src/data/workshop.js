@@ -271,6 +271,8 @@ export const WORKSHOP = {
       n: "Bloque 03",
       title: "Edición de alto impacto",
       photo: "bloque3",
+      video: "/assets/workshop-bloque3.mp4",
+      poster: "/assets/workshop-bloque3-poster.jpg",
       points: [
         { b: "Mastery en CapCut", s: "El workflow exacto que usan los creadores top, sin perder tiempo." },
         { b: "Beat matching", s: "Sincroniza tus cortes con la música para máximo ritmo." },

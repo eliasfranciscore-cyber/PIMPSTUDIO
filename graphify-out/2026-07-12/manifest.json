@@ -290,9 +290,9 @@
     "semantic_hash": ""
   },
   "src/data/workshop.js": {
-    "mtime": 1782690243.8011453,
-    "ast_hash": "6d6aef9d62afeae7e310de285b685d7f",
-    "semantic_hash": "6d6aef9d62afeae7e310de285b685d7f"
+    "mtime": 1783825272.0724726,
+    "ast_hash": "030e54d88430e798b19b6130c70c8745",
+    "semantic_hash": ""
   },
   "src/enrollmentsStore.js": {
     "mtime": 1782686874.1730206,
@@ -320,7 +320,7 @@
     "semantic_hash": ""
   },
   "src/pages/Cursos.jsx": {
-    "mtime": 1783797380.1702042,
+    "mtime": 1783825755.007647,
     "ast_hash": "5dd1f95f21837e9475d28d0fe88b8235",
     "semantic_hash": ""
   },
@@ -345,8 +345,8 @@
     "semantic_hash": "61423707271a059b9925830747ca0f12"
   },
   "src/pages/Workshop.jsx": {
-    "mtime": 1783802953.5849192,
-    "ast_hash": "003529b1ead44f31d592c320137201e2",
+    "mtime": 1783878059.8192108,
+    "ast_hash": "86a78644f6ed9c5a9a7992283334662b",
     "semantic_hash": ""
   },
   "src/push.js": {
@@ -970,8 +970,8 @@
     "semantic_hash": ""
   },
   "src/data/content/estilo.json": {
-    "mtime": 1783739489.3215759,
-    "ast_hash": "c3ed607f5a6310a7c34c811180f50286",
+    "mtime": 1783823103.535433,
+    "ast_hash": "356f245597810913fcf4ec6139c08109",
     "semantic_hash": ""
   },
   "src/data/content/home-contacto.json": {
@@ -1085,8 +1085,8 @@
     "semantic_hash": ""
   },
   "src/data/overrides/workshop.json": {
-    "mtime": 1783820262.9242954,
-    "ast_hash": "96b11840649e5b6129a6a79074f88d2f",
+    "mtime": 1783878846.3185747,
+    "ast_hash": "28cc2db88d75f0b8f486055a34a1be56",
     "semantic_hash": ""
   },
   "src/components/DashKit.jsx": {
@@ -1122,6 +1122,91 @@
   "public/assets/uploads/img-7119-jpg-mrgudg5i.jpg": {
     "mtime": 1783803207.9432216,
     "ast_hash": "73b083f45ff0d4226f810a06561422b7",
+    "semantic_hash": ""
+  },
+  "skills-lock.json": {
+    "mtime": 1783875580.2258334,
+    "ast_hash": "2938844f2a2d553f47ea0d4cc98b84ed",
+    "semantic_hash": ""
+  },
+  ".agents/skills/animation-vocabulary/SKILL.md": {
+    "mtime": 1783875580.147629,
+    "ast_hash": "1cd9536b992be3fbe337bf663487342a",
+    "semantic_hash": ""
+  },
+  ".agents/skills/apple-design/SKILL.md": {
+    "mtime": 1783875580.1718724,
+    "ast_hash": "7ae1e8f9032a2d0bb66e4524cc907b5d",
+    "semantic_hash": ""
+  },
+  ".agents/skills/emil-design-eng/SKILL.md": {
+    "mtime": 1783875580.1826546,
+    "ast_hash": "fd025de68df6836a0c52564d7ac85e72",
+    "semantic_hash": ""
+  },
+  ".agents/skills/improve-animations/AUDIT.md": {
+    "mtime": 1783875580.1964788,
+    "ast_hash": "1e7277dd7b91181f9668a55ed7ab1c21",
+    "semantic_hash": ""
+  },
+  ".agents/skills/improve-animations/PLAN-TEMPLATE.md": {
+    "mtime": 1783875580.1965022,
+    "ast_hash": "eb681eb7019772716c77ae130320b4bd",
+    "semantic_hash": ""
+  },
+  ".agents/skills/improve-animations/SKILL.md": {
+    "mtime": 1783875580.196511,
+    "ast_hash": "f987a87f73e9b0d0a8e57cbb7cd20a1f",
+    "semantic_hash": ""
+  },
+  ".agents/skills/review-animations/SKILL.md": {
+    "mtime": 1783875580.2176387,
+    "ast_hash": "0a05ae968a546d62908a7c06af30717e",
+    "semantic_hash": ""
+  },
+  ".agents/skills/review-animations/STANDARDS.md": {
+    "mtime": 1783875580.2176733,
+    "ast_hash": "2a88b60d77c89a19d7a4f0917bc67995",
+    "semantic_hash": ""
+  },
+  "public/assets/ascension-hero-cutout.webp": {
+    "mtime": 1783824799.7181637,
+    "ast_hash": "ddb366e554dd1b49a2f28062b8e1877e",
+    "semantic_hash": ""
+  },
+  "public/assets/uploads/e450c56b-a846-4972-9081-73cbce76b474-jpg-mri272ws.jpg": {
+    "mtime": 1783876813.948627,
+    "ast_hash": "a339cbad837d60cde2cb2eabdebfcee6",
+    "semantic_hash": ""
+  },
+  "public/assets/uploads/jos08520dsds-mri26g1d.jpeg": {
+    "mtime": 1783876784.313747,
+    "ast_hash": "1ada680d16c8884931f9513de0d3575a",
+    "semantic_hash": ""
+  },
+  "public/assets/uploads/jos08578dsds-mri256yw.jpeg": {
+    "mtime": 1783876725.8970258,
+    "ast_hash": "03890c0ff9237178c37583d772825579",
+    "semantic_hash": ""
+  },
+  "public/assets/uploads/jos08607dsds-mri249qf.jpeg": {
+    "mtime": 1783876682.8255007,
+    "ast_hash": "cce858ac39024d31254335b14f5c7874",
+    "semantic_hash": ""
+  },
+  "public/assets/uploads/jos08638dsds-mri24sml.jpeg": {
+    "mtime": 1783876707.314197,
+    "ast_hash": "bcb1d8180f1511389f775c455bf8496c",
+    "semantic_hash": ""
+  },
+  "public/assets/uploads/jos08638dsds-mri25k7r.jpeg": {
+    "mtime": 1783876743.064712,
+    "ast_hash": "bcb1d8180f1511389f775c455bf8496c",
+    "semantic_hash": ""
+  },
+  "public/assets/workshop-hero-bg.webp": {
+    "mtime": 1783825256.3557076,
+    "ast_hash": "7db478e0ecb654a48221ebad1f974680",
     "semantic_hash": ""
   }
 }

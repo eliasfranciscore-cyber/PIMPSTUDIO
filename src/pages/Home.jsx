@@ -35,7 +35,17 @@ const PILLAR_ICONS = [
   (<><path d="M3 12a9 9 0 1 0 9-9M3 12l3-3M3 12l3 3" /><path d="M12 8v4l3 2" /></>),
   (<><path d="M23 7l-7 5 7 5V7z" /><rect x="1" y="5" width="15" height="14" rx="2" /></>),
 ]
-const PILLARS = VISAGISMO.pillars.map((p, i) => ({ ...p, icon: PILLAR_ICONS[i] }))
+// Medios de fondo de cada panel del carrusel de visagismo: fotos reales en los
+// pasos 1-4 y un video en loop en el paso 5. Sin `image`/`video` el panel cae
+// al ícono sobre tinte dorado (fallback del InteractiveSelector).
+const PILLAR_MEDIA = [
+  { image: '/assets/visagismo-paso-1.jpg' },
+  { image: '/assets/visagismo-paso-2.jpg' },
+  { image: '/assets/visagismo-paso-3.jpg' },
+  { image: '/assets/visagismo-paso-4.jpg' },
+  { video: '/assets/visagismo-paso-5.mp4', poster: '/assets/visagismo-paso-5-poster.jpg' },
+]
+const PILLARS = VISAGISMO.pillars.map((p, i) => ({ ...p, icon: PILLAR_ICONS[i], ...PILLAR_MEDIA[i] }))
 
 // Respaldo solo para cuando /api/services no responde (ver graceful degradation
 // en CLAUDE.md). La fuente real son los servicios activos configurados en el
@@ -295,6 +305,9 @@ export default function Home() {
               items={PILLARS.map((p, i) => ({
                 num: p.num,
                 icon: p.icon,
+                image: p.image,
+                video: p.video,
+                poster: p.poster,
                 title: <EditableText file="home-visagismo" path={`pillars.${i}.title`} as="span">{p.title}</EditableText>,
                 body: <EditableText file="home-visagismo" path={`pillars.${i}.body`} as="span">{p.body}</EditableText>,
               }))}

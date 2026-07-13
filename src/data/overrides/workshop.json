@@ -28,5 +28,8 @@
   },
   "workshop:logo": {
     "width": 275
+  },
+  "workshop:card:redes": {
+    "src": "/assets/uploads/5-jpg-mriinh5h.jpg"
   }
 }

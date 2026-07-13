@@ -810,8 +810,10 @@
 /* ============================================================
    SPARKLES — fondo de partículas doradas (todo el home salvo el hero)
    ============================================================ */
-.brunetti-site .bru-sparkles-zone { position: relative; }
-.brunetti-site .bru-sparkles--bg {
+/* Selectores SIN scope .brunetti-site a propósito: el sparkles-zone también se
+   usa en Workshop, cuya raíz es .wks (no .brunetti-site). Las clases son únicas. */
+.bru-sparkles-zone { position: relative; }
+.bru-sparkles--bg {
   /* fixed (no absolute): el contenedor (.bru-sparkles-zone) tiene alto
      "auto" (lo definen sus hijos en flujo normal), así que un canvas
      absolute+inset:0 no puede resolver su alto contra ese ancestro y
@@ -824,7 +826,7 @@
   z-index: 0;
   pointer-events: none;
 }
-.brunetti-site .bru-sparkles-zone > *:not(.bru-sparkles--bg) { position: relative; z-index: 1; }
+.bru-sparkles-zone > *:not(.bru-sparkles--bg) { position: relative; z-index: 1; }
 .bru-sparkles { display: block; width: 100%; height: 100%; }
 
 /* ============================================================
@@ -851,7 +853,8 @@
 }
 .brunetti-site .is-panel.is-active { flex-grow: 3.6; }
 .brunetti-site .is-panel-bg { position: absolute; inset: 0; display: block; }
-.brunetti-site .is-panel-bg img { width: 100%; height: 100%; object-fit: cover; }
+.brunetti-site .is-panel-bg img,
+.brunetti-site .is-panel-bg video { width: 100%; height: 100%; object-fit: cover; }
 .brunetti-site .is-panel-icon {
   position: absolute; inset: 0; display: grid; place-items: center;
   background: linear-gradient(150deg, var(--g-tint-strong), var(--g-tint-soft));
@@ -2031,7 +2034,22 @@
 /* .bru-lamp--sec ahora vive DENTRO del bloque del título (.bhead/.wks-head/
    .babout-body), no del <section> completo — así el haz siempre queda justo
    sobre el kicker sin importar cuánto contenido tenga la sección antes. */
-.bru-lamp--sec  { top: -30px; height: 200px; --lamp-y: 24px; }
+/* La lámpara de sección se sube MUY por encima del título: la línea brillante y
+   su halo caen en el espacio de arriba (no sobre el texto), e iluminan el título
+   desde arriba como luz ambiente. overflow visible + máscara que apaga el
+   resplandor rápido hacia abajo → el texto queda legible, sin lavado. */
+.bru-lamp--sec  { top: -118px; height: 150px; --lamp-y: 20px; overflow: visible; }
+.bru-lamp--sec .bru-lamp-glow {
+  width: min(60rem, 162%); height: 19rem;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0,0,0,.45) 32%, transparent 68%);
+  mask-image: linear-gradient(to bottom, #000 0%, rgba(0,0,0,.45) 32%, transparent 68%);
+}
+.bru-lamp--sec .bru-lamp-beam { width: 38rem; height: 14rem; }
+/* Línea un poco menos intensa aquí: aunque esté arriba del texto, su halo no
+   debe teñir el encabezado. */
+.bru-lamp--sec .bru-lamp-line {
+  box-shadow: 0 0 20px 3px rgba(var(--lamp-rgb),.85), 0 0 56px 14px rgba(var(--lamp-rgb),.45), 0 0 110px 34px rgba(var(--lamp-rgb),.22);
+}
 /* .bteaser recorta con overflow:hidden muy pegado al borde superior — con el
    offset negativo normal el haz queda cortado. Versión compacta, sin negativo. */
 .bru-lamp--teaser { top: 4px; height: 140px; --lamp-y: 8px; }

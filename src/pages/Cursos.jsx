@@ -4,6 +4,7 @@ import { useBrunettiFx, scrollToId } from '../components/brunetti.jsx'
 import SiteNav from '../components/SiteNav.jsx'
 import ModuleFooter from '../components/ModuleFooter.jsx'
 import { Lamp } from '../components/ui/lamp.jsx'
+import { Sparkles } from '../components/ui/sparkles.jsx'
 import FintocCheckout from '../components/FintocCheckout.jsx'
 import { EditableText } from '../components/edit/EditableText.jsx'
 import { Editable } from '../components/edit/Editable.jsx'
@@ -75,6 +76,10 @@ export default function Cursos() {
             <Editable as="img" editId="cursos:heroCutout" src="/assets/cursos-hero-cutout.webp" alt="" />
           </div>
         </section>
+
+        {/* Fondo de partículas azules para el cuerpo de cursos (hero fuera). */}
+        <div className="bru-sparkles-zone">
+          <Sparkles className="bru-sparkles--bg" color="107, 116, 240" />
 
         {/* ============ INTRO ============ */}
         <section className="bsection">
@@ -153,6 +158,7 @@ export default function Cursos() {
             <FintocCheckout />
           </div>
         </section>
+        </div>
       </main>
 
       <ModuleFooter

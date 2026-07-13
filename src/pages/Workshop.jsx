@@ -7,6 +7,7 @@ import { WORKSHOP } from '../data/workshop.js'
 import SiteNav from '../components/SiteNav.jsx'
 import { addLocalEnrollment } from '../enrollmentsStore.js'
 import { Lamp } from '../components/ui/lamp.jsx'
+import { Sparkles } from '../components/ui/sparkles.jsx'
 import { EditableText } from '../components/edit/EditableText.jsx'
 import { Editable } from '../components/edit/Editable.jsx'
 import WKC from '../data/content/workshop.json'
@@ -368,7 +369,13 @@ function Programa() {
           </div>
           <div className="wks-mod-panel" key={active}>
             <div className="wks-mod-panel-media wks-fade-key">
-              <Bw src={WK.photos[mod.photo]} alt={mod.title} label={mod.title} editId={`workshop:mod:${mod.photo}`} />
+              {mod.video ? (
+                <div className="wks-img" data-label={mod.title}>
+                  <video src={mod.video} poster={mod.poster} autoPlay muted loop playsInline preload="metadata" />
+                </div>
+              ) : (
+                <Bw src={WK.photos[mod.photo]} alt={mod.title} label={mod.title} editId={`workshop:mod:${mod.photo}`} />
+              )}
             </div>
             <div className="wks-mod-panel-body wks-fade-key">
               <span className="wks-eyebrow">{mod.n}</span>
@@ -729,18 +736,23 @@ export default function Workshop() {
       <div className="wks-shell">
         <SiteNav />
         <Hero onReserve={reserve} />
-        <Transform />
-        <QuoteBlock />
-        <FeatureRow data={WK.experiencia} contentKey="experiencia" />
-        <FeatureRow data={WK.asesoria} contentKey="asesoria" reversed />
-        <VideoShowcase />
-        <Programa />
-        <Cronograma />
-        <GiveKit />
-        <Pricing onReserve={reserve} />
-        <Register formRef={formRef} />
-        <Faq />
-        <Footer onReserve={reserve} />
+        {/* Fondo de partículas moradas para todo el cuerpo del workshop (el hero
+            queda fuera, igual que en Home). Color a juego con la lámpara morada. */}
+        <div className="bru-sparkles-zone">
+          <Sparkles className="bru-sparkles--bg" color="180, 131, 243" />
+          <Transform />
+          <QuoteBlock />
+          <FeatureRow data={WK.experiencia} contentKey="experiencia" />
+          <FeatureRow data={WK.asesoria} contentKey="asesoria" reversed />
+          <VideoShowcase />
+          <Programa />
+          <Cronograma />
+          <GiveKit />
+          <Pricing onReserve={reserve} />
+          <Register formRef={formRef} />
+          <Faq />
+          <Footer onReserve={reserve} />
+        </div>
       </div>
     </div>
   );
