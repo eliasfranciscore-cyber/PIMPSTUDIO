@@ -2940,6 +2940,34 @@ select.input { text-overflow: ellipsis; }
 /* ============================================================
    AGENDA V3 — single day, simple toggle list
    ============================================================ */
+/* Layout de 2 columnas en pantallas ≥1024px: la grilla de horarios a la
+   izquierda, un panel de "reservas del día" a la derecha — antes esa
+   información solo existía saltando al tab Reservas, y el espacio a la
+   derecha de la grilla quedaba vacío. En <1024px sigue apilado (1 columna). */
+.agenda-layout { display: grid; gap: 1.1rem; align-items: start; }
+@media (min-width: 1024px) {
+  .agenda-layout { grid-template-columns: 1.6fr 1fr; }
+}
+.agenda-day-panel { display: grid; gap: .55rem; }
+.agenda-day-booking {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: .6rem;
+  padding: .55rem .7rem;
+  border-radius: 10px;
+  border: 1px solid var(--hair);
+  background: rgba(255,255,255,.02);
+  cursor: pointer;
+  transition: border-color .15s, background .15s, transform .1s ease-out;
+  text-align: left;
+}
+.agenda-day-booking:hover { border-color: var(--gold-line); background: rgba(201,161,78,.06); }
+.agenda-day-booking:active { transform: scale(.98); }
+.agenda-day-booking .adb-time { font-family: var(--font-display); font-weight: 700; font-size: .82rem; color: var(--gold-lt); }
+.agenda-day-booking .adb-info { min-width: 0; display: grid; }
+.agenda-day-booking .adb-info strong { font-size: .84rem; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.agenda-day-booking .adb-info span { font-size: .72rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .agenda-controls {
   display: grid;
   gap: .7rem;
@@ -3081,6 +3109,13 @@ select.input { text-overflow: ellipsis; }
    AGENDA TILE GRID — MAÑANA / TARDE interactive tiles
    ============================================================ */
 .agenda-period { margin-top: 1rem; }
+.agenda-period-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .6rem;
+  margin: 0 0 .5rem .25rem;
+}
 .agenda-period-title {
   font-family: var(--font-display);
   font-size: .7rem;
@@ -3088,25 +3123,45 @@ select.input { text-overflow: ellipsis; }
   letter-spacing: .12em;
   text-transform: uppercase;
   color: var(--muted);
-  margin: 0 0 .5rem .25rem;
+  margin: 0;
 }
+.agenda-period-toggle {
+  font-family: var(--font-display);
+  font-size: .66rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  padding: .28rem .6rem;
+  border-radius: 999px;
+  border: 1px solid var(--hair-2);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color .15s, color .15s, background .15s, transform .1s ease-out;
+}
+.agenda-period-toggle:hover { border-color: var(--gold-line); color: var(--gold-lt); }
+.agenda-period-toggle:active { transform: scale(.95); }
+.agenda-period-toggle.is-blocked { border-color: var(--gold-line); color: var(--gold-lt); background: rgba(201,161,78,.08); }
+/* Baldosas compactas de 44px de alto — antes aspect-ratio:1 las hacía
+   cuadradas y gigantes (~90px de lado en desktop), inflando la agenda a
+   varias pantallas de alto por casi nada de información real. */
 .agenda-tile-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
-  gap: .45rem;
+  grid-template-columns: repeat(auto-fill, 74px);
+  grid-auto-rows: 44px;
+  gap: .4rem;
+  justify-content: start;
 }
 .agenda-tile {
-  aspect-ratio: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 14px;
+  border-radius: 10px;
   border: 1.5px solid var(--border);
   background: var(--surface);
   color: var(--ink-soft);
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: .85rem;
+  font-size: .8rem;
   cursor: pointer;
   transition: background .15s, border-color .15s, color .15s, transform .1s;
   -webkit-tap-highlight-color: transparent;
@@ -3129,8 +3184,8 @@ select.input { text-overflow: ellipsis; }
   background: rgba(201,161,78,.08);
   border-color: var(--gold-line);
   color: var(--gold-lt);
-  cursor: not-allowed;
-  opacity: .7;
+  /* clickeable (abre el detalle en Reservas): ya no cursor:not-allowed */
+  opacity: .85;
 }
 .agenda-tile:disabled { cursor: not-allowed; }
 

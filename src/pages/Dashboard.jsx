@@ -635,6 +635,11 @@ export default function Dashboard() {
     setAgendaBusy("")
   }
 
+  // Salta a Reservas con el día enfocado (mismo patrón que usan GlobalSearch y
+  // el resumen para "próxima cita"): clickear una hora reservada en la agenda
+  // ahora lleva al detalle real de esa reserva en vez de estar deshabilitada.
+  const goToDayInReservas = (dayKey) => { setTab("reservas"); setInboxFocus({ day: dayKey, ts: Date.now() }) }
+
   // Totales de la semana visible (no solo del día seleccionado): permite ver
   // de un vistazo cuántas horas quedan libres/bloqueadas antes de publicar la
   // semana siguiente.
@@ -773,63 +778,100 @@ export default function Dashboard() {
                   )
                 })}
               </div>
+              {/* Antes eran 6 botones sueltos (mañana/tarde/día/semana × bloquear/
+                  habilitar) todos visibles a la vez. Mañana/tarde ahora son un
+                  toggle contextual junto al título de cada periodo (más abajo);
+                  acá solo quedan día completo y semana completa, y cada uno es
+                  un único botón cuya etiqueta cambia según el estado actual. */}
               <div className="agenda-bulk-actions">
-                <button type="button" className="btn btn-dark btn-sm" disabled={!!agendaBusy} onClick={() => bulkAgenda("morning", "block")}>
-                  <Icon name="clock" size={13} /> Bloquear mañana
-                </button>
-                <button type="button" className="btn btn-dark btn-sm" disabled={!!agendaBusy} onClick={() => bulkAgenda("afternoon", "block")}>
-                  <Icon name="clock" size={13} /> Bloquear tarde
-                </button>
-                <button type="button" className="btn btn-dark btn-sm" disabled={!!agendaBusy} onClick={() => bulkAgenda("day", "block")}>
-                  <Icon name="close" size={13} /> Bloquear día completo
-                </button>
-                <button type="button" className="btn btn-gold btn-sm" disabled={!!agendaBusy} onClick={() => bulkAgenda("day", "enable")}>
-                  <Icon name="check" size={13} /> Habilitar día completo
-                </button>
-                <button type="button" className="btn btn-dark btn-sm" disabled={!!agendaBusy} onClick={() => bulkAgenda("week", "block")}>
-                  <Icon name="close" size={13} /> Bloquear semana completa
-                </button>
-                <button type="button" className="btn btn-gold btn-sm" disabled={!!agendaBusy} onClick={() => bulkAgenda("week", "enable")}>
-                  <Icon name="check" size={13} /> Habilitar semana completa
-                </button>
+                {(() => {
+                  const dayFree = (availability[agendaDayKey] || []).filter((s) => s.state === "free").length
+                  const dayIsBlocked = dayFree === 0
+                  const weekIsBlocked = weekStats.free === 0
+                  return (
+                    <>
+                      <button type="button" className={`btn btn-sm ${dayIsBlocked ? "btn-gold" : "btn-dark"}`} disabled={!!agendaBusy} onClick={() => bulkAgenda("day", dayIsBlocked ? "enable" : "block")}>
+                        <Icon name={dayIsBlocked ? "check" : "close"} size={13} /> {dayIsBlocked ? "Habilitar" : "Bloquear"} día completo
+                      </button>
+                      <button type="button" className={`btn btn-sm ${weekIsBlocked ? "btn-gold" : "btn-dark"}`} disabled={!!agendaBusy} onClick={() => bulkAgenda("week", weekIsBlocked ? "enable" : "block")}>
+                        <Icon name={weekIsBlocked ? "check" : "close"} size={13} /> {weekIsBlocked ? "Habilitar" : "Bloquear"} semana completa
+                      </button>
+                    </>
+                  )
+                })()}
               </div>
             </div>
-            <Panel
-              title={`${(barbers.find((item) => item.id === agendaBarber) || barberById(agendaBarber))?.name || "Barbero"}`}
-              action={<span className="chip chip-gold">{(availability[agendaDayKey] || []).filter((s) => s.state === "free").length} libres</span>}
-            >
-              <div className="agenda-legend">
-                <span><i className="free" /> Atiende</span>
-                <span><i className="blocked" /> Bloqueado</span>
-                <span><i className="booked" /> Reservado</span>
-              </div>
-              {["MAÑANA", "TARDE"].map((label) => {
-                const slots = AGENDA_SLOTS.filter((t) => label === "MAÑANA" ? Number(t.slice(0, 2)) < 12 : Number(t.slice(0, 2)) >= 12)
-                return (
-                  <div key={label} className="agenda-period">
-                    <p className="agenda-period-title">{label}</p>
-                    <div className="agenda-tile-grid">
-                      {slots.map((t) => {
-                        const slotInfo = (availability[agendaDayKey] || []).find((item) => item.slot === t)
-                        const state = slotInfo?.state || (slotInfo?.available === false ? "blocked" : "free")
-                        const busy = agendaBusy === `${agendaDayKey}-${t}`
-                        return (
-                          <button
-                            key={t}
-                            className={`agenda-tile ${state}`}
-                            disabled={state === "booked" || busy}
-                            onClick={() => toggleSlot(agendaDayKey, t, state)}
-                            title={state === "booked" ? "Reservado" : state === "blocked" ? "Tocar para atender" : "Tocar para bloquear"}
-                          >
-                            {busy ? "..." : t}
-                          </button>
-                        )
-                      })}
+            <div className="agenda-layout">
+              <Panel
+                title={`${(barbers.find((item) => item.id === agendaBarber) || barberById(agendaBarber))?.name || "Barbero"}`}
+                action={<span className="chip chip-gold">{(availability[agendaDayKey] || []).filter((s) => s.state === "free").length} libres</span>}
+              >
+                <div className="agenda-legend">
+                  <span><i className="free" /> Atiende</span>
+                  <span><i className="blocked" /> Bloqueado</span>
+                  <span><i className="booked" /> Reservado</span>
+                </div>
+                {["MAÑANA", "TARDE"].map((label) => {
+                  const slots = AGENDA_SLOTS.filter((t) => label === "MAÑANA" ? Number(t.slice(0, 2)) < 12 : Number(t.slice(0, 2)) >= 12)
+                  const periodStates = slots.map((t) => (availability[agendaDayKey] || []).find((item) => item.slot === t))
+                  const periodIsBlocked = periodStates.every((s) => s?.state !== "free")
+                  return (
+                    <div key={label} className="agenda-period">
+                      <div className="agenda-period-head">
+                        <p className="agenda-period-title">{label}</p>
+                        <button
+                          type="button"
+                          className={`agenda-period-toggle ${periodIsBlocked ? "is-blocked" : ""}`}
+                          disabled={!!agendaBusy}
+                          onClick={() => bulkAgenda(label === "MAÑANA" ? "morning" : "afternoon", periodIsBlocked ? "enable" : "block")}
+                        >
+                          {periodIsBlocked ? "Habilitar" : "Bloquear"}
+                        </button>
+                      </div>
+                      <div className="agenda-tile-grid">
+                        {slots.map((t) => {
+                          const slotInfo = (availability[agendaDayKey] || []).find((item) => item.slot === t)
+                          const state = slotInfo?.state || (slotInfo?.available === false ? "blocked" : "free")
+                          const busy = agendaBusy === `${agendaDayKey}-${t}`
+                          const bk = state === "booked" ? visibleBookings.find((b) => b.date === agendaDayKey && b.time === t && b.status !== "cancelada") : null
+                          return (
+                            <button
+                              key={t}
+                              className={`agenda-tile ${state}`}
+                              disabled={busy}
+                              onClick={() => state === "booked" ? goToDayInReservas(agendaDayKey) : toggleSlot(agendaDayKey, t, state)}
+                              title={state === "booked" ? (bk ? `${bk.client} · ${bk.service}` : "Reservado — ver en Reservas") : state === "blocked" ? "Tocar para atender" : "Tocar para bloquear"}
+                            >
+                              {busy ? "..." : t}
+                            </button>
+                          )
+                        })}
+                      </div>
                     </div>
-                  </div>
-                )
-              })}
-            </Panel>
+                  )
+                })}
+              </Panel>
+              <Panel title="Reservas del día" action={<span className="chip">{(weekDays.find((d) => d.key === agendaDayKey)?.label) || ""}</span>}>
+                <div className="agenda-day-panel">
+                  {visibleBookings
+                    .filter((b) => b.date === agendaDayKey && b.status !== "cancelada")
+                    .sort((a, b) => (a.time || "").localeCompare(b.time || ""))
+                    .map((b) => (
+                      <button key={b.id || `${b.date}-${b.time}-${b.client}`} type="button" className="agenda-day-booking" onClick={() => goToDayInReservas(agendaDayKey)}>
+                        <span className="adb-time">{b.time}</span>
+                        <span className="adb-info">
+                          <strong>{b.client}</strong>
+                          <span>{b.service}</span>
+                        </span>
+                        <span className={`chip ${b.status === "confirmada" ? "chip-gold" : ""}`} style={{ fontSize: ".64rem" }}>{b.status}</span>
+                      </button>
+                    ))}
+                  {!visibleBookings.some((b) => b.date === agendaDayKey && b.status !== "cancelada") && (
+                    <div className="empty-state">Sin reservas este día.</div>
+                  )}
+                </div>
+              </Panel>
+            </div>
           </div>
         )}
 
