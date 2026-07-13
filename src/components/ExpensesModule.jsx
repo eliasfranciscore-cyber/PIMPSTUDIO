@@ -173,9 +173,9 @@ export default function ExpensesModule({ expenses = [], budgets = {}, onCreate =
         <div className="dk-hero-grid cols-5 dk-stagger">
           <div>
             <div className="dk-month-stepper">
-              <button type="button" onClick={() => shiftMonth(-1)} aria-label="Mes anterior"><Icon name="arrowLeft" size={13} /></button>
+              <button type="button" onClick={() => shiftMonth(-1)} data-tip="Mes anterior" aria-label="Mes anterior"><Icon name="arrowLeft" size={13} /></button>
               <span className="dk-hero-sub">Gastos de {monthLabel}</span>
-              <button type="button" onClick={() => shiftMonth(1)} disabled={ym >= monthKey()} aria-label="Mes siguiente"><Icon name="arrowRight" size={13} /></button>
+              <button type="button" onClick={() => shiftMonth(1)} disabled={ym >= monthKey()} data-tip="Mes siguiente" aria-label="Mes siguiente"><Icon name="arrowRight" size={13} /></button>
             </div>
             <h2 className="dk-hero-big"><CountUp value={monthTotal} format={CLP} /></h2>
             {budgetTotal > 0 && (
@@ -253,7 +253,14 @@ export default function ExpensesModule({ expenses = [], budgets = {}, onCreate =
           ))}
         </div>
         <div className="dk-mov-list">
-          {filteredMovements.length === 0 && <div className="empty-state">Sin gastos que coincidan en {monthLabel}.</div>}
+          {filteredMovements.length === 0 && (
+            <div className="empty-state" style={{ display: 'grid', gap: '.7rem', justifyItems: 'center' }}>
+              <span>Sin gastos que coincidan en {monthLabel}.</span>
+              <button type="button" className="btn btn-gold btn-sm" onClick={() => setModal({})}>
+                <Icon name="wallet" size={14} /> Nuevo gasto
+              </button>
+            </div>
+          )}
           {filteredMovements.map((e) => {
             const m = metaOf(e.category)
             return (
@@ -265,8 +272,8 @@ export default function ExpensesModule({ expenses = [], budgets = {}, onCreate =
                 </div>
                 <b className="dk-mov-amt">{CLP(e.amount)}</b>
                 <div className="dk-mov-actions">
-                  <button className="btn btn-dark btn-sm" title="Editar" onClick={() => setModal(e)}><Icon name="check" size={13} /></button>
-                  <button className="btn btn-sm psn-res-delete" title="Eliminar" onClick={() => setConfirmDel(e)}><Icon name="close" size={13} /></button>
+                  <button className="btn btn-dark btn-sm" data-tip="Editar" aria-label="Editar" onClick={() => setModal(e)}><Icon name="check" size={13} /></button>
+                  <button className="btn btn-sm psn-res-delete" data-tip="Eliminar" aria-label="Eliminar" onClick={() => setConfirmDel(e)}><Icon name="close" size={13} /></button>
                 </div>
               </div>
             )

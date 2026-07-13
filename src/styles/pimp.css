@@ -48,6 +48,11 @@
 }
 
 * { box-sizing: border-box; }
+/* Foco visible por teclado (Tab), no en click con mouse: :focus-visible ya
+   distingue ambos casos nativamente. Los inputs con su propio glow (líneas
+   ~299/607/633) siguen ganando por especificidad — esto es el fallback
+   general para botones, links, chips y filas tappables sin estilo propio. */
+:focus-visible { outline: 2px solid var(--gold-line, #c9a14e); outline-offset: 2px; border-radius: 4px; }
 html, body { margin: 0; padding: 0; }
 /* Contener el desbordamiento horizontal en la RAÍZ (no en .home-scroll).
    `clip` no crea un contenedor de scroll ni un bloque contenedor, así que
@@ -1779,7 +1784,17 @@ select.input { text-overflow: ellipsis; }
 /* Los wrappers de cada tab usan display:grid con columna implícita; sin esto la
    columna se dimensiona al max-content (p. ej. un <select> con nombres largos) y
    estira el contenido más allá del viewport. minmax(0,1fr) lo ancla al ancho real. */
-.dashboard-main > .animate-in { grid-template-columns: minmax(0, 1fr); min-width: 0; }
+.dashboard-main > .animate-in {
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+  /* Transición de tabs: cross-fade corto + slide 8px (más rápido que el
+     .animate-in genérico del sitio, que es para reveals de landing). Cada
+     tab es un nodo distinto (unmount/mount), así que cambiar de tab a mitad
+     de otra transición no la interrumpe a medias — ya "interrumpible" por
+     construcción, sin animación en cola. */
+  animation: dashTabIn 0.12s cubic-bezier(.2,.7,.3,1) both;
+}
+@keyframes dashTabIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 .dashboard-main-head {
   display: flex;
   justify-content: space-between;
@@ -2174,14 +2189,20 @@ select.input { text-overflow: ellipsis; }
   padding: 0.8rem 1rem;
   margin: 0 0 1rem;
   border-radius: 18px;
-  background: linear-gradient(160deg, var(--surface-2), var(--surface));
-  border: 1px solid var(--border);
+  /* Translúcido de verdad (antes --surface/--surface-2 son hex opacos, así
+     que el blur no tenía nada detrás que difuminar): el contenido pasa por
+     debajo al hacer scroll dentro de .dashboard-main. */
+  background: color-mix(in srgb, var(--surface-2) 60%, transparent);
+  border: 1px solid transparent;
+  border-bottom-color: transparent;
   position: sticky;
   top: 0.6rem;
   z-index: 50;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  transition: border-color .2s ease;
 }
+.dashboard-topbar.is-scrolled { border-bottom-color: var(--border); }
 .dashboard-topbar-left { display: flex; align-items: center; gap: 0.65rem; min-width: 0; }
 .dashboard-topbar-title { display: grid; gap: 2px; min-width: 0; }
 .dashboard-topbar-title strong {

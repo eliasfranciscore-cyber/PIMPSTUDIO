@@ -116,6 +116,7 @@ export default function Dashboard() {
   const [clientSort, setClientSort] = useState({ key: "name", dir: "asc" })
   const [financePeriod, setFinancePeriod] = useState("mes") // "semana" | "mes" | "año"
   const [financeSort, setFinanceSort] = useState({ key: "date", dir: "desc" })
+  const [topbarScrolled, setTopbarScrolled] = useState(false)
   const [selectedClient, setSelectedClient] = useState(null)
   const [clientHistory, setClientHistory] = useState([])
   const [clientEditing, setClientEditing] = useState(false)
@@ -707,7 +708,7 @@ export default function Dashboard() {
       onLogout={logout}
       onNewBooking={() => setNewBookingOpen(true)}
     >
-      <main className="dashboard-main">
+      <main className="dashboard-main" onScroll={(e) => setTopbarScrolled(e.currentTarget.scrollTop > 4)}>
         <DashboardTopbar
           title={nav.find((n) => n[0] === tab)?.[2] || 'Panel'}
           barber={barber}
@@ -718,6 +719,7 @@ export default function Dashboard() {
           notifCount={visibleBookings.filter((b) => b.status === 'pendiente').length}
           onRefresh={refreshAll}
           refreshing={refreshing}
+          scrolled={topbarScrolled}
           search={(
             <GlobalSearch
               clients={clients}
@@ -1005,7 +1007,14 @@ export default function Dashboard() {
                       </div>
                     )
                   })}
-                  {!sortedFinanceRows.length && <div className="empty-state">Sin movimientos en este periodo.</div>}
+                  {!sortedFinanceRows.length && (
+                    <div className="empty-state" style={{ display: "grid", gap: ".7rem", justifyItems: "center" }}>
+                      <span>Sin movimientos en este periodo.</span>
+                      <button type="button" className="btn btn-gold btn-sm" onClick={() => setNewBookingOpen(true)}>
+                        <Icon name="calendar" size={14} /> Nueva reserva
+                      </button>
+                    </div>
+                  )}
                 </div>
                 {sortedFinanceRows.length > 0 && (
                   <div className="fin-row-total">
@@ -1077,7 +1086,12 @@ export default function Dashboard() {
                   </div>
                 ))}
                 {!sortedClients.length && (
-                  <div className="empty-state">No hay clientes que coincidan con la busqueda.</div>
+                  <div className="empty-state" style={{ display: "grid", gap: ".7rem", justifyItems: "center" }}>
+                    <span>No hay clientes que coincidan con la busqueda.</span>
+                    <button type="button" className="btn btn-gold btn-sm" onClick={() => setNewClientOpen(true)}>
+                      <Icon name="user" size={14} /> Nuevo cliente
+                    </button>
+                  </div>
                 )}
               </div>
             </Panel>
@@ -2028,7 +2042,7 @@ function DashboardShell({ tab, setTab, nav, dockItems, barber, onLogout, onNewBo
   )
 }
 
-function DashboardTopbar({ title, barber, onLogout, tab, setTab, nav, notifCount = 0, onRefresh, refreshing = false, search = null }) {
+function DashboardTopbar({ title, barber, onLogout, tab, setTab, nav, notifCount = 0, onRefresh, refreshing = false, search = null, scrolled = false }) {
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
   useEffect(() => {
@@ -2039,7 +2053,7 @@ function DashboardTopbar({ title, barber, onLogout, tab, setTab, nav, notifCount
   }, [open])
   const initial = (barber?.name || 'B')[0].toUpperCase()
   return (
-    <header className="dashboard-topbar">
+    <header className={`dashboard-topbar ${scrolled ? 'is-scrolled' : ''}`}>
       <div className="dashboard-topbar-left">
         <button
           type="button"
@@ -2064,7 +2078,7 @@ function DashboardTopbar({ title, barber, onLogout, tab, setTab, nav, notifCount
         <button
           type="button"
           className="notif-pill"
-          title={refreshing ? 'Actualizando…' : 'Actualizar datos'}
+          data-tip={refreshing ? 'Actualizando…' : 'Actualizar datos'}
           aria-label="Actualizar datos"
           onClick={onRefresh}
           disabled={refreshing}
@@ -2075,7 +2089,8 @@ function DashboardTopbar({ title, barber, onLogout, tab, setTab, nav, notifCount
         <button
           type="button"
           className="notif-pill"
-          title={notifCount ? `${notifCount} reserva(s) pendiente(s)` : 'Sin pendientes'}
+          data-tip={notifCount ? `${notifCount} reserva(s) pendiente(s)` : 'Sin pendientes'}
+          aria-label={notifCount ? `${notifCount} reserva(s) pendiente(s)` : 'Sin pendientes'}
           onClick={() => setTab('reservas')}
           style={{ cursor: 'pointer' }}
         >

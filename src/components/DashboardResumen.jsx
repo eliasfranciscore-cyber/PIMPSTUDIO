@@ -328,7 +328,16 @@ export default function DashboardResumen({ bookings = [], barbers = [], expenses
                 </div>
               )
             })}
-            {!today.length && <div style={{ color: 'var(--muted)', fontSize: '.85rem', padding: '1rem' }}>Sin reservas para hoy.</div>}
+            {!today.length && (
+              <div style={{ display: 'grid', gap: '.6rem', justifyItems: 'center', padding: '1rem', textAlign: 'center' }}>
+                <span style={{ color: 'var(--muted)', fontSize: '.85rem' }}>Sin reservas para hoy.</span>
+                {onNewBooking && (
+                  <button type="button" className="btn btn-gold btn-sm" onClick={onNewBooking}>
+                    <Icon name="calendar" size={14} /> Nueva reserva
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         </div>
 

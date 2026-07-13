@@ -81,16 +81,19 @@ function ResCard({ bk, barbers, isAdmin, onOpen, onStatusSelect, onQuickAdvance,
         </div>
       </div>
       <div className="psn-res-quick">
-        {next && (
-          <button type="button" className="qk-confirm" title={bk.status === 'pendiente' ? 'Confirmar' : bk.status === 'confirmada' ? 'Iniciar atención' : 'Completar'} onClick={(e) => { e.stopPropagation(); onQuickAdvance(bk) }}>
-            <Icon name="check" size={14} />
-          </button>
-        )}
-        <a className="qk-wa" title="Enviar WhatsApp" href={waLink(bk, short, waStatus)} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+        {next && (() => {
+          const label = bk.status === 'pendiente' ? 'Confirmar' : bk.status === 'confirmada' ? 'Iniciar atención' : 'Completar'
+          return (
+            <button type="button" className="qk-confirm" data-tip={label} aria-label={label} onClick={(e) => { e.stopPropagation(); onQuickAdvance(bk) }}>
+              <Icon name="check" size={14} />
+            </button>
+          )
+        })()}
+        <a className="qk-wa" data-tip="Enviar WhatsApp" aria-label="Enviar WhatsApp" href={waLink(bk, short, waStatus)} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
           <Icon name="whatsapp" size={14} />
         </a>
         {cancelable && (
-          <button type="button" className="qk-cancel" title="Cancelar reserva" onClick={(e) => { e.stopPropagation(); onQuickCancel(bk) }}>
+          <button type="button" className="qk-cancel" data-tip="Cancelar reserva" aria-label="Cancelar reserva" onClick={(e) => { e.stopPropagation(); onQuickCancel(bk) }}>
             <Icon name="x" size={14} />
           </button>
         )}
@@ -576,8 +579,8 @@ export default function BookingsInbox({ bookings = [], barbers = [], barber, adm
           {searching && <button type="button" className="psn-search-clear" onClick={() => setQuery('')} aria-label="Limpiar"><Icon name="close" size={13} /></button>}
         </div>
         <div className="psn-view-toggle" role="group" aria-label="Vista">
-          <button type="button" className={viewMode === 'cards' ? 'is-on' : ''} onClick={() => setViewMode('cards')} title="Vista tarjetas" aria-label="Vista tarjetas"><Icon name="grid" size={15} /></button>
-          <button type="button" className={viewMode === 'lista' ? 'is-on' : ''} onClick={() => setViewMode('lista')} title="Vista lista" aria-label="Vista lista"><Icon name="list" size={15} /></button>
+          <button type="button" className={viewMode === 'cards' ? 'is-on' : ''} onClick={() => setViewMode('cards')} data-tip="Vista tarjetas" aria-label="Vista tarjetas"><Icon name="grid" size={15} /></button>
+          <button type="button" className={viewMode === 'lista' ? 'is-on' : ''} onClick={() => setViewMode('lista')} data-tip="Vista lista" aria-label="Vista lista"><Icon name="list" size={15} /></button>
         </div>
         {onNewBooking && (
           <button type="button" className="btn btn-gold btn-sm" style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem' }} onClick={onNewBooking}>
@@ -600,8 +603,13 @@ export default function BookingsInbox({ bookings = [], barbers = [], barber, adm
           ))}
         </div>
       ) : (
-        <div className="card psn-empty" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--muted)' }}>
-          {searching ? 'Sin resultados para tu búsqueda.' : `Sin reservas para ${isToday && dateScope === 'dia' ? 'hoy' : scopeLabel || selLabel}.`}
+        <div className="card psn-empty" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--muted)', display: 'grid', gap: '.9rem', justifyItems: 'center' }}>
+          <span>{searching ? 'Sin resultados para tu búsqueda.' : `Sin reservas para ${isToday && dateScope === 'dia' ? 'hoy' : scopeLabel || selLabel}.`}</span>
+          {!searching && onNewBooking && (
+            <button type="button" className="btn btn-gold btn-sm" onClick={onNewBooking}>
+              <Icon name="calendar" size={14} /> Nueva reserva
+            </button>
+          )}
         </div>
       )}
 
