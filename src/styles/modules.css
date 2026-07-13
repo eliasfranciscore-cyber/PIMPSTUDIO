@@ -88,6 +88,12 @@
 .psn-inbox-search { display: flex; align-items: center; gap: .5rem; padding: .5rem .8rem; border-radius: 999px; border: 1px solid var(--hair-2); background: rgba(255,255,255,.02); color: var(--muted); margin-left: auto; }
 .psn-inbox-search input { background: none; border: 0; color: var(--ink); outline: none; font-family: var(--font-body); font-size: .85rem; width: 160px; }
 .psn-inbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px,1fr)); gap: .9rem; }
+/* Grid adaptativo: 2 col en medium (≥1024px), 3 col en wide (≥1440px). La
+   vista lista (toggle persistido) fuerza 1 columna y aplana cada tarjeta en
+   una fila densa — ver reglas .is-list más abajo. */
+@media (min-width: 1024px) { .psn-inbox-grid:not(.is-list) { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1440px) { .psn-inbox-grid:not(.is-list) { grid-template-columns: repeat(3, 1fr); } }
+.psn-inbox-grid.is-list { grid-template-columns: 1fr; gap: .5rem; }
 .psn-res-card { border-radius: 16px; border: 1px solid var(--hair); background: linear-gradient(160deg, rgba(20,20,18,.96), rgba(10,10,9,.96)); padding: 1rem; display: grid; gap: .8rem; position: relative; overflow: hidden; }
 .psn-res-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--bar, var(--muted-2)); }
 .psn-res-card.pendiente { --bar: var(--gold); }
@@ -162,6 +168,32 @@
 .psn-day-badge { position: absolute; top: -6px; right: -4px; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 99px; background: var(--gold-grad); color: #1a1206; font-size: .64rem; font-weight: 700; display: grid; place-items: center; box-shadow: 0 2px 6px rgba(0,0,0,.4); }
 .psn-search-clear { background: none; border: 0; color: var(--muted); cursor: pointer; display: grid; place-items: center; padding: 0 .1rem; }
 .psn-search-note { font-size: .78rem; color: var(--muted); display: flex; align-items: center; gap: .35rem; margin: -.35rem 0 0; }
+
+/* ---------- Reservas: segmented controls (rango de fechas / vista) ----------
+   Grupo de pills conectadas dentro de un único borde (a diferencia del chip
+   suelto .psn-chip-btn) — visualmente comunican "un valor a la vez". */
+.psn-seg, .psn-view-toggle { display: inline-flex; gap: 2px; padding: 3px; border-radius: 999px; border: 1px solid var(--hair-2); background: rgba(255,255,255,.02); flex: 0 0 auto; }
+.psn-seg button, .psn-view-toggle button { border: 0; background: none; padding: .4rem .8rem; border-radius: 999px; font-family: var(--font-display); font-size: .78rem; color: var(--muted); cursor: pointer; transition: background .15s, color .15s; white-space: nowrap; }
+.psn-seg button:hover, .psn-view-toggle button:hover { color: var(--ink); }
+.psn-seg button.is-on, .psn-view-toggle button.is-on { background: var(--gold-grad); color: #1a1407; }
+.psn-view-toggle button { width: 32px; padding: .4rem; display: grid; place-items: center; }
+
+/* Filtros de estado: mismo lenguaje visual, con contador y scroll horizontal
+   en pantallas angostas (son 6 opciones desde que sumamos Canceladas). */
+.psn-status-seg { display: flex; gap: 2px; padding: 3px; border-radius: 999px; border: 1px solid var(--hair-2); background: rgba(255,255,255,.02); flex: 1 1 220px; min-width: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.psn-status-seg::-webkit-scrollbar { display: none; }
+.psn-status-seg button { flex: 0 0 auto; display: inline-flex; align-items: center; gap: .35rem; border: 0; background: none; padding: .4rem .7rem; border-radius: 999px; font-family: var(--font-display); font-size: .78rem; color: var(--muted); cursor: pointer; transition: background .15s, color .15s; }
+.psn-status-seg button:hover { color: var(--ink); }
+.psn-status-seg button.is-on { background: rgba(201,161,78,.14); color: var(--gold-lt); box-shadow: inset 0 0 0 1px var(--gold-line); }
+.psn-seg-count { font-size: .66rem; padding: .05rem .38rem; border-radius: 999px; background: rgba(255,255,255,.06); color: var(--muted-2); }
+.psn-status-seg button.is-on .psn-seg-count { background: rgba(201,161,78,.2); color: var(--gold-lt); }
+
+/* ---------- Reservas: toast de deshacer (cancelar es reversible: feedback,
+   no un diálogo de confirmación previo). ---------- */
+.psn-toast { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 200; display: flex; align-items: center; gap: .9rem; padding: .7rem 1.1rem; border-radius: 12px; background: rgba(18,18,16,.97); border: 1px solid var(--hair-2); box-shadow: 0 20px 50px rgba(0,0,0,.5); color: #fff; font-size: .86rem; backdrop-filter: blur(14px); animation: psnToastIn .2s ease; }
+.psn-toast button { flex: 0 0 auto; border: 0; background: none; color: var(--gold-lt); font-family: var(--font-display); font-weight: 600; font-size: .84rem; cursor: pointer; padding: .3rem .5rem; }
+.psn-toast button:hover { color: #fff; }
+@keyframes psnToastIn { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }
 
 /* ---------- Reservas: modal calendario ---------- */
 .psn-cal { max-width: 420px; width: 92vw; }
@@ -286,12 +318,47 @@ a.home-footer-access { display: inline-flex; align-items: center; gap: .4rem; te
 
 /* ---------- Reservas: tarjeta tappable + selector + modal de gestión ---------- */
 .psn-res-tap { display: grid; gap: .8rem; width: 100%; text-align: left; background: none; border: 0; padding: 0; margin: 0; color: inherit; cursor: pointer; font: inherit; }
+.psn-res-tap:focus-visible { outline: 2px solid var(--gold-line); outline-offset: 3px; border-radius: 8px; }
 .psn-res-foot { display: flex; gap: .5rem; align-items: center; }
 .psn-res-status { flex: 1; min-width: 0; padding: .55rem .7rem; border-radius: 10px; border: 1px solid var(--hair-2); background: rgba(255,255,255,.03); color: var(--ink); font-family: var(--font-body); font-size: .82rem; cursor: pointer; }
 .psn-res-status.pendiente { border-color: var(--gold-line); color: var(--gold-lt); }
 .psn-res-status.confirmada { border-color: rgba(111,191,134,.45); }
 .psn-res-status.cancelada { border-color: rgba(217,154,143,.45); color: var(--red); }
 .psn-res-detail { flex: 0 0 auto; white-space: nowrap; }
+
+/* Acciones rápidas (confirmar/WhatsApp/cancelar) sin abrir el modal. En
+   desktop aparecen al hover/focus de la tarjeta; en táctil no hay hover, así
+   que quedan siempre visibles (mismo patrón que .client-row-edit). */
+.psn-res-quick { display: flex; gap: .4rem; }
+.psn-res-quick button, .psn-res-quick a { width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--hair-2); background: rgba(255,255,255,.03); color: var(--ink-soft); display: grid; place-items: center; cursor: pointer; transition: border-color .15s, color .15s, background .15s; }
+.psn-res-quick .qk-confirm:hover { border-color: rgba(111,191,134,.5); color: #9fd7af; background: rgba(111,191,134,.08); }
+.psn-res-quick .qk-wa:hover { border-color: rgba(43,182,115,.5); color: #6fe3a4; background: rgba(43,182,115,.08); }
+.psn-res-quick .qk-cancel:hover { border-color: rgba(217,84,74,.5); color: #e0857c; background: rgba(217,84,74,.08); }
+@media (min-width: 1024px) {
+  .psn-res-quick { opacity: 0; transition: opacity .15s ease; }
+  .psn-res-card:hover .psn-res-quick,
+  .psn-res-card:focus-within .psn-res-quick { opacity: 1; }
+}
+
+/* Vista lista (≥1024px): aplana cada tarjeta en una fila densa — el color de
+   estado ya lo da el borde izquierdo, así que el badge se oculta para ganar
+   espacio horizontal. Por debajo de 1024px no se distingue de la vista cards
+   (mismo layout de 1 columna en móvil, no vale la pena una fila tan angosta). */
+@media (min-width: 1024px) {
+  .psn-inbox-grid.is-list .psn-res-card { display: flex; align-items: center; gap: 1.1rem; padding: .55rem .9rem; }
+  .psn-inbox-grid.is-list .psn-res-tap { display: flex; align-items: center; gap: 1.2rem; flex: 1; min-width: 0; }
+  .psn-inbox-grid.is-list .psn-res-top { flex-direction: column-reverse; align-items: flex-start; gap: .15rem; flex: 0 0 auto; }
+  .psn-inbox-grid.is-list .psn-res-badge { display: none; }
+  .psn-inbox-grid.is-list .psn-res-client { flex: 0 0 190px; }
+  .psn-inbox-grid.is-list .psn-res-meta { display: flex; flex-direction: row; gap: 1.3rem; flex: 1; min-width: 0; padding: 0; border: 0; background: none; }
+  .psn-inbox-grid.is-list .psn-res-row { flex-direction: column; align-items: flex-start; gap: 0; font-size: .78rem; }
+  .psn-inbox-grid.is-list .psn-res-row span { font-size: .62rem; }
+  .psn-inbox-grid.is-list .psn-res-quick { opacity: 0; }
+  .psn-inbox-grid.is-list .psn-res-card:hover .psn-res-quick,
+  .psn-inbox-grid.is-list .psn-res-card:focus-within .psn-res-quick { opacity: 1; }
+  .psn-inbox-grid.is-list .psn-res-foot { flex: 0 0 auto; }
+  .psn-inbox-grid.is-list .psn-res-status { width: 130px; flex: 0 0 auto; }
+}
 
 .btn-danger { background: linear-gradient(135deg, #d9544a, #b23b32); color: #fff; border: 0; box-shadow: 0 12px 30px -16px rgba(217,84,74,.6); }
 .btn-danger:hover { filter: brightness(1.06); }
