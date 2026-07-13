@@ -3293,6 +3293,27 @@ select.input { text-overflow: ellipsis; }
 
 .cfg-detail-screen .cfg-content { padding: 1.4rem 1.4rem 2rem; }
 
+/* Config: lista + detalle lado a lado en desktop ("secciones colapsables" —
+   la lista de ajustes queda siempre visible, no hace falta volver a
+   navegar a pantalla completa para pasar de una sección a otra). En
+   móvil, :has() oculta la lista mientras hay una sección abierta, igual
+   que el comportamiento anterior de navegación a pantalla completa. */
+.cfg-split { display: grid; gap: 1.1rem; align-items: start; }
+@media (max-width: 1023px) {
+  .cfg-split:has(.cfg-detail-screen) .cfg-list-screen { display: none; }
+}
+@media (min-width: 1024px) {
+  /* Especificidad (0,2,0) para ganarle a ".dashboard-main > .animate-in"
+     (misma especificidad, pero esa regla es genérica para todos los tabs
+     y quedaría definida antes en la hoja de estilos). */
+  .dashboard-main > .cfg-split { grid-template-columns: 300px 1fr; }
+  .cfg-split .cfg-list-screen { position: sticky; top: 1rem; }
+}
+.cfg-search { display: flex; align-items: center; gap: .5rem; padding: .5rem .8rem; margin-bottom: .8rem; border-radius: 10px; border: 1px solid var(--hair-2); background: rgba(255,255,255,.02); color: var(--muted); }
+.cfg-search input { background: none; border: 0; outline: none; color: var(--ink); font-family: var(--font-body); font-size: .85rem; width: 100%; }
+.cfg-list-item.is-active { border-color: var(--gold-line); background: rgba(201,161,78,.08); }
+.cfg-list-item.is-active .cfg-list-label { color: var(--gold-lt); }
+
 @media (max-width: 480px) {
   .agenda-controls { grid-template-columns: minmax(0, 1fr); }
   .agenda-day-slot { grid-template-columns: 52px 1fr 42px; padding: .75rem .85rem; }

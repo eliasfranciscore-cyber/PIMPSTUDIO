@@ -1110,37 +1110,49 @@ export default function Dashboard() {
             </button>
             <Panel title="Servicios publicados" action={<span className="chip chip-gold">{services.filter((s) => s.active !== false).length} activos</span>}>
               <div className="svc-grid">
-                {services.map((svc) => {
-                  const isEditing = editSvcId === svc.id
-                  return (
-                    <div key={svc.id} className={`svc-card ${isEditing ? "is-open" : ""}`} onClick={() => !isEditing && setEditSvcId(svc.id)}>
-                      <div className="svc-card-ic"><Icon name={getSvcIcon(svc)} size={20} /></div>
-                      <div className="svc-card-name">{svc.name}</div>
-                      <div className="svc-card-price">{CLP(svc.price)}</div>
-                      <div className="svc-card-meta"><Icon name="clock" size={11} /> {svc.min} min · {svc.cat}</div>
-                      <span className={svc.active === false ? "chip" : "chip chip-gold"} style={{ fontSize: ".68rem" }}>{svc.active === false ? "Oculto" : "Publicado"}</span>
-                      {isEditing && (
-                        <div className="svc-card-edit" onClick={(e) => e.stopPropagation()}>
-                          <input className="input" value={svc.name} onChange={(e) => setServices((items) => items.map((item) => item.id === svc.id ? { ...item, name: e.target.value } : item))} />
-                          <input className="input" inputMode="numeric" placeholder="Precio" value={svc.price} onChange={(e) => setServices((items) => items.map((item) => item.id === svc.id ? { ...item, price: e.target.value.replace(/\D/g, "") } : item))} />
-                          <input className="input" inputMode="numeric" placeholder="Minutos" value={svc.min} onChange={(e) => setServices((items) => items.map((item) => item.id === svc.id ? { ...item, min: e.target.value.replace(/\D/g, "") } : item))} />
-                          <div style={{ display: "flex", gap: ".5rem" }}>
-                            <button className={svc.active === false ? "chip" : "chip chip-gold"} onClick={() => saveService({ ...svc, active: svc.active === false })}>{svc.active === false ? "Oculto" : "Activo"}</button>
-                            <button className="btn btn-gold btn-sm" style={{ flex: 1 }} onClick={() => { saveService(svc); setEditSvcId(null) }}><Icon name="check" size={14} /> Guardar</button>
-                            <button className="btn btn-dark btn-sm" onClick={() => setEditSvcId(null)}><Icon name="close" size={14} /></button>
-                            {admin && (
-                              <button className="btn btn-sm psn-res-delete" title="Eliminar servicio" onClick={() => setDeleteSvc(svc)}><Icon name="close" size={14} /></button>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )
-                })}
+                {services.map((svc) => (
+                  <button key={svc.id} type="button" className="svc-card" onClick={() => setEditSvcId(svc.id)}>
+                    <div className="svc-card-ic"><Icon name={getSvcIcon(svc)} size={20} /></div>
+                    <div className="svc-card-name">{svc.name}</div>
+                    <div className="svc-card-price">{CLP(svc.price)}</div>
+                    <div className="svc-card-meta"><Icon name="clock" size={11} /> {svc.min} min · {svc.cat}</div>
+                    <span className={svc.active === false ? "chip" : "chip chip-gold"} style={{ fontSize: ".68rem" }}>{svc.active === false ? "Oculto" : "Publicado"}</span>
+                  </button>
+                ))}
               </div>
             </Panel>
           </div>
         )}
+
+        {/* DRAWER edición de servicio (antes expandía la card a fila completa) */}
+        {tab === "servicios" && editSvcId != null && (() => {
+          const svc = services.find((item) => item.id === editSvcId)
+          if (!svc) return null
+          return (
+            <div className="psn-modal is-drawer" role="dialog" aria-modal="true">
+              <button className="psn-scrim" aria-label="Cerrar" onClick={() => setEditSvcId(null)} />
+              <div className="psn-modal-card psn-newbk psn-drawer-card">
+                <button className="psn-close" onClick={() => setEditSvcId(null)} aria-label="Cerrar"><Icon name="close" size={17} /></button>
+                <h3><Icon name={getSvcIcon(svc)} size={20} /> Editar servicio</h3>
+                <div className="psn-newbk-sec">
+                  <label className="dk-field-lbl">Nombre</label>
+                  <input className="input" value={svc.name} onChange={(e) => setServices((items) => items.map((item) => item.id === svc.id ? { ...item, name: e.target.value } : item))} />
+                </div>
+                <div className="psn-newbk-sec" style={{ gridTemplateColumns: "1fr 1fr", display: "grid", gap: ".5rem" }}>
+                  <div><label className="dk-field-lbl">Precio</label><input className="input" inputMode="numeric" value={svc.price} onChange={(e) => setServices((items) => items.map((item) => item.id === svc.id ? { ...item, price: e.target.value.replace(/\D/g, "") } : item))} /></div>
+                  <div><label className="dk-field-lbl">Minutos</label><input className="input" inputMode="numeric" value={svc.min} onChange={(e) => setServices((items) => items.map((item) => item.id === svc.id ? { ...item, min: e.target.value.replace(/\D/g, "") } : item))} /></div>
+                </div>
+                <div className="psn-confirm-actions" style={{ gridTemplateColumns: admin ? "1fr 1fr 1fr" : "1fr 1fr" }}>
+                  <button className={svc.active === false ? "chip" : "chip chip-gold"} onClick={() => saveService({ ...svc, active: svc.active === false })}>{svc.active === false ? "Oculto" : "Publicado"}</button>
+                  {admin && (
+                    <button className="btn btn-sm psn-res-delete" onClick={() => setDeleteSvc(svc)}><Icon name="close" size={14} /> Eliminar</button>
+                  )}
+                  <button className="btn btn-gold btn-sm" onClick={() => { saveService(svc); setEditSvcId(null) }}><Icon name="check" size={14} /> Guardar</button>
+                </div>
+              </div>
+            </div>
+          )
+        })()}
 
         {/* GASTOS */}
         {tab === "gastos" && admin && (
@@ -1276,17 +1288,17 @@ export default function Dashboard() {
    Config Panel — Santa Julieta style two-column settings
    ============================================================ */
 const CFG_SECTIONS = [
-  { id: "cuenta",        icon: "user",     label: "Cuenta y seguridad" },
-  { id: "apariencia",    icon: "star",     label: "Apariencia" },
-  { id: "accesos",       icon: "pin",      label: "Accesos directos" },
-  { id: "navegacion",    icon: "grid",     label: "Navegacion" },
-  { id: "notificaciones",icon: "bell",     label: "Notificaciones" },
-  { id: "whatsapp",      icon: "whatsapp", label: "WhatsApp" },
-  { id: "negocio",       icon: "scissors", label: "Negocio" },
-  { id: "presupuestos",  icon: "wallet",   label: "Presupuestos" },
-  { id: "equipo",        icon: "key",      label: "Equipo y permisos" },
-  { id: "datos",         icon: "wallet",   label: "Datos y respaldos" },
-  { id: "acerca",        icon: "spark",    label: "Acerca de" },
+  { id: "cuenta",        icon: "user",     label: "Cuenta y seguridad", kw: "contraseña password usuario nombre rol" },
+  { id: "apariencia",    icon: "star",     label: "Apariencia", kw: "tema modo claro oscuro" },
+  { id: "accesos",       icon: "pin",      label: "Accesos directos", kw: "dock atajos shortcuts" },
+  { id: "navegacion",    icon: "grid",     label: "Navegacion", kw: "pestañas tabs orden menu" },
+  { id: "notificaciones",icon: "bell",     label: "Notificaciones", kw: "push alertas avisos" },
+  { id: "whatsapp",      icon: "whatsapp", label: "WhatsApp", kw: "recordatorio plantillas mensajes" },
+  { id: "negocio",       icon: "scissors", label: "Negocio", kw: "horario direccion telefono nombre local" },
+  { id: "presupuestos",  icon: "wallet",   label: "Presupuestos", kw: "gastos categoria limite" },
+  { id: "equipo",        icon: "key",      label: "Equipo y permisos", kw: "barberos permisos roles" },
+  { id: "datos",         icon: "wallet",   label: "Datos y respaldos", kw: "exportar csv respaldo backup" },
+  { id: "acerca",        icon: "spark",    label: "Acerca de", kw: "version creditos" },
 ]
 
 /* ============================================================
@@ -1336,11 +1348,9 @@ function EnrollmentsPanel() {
         <Stat icon="scissors" label="Workshop" value={rows.filter(r => r.source === "workshop").length} />
       </div>
       <Panel title="Inscripciones" action={
-        <div style={{ display: "flex", gap: "0.5rem" }}>
+        <div className="psn-seg" role="group" aria-label="Filtrar por origen">
           {["todos","cursos","workshop"].map(f => (
-            <button key={f} onClick={() => setFilter(f)}
-              className={"btn btn-sm " + (filter === f ? "btn-gold" : "btn-dark")}
-              style={{ textTransform: "capitalize" }}>{f}</button>
+            <button key={f} type="button" className={filter === f ? "is-on" : ""} style={{ textTransform: "capitalize" }} onClick={() => setFilter(f)}>{f}</button>
           ))}
         </div>
       }>
@@ -1348,23 +1358,29 @@ function EnrollmentsPanel() {
           <Icon name="user" size={15} />
           <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Buscar por nombre, teléfono o email" />
         </div>
+        <div className="client-table-head" style={{ gridTemplateColumns: "1.4fr 1fr auto auto" }}>
+          <span>Cliente</span>
+          <span>Detalle</span>
+          <span>Origen</span>
+          <span>Fecha</span>
+        </div>
         <div className="client-list">
           {loading && <div className="empty-state">Cargando inscripciones…</div>}
           {!loading && !filtered.length && <div className="empty-state">No hay inscripciones que coincidan.</div>}
           {filtered.map((r) => (
-            <div key={r.id} className="client-row" style={{ cursor: "default" }}>
+            <div key={r.id} className="client-row" style={{ gridTemplateColumns: "1.4fr 1fr auto auto", cursor: "default" }}>
               <div style={{ minWidth: 0 }}>
                 <strong>{r.name}</strong>
                 <span>{r.phone} · {r.email}</span>
-                {r.level && <span style={{ fontSize: "0.75rem", color: "var(--muted)" }}>{r.level}</span>}
-                {r.edition && <span style={{ fontSize: "0.75rem", color: "var(--muted)" }}>Edición: {r.edition}</span>}
               </div>
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.3rem" }}>
-                <span style={{ fontSize: "0.7rem", padding: "2px 8px", borderRadius: 999, ...( r.source === "cursos" ? cursosBadge : workshopBadge) }}>
-                  {r.source === "cursos" ? "Cursos" : "Workshop"}
-                </span>
-                <span style={{ fontSize: "0.75rem", color: "var(--muted)" }}>{fmtDate(r.created_at)}</span>
+              <div style={{ minWidth: 0 }}>
+                <span>{r.level || "—"}</span>
+                {r.edition && <span>Edición: {r.edition}</span>}
               </div>
+              <span style={{ fontSize: "0.7rem", padding: "2px 8px", borderRadius: 999, justifySelf: "start", ...( r.source === "cursos" ? cursosBadge : workshopBadge) }}>
+                {r.source === "cursos" ? "Cursos" : "Workshop"}
+              </span>
+              <span style={{ fontSize: "0.75rem", color: "var(--muted)" }}>{fmtDate(r.created_at)}</span>
             </div>
           ))}
         </div>
@@ -1565,32 +1581,44 @@ function ConfigPanel({ brunettiOnly, barber, barbers, admin, canManageTeam, barb
   const { theme, toggle } = useTheme()
 
   const current = sections.find((s) => s.id === section)
+  const [sectionQuery, setSectionQuery] = useState("")
+  const visibleSections = sections.filter((s) => {
+    const q = sectionQuery.trim().toLowerCase()
+    if (!q) return true
+    return s.label.toLowerCase().includes(q) || s.kw?.toLowerCase().includes(q)
+  })
 
-  // If no section picked: show full-screen list
-  if (!section) {
-    return (
-      <div className="animate-in cfg-list-screen">
+  // Escritorio (≥1024px): lista + contenido lado a lado, la lista nunca se
+  // oculta — "secciones colapsables" en vez de navegar a pantalla completa.
+  // Móvil: la lista desaparece mientras hay una sección abierta (regla CSS
+  // con :has, ver .cfg-split) — mismo comportamiento de siempre ahí.
+  return (
+    <div className="animate-in cfg-split">
+      <div className="cfg-list-screen">
         <p className="cfg-nav-head">Configuraciones</p>
+        <div className="cfg-search">
+          <Icon name="user" size={15} />
+          <input value={sectionQuery} onChange={(e) => setSectionQuery(e.target.value)} placeholder="Buscar un ajuste…" />
+        </div>
         <div className="cfg-list">
-          {sections.map((s) => (
+          {visibleSections.map((s) => (
             <button
               key={s.id}
               type="button"
-              className="cfg-list-item"
-              onClick={() => setSection(s.id)}
+              className={`cfg-list-item ${section === s.id ? "is-active" : ""}`}
+              onClick={() => setSection(section === s.id ? null : s.id)}
             >
               <span className="cfg-list-icon"><Icon name={s.icon} size={18} /></span>
               <span className="cfg-list-label">{s.label}</span>
-              <Icon name="arrowRight" size={16} style={{ opacity: .4 }} />
+              <Icon name={section === s.id ? "close" : "arrowRight"} size={16} style={{ opacity: .4 }} />
             </button>
           ))}
+          {!visibleSections.length && <p className="empty-state" style={{ fontSize: ".84rem" }}>Sin ajustes que coincidan.</p>}
         </div>
       </div>
-    )
-  }
 
-  return (
-    <div className="animate-in cfg-detail-screen">
+      {section && (
+      <div className="cfg-detail-screen">
       <button type="button" className="cfg-back" onClick={() => setSection(null)}>
         <Icon name="arrowLeft" size={16} /> Volver a ajustes
       </button>
@@ -1953,6 +1981,8 @@ function ConfigPanel({ brunettiOnly, barber, barbers, admin, canManageTeam, barb
           </div>
         )}
       </div>
+      </div>
+      )}
 
       {teamModal && (
         <BarberModal
