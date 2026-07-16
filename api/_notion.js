@@ -28,10 +28,22 @@ function notionHeaders() {
   }
 }
 
+// Notion, cuando recibe un start/end CON sufijo "Z"/offset a la vez que un
+// time_zone, no hace la conversión que uno esperaría: toma los dígitos del
+// timestamp tal cual y los etiqueta con el time_zone indicado. Por eso acá
+// NO usamos toISOString() directo (que depende de la zona horaria del
+// proceso que corre este código — distinta en local vs en Vercel) sino que
+// armamos los dígitos a mano vía Date.UTC como aritmética neutra, y le
+// sacamos la "Z" antes de mandarlos: así el string queda representando
+// siempre la hora de Chile tal cual se guardó la reserva, sin importar en
+// qué zona horaria corra el servidor.
 function buildDateRange(date, time, durationMin) {
-  const start = new Date(`${date}T${String(time).slice(0, 5)}:00`)
-  const end = new Date(start.getTime() + (durationMin || DEFAULT_DURATION_MIN) * 60_000)
-  return { start: start.toISOString(), end: end.toISOString(), time_zone: BUSINESS_TZ }
+  const [hh, mm] = String(time).slice(0, 5).split(":").map(Number)
+  const [y, mo, d] = date.split("-").map(Number)
+  const startMs = Date.UTC(y, mo - 1, d, hh, mm, 0)
+  const endMs = startMs + (durationMin || DEFAULT_DURATION_MIN) * 60_000
+  const naiveIso = (ms) => new Date(ms).toISOString().replace("Z", "")
+  return { start: naiveIso(startMs), end: naiveIso(endMs), time_zone: BUSINESS_TZ }
 }
 
 function formatCLP(price) {

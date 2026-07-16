@@ -43,6 +43,7 @@ const Dashboard = lazy(() => import('./pages/Dashboard.jsx'))
 const Workshop = lazy(() => import('./pages/Workshop.jsx'))
 const Cursos = lazy(() => import('./pages/Cursos.jsx'))
 const EncuentraEstilo = lazy(() => import('./pages/EncuentraEstilo.jsx'))
+const Essentials = lazy(() => import('./pages/Essentials.jsx'))
 
 function RouteFallback() {
   return (
@@ -65,6 +66,7 @@ export default function App() {
               <Route path="/workshop" element={<Workshop />} />
               <Route path="/cursos"   element={<Cursos />} />
               <Route path="/style"    element={<EncuentraEstilo />} />
+              <Route path="/essentials" element={<Essentials />} />
               <Route path="/encuentra-tu-estilo" element={<Navigate to="/style" replace />} />
               <Route path="/login"    element={<Login />} />
               <Route path="/reservar" element={<Booking />} />

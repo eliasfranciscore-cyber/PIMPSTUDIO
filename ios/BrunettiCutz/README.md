@@ -37,7 +37,7 @@ La app usa por defecto `http://127.0.0.1:3003`.
 - `/api/barbers`: listar equipo/permisos.
 - `/api/enrollments`: listar/crear inscripciones de cursos/workshop.
 - `/api/auth-login`: lookup de cuenta cliente.
-- `/api/fintoc-payments`: crear checkout Fintoc.
+- `/api/flow-payments`: crear checkout, confirmar y consultar estado de pago vía Flow.
 - `/api/push`: endpoint Web Push de la PWA. Push nativo real requiere APNs y soporte backend adicional.
 
 ## Sesion interna y fallback
@@ -72,4 +72,4 @@ Para iPhone fisico / IPA:
 - Clientes con historial, WhatsApp, agendar e inscribir a workshop.
 - Workshop/cursos con inscripciones nativas.
 - Servicios, finanzas, gastos y marketing.
-- Configuracion con diagnostico de endpoints, equipo/permisos, Fintoc, auth cliente y export CSV.
+- Configuracion con diagnostico de endpoints, equipo/permisos, Flow, auth cliente y export CSV.

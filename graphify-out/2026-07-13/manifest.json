@@ -10,8 +10,8 @@
     "semantic_hash": ""
   },
   ".claude/settings.local.json": {
-    "mtime": 1784234553.8029354,
-    "ast_hash": "9214538d8a81602b9997b82b304e59e2",
+    "mtime": 1783910601.0571804,
+    "ast_hash": "db5f1fdde46860b2d60f238c6aa4c54c",
     "semantic_hash": ""
   },
   "api/_auth.js": {
@@ -40,8 +40,8 @@
     "semantic_hash": "80924df7ecf1f104245ccd92cd78b5cd"
   },
   "api/bookings.js": {
-    "mtime": 1784234868.1742454,
-    "ast_hash": "f90d1d58c5e2a110fbcac5b0e19b190c",
+    "mtime": 1783888425.6594763,
+    "ast_hash": "89c6d7940d07f3ec8ea1eecea24a14df",
     "semantic_hash": ""
   },
   "api/clients.js": {
@@ -59,9 +59,14 @@
     "ast_hash": "95ab9efc1ad5216cbf0266ff416d4a0d",
     "semantic_hash": ""
   },
+  "api/fintoc-payments.js": {
+    "mtime": 1783679696.8804126,
+    "ast_hash": "b966cb4103c7e13cead5315b8110ec00",
+    "semantic_hash": ""
+  },
   "api/push.js": {
-    "mtime": 1784237267.8266041,
-    "ast_hash": "834dd4cd22c8b5fefbedf344967a7d57",
+    "mtime": 1783680449.4185176,
+    "ast_hash": "9fdb1c6f1260e8c4944986ffecb3f52b",
     "semantic_hash": ""
   },
   "api/register-client.js": {
@@ -70,13 +75,13 @@
     "semantic_hash": "aa2c8ac0c0dbc111671fa1209f170cf3"
   },
   "api/services.js": {
-    "mtime": 1784242110.0559254,
-    "ast_hash": "e65e3ec9c96b957f3a6f53f460afa75c",
+    "mtime": 1783806821.0444171,
+    "ast_hash": "f33cc0e06337c9614e6168a0aed8149b",
     "semantic_hash": ""
   },
   "db/schema.sql": {
-    "mtime": 1784242020.9188247,
-    "ast_hash": "c72762a1b90befa42df467ff10cf0a93",
+    "mtime": 1783806727.613088,
+    "ast_hash": "a25ec7b113f4904da22c5949d6a03d7c",
     "semantic_hash": ""
   },
   "db/seed.sql": {
@@ -170,8 +175,8 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1784242116.676254,
-    "ast_hash": "622fdeebf83374ccd417d7ecd1822d76",
+    "mtime": 1783793576.3878713,
+    "ast_hash": "30b6872100426ab625f132731836ccf4",
     "semantic_hash": ""
   },
   "postcss.config.js": {
@@ -185,8 +190,8 @@
     "semantic_hash": "544fcc7f6c81847758aca7b5a306e7f0"
   },
   "src/App.jsx": {
-    "mtime": 1784242405.6735377,
-    "ast_hash": "b2376a65174e7aa67ef88fc8de394c53",
+    "mtime": 1783796221.4230165,
+    "ast_hash": "29e8027adfacf8923e5833b2b72b75b4",
     "semantic_hash": ""
   },
   "src/bookingsStore.js": {
@@ -205,8 +210,8 @@
     "semantic_hash": "b8baf870791352a85cf36d45660fcde1"
   },
   "src/components/BookingsInbox.jsx": {
-    "mtime": 1783916637.0470645,
-    "ast_hash": "8d7c674a724bd00496eb0201b7ee0a90",
+    "mtime": 1783913183.733175,
+    "ast_hash": "a69c55316c78f5772a0bd2131d48ac6c",
     "semantic_hash": ""
   },
   "src/components/ClientModal.jsx": {
@@ -215,9 +220,14 @@
     "semantic_hash": "29ad3edc81d0444c32187d7bc47a7e08"
   },
   "src/components/DashboardResumen.jsx": {
-    "mtime": 1783916516.8074489,
-    "ast_hash": "b5182f63db45a9da08ba95b6cd7a1d5c",
+    "mtime": 1783913192.1506548,
+    "ast_hash": "ae6732fe9a1f5c0fbe9dee367c7c9752",
     "semantic_hash": ""
+  },
+  "src/components/FintocCheckout.jsx": {
+    "mtime": 1782699796.7629848,
+    "ast_hash": "e858b1dc9fc71a85d27872d7a62ba75b",
+    "semantic_hash": "e858b1dc9fc71a85d27872d7a62ba75b"
   },
   "src/components/GlareCard.jsx": {
     "mtime": 1782686874.1700273,
@@ -240,8 +250,8 @@
     "semantic_hash": ""
   },
   "src/components/SiteNav.jsx": {
-    "mtime": 1784242433.3804386,
-    "ast_hash": "ab356472c284f55f6100bee5f9bbf7aa",
+    "mtime": 1783892599.0165138,
+    "ast_hash": "d4aca1e3d88b1c7fb5751e69a87d9613",
     "semantic_hash": ""
   },
   "src/components/brunetti.jsx": {
@@ -255,13 +265,13 @@
     "semantic_hash": "c1fa5ced9e51247af9eb135be69b91ae"
   },
   "src/components/theme.jsx": {
-    "mtime": 1783916675.8705306,
-    "ast_hash": "3f17a84780b7d898aaff88055fe1a888",
-    "semantic_hash": ""
+    "mtime": 1782688629.8309586,
+    "ast_hash": "ea919cd5fc8f57b54d15f6e2552917c4",
+    "semantic_hash": "ea919cd5fc8f57b54d15f6e2552917c4"
   },
   "src/components/ui.jsx": {
-    "mtime": 1784242158.432213,
-    "ast_hash": "941b0710e0fad04602269751982fc728",
+    "mtime": 1783889022.7275429,
+    "ast_hash": "a97112fe11e82d9687a48b7021cff412",
     "semantic_hash": ""
   },
   "src/components/ui/lamp.jsx": {
@@ -310,13 +320,13 @@
     "semantic_hash": ""
   },
   "src/pages/Cursos.jsx": {
-    "mtime": 1784084610.4143813,
-    "ast_hash": "aa4a141bba1d1affd1ce1c05bf5ce12b",
+    "mtime": 1783903705.0590258,
+    "ast_hash": "7015c729e916f98c45076abe6a5d54f9",
     "semantic_hash": ""
   },
   "src/pages/Dashboard.jsx": {
-    "mtime": 1784243345.48998,
-    "ast_hash": "c75f2bc2cf422f0945fe8573ac21046f",
+    "mtime": 1783915798.2045844,
+    "ast_hash": "ae43fa446ce7906902628ec641e89d11",
     "semantic_hash": ""
   },
   "src/pages/EncuentraEstilo.jsx": {
@@ -350,14 +360,14 @@
     "semantic_hash": "1b7e818f114dad25484ff5613ea20db5"
   },
   "vercel.json": {
-    "mtime": 1784236074.559784,
+    "mtime": 1783642326.9903038,
     "ast_hash": "53a82c77d35357525e0c37d6b268576f",
     "semantic_hash": "53a82c77d35357525e0c37d6b268576f"
   },
   "vite.config.js": {
-    "mtime": 1784084621.523947,
-    "ast_hash": "0a6cf5ade211411c79b616fcd58c2b28",
-    "semantic_hash": ""
+    "mtime": 1782699804.7018158,
+    "ast_hash": "6a68c0ebf79d6482aba7d0de369b4a21",
+    "semantic_hash": "6a68c0ebf79d6482aba7d0de369b4a21"
   },
   "CHANGELOG_IMPLEMENTACION.md": {
     "mtime": 1782522899.931437,
@@ -365,8 +375,8 @@
     "semantic_hash": "8821dc65ef6d88a32b3d71aa793563c1"
   },
   "CLAUDE.md": {
-    "mtime": 1784237294.975412,
-    "ast_hash": "ee548ab391750eb3ddbef0cae8199d35",
+    "mtime": 1783884360.6963422,
+    "ast_hash": "a97f3186f0dca25ba0f04032d87e9d8c",
     "semantic_hash": ""
   },
   "IMPLEMENTATION_PLAN.md": {
@@ -385,9 +395,9 @@
     "semantic_hash": "c32fd878366b74df8cd04c2dc7a0b6da"
   },
   "ios/BrunettiCutz/README.md": {
-    "mtime": 1784245274.838214,
-    "ast_hash": "f0d32c428429f8db900ac2f4b84a6c98",
-    "semantic_hash": ""
+    "mtime": 1783043288.8012676,
+    "ast_hash": "86efe85cefb81ae936c5928a1caf3be8",
+    "semantic_hash": "86efe85cefb81ae936c5928a1caf3be8"
   },
   "output/pdf/Vincent Flow Fade - correcciones finales.pdf": {
     "mtime": 1782788367.3299286,
@@ -1055,8 +1065,8 @@
     "semantic_hash": ""
   },
   "src/components/ExpensesModule.jsx": {
-    "mtime": 1783916713.6583776,
-    "ast_hash": "e310bab654402f50c8af3a498eb64809",
+    "mtime": 1783914243.830034,
+    "ast_hash": "ffa595858c97a58d30f07f5bb9291e28",
     "semantic_hash": ""
   },
   "src/components/GlobalSearch.jsx": {
@@ -1252,51 +1262,6 @@
   "docs/plan-panel-interno.md": {
     "mtime": 1783908131.509399,
     "ast_hash": "b93986141a25d86d12d87537885e26af",
-    "semantic_hash": ""
-  },
-  "api/_notion.js": {
-    "mtime": 1784239930.689405,
-    "ast_hash": "c053b56ee813996284304826ade73f38",
-    "semantic_hash": ""
-  },
-  "api/flow-payments.js": {
-    "mtime": 1784084571.9492133,
-    "ast_hash": "fe8db56ba085f5863dbc919be11a1a11",
-    "semantic_hash": ""
-  },
-  "src/components/FlowCheckout.jsx": {
-    "mtime": 1784084597.3765712,
-    "ast_hash": "df1392cb130c2f16b715a539dbfc5aeb",
-    "semantic_hash": ""
-  },
-  "api/_products.js": {
-    "mtime": 1784244051.8344996,
-    "ast_hash": "1f6e83d7e1c6732866dabda67c654597",
-    "semantic_hash": ""
-  },
-  "src/cartStore.js": {
-    "mtime": 1784242146.7548838,
-    "ast_hash": "7782f9b24f96527749bbd0b70deb5f43",
-    "semantic_hash": ""
-  },
-  "src/pages/Essentials.jsx": {
-    "mtime": 1784242988.5722682,
-    "ast_hash": "6016c6bf88aa4db37a06bd8dd9418a41",
-    "semantic_hash": ""
-  },
-  "public/assets/products/polera-barber-club-1.png": {
-    "mtime": 1784242195.7898312,
-    "ast_hash": "a783c9ab1e139cc5a2f2b856a0bffad0",
-    "semantic_hash": ""
-  },
-  "public/assets/products/polera-barber-club-2.png": {
-    "mtime": 1784242195.7965775,
-    "ast_hash": "4f51cf166900b9414b4e795af0a00bb8",
-    "semantic_hash": ""
-  },
-  "public/assets/products/polera-barber-club-3.png": {
-    "mtime": 1784242195.7995162,
-    "ast_hash": "0dcaa398a24df37ea863eaf462c61995",
     "semantic_hash": ""
   }
 }

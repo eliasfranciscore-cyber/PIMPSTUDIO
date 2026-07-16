@@ -70,13 +70,13 @@
     "semantic_hash": "aa2c8ac0c0dbc111671fa1209f170cf3"
   },
   "api/services.js": {
-    "mtime": 1784242110.0559254,
-    "ast_hash": "e65e3ec9c96b957f3a6f53f460afa75c",
+    "mtime": 1783806821.0444171,
+    "ast_hash": "f33cc0e06337c9614e6168a0aed8149b",
     "semantic_hash": ""
   },
   "db/schema.sql": {
-    "mtime": 1784242020.9188247,
-    "ast_hash": "c72762a1b90befa42df467ff10cf0a93",
+    "mtime": 1784234760.8967166,
+    "ast_hash": "e07310eabeb91eb53b9d28d3277a987a",
     "semantic_hash": ""
   },
   "db/seed.sql": {
@@ -170,8 +170,8 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1784242116.676254,
-    "ast_hash": "622fdeebf83374ccd417d7ecd1822d76",
+    "mtime": 1783793576.3878713,
+    "ast_hash": "30b6872100426ab625f132731836ccf4",
     "semantic_hash": ""
   },
   "postcss.config.js": {
@@ -185,8 +185,8 @@
     "semantic_hash": "544fcc7f6c81847758aca7b5a306e7f0"
   },
   "src/App.jsx": {
-    "mtime": 1784242405.6735377,
-    "ast_hash": "b2376a65174e7aa67ef88fc8de394c53",
+    "mtime": 1783796221.4230165,
+    "ast_hash": "29e8027adfacf8923e5833b2b72b75b4",
     "semantic_hash": ""
   },
   "src/bookingsStore.js": {
@@ -240,8 +240,8 @@
     "semantic_hash": ""
   },
   "src/components/SiteNav.jsx": {
-    "mtime": 1784242433.3804386,
-    "ast_hash": "ab356472c284f55f6100bee5f9bbf7aa",
+    "mtime": 1783892599.0165138,
+    "ast_hash": "d4aca1e3d88b1c7fb5751e69a87d9613",
     "semantic_hash": ""
   },
   "src/components/brunetti.jsx": {
@@ -260,8 +260,8 @@
     "semantic_hash": ""
   },
   "src/components/ui.jsx": {
-    "mtime": 1784242158.432213,
-    "ast_hash": "941b0710e0fad04602269751982fc728",
+    "mtime": 1783916228.322497,
+    "ast_hash": "671370735174ae4a807f8c821de38b36",
     "semantic_hash": ""
   },
   "src/components/ui/lamp.jsx": {
@@ -315,8 +315,8 @@
     "semantic_hash": ""
   },
   "src/pages/Dashboard.jsx": {
-    "mtime": 1784243345.48998,
-    "ast_hash": "c75f2bc2cf422f0945fe8573ac21046f",
+    "mtime": 1783916658.0160549,
+    "ast_hash": "11dde5f759890e0c378633ccfc347dda",
     "semantic_hash": ""
   },
   "src/pages/EncuentraEstilo.jsx": {
@@ -385,9 +385,9 @@
     "semantic_hash": "c32fd878366b74df8cd04c2dc7a0b6da"
   },
   "ios/BrunettiCutz/README.md": {
-    "mtime": 1784245274.838214,
-    "ast_hash": "f0d32c428429f8db900ac2f4b84a6c98",
-    "semantic_hash": ""
+    "mtime": 1783043288.8012676,
+    "ast_hash": "86efe85cefb81ae936c5928a1caf3be8",
+    "semantic_hash": "86efe85cefb81ae936c5928a1caf3be8"
   },
   "output/pdf/Vincent Flow Fade - correcciones finales.pdf": {
     "mtime": 1782788367.3299286,
@@ -1255,8 +1255,8 @@
     "semantic_hash": ""
   },
   "api/_notion.js": {
-    "mtime": 1784239930.689405,
-    "ast_hash": "c053b56ee813996284304826ade73f38",
+    "mtime": 1784236363.3417888,
+    "ast_hash": "cda167089e3e4027515fe39283689219",
     "semantic_hash": ""
   },
   "api/flow-payments.js": {
@@ -1267,36 +1267,6 @@
   "src/components/FlowCheckout.jsx": {
     "mtime": 1784084597.3765712,
     "ast_hash": "df1392cb130c2f16b715a539dbfc5aeb",
-    "semantic_hash": ""
-  },
-  "api/_products.js": {
-    "mtime": 1784244051.8344996,
-    "ast_hash": "1f6e83d7e1c6732866dabda67c654597",
-    "semantic_hash": ""
-  },
-  "src/cartStore.js": {
-    "mtime": 1784242146.7548838,
-    "ast_hash": "7782f9b24f96527749bbd0b70deb5f43",
-    "semantic_hash": ""
-  },
-  "src/pages/Essentials.jsx": {
-    "mtime": 1784242988.5722682,
-    "ast_hash": "6016c6bf88aa4db37a06bd8dd9418a41",
-    "semantic_hash": ""
-  },
-  "public/assets/products/polera-barber-club-1.png": {
-    "mtime": 1784242195.7898312,
-    "ast_hash": "a783c9ab1e139cc5a2f2b856a0bffad0",
-    "semantic_hash": ""
-  },
-  "public/assets/products/polera-barber-club-2.png": {
-    "mtime": 1784242195.7965775,
-    "ast_hash": "4f51cf166900b9414b4e795af0a00bb8",
-    "semantic_hash": ""
-  },
-  "public/assets/products/polera-barber-club-3.png": {
-    "mtime": 1784242195.7995162,
-    "ast_hash": "0dcaa398a24df37ea863eaf462c61995",
     "semantic_hash": ""
   }
 }

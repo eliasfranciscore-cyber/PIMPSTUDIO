@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const CURSO_PRICE = '9990' // CLP
 const CHECKOUT_ITEMS = [
@@ -9,12 +9,30 @@ const CHECKOUT_ITEMS = [
   'Acceso de por vida al material y actualizaciones',
 ]
 
-export default function FintocCheckout() {
+export default function FlowCheckout() {
   const [form, setForm] = useState({ name: '', email: '', phone: '' })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [sessionUrl, setSessionUrl] = useState('')
-  const [paid, setPaid] = useState(false)
+  const [redirecting, setRedirecting] = useState(false)
+  const [returnStatus, setReturnStatus] = useState(null) // null | 'checking' | 'paid' | 'pending' | 'failed'
+
+  // Si volvemos desde Flow (urlReturn), el token viene en la query string.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const token = params.get('flow_token')
+    if (!token) return
+
+    setReturnStatus('checking')
+    fetch(`/api/flow-payments?status=1&token=${encodeURIComponent(token)}`)
+      .then((r) => r.json())
+      .then((data) => setReturnStatus(data.paid ? 'paid' : data.status === 1 ? 'pending' : 'failed'))
+      .catch(() => setReturnStatus('failed'))
+
+    // Limpia el token de la URL sin recargar.
+    params.delete('flow_token')
+    const clean = window.location.pathname + (params.toString() ? `?${params}` : '')
+    window.history.replaceState({}, '', clean)
+  }, [])
 
   const onChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
 
@@ -33,7 +51,7 @@ export default function FintocCheckout() {
     setLoading(true)
 
     try {
-      const response = await fetch('/api/fintoc-payments', {
+      const response = await fetch('/api/flow-payments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -50,49 +68,73 @@ export default function FintocCheckout() {
       }
 
       const data = await response.json()
-      setSessionUrl(data.sessionUrl)
-      // Escuchar mensaje de cierre del widget (pago completado)
-      window.addEventListener('message', (e) => {
-        if (e.origin !== 'https://pay.fintoc.com' && e.origin !== 'https://pay.sandbox.fintoc.com') return
-        if (e.data?.type === 'fintoc:payment:completed') {
-          setPaid(true)
-        }
-      })
+      setRedirecting(true)
+      window.location.href = data.sessionUrl
     } catch (err) {
       setError(err.message || 'Error al procesar pago')
       setLoading(false)
     }
   }
 
-  // Si pagó exitosamente
-  if (paid) {
+  // Volviendo desde Flow: mostramos el resultado de la verificación.
+  if (returnStatus) {
+    if (returnStatus === 'checking') {
+      return (
+        <div className="checkout-card checkout-widget-mode" data-reveal>
+          <div className="checkout-widget-wrapper checkout-redirecting">
+            <p>Verificando tu pago...</p>
+          </div>
+        </div>
+      )
+    }
+    if (returnStatus === 'paid') {
+      return (
+        <div className="checkout-card" data-reveal>
+          <div className="checkout-info">
+            <div className="checkout-success-icon">✓</div>
+            <h3 className="checkout-success-title">¡Pago completado!</h3>
+            <p className="checkout-success-text">
+              Tu inscripción fue confirmada. Te enviaremos un email con el enlace de acceso a la comunidad Brunetti en Skool.
+            </p>
+            <p className="checkout-success-subtext">
+              Revisa tu bandeja de entrada (y spam) en los próximos minutos.
+            </p>
+          </div>
+        </div>
+      )
+    }
+    if (returnStatus === 'pending') {
+      return (
+        <div className="checkout-card" data-reveal>
+          <div className="checkout-info">
+            <h3 className="checkout-success-title">Pago en proceso</h3>
+            <p className="checkout-success-text">
+              Tu pago está siendo confirmado por el medio de pago. Te avisaremos por email apenas se confirme.
+            </p>
+          </div>
+        </div>
+      )
+    }
     return (
       <div className="checkout-card" data-reveal>
         <div className="checkout-info">
-          <div className="checkout-success-icon">✓</div>
-          <h3 className="checkout-success-title">¡Pago completado!</h3>
+          <h3 className="checkout-success-title">El pago no se completó</h3>
           <p className="checkout-success-text">
-            Tu inscripción fue confirmada. Te enviaremos un email con el enlace de acceso a la comunidad Brunetti en Skool.
+            No alcanzamos a confirmar tu pago. Si el cargo se realizó, escríbenos; si no, puedes intentarlo de nuevo.
           </p>
-          <p className="checkout-success-subtext">
-            Revisa tu bandeja de entrada (y spam) en los próximos minutos.
-          </p>
+          <button type="button" className="btn btn-primary checkout-cta" onClick={() => setReturnStatus(null)}>
+            Volver a intentar
+          </button>
         </div>
       </div>
     )
   }
 
-  // Si hay sessionUrl, mostrar widget
-  if (sessionUrl) {
+  if (redirecting) {
     return (
       <div className="checkout-card checkout-widget-mode" data-reveal>
-        <div className="checkout-widget-wrapper">
-          <iframe
-            src={sessionUrl}
-            title="Fintoc Payment Widget"
-            className="fintoc-widget-iframe"
-            allow="payment"
-          />
+        <div className="checkout-widget-wrapper checkout-redirecting">
+          <p>Redirigiendo a Flow para completar tu pago...</p>
         </div>
       </div>
     )
@@ -127,10 +169,10 @@ export default function FintocCheckout() {
 
         <form onSubmit={onSubmit} className="checkout-form">
           <div className="frow">
-            <label htmlFor="fintoc-name">Nombre completo</label>
+            <label htmlFor="flow-name">Nombre completo</label>
             <input
               type="text"
-              id="fintoc-name"
+              id="flow-name"
               name="name"
               placeholder="Tu nombre"
               value={form.name}
@@ -141,10 +183,10 @@ export default function FintocCheckout() {
 
           <div className="frow two">
             <div className="frow">
-              <label htmlFor="fintoc-email">Email</label>
+              <label htmlFor="flow-email">Email</label>
               <input
                 type="email"
-                id="fintoc-email"
+                id="flow-email"
                 name="email"
                 placeholder="tu@email.com"
                 value={form.email}
@@ -153,10 +195,10 @@ export default function FintocCheckout() {
               />
             </div>
             <div className="frow">
-              <label htmlFor="fintoc-phone">Teléfono</label>
+              <label htmlFor="flow-phone">Teléfono</label>
               <input
                 type="tel"
-                id="fintoc-phone"
+                id="flow-phone"
                 name="phone"
                 placeholder="9 1234 5678"
                 value={form.phone}
@@ -179,13 +221,13 @@ export default function FintocCheckout() {
 
         <div className="checkout-secure">
           <svg viewBox="0 0 24 24" width="14" height="14"><path d="M12 2l7 4v6c0 5-3.5 9-7 10C8.5 21 5 17 5 12V6l7-4z" /></svg>
-          Pago seguro vía transferencia bancaria con Fintoc
+          Pago seguro con tarjeta, transferencia o billetera vía Flow
         </div>
 
-        <div className="checkout-fintoc-badge">
+        <div className="checkout-flow-badge">
           <span>Procesado por</span>
-          <svg viewBox="0 0 80 20" width="56" height="14" aria-label="Fintoc">
-            <text x="0" y="15" fontFamily="system-ui,sans-serif" fontSize="13" fontWeight="700" fill="currentColor">fintoc</text>
+          <svg viewBox="0 0 80 20" width="56" height="14" aria-label="Flow">
+            <text x="0" y="15" fontFamily="system-ui,sans-serif" fontSize="13" fontWeight="700" fill="currentColor">flow</text>
           </svg>
         </div>
 

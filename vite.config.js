@@ -1,22 +1,32 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-const mockFintocPlugin = {
-  name: 'mock-fintoc',
+const mockFlowPlugin = {
+  name: 'mock-flow',
   configureServer(server) {
     return () => {
-      server.middlewares.use('/api/fintoc-payments', (req, res, next) => {
+      server.middlewares.use('/api/flow-payments', (req, res, next) => {
+        const url = new URL(req.url, 'http://localhost')
+
+        // GET ?status=1&token=... — usado por el frontend al volver del checkout mock
+        if (req.method === 'GET' && url.searchParams.get('status') === '1') {
+          res.setHeader('Content-Type', 'application/json')
+          res.end(JSON.stringify({ status: 2, paid: true, amount: url.searchParams.get('amount') || 9990 }))
+          return
+        }
+
         if (req.method !== 'POST') return next()
         let body = ''
         req.on('data', (chunk) => { body += chunk })
         req.on('end', () => {
           try {
             const data = JSON.parse(body)
-            console.log('✓ Mock Fintoc:', data.email)
+            console.log('✓ Mock Flow:', data.email)
+            const token = `test_${Date.now()}`
             res.setHeader('Content-Type', 'application/json')
             res.end(JSON.stringify({
-              sessionUrl: `https://pay.sandbox.fintoc.com/sessions/test_${Date.now()}?amount=${data.amount}`,
-              sessionId: `test_${Date.now()}`,
+              sessionUrl: `http://localhost:${parseInt(process.env.PORT) || 5173}/cursos?flow_token=${token}&amount=${data.amount}`,
+              token,
             }))
           } catch (e) {
             res.statusCode = 400
@@ -29,7 +39,7 @@ const mockFintocPlugin = {
 }
 
 export default defineConfig({
-  plugins: [react(), mockFintocPlugin],
+  plugins: [react(), mockFlowPlugin],
   server: {
     port: parseInt(process.env.PORT) || 5173,
     strictPort: false,

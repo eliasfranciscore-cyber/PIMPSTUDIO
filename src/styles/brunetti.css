@@ -2800,7 +2800,7 @@ img.mfooter-wordmark {
 .brunetti-site .course-level-desc { text-align: center; color: var(--ink-2, var(--muted)); margin: 0 auto 1.4rem; max-width: 60ch; }
 
 /* ============================================================
-   CURSOS — Checkout card (Fintoc)
+   CURSOS — Checkout card (Flow)
    ============================================================ */
 .checkout-card {
   display: grid;
@@ -2872,7 +2872,7 @@ img.mfooter-wordmark {
 }
 .checkout-secure svg { flex-shrink: 0; stroke: var(--muted); fill: none; stroke-width: 2; }
 
-.checkout-fintoc-badge {
+.checkout-flow-badge {
   display: flex; align-items: center; gap: 0.35rem;
   font-size: 0.72rem; color: var(--muted);
   padding-top: 0.6rem; border-top: 1px solid var(--hair);
@@ -2912,7 +2912,7 @@ img.mfooter-wordmark {
 
 [data-theme="light"] .checkout-card { border-color: rgba(0,0,0,0.10); background: #fffdf8; }
 [data-theme="light"] .checkout-info { border-color: rgba(0,0,0,0.08); }
-[data-theme="light"] .checkout-fintoc-badge { border-color: rgba(0,0,0,0.08); }
+[data-theme="light"] .checkout-flow-badge { border-color: rgba(0,0,0,0.08); }
 [data-theme="light"] .checkout-pay {
   background: linear-gradient(180deg, rgba(11, 18, 158, 0.04) 0%, transparent 60%);
 }
@@ -2926,9 +2926,10 @@ img.mfooter-wordmark {
   border-radius: 20px; overflow: hidden;
   min-height: 600px;
 }
-.fintoc-widget-iframe {
-  width: 100%; height: 100%; border: none; display: block;
-  min-height: 600px;
+.checkout-redirecting {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 600px; text-align: center; padding: 2rem;
+  color: var(--ink-soft); font-size: 0.95rem;
 }
 
 .checkout-success-icon {

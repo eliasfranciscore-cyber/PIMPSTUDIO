@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless"
 import { requireInternal } from "./_auth.js"
+import { handleProducts } from "./_products.js"
 
 const STATIC_SERVICES = [
   { id: 5,  name: "Asesoría de corte",              price: 24990, min: 90,  cat: "general",  tne: true,  desc: "Consulta profesional para encontrar tu estilo ideal." },
@@ -16,6 +17,10 @@ const STATIC_SERVICES = [
 ]
 
 export default async function handler(req, res) {
+  // El catálogo de productos ("Essentials") vive en su propio módulo pero
+  // reusa esta función serverless — Vercel Hobby tope 12 funciones.
+  if (req.query.scope === "shop") return handleProducts(req, res)
+
   try {
     const sql = neon(process.env.DATABASE_URL)
 
