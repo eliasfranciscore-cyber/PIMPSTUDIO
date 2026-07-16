@@ -2,6 +2,7 @@ import { neon } from "@neondatabase/serverless"
 import { readSession, requireInternal } from "./_auth.js"
 import { notifyBarber } from "./push.js"
 import { sendBookingConfirmationEmail } from "./_email.js"
+import { syncBookingToNotion, updateNotionBookingStatus } from "./_notion.js"
 
 const MIN_CANCEL_NOTICE_HOURS = 10
 const MAX_LEAD_DAYS = 7
@@ -103,6 +104,28 @@ export default async function handler(req, res) {
                   ${serviceId ? null : String(service).trim()}, ${customPrice})
           RETURNING id, booking_date::text as date, booking_time::text as time, status
         `
+        // Sincronizar con Notion Calendar. No bloquea la respuesta ni la
+        // reserva ya creada si Notion no está configurado o falla.
+        try {
+          const [barberRow] = await sql`SELECT name FROM barbers WHERE id = ${Number(barberId)}`
+          const [svcRow] = serviceId ? await sql`SELECT name, duration_min FROM services WHERE id = ${Number(serviceId)}` : [null]
+          const synced = await syncBookingToNotion({
+            client: String(client).trim(),
+            phone: cleanPhone,
+            service: serviceId ? svcRow?.name : String(service).trim(),
+            barber: barberRow?.name,
+            date,
+            time,
+            price: customPrice,
+            status: st,
+            durationMin: svcRow?.duration_min,
+          })
+          if (synced.ok) {
+            await sql`UPDATE bookings SET notion_page_id = ${synced.pageId} WHERE id = ${booking.id}`
+          }
+        } catch (notionErr) {
+          console.error("notion sync (panel) error:", notionErr)
+        }
         return res.json({ ok: true, booking: { ...booking, time: booking.time?.slice(0, 5) } })
       }
 
@@ -142,7 +165,8 @@ export default async function handler(req, res) {
       // de los dos bloquea la respuesta ni la reserva ya creada.
       try {
         const [info] = await sql`
-          SELECT u.name as client, u.email as email, s.name as service, s.price as price, br.name as barber
+          SELECT u.name as client, u.email as email, s.name as service, s.price as price,
+                 s.duration_min as "durationMin", br.name as barber
           FROM users u, services s, barbers br
           WHERE u.id = ${user.id} AND s.id = ${serviceId} AND br.id = ${barberId}
         `
@@ -161,6 +185,20 @@ export default async function handler(req, res) {
           date,
           time,
         })
+        const synced = await syncBookingToNotion({
+          client: info?.client,
+          phone: cleanPhone,
+          service: info?.service,
+          barber: info?.barber,
+          date,
+          time,
+          price: info?.price,
+          status: "confirmada",
+          durationMin: info?.durationMin,
+        })
+        if (synced.ok) {
+          await sql`UPDATE bookings SET notion_page_id = ${synced.pageId} WHERE id = ${booking.id}`
+        }
       } catch (notifyErr) {
         console.error("notify barber/client error:", notifyErr)
       }
@@ -178,8 +216,11 @@ export default async function handler(req, res) {
         UPDATE bookings
         SET status = ${status}, updated_at = NOW()
         WHERE id = ${Number(id)}
-        RETURNING id, booking_date::text as date, booking_time::text as time, barber_id as "barberId", status
+        RETURNING id, booking_date::text as date, booking_time::text as time, barber_id as "barberId", status, notion_page_id as "notionPageId"
       `
+      if (booking?.notionPageId) {
+        updateNotionBookingStatus(booking.notionPageId, status).catch((err) => console.error("notion status update error:", err))
+      }
       return res.json({ ok: true, booking: { ...booking, time: booking.time?.slice(0, 5) } })
     }
 
@@ -199,7 +240,7 @@ export default async function handler(req, res) {
       // marca la reserva como cancelada en vez de borrarla.
       const [existing] = await sql`
         SELECT b.id, b.booking_date::text as date, b.booking_time::text as time,
-               b.barber_id as "barberId", u.name as client
+               b.barber_id as "barberId", u.name as client, b.notion_page_id as "notionPageId"
         FROM bookings b JOIN users u ON b.client_id = u.id
         WHERE b.id = ${Number(id)}
       `
@@ -222,6 +263,9 @@ export default async function handler(req, res) {
           url: "/panel",
           tag: `cancelada-${existing.id}`,
         })
+        if (existing.notionPageId) {
+          await updateNotionBookingStatus(existing.notionPageId, "cancelada")
+        }
       } catch (notifyErr) {
         console.error("notify cancel error:", notifyErr)
       }

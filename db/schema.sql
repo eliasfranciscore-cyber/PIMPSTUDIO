@@ -65,6 +65,13 @@ CREATE TABLE IF NOT EXISTS bookings (
 ALTER TABLE bookings ADD COLUMN IF NOT EXISTS custom_service VARCHAR(200);
 ALTER TABLE bookings ADD COLUMN IF NOT EXISTS custom_price  INTEGER;
 
+-- Para bases existentes (idempotente): sincronización con Notion Calendar +
+-- recordatorios push 60min/15min antes de la hora. ⚠️ Ejecutar en la consola
+-- de Neon ANTES de desplegar la API que los usa.
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS notion_page_id   VARCHAR(64);
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS reminder_60_sent BOOLEAN DEFAULT false;
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS reminder_15_sent BOOLEAN DEFAULT false;
+
 CREATE TABLE IF NOT EXISTS availability_blocks (
   id         SERIAL PRIMARY KEY,
   barber_id  INTEGER REFERENCES barbers(id),

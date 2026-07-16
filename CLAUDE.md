@@ -59,9 +59,11 @@ Each file in `/api` exports a default handler: `async function handler(req, res)
 - `/api/services.js` — Menu items
 - `/api/clients.js` — Customer registry (barber view)
 - `/api/expenses.js` — Finance tracking
-- `/api/fintoc-payments.js` — Unified payment checkout + webhook handler
+- `/api/flow-payments.js` — Unified payment checkout + webhook handler
 - `/api/push.js` — Web Push notifications
 - `/api/_email.js` — Booking confirmation email to clients (Resend REST API, no SDK)
+- `/api/_notion.js` — Syncs bookings to a Notion database (REST API, no SDK) so they show up in Notion Calendar
+- `/api/cron-reminders.js` — Vercel Cron job (every 5 min, see `vercel.json`); sends Web Push reminders 60min/15min before each booking
 - `/api/availability.js` — Barber time slots
 
 **Graceful degradation:** All endpoints return demo data on database errors so the app remains usable offline.
@@ -84,7 +86,7 @@ Seed data in `db/seed.sql` (optional; most tables auto-create on first use).
 
 **Vite config** (`vite.config.js`):
 - Vendor splitting: React + React Router cached separately (`react-vendor` chunk)
-- Custom Fintoc mock middleware for local dev (intercepts `/api/fintoc-payments` POST in dev mode)
+- Custom Flow mock middleware for local dev (intercepts `/api/flow-payments` POST in dev mode)
 - Chunk size warning raised to 700KB (minified CSS is large)
 
 **Vercel config** (`vercel.json`):
@@ -96,11 +98,14 @@ Seed data in `db/seed.sql` (optional; most tables auto-create on first use).
 **Environment variables** (`.env.local` or Vercel settings):
 - `DATABASE_URL` — Neon connection string (required in prod)
 - `PS_SESSION_SECRET` — ≥16 char key for HMAC signing (required in prod; if missing, system fails closed — no sessions accepted)
-- `FINTOC_SECRET_KEY` — Fintoc API key for payment sessions
+- `FLOW_API_KEY`, `FLOW_SECRET_KEY` — Flow API credentials for payment sessions
+- `FLOW_ENV` — set to `production` to use Flow's live API; defaults to sandbox
 - `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` — Web Push keys
 - `VITE_VAPID_PUBLIC_KEY` — Public VAPID key exposed to frontend
 - `BLOB_READ_WRITE_TOKEN` — Vercel Blob (optional backup storage)
 - `RESEND_API_KEY`, `RESEND_FROM` — Resend email API for booking confirmations (optional; skipped if missing)
+- `NOTION_API_KEY`, `NOTION_DATABASE_ID` — Syncs bookings to Notion so they appear in Notion Calendar (optional; skipped if missing)
+- `CRON_SECRET` — Bearer token required by `/api/cron-reminders` if set (optional but recommended when triggering the cron from outside Vercel)
 - `BARBER_PASSWORDS` — JSON fallback: `{code: sha256_hex}` if DB is down
 
 ## Patterns & Conventions
@@ -139,16 +144,29 @@ iOS "Add to Home Screen" often ignores manifest `start_url` and instead launches
 
 This only happens once per app session (sessionStorage flag).
 
-### Fintoc Integration
+### Flow Integration
 
 **Checkout flow:**
-1. Frontend posts to `/api/fintoc-payments` with `{amount, email, name, phone}`
-2. API calls Fintoc REST API, returns `{sessionUrl, sessionId}`
-3. Frontend redirects user to `sessionUrl` (Fintoc hosted checkout)
-4. After payment, Fintoc POSTs to `/api/fintoc-payments?webhook=1` with transaction data
-5. Webhook validates signature and updates enrollment records
+1. Frontend posts to `/api/flow-payments` with `{amount, email, name, phone}`
+2. API signs the request (HMAC-SHA256 with `FLOW_SECRET_KEY`) and calls Flow's `/payment/create`, returns `{sessionUrl, token}`
+3. Frontend does a full-page redirect to `sessionUrl` (Flow hosted checkout — supports Webpay, tarjetas, transferencia y billeteras como Mach/Chek según lo habilitado en la cuenta comercial)
+4. Flow sends the user's browser back to `urlReturn` (`/api/flow-payments?return=1`), which 302-redirects to `/cursos?flow_token=...` so the SPA can show a status message
+5. Independently, Flow POSTs server-to-server to `urlConfirmation` (`/api/flow-payments?webhook=1`); the handler calls `/payment/getStatus` to verify the real status before saving the enrollment (never trusts the return redirect alone)
+6. `GET /api/flow-payments?status=1&token=...` is a read-only status check used by the frontend after the return redirect — it does not write to the DB
 
-In dev mode (`npm run dev`), Fintoc requests are mocked by Vite middleware (see `vite.config.js`).
+In dev mode (`npm run dev`), Flow requests are mocked by Vite middleware (see `vite.config.js`).
+
+### Notion Calendar Sync & Reminders
+
+**Sync flow:**
+1. Every booking created or updated in `/api/bookings.js` (client-facing and panel-manual) calls `syncBookingToNotion(...)` in `api/_notion.js`, which creates a page in the configured Notion database via the REST API (no SDK)
+2. The target database ("Reservas Brunetti") was created by hand in the Notion UI and its properties don't match an ideal schema — `api/_notion.js` adapts to what actually exists rather than requiring more manual changes: `Nombre` (title — Spanish-locale default name, not "Name"), `Fecha` (date), `servicio`/`teléfono` (lowercase rich_text/phone_number), `Barbero` (rich_text), `Precio` (rich_text, not number — formatted as CLP text), `Estado` (Notion's **Status** type with 3 fixed stages — "Sin empezar"/"En curso"/"Listo" — not a free-form Select, mapped via `mapStatusToStage()`), and `Cliente` (type **People**, which can't hold arbitrary text — the client's name is NOT written there; it only appears in the page title alongside the service name)
+3. The created page ID is stored in `bookings.notion_page_id`. Status changes (PATCH) map to one of the 3 Status stages via `updateNotionBookingStatus(...)`; cancellations (DELETE) **archive** the Notion page instead of setting a status, since "cancelada" doesn't fit any of the 3 fixed stages — this also makes cancelled bookings disappear from the calendar view, which is arguably the correct behavior anyway
+4. To see these events in the Notion Calendar app, the Notion database must be added as a calendar source from within Notion Calendar itself (Settings → Notion databases) — this is a one-time manual step, not something the API can do
+
+**Reminder limitation (important):** Notion's API has no reminder/notification field at all (the `date` property object is empty), and Notion's own UI-based reminders for database Date properties only offer day-level presets (same day, 1 day before, 1 week before) — there is no way, via API or UI, to get a Notion-database-backed calendar entry to notify at a specific number of minutes/hours before. Precise "1 hour before" / "15 minutes before" alerts are therefore handled entirely outside Notion: `/api/cron-reminders.js` sends a Web Push notification (via the existing `notifyBarber` in `api/push.js`) to the assigned barber when a booking is 60 or 15 minutes away, tracked via the `reminder_60_sent`/`reminder_15_sent` columns so each reminder fires once.
+
+**Trigger (cron-job.org, not Vercel Cron):** this project is on Vercel's Hobby plan, which only runs `vercel.json`-declared cron jobs once a day (a `*/5 * * * *` schedule fails deployment outright on Hobby). So `/api/cron-reminders` is **not** declared in `vercel.json` — instead, an external [cron-job.org](https://cron-job.org) job hits `GET https://brunetticutz.cl/api/cron-reminders` every 5 minutes with header `Authorization: Bearer $CRON_SECRET`. If the project ever moves to Vercel Pro, this can switch to a native `crons` entry in `vercel.json` with the same path.
 
 ## Common Tasks
 
@@ -200,7 +218,7 @@ npx vercel --prod --yes     # Deploy (project already linked in .vercel/)
 | `src/data.js` | Static data (services, constants) |
 | `api/_auth.js` | Session creation/validation |
 | `db/schema.sql` | Database table definitions |
-| `vite.config.js` | Vite build config + Fintoc mock |
+| `vite.config.js` | Vite build config + Flow mock |
 | `vercel.json` | Deployment routing, headers, caching |
 | `.env.example` | Required environment variables |
 
@@ -209,7 +227,7 @@ npx vercel --prod --yes     # Deploy (project already linked in .vercel/)
 Before `npx vercel --prod`:
 1. Verify `PS_SESSION_SECRET` is set in Vercel (≥16 chars)
 2. Verify `DATABASE_URL` is accessible and schema is initialized
-3. If using Fintoc, verify `FINTOC_SECRET_KEY` is set
+3. If using Flow, verify `FLOW_API_KEY` and `FLOW_SECRET_KEY` are set
 4. Run `npm run build` locally and test with `npm run preview`
 5. Push to `desarrollo` branch first (staging; domain auto-deployed)
 6. Then `npx vercel --prod` for production (`brunetticutz.cl`)
