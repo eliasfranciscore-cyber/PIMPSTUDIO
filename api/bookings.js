@@ -6,6 +6,7 @@ import { syncBookingToNotion, updateNotionBookingStatus } from "./_notion.js"
 
 const MIN_CANCEL_NOTICE_HOURS = 10
 const MAX_LEAD_DAYS = 7
+const MIN_BOOKING_LEAD_MINUTES = 55
 const BUSINESS_TZ = "America/Santiago"
 
 // Vercel ejecuta las funciones en UTC: calcular "hoy" con new Date() ahí
@@ -13,6 +14,12 @@ const BUSINESS_TZ = "America/Santiago"
 // la zona horaria del negocio para que coincida con lo que ve el cliente.
 function businessDateKey(date) {
   return new Intl.DateTimeFormat("en-CA", { timeZone: BUSINESS_TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(date)
+}
+function businessNowMinutes(date) {
+  const parts = new Intl.DateTimeFormat("en-CA", { timeZone: BUSINESS_TZ, hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(date)
+  const h = Number(parts.find((p) => p.type === "hour").value)
+  const m = Number(parts.find((p) => p.type === "minute").value)
+  return h * 60 + m
 }
 
 const DEMO_BOOKINGS = [
@@ -142,6 +149,14 @@ export default async function handler(req, res) {
       const maxDateKey = businessDateKey(maxDate)
       if (date < todayKey || date > maxDateKey) {
         return res.status(422).json({ error: `Solo puedes reservar dentro de los próximos ${MAX_LEAD_DAYS} días.` })
+      }
+      // Reservas de hoy requieren al menos MIN_BOOKING_LEAD_MINUTES de anticipación
+      // (el front ya oculta las horas muy próximas, esto valida también en el servidor).
+      if (date === todayKey) {
+        const [slotH, slotM] = String(time).split(":").map(Number)
+        if (slotH * 60 + slotM < businessNowMinutes(new Date()) + MIN_BOOKING_LEAD_MINUTES) {
+          return res.status(422).json({ error: `Debes reservar con al menos ${MIN_BOOKING_LEAD_MINUTES} minutos de anticipación.` })
+        }
       }
       const cleanPhone = String(phone).replace(/\D/g, "")
       const [user] = await sql`SELECT id FROM users WHERE phone = ${cleanPhone}`

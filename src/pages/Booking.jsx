@@ -25,6 +25,18 @@ function readLocalBlocks() {
   try { return JSON.parse(localStorage.getItem("ps_availability_blocks") || "{}") } catch { return {} }
 }
 
+// El cliente debe reservar con al menos MIN_LEAD_MINUTES de anticipación
+// (ej: a las 15:53 ya no puede tomar la hora de las 16:00, pero sí la de
+// las 17:00). Solo aplica al día de hoy — días futuros no tienen "pasado".
+const MIN_LEAD_MINUTES = 55
+function isSlotTooSoon(dateKey, slot, todayKey, now) {
+  if (dateKey !== todayKey) return false
+  const [h, m] = slot.split(":").map(Number)
+  const slotDate = new Date(now)
+  slotDate.setHours(h, m, 0, 0)
+  return (slotDate - now) / 60000 < MIN_LEAD_MINUTES
+}
+
 export default function Booking() {
   const navigate = useNavigate()
   // Marca personal de un solo barbero: Brunetti. Se reserva siempre con él.
@@ -86,7 +98,8 @@ export default function Booking() {
 
   const firstDow = new Date(year, month, 1).getDay()
   const daysInMonth = new Date(year, month + 1, 0).getDate()
-  const todayKey = localDateKey(new Date())
+  const now = new Date()
+  const todayKey = localDateKey(now)
   // El cliente solo puede reservar dentro de los próximos MAX_LEAD_DAYS días:
   // más allá de eso el barbero todavía no publicó su disponibilidad de esa
   // semana (ver agenda del panel interno, que se administra semana a semana).
@@ -287,7 +300,7 @@ export default function Booking() {
                         {list.map((t) => {
                           const fromApi = availableSlots.find((item) => item.slot === t)
                           const st = fromApi ? (fromApi.available ? "free" : "booked") : slotState(barberId, dateKey, t)
-                          const taken = st !== "free"
+                          const taken = st !== "free" || isSlotTooSoon(dateKey, t, todayKey, now)
                           const sel = slot === t
                           return (
                             <button key={t} disabled={taken} onClick={() => setSlot(t)} className="booking-slot" style={{
