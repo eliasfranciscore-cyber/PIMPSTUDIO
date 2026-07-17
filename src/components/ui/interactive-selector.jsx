@@ -7,7 +7,7 @@ import React, { useState } from "react"
    `items` = { num, title, body, icon, image? }. Sin `image` muestra el ícono
    sobre el tinte dorado — cuando se agreguen fotos reales, basta con pasar
    `image` por item y el panel las usa como fondo automáticamente. */
-export function InteractiveSelector({ items, className = "" }) {
+export function InteractiveSelector({ items, className = "", onSelect }) {
   const [active, setActive] = useState(0)
 
   return (
@@ -19,7 +19,7 @@ export function InteractiveSelector({ items, className = "" }) {
           className={`is-panel ${i === active ? "is-active" : ""}`}
           onMouseEnter={() => setActive(i)}
           onFocus={() => setActive(i)}
-          onClick={() => setActive(i)}
+          onClick={() => { setActive(i); onSelect?.(item, i) }}
           aria-pressed={i === active}
         >
           <span className="is-panel-bg" aria-hidden="true">

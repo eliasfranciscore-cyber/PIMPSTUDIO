@@ -15,6 +15,17 @@
 }
 .essentials-page .btn:disabled::before { display: none; }
 
+/* ---------- SELECTOR "Destacados" (reusa .interactive-selector/.is-* de brunetti.css) ---------- */
+.essentials-selector-price {
+  display: block;
+  margin-top: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gold-lt);
+  font-variant-numeric: tabular-nums;
+}
+
 /* ---------- HERO ---------- */
 .brunetti-site .essentials-hero {
   padding: clamp(7.5rem, 14vh, 10rem) 0 clamp(2.4rem, 5vw, 3.4rem);

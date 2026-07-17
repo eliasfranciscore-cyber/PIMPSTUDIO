@@ -3,6 +3,8 @@ import SiteNav from '../components/SiteNav.jsx'
 import ModuleFooter from '../components/ModuleFooter.jsx'
 import { Icon } from '../components/ui.jsx'
 import { useBrunettiFx, scrollToId } from '../components/brunetti.jsx'
+import { Sparkles } from '../components/ui/sparkles.jsx'
+import { InteractiveSelector } from '../components/ui/interactive-selector.jsx'
 import { CLP } from '../data.js'
 import { readCart, addToCart, setQty, removeFromCart, cartCount } from '../cartStore.js'
 import '../styles/essentials.css'
@@ -76,6 +78,35 @@ export default function Essentials() {
           </div>
         </section>
 
+        {/* Fondo de partículas doradas, igual que Home/Cursos (hero fuera). */}
+        <div className="bru-sparkles-zone">
+          <Sparkles className="bru-sparkles--bg" />
+
+        {/* ============ SELECTOR INTERACTIVO DE PRODUCTOS (igual que Visagismo en Home) ============ */}
+        {!loading && products.length > 0 && (
+          <section className="bsection" id="destacados">
+            <div className="bwrap">
+              <div className="bhead center" data-reveal>
+                <p className="kicker">Destacados</p>
+                <h2>Lo que más se lleva del estudio</h2>
+                <p>Pasa el mouse o toca cualquiera para verlo de cerca.</p>
+              </div>
+            </div>
+            <div className="bwrap">
+              <InteractiveSelector
+                items={products.map((p, i) => ({
+                  num: String(i + 1).padStart(2, '0'),
+                  image: p.imgFront,
+                  title: p.name,
+                  body: <>{p.description} <b className="essentials-selector-price">{CLP(p.price)}</b></>,
+                  product: p,
+                }))}
+                onSelect={(item) => openProduct(item.product)}
+              />
+            </div>
+          </section>
+        )}
+
         {/* ============ GRILLA ============ */}
         <section className="bsection essentials-section" id="productos">
           <div className="bwrap">
@@ -124,6 +155,7 @@ export default function Essentials() {
             )}
           </div>
         </section>
+        </div>
       </main>
 
       <ModuleFooter
