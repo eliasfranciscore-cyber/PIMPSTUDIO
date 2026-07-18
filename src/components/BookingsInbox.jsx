@@ -341,7 +341,7 @@ export default function BookingsInbox({ bookings = [], barbers = [], barber, adm
     }
     let list = scopeList
     if (filter !== 'Todas') list = list.filter((b) => b.status === FILTER_MAP[filter])
-    else list = list.filter((b) => b.status !== 'completada' && b.status !== 'cancelada')
+    else list = list.filter((b) => b.status !== 'cancelada')
     return [...list].sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`))
   }, [searching, query, mine, scopeList, filter, admin, multiBarber, barberFilter])
 
@@ -428,6 +428,9 @@ export default function BookingsInbox({ bookings = [], barbers = [], barber, adm
     if (focus.filter) setFilter(focus.filter)
     setSlideKey((k) => k + 1)
     setQuery('')
+    // Deep-link a una reserva puntual (notificación push / popup de campana):
+    // abre directo su modal de detalle, además de ubicar el día/filtro.
+    if (focus.bookingId != null) setDetailId(Number(focus.bookingId))
   }, [focus?.day, focus?.ts])
 
   // --- Swipe (móvil): cambia de día ---------------------------------------
@@ -559,7 +562,7 @@ export default function BookingsInbox({ bookings = [], barbers = [], barber, adm
       <div className="psn-inbox-toolbar">
         <div className="psn-status-seg" role="group" aria-label="Filtrar por estado">
           {FILTERS.map((f) => {
-            const n = f === 'Todas' ? scopeList.length : scopeCount(FILTER_MAP[f])
+            const n = f === 'Todas' ? scopeList.filter((b) => b.status !== 'cancelada').length : scopeCount(FILTER_MAP[f])
             return (
               <button key={f} type="button" className={filter === f && !searching ? 'is-on' : ''} onClick={() => { setFilter(f); setQuery('') }}>
                 {f}<span className="psn-seg-count">{n}</span>

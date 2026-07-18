@@ -131,7 +131,22 @@ CREATE TABLE IF NOT EXISTS products (
   updated_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW()
 );
 
+-- Historial de notificaciones push enviadas (para el popup de la campana en
+-- el panel). barber_id nullable para permitir a futuro avisos de notifyAll()
+-- que no son de un barbero concreto. api/push.js también la crea en caliente
+-- si no existe (igual que push_subscriptions/products).
+CREATE TABLE IF NOT EXISTS notifications (
+  id         SERIAL PRIMARY KEY,
+  barber_id  INTEGER REFERENCES barbers(id),
+  title      TEXT NOT NULL,
+  body       TEXT,
+  url        TEXT,
+  tag        TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 CREATE INDEX IF NOT EXISTS idx_push_subs_barber       ON push_subscriptions(barber_id);
+CREATE INDEX IF NOT EXISTS idx_notifications_barber   ON notifications(barber_id, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_bookings_barber_date  ON bookings(barber_id, booking_date);
 CREATE INDEX IF NOT EXISTS idx_bookings_client       ON bookings(client_id);
 CREATE INDEX IF NOT EXISTS idx_users_phone           ON users(phone);

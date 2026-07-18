@@ -49,7 +49,7 @@ async function sendDueReminders(sql, { column, label, fromMin, toMin }) {
     notifyBarber(b.barberId, {
       title: `Turno en ${label}`,
       body: `${b.client || "Cliente"} · ${b.service || "Servicio"} · ${String(b.time).slice(0, 5)}`,
-      url: "/panel",
+      url: `/panel?tab=reservas&date=${b.date}&bookingId=${b.id}`,
       tag: `recordatorio-${column}-${b.id}`,
     }).catch((err) => console.error(`notifyBarber (${label}) error:`, err))
   ))
@@ -79,8 +79,35 @@ async function getWebPush() {
   return null
 }
 
+// Registra el envío en `notifications` para el popup de la campana del panel
+// (ver GET /api/push más abajo). Se llama antes de intentar el push real y
+// nunca lanza — un fallo de logging no debe impedir el aviso al barbero.
+async function logNotification(barberId, payload) {
+  try {
+    const sql = neon(process.env.DATABASE_URL)
+    await sql`
+      CREATE TABLE IF NOT EXISTS notifications (
+        id         SERIAL PRIMARY KEY,
+        barber_id  INTEGER,
+        title      TEXT NOT NULL,
+        body       TEXT,
+        url        TEXT,
+        tag        TEXT,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )
+    `
+    await sql`
+      INSERT INTO notifications (barber_id, title, body, url, tag)
+      VALUES (${barberId ?? null}, ${payload?.title || "Brunetti"}, ${payload?.body || null}, ${payload?.url || null}, ${payload?.tag || null})
+    `
+  } catch (err) {
+    console.error("logNotification error:", err)
+  }
+}
+
 export async function notifyBarber(barberId, payload) {
   if (!barberId) return { ok: false, sent: 0 }
+  await logNotification(Number(barberId), payload)
   const webpush = await getWebPush()
   if (!webpush) return { ok: false, sent: 0, reason: "push-not-configured" }
   try {
@@ -115,6 +142,7 @@ export async function notifyBarber(barberId, payload) {
    son de un barbero concreto (p. ej. inscripciones a Cursos/Workshop). En el
    modo "solo Brunetti" todas las suscripciones son del equipo de Bruno. */
 export async function notifyAll(payload) {
+  await logNotification(null, payload)
   const webpush = await getWebPush()
   if (!webpush) return { ok: false, sent: 0, reason: "push-not-configured" }
   try {
@@ -168,6 +196,19 @@ export default async function handler(req, res) {
 
   try {
     const sql = neon(process.env.DATABASE_URL)
+
+    // Últimas notificaciones para el popup de la campana del panel (distinto
+    // del GET ?job=reminders de arriba, que no lleva sesión de barbero).
+    if (req.method === "GET") {
+      const rows = await sql`
+        SELECT id, title, body, url, tag, created_at::text as "createdAt"
+        FROM notifications
+        WHERE barber_id = ${Number(session.id)} OR barber_id IS NULL
+        ORDER BY created_at DESC
+        LIMIT 5
+      `
+      return res.json({ ok: true, notifications: rows })
+    }
 
     if (req.method === "POST") {
       const { subscription } = req.body || {}

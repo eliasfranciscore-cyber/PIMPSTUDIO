@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Brandmark, Icon, Stat } from '../components/ui.jsx'
 import { ThemeProvider, ThemeToggle, useTheme } from '../components/theme.jsx'
 import MobileDock from '../components/MobileDock.jsx'
@@ -100,6 +100,7 @@ function Panel({ title, action, children, style }) {
 
 export default function Dashboard() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const [tab, setTab] = useState("agenda")
   const [agendaBarber, setAgendaBarber] = useState(null)
   const [agendaDayKey, setAgendaDayKey] = useState(null)
@@ -243,6 +244,35 @@ export default function Dashboard() {
     document.body.classList.add('dash-mode')
     return () => document.body.classList.remove('dash-mode')
   }, [])
+
+  // Deep-link desde una notificación push (recordatorio, nueva reserva o
+  // cancelación) o desde el popup de notificaciones de la campana: la URL
+  // trae ?tab=reservas&date=...&bookingId=... y hay que abrir esa reserva
+  // puntual, no solo la pestaña. Reutiliza el mismo mecanismo `inboxFocus`
+  // que ya usan GlobalSearch/goToDayInReservas para saltar a un día.
+  useEffect(() => {
+    const qTab = searchParams.get('tab')
+    const qBookingId = searchParams.get('bookingId')
+    const qDate = searchParams.get('date')
+    if (!qTab && !qBookingId) return
+    if (qTab) setTab(qTab)
+    if (qBookingId) {
+      setInboxFocus({ day: qDate || isoDate(new Date()), ts: Date.now(), filter: 'Todas', scope: 'dia', bookingId: Number(qBookingId) })
+    }
+  }, [searchParams])
+
+  // Si la PWA ya está abierta cuando se toca una notificación push, el
+  // service worker no puede navegarla directamente (no controla el router de
+  // React) — le manda un postMessage y acá lo escuchamos para navegar sin
+  // perder el estado ya cargado (ver public/sw.js `notificationclick`).
+  useEffect(() => {
+    if (!('serviceWorker' in navigator)) return
+    const onMessage = (event) => {
+      if (event.data?.type === 'ps-navigate' && event.data.url) navigate(event.data.url)
+    }
+    navigator.serviceWorker.addEventListener('message', onMessage)
+    return () => navigator.serviceWorker.removeEventListener('message', onMessage)
+  }, [navigate])
 
   useEffect(() => {
     const stored = localStorage.getItem("ps_barber")
@@ -769,7 +799,7 @@ export default function Dashboard() {
           tab={tab}
           setTab={setTab}
           nav={visibleNav}
-          notifCount={visibleBookings.filter((b) => b.status === 'pendiente').length}
+          navigate={navigate}
           onRefresh={refreshAll}
           refreshing={refreshing}
           scrolled={topbarScrolled}
@@ -2220,7 +2250,19 @@ function DashboardShell({ tab, setTab, nav, dockItems, barber, onLogout, onNewBo
   )
 }
 
-function DashboardTopbar({ title, barber, onLogout, tab, setTab, nav, notifCount = 0, onRefresh, refreshing = false, search = null, scrolled = false }) {
+// "hace 5m" / "hace 2h" / "hace 3d" — sin librerías, mismo estilo breve que
+// el resto de los indicadores de tiempo del panel (ver nextEta más arriba).
+function timeAgo(iso) {
+  if (!iso) return ''
+  const diffMin = Math.max(0, Math.round((Date.now() - new Date(iso).getTime()) / 60000))
+  if (diffMin < 1) return 'ahora'
+  if (diffMin < 60) return `hace ${diffMin}m`
+  const diffH = Math.round(diffMin / 60)
+  if (diffH < 24) return `hace ${diffH}h`
+  return `hace ${Math.round(diffH / 24)}d`
+}
+
+function DashboardTopbar({ title, barber, onLogout, tab, setTab, nav, onRefresh, refreshing = false, search = null, scrolled = false, navigate }) {
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
   useEffect(() => {
@@ -2230,6 +2272,57 @@ function DashboardTopbar({ title, barber, onLogout, tab, setTab, nav, notifCount
     return () => document.removeEventListener('mousedown', h)
   }, [open])
   const initial = (barber?.name || 'B')[0].toUpperCase()
+
+  // Popup de "últimas 5 notificaciones" — ver GET /api/push (sin ?job=) en
+  // api/push.js. El badge cuenta las que llegaron después de la última vez
+  // que se abrió el popup (marca local por barbero, mismo patrón que
+  // ps_push_enabled_${barberId} en src/push.js).
+  const seenKey = `ps_notif_seen_at_${barber?.id ?? 'me'}`
+  const [notifOpen, setNotifOpen] = useState(false)
+  const notifRef = useRef(null)
+  const [notifications, setNotifications] = useState([])
+  const [seenAt, setSeenAt] = useState(() => { try { return Number(localStorage.getItem(seenKey) || 0) } catch { return 0 } })
+
+  useEffect(() => {
+    if (!notifOpen) return
+    const h = (e) => { if (notifRef.current && !notifRef.current.contains(e.target)) setNotifOpen(false) }
+    document.addEventListener('mousedown', h)
+    return () => document.removeEventListener('mousedown', h)
+  }, [notifOpen])
+
+  const loadNotifications = async () => {
+    try {
+      const token = localStorage.getItem('ps_barber_token') || ''
+      const res = await fetch('/api/push', { headers: token ? { Authorization: `Bearer ${token}` } : {} })
+      const data = await res.json()
+      setNotifications(data.notifications || [])
+    } catch {
+      setNotifications([])
+    }
+  }
+  // Carga inicial: para que el badge de no-vistas ya tenga datos apenas se
+  // abre el panel, no solo al tocar la campana.
+  useEffect(() => { loadNotifications() }, [])
+
+  const unseenCount = notifications.filter((n) => new Date(n.createdAt).getTime() > seenAt).length
+
+  const toggleNotif = () => {
+    setNotifOpen((v) => {
+      const next = !v
+      if (next) {
+        loadNotifications()
+        const now = Date.now()
+        setSeenAt(now)
+        try { localStorage.setItem(seenKey, String(now)) } catch {}
+      }
+      return next
+    })
+  }
+
+  const openNotification = (n) => {
+    setNotifOpen(false)
+    if (n.url) navigate?.(n.url)
+  }
   return (
     <header className={`dashboard-topbar ${scrolled ? 'is-scrolled' : ''}`}>
       <div className="dashboard-topbar-left">
@@ -2264,16 +2357,33 @@ function DashboardTopbar({ title, barber, onLogout, tab, setTab, nav, notifCount
         >
           <Icon name="refresh" size={14} style={refreshing ? { animation: 'spin 0.8s linear infinite' } : undefined} />
         </button>
-        <button
-          type="button"
-          className="notif-pill"
-          data-tip={notifCount ? `${notifCount} reserva(s) pendiente(s)` : 'Sin pendientes'}
-          aria-label={notifCount ? `${notifCount} reserva(s) pendiente(s)` : 'Sin pendientes'}
-          onClick={() => setTab('reservas')}
-          style={{ cursor: 'pointer' }}
-        >
-          <Icon name="bell" size={14} /> {notifCount}
-        </button>
+        <div className="notif-chip" ref={notifRef}>
+          <button
+            type="button"
+            className="notif-pill"
+            data-tip={unseenCount ? `${unseenCount} notificación(es) nueva(s)` : 'Notificaciones'}
+            aria-label={unseenCount ? `${unseenCount} notificación(es) nueva(s)` : 'Notificaciones'}
+            aria-haspopup="true"
+            aria-expanded={notifOpen}
+            onClick={toggleNotif}
+            style={{ cursor: 'pointer' }}
+          >
+            <Icon name="bell" size={14} /> {unseenCount > 0 && unseenCount}
+          </button>
+          {notifOpen && (
+            <div className="notif-chip-pop" role="menu">
+              <div className="notif-pop-head">Notificaciones</div>
+              {!notifications.length && <div className="notif-pop-empty">Sin notificaciones recientes.</div>}
+              {notifications.map((n) => (
+                <button key={n.id} type="button" className="notif-pop-item" onClick={() => openNotification(n)}>
+                  <div className="notif-pop-title">{n.title}</div>
+                  {n.body && <div className="notif-pop-body">{n.body}</div>}
+                  <div className="notif-pop-time">{timeAgo(n.createdAt)}</div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
         <div className="user-chip" ref={ref}>
           <button
             type="button"

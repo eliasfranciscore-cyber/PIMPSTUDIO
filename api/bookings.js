@@ -188,7 +188,7 @@ export default async function handler(req, res) {
         await notifyBarber(barberId, {
           title: "Nueva reserva",
           body: `${info?.client || "Cliente"} · ${info?.service || "Servicio"} · ${date} ${String(time).slice(0, 5)}`,
-          url: "/panel",
+          url: `/panel?tab=reservas&date=${date}&bookingId=${booking.id}`,
           tag: `reserva-${booking.id}`,
         })
         await sendBookingConfirmationEmail({
@@ -275,7 +275,7 @@ export default async function handler(req, res) {
         await notifyBarber(existing.barberId, {
           title: "Reserva cancelada",
           body: `${existing.client || "Cliente"} canceló su hora del ${existing.date} a las ${String(existing.time).slice(0, 5)}`,
-          url: "/panel",
+          url: `/panel?tab=reservas&date=${existing.date}&bookingId=${existing.id}`,
           tag: `cancelada-${existing.id}`,
         })
         if (existing.notionPageId) {

@@ -57,7 +57,14 @@ self.addEventListener("notificationclick", (event) => {
   event.waitUntil(
     self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientsArr) => {
       const existing = clientsArr.find((c) => c.url.includes("/panel"));
-      if (existing) return existing.focus();
+      // Si ya hay una ventana /panel abierta (el caso típico: la PWA queda
+      // abierta en segundo plano), enfocarla no alcanza — hay que decirle a
+      // qué reserva navegar. postMessage lo hace; App.jsx escucha este
+      // mensaje y usa el router para no perder el estado ya cargado.
+      if (existing) {
+        existing.postMessage({ type: "ps-navigate", url: targetUrl });
+        return existing.focus();
+      }
       return self.clients.openWindow(targetUrl);
     })
   );
