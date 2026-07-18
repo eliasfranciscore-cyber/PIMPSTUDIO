@@ -150,6 +150,16 @@ export default async function handler(req, res) {
     const secret = process.env.CRON_SECRET
     if (secret) {
       const auth = req.headers.authorization || ""
+      // TEMP DEBUG #2 (quitar tras diagnosticar el 401 de cron-job.org): esta
+      // vez se loguea el header completo + sus code points, para detectar
+      // caracteres invisibles (comillas curvas, NBSP, etc.) que un dump
+      // redactado no mostraría.
+      console.log("push reminders auth debug #2:", JSON.stringify({
+        raw: auth,
+        codePoints: Array.from(auth).map((c) => c.charCodeAt(0)),
+        expected: `Bearer ${secret}`,
+        expectedCodePoints: Array.from(`Bearer ${secret}`).map((c) => c.charCodeAt(0)),
+      }))
       if (auth !== `Bearer ${secret}`) return res.status(401).json({ ok: false, error: "unauthorized" })
     }
     try {
