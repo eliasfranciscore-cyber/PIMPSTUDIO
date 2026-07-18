@@ -577,11 +577,15 @@ a.home-footer-access { display: inline-flex; align-items: center; gap: .4rem; te
 .psn-ring-stat .val { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: var(--gold-lt); line-height: 1.1; }
 
 /* === Peak hours === */
+.psn-peak-split { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
 .psn-peak { display: flex; align-items: flex-end; gap: 3px; height: 84px; }
 .psn-peak-col { display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; min-width: 0; }
 .psn-peak-track { flex: 1; width: 100%; display: flex; align-items: flex-end; border-bottom: 1px solid var(--hair); }
 .psn-peak-fill { width: 100%; border-radius: 4px 4px 0 0; min-height: 3px; transition: height 1.2s cubic-bezier(.2,.7,.3,1); }
 .psn-peak-lbl { font-size: .56rem; color: var(--muted); line-height: 1; }
+@media (max-width: 700px) {
+  .psn-peak-split { grid-template-columns: 1fr; gap: 1.4rem; }
+}
 
 /* === Top services === */
 .psn-top-svc { display: grid; gap: .75rem; }

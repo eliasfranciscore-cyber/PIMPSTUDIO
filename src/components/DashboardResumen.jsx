@@ -22,7 +22,6 @@ import { CountUp, KpiTile, Sparkline, Donut, AnimatedRing } from './DashKit.jsx'
 
 const STATUS_DOT = { confirmada: 'var(--green, #6fbf86)', pendiente: 'var(--gold)', 'en curso': '#7ea8ff', completada: 'var(--muted-2)', cancelada: 'var(--red, #d99a8f)' }
 const CAT_COLORS = ['#c9a14e', '#9c7a32', '#e6cd90', '#8d8a84', '#5a5852']
-const LOGO = '/assets/pimp-studio-logo.jpg'
 
 function Bars({ data }) {
   const max = Math.max(1, ...data.map((d) => d.v))
@@ -47,32 +46,75 @@ function getSvcIconByName(name) {
   return 'scissors'
 }
 
-function PeakHours({ data = [], bookings = [] }) {
+// Horas de atención fijas (ver ALL_SLOTS en data.js) — siempre se muestran
+// las 11, aunque alguna nunca haya tenido reservas, para que el gráfico
+// refleje la jornada completa y no solo las horas con historial.
+const BUSINESS_HOURS = ['9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19']
+// Lun→Dom en vez del orden nativo de Date#getDay() (0=Dom), para leer la
+// semana como la vive el negocio.
+const DOW_ORDER = [1, 2, 3, 4, 5, 6, 0]
+const DOW_SHORT = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
+
+function PeakChart({ data, peakKey }) {
+  const max = Math.max(1, ...data.map((d) => d.v))
+  return (
+    <div className="psn-peak">
+      {data.map((d) => (
+        <div key={d.k} className="psn-peak-col">
+          <div className="psn-peak-track">
+            <div className="psn-peak-fill" style={{ height: `${(d.v / max) * 100}%`, background: d.k === peakKey ? 'var(--gold-grad)' : 'rgba(255,255,255,0.13)' }} title={`${d.v} reservas`} />
+          </div>
+          <span className="psn-peak-lbl">{d.lbl}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+/* Antes agregaba TODAS las reservas del historial completo (sin ventana de
+   tiempo) y solo dibujaba las horas que alguna vez tuvieron una reserva —
+   el gráfico crecía para siempre sesgado hacia las horas más "viejas" y
+   podía mostrar solo 3-4 columnas salteadas en vez de la jornada completa.
+   Ahora recibe `bookings` ya acotado a una ventana reciente (ver
+   `recentBookings` en DashboardResumen) y siempre dibuja las 11 horas y los
+   7 días de la semana, con 0 donde no hay datos. */
+function PeakHours({ bookings = [], windowLabel = '' }) {
+  const valid = React.useMemo(() => bookings.filter((b) => b.status !== 'cancelada' && b.time && b.date), [bookings])
+
   const hourData = React.useMemo(() => {
-    const valid = bookings.filter((b) => b.status !== 'cancelada' && b.time)
-    if (!valid.length) return data
     const map = {}
     valid.forEach((b) => { const h = String(b.time).slice(0, 2).replace(/^0/, ''); map[h] = (map[h] || 0) + 1 })
-    return Object.keys(map).sort((a, b) => Number(a) - Number(b)).map((h) => ({ h, v: map[h] }))
-  }, [bookings, data])
-  const max = Math.max(1, ...hourData.map((d) => d.v))
-  const peak = hourData.reduce((p, d) => d.v > (p?.v ?? -1) ? d : p, null)
+    return BUSINESS_HOURS.map((h) => ({ k: h, lbl: h, v: map[h] || 0 }))
+  }, [valid])
+  const peakHour = hourData.reduce((p, d) => d.v > (p?.v ?? 0) ? d : p, null)
+
+  const dowData = React.useMemo(() => {
+    const map = {}
+    valid.forEach((b) => { const dow = new Date(`${b.date}T00:00:00`).getDay(); map[dow] = (map[dow] || 0) + 1 })
+    return DOW_ORDER.map((dow) => ({ k: dow, lbl: DOW_SHORT[dow], v: map[dow] || 0 }))
+  }, [valid])
+  const peakDow = dowData.reduce((p, d) => d.v > (p?.v ?? 0) ? d : p, null)
+
+  if (!valid.length) {
+    return <div style={{ color: 'var(--muted)', fontSize: '.85rem' }}>Sin reservas {windowLabel} para analizar todavía.</div>
+  }
+
   return (
-    <div>
-      <div className="psn-peak">
-        {hourData.map((d) => (
-          <div key={d.h} className="psn-peak-col">
-            <div className="psn-peak-track">
-              <div className="psn-peak-fill" style={{ height: `${(d.v / max) * 100}%`, background: d.h === peak?.h ? 'var(--gold-grad)' : 'rgba(255,255,255,0.13)' }} />
-            </div>
-            <span className="psn-peak-lbl">{d.h}</span>
-          </div>
-        ))}
+    <div className="psn-peak-split">
+      <div>
+        <PeakChart data={hourData} peakKey={peakHour?.k} />
+        {peakHour && <div style={{ fontSize: '.73rem', color: 'var(--muted)', marginTop: '.6rem', display: 'flex', alignItems: 'center', gap: '.35rem' }}>
+          <Icon name="trend" size={13} />
+          Hora pico: <strong style={{ color: 'var(--gold-lt)' }}>{peakHour.k}:00</strong> · {peakHour.v} reservas
+        </div>}
       </div>
-      {peak && <div style={{ fontSize: '.73rem', color: 'var(--muted)', marginTop: '.6rem', display: 'flex', alignItems: 'center', gap: '.35rem' }}>
-        <Icon name="trend" size={13} />
-        Hora pico: <strong style={{ color: 'var(--gold-lt)' }}>{peak.h}:00</strong> · {peak.v} reservas
-      </div>}
+      <div>
+        <PeakChart data={dowData} peakKey={peakDow?.k} />
+        {peakDow && <div style={{ fontSize: '.73rem', color: 'var(--muted)', marginTop: '.6rem', display: 'flex', alignItems: 'center', gap: '.35rem' }}>
+          <Icon name="calendar" size={13} />
+          Día pico: <strong style={{ color: 'var(--gold-lt)' }}>{peakDow.lbl}</strong> · {peakDow.v} reservas
+        </div>}
+      </div>
     </div>
   )
 }
@@ -112,6 +154,21 @@ function localDateKey(date) {
   return `${y}-${m}-${d}`
 }
 
+function addDays(date, n) {
+  const d = new Date(date)
+  d.setDate(d.getDate() + n)
+  return d
+}
+
+// Lunes de la semana de `date` (semana Lun→Dom, como la vive el negocio).
+function mondayOf(date) {
+  const d = new Date(date)
+  const dow = d.getDay() // 0=Dom..6=Sáb
+  d.setDate(d.getDate() + (dow === 0 ? -6 : 1 - dow))
+  d.setHours(0, 0, 0, 0)
+  return d
+}
+
 export default function DashboardResumen({ bookings = [], barbers = [], expenses = [], clients = [], todaySlots = [], onNewBooking, onGoToPending }) {
   const todayKey = localDateKey(new Date())
   const monthKey = todayKey.slice(0, 7)
@@ -120,15 +177,29 @@ export default function DashboardResumen({ bookings = [], barbers = [], expenses
   const dayValid = today.filter((b) => b.status !== 'cancelada')
   const revenueDay = dayValid.reduce((s, b) => s + Number(b.price || 0), 0)
   const avgTicket = dayValid.length ? Math.round(revenueDay / dayValid.length) : 0
-  const activeBarbers = barbers.filter((b) => b.active !== false)
 
-  const ranking = useMemo(() => {
-    return barbers.map((b) => {
-      const own = bookings.filter((x) => Number(x.barberId) === Number(b.id) && x.status !== 'cancelada')
-      return { id: b.id, cuts: own.length, rev: own.reduce((s, x) => s + Number(x.price || 0), 0) }
-    }).filter((r) => r.rev || r.cuts).sort((a, b) => b.rev - a.rev).slice(0, 5)
-  }, [barbers, bookings])
-  const maxRev = Math.max(1, ...ranking.map((r) => r.rev))
+  // Ventana móvil de 30 días para métricas de "patrón" (tasa de cancelación,
+  // horas/días pico) — evita que se acumulen para siempre sesgadas hacia el
+  // historial más viejo y las mantiene relevantes al momento actual.
+  const last30Key = useMemo(() => localDateKey(addDays(new Date(), -30)), [todayKey])
+  const recentBookings = useMemo(() => bookings.filter((b) => b.date && b.date >= last30Key), [bookings, last30Key])
+  const cancelRatePct = recentBookings.length
+    ? Math.round((recentBookings.filter((b) => b.status === 'cancelada').length / recentBookings.length) * 100)
+    : 0
+
+  // Semana actual (Lun→Dom) vs semana anterior, para el chip de ventas.
+  const weekStart = useMemo(() => mondayOf(new Date()), [todayKey])
+  const weekKeys = useMemo(() => Array.from({ length: 7 }, (_, i) => localDateKey(addDays(weekStart, i))), [weekStart])
+  const lastWeekKeys = useMemo(() => Array.from({ length: 7 }, (_, i) => localDateKey(addDays(weekStart, i - 7))), [weekStart])
+  const weekBookings = useMemo(() => bookings.filter((b) => b.status !== 'cancelada' && weekKeys.includes(b.date)), [bookings, weekKeys])
+  const weekRevenue = weekBookings.reduce((s, b) => s + Number(b.price || 0), 0)
+  const weekCount = weekBookings.length
+  const lastWeekRevenue = useMemo(() => bookings
+    .filter((b) => b.status !== 'cancelada' && lastWeekKeys.includes(b.date))
+    .reduce((s, b) => s + Number(b.price || 0), 0), [bookings, lastWeekKeys])
+  const weekTrendPct = lastWeekRevenue ? Math.round(((weekRevenue - lastWeekRevenue) / lastWeekRevenue) * 100) : null
+  const weekDailyRevenue = useMemo(() => weekKeys.map((k) =>
+    weekBookings.filter((b) => b.date === k).reduce((s, b) => s + Number(b.price || 0), 0)), [weekKeys, weekBookings])
 
   // Gastos del mes en curso, por categoría.
   const expenseCats = useMemo(() => {
@@ -278,7 +349,7 @@ export default function DashboardResumen({ bookings = [], barbers = [], expenses
         <KpiTile icon="chart"  label="Ticket promedio"      value={avgTicket} format={CLP} />
         <KpiTile icon="wallet" label="Gastos del mes"       value={expTotal} format={CLP} color="var(--red, #d99a8f)" />
         <KpiTile icon="trend"  label="Margen neto"          value={netMarginPct} suffix="%" color="var(--green, #6fbf86)" />
-        <KpiTile icon="users"  label="Barberos activos"     value={activeBarbers.length} suffix={`/${barbers.length}`} color="#7ea8ff" />
+        <KpiTile icon="close"  label="Tasa de cancelación"  value={cancelRatePct} suffix="%" color="#e0897a" sub="últimos 30 días" />
         <KpiTile icon="user"   label="Clientes nuevos"      value={newClients} />
         <KpiTile icon="spark"  label="Clientes recurrentes" value={retention} suffix="%" color="var(--gold-lt)" />
       </div>
@@ -290,25 +361,18 @@ export default function DashboardResumen({ bookings = [], barbers = [], expenses
         </div>
 
         <div className="card psn-panel span-5">
-          <div className="psn-panel-head"><h3 className="font-display">Mis ventas de la semana</h3><span style={{ fontSize: '.74rem', color: 'var(--muted)' }}>Esta semana</span></div>
-          <div style={{ display: 'grid', gap: '.75rem' }}>
-            {ranking.map((r, i) => {
-              const b = barbers.find((x) => Number(x.id) === Number(r.id)) || barberById(r.id) || {}
-              return (
-                <div key={r.id} className={`psn-rank ${i === 0 ? 'top' : ''}`}>
-                  <span className="pos">{i + 1}</span>
-                  <img className="av" src={b.photo || LOGO} alt={b.short || b.name} onError={(e) => { if (e.currentTarget.src !== window.location.origin + LOGO) e.currentTarget.src = LOGO }} />
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: '.85rem', fontWeight: 500 }}>{b.short || b.name}</div>
-                    <div className="bar"><i style={{ width: `${(r.rev / maxRev) * 100}%` }} /></div>
-                  </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: '.82rem', color: 'var(--ink-soft)' }}>{CLP(r.rev)}</div>
-                    <div style={{ fontSize: '.68rem', color: 'var(--muted-2)' }}>{r.cuts} cortes</div>
-                  </div>
-                </div>
-              )
-            })}
+          <div className="psn-panel-head"><h3 className="font-display">Mis ventas de la semana</h3><span style={{ fontSize: '.74rem', color: 'var(--muted)' }}>Lun–Dom</span></div>
+          <div style={{ display: 'grid', gap: '.6rem' }}>
+            <div className="dk-hero-big"><CountUp value={weekRevenue} format={CLP} /></div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem', flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '.82rem', color: 'var(--muted)' }}>{weekCount} corte{weekCount === 1 ? '' : 's'} esta semana</span>
+              {weekTrendPct != null && (
+                <span className="chip" style={{ color: weekTrendPct >= 0 ? 'var(--green, #6fbf86)' : 'var(--red, #d99a8f)', fontSize: '.72rem' }}>
+                  {weekTrendPct >= 0 ? '▲' : '▼'} {Math.abs(weekTrendPct)}% vs. semana pasada
+                </span>
+              )}
+            </div>
+            <Sparkline data={weekDailyRevenue} width={230} height={46} />
           </div>
         </div>
 
@@ -381,8 +445,8 @@ export default function DashboardResumen({ bookings = [], barbers = [], expenses
         </div>
 
         <div className="card psn-panel span-12">
-          <div className="psn-panel-head"><h3 className="font-display">Horas pico</h3><span style={{ fontSize: '.73rem', color: 'var(--muted)' }}>Distribución de reservas por hora</span></div>
-          <PeakHours data={[]} bookings={bookings} />
+          <div className="psn-panel-head"><h3 className="font-display">Horas y días pico</h3><span style={{ fontSize: '.73rem', color: 'var(--muted)' }}>Últimos 30 días</span></div>
+          <PeakHours bookings={recentBookings} windowLabel="en los últimos 30 días" />
         </div>
 
       </div>
