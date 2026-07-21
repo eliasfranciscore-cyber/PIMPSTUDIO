@@ -44,8 +44,9 @@ export function CountUp({ value, format }) {
  * count-up + borde de acento izquierdo). `onClick` la vuelve clickable
  * (filtros); `active` la resalta.
  */
-export function KpiTile({ icon, label, value, format, suffix, color = 'var(--gold)', onClick, active, sub, children }) {
+export function KpiTile({ icon, label, value, format, suffix, color = 'var(--gold)', onClick, active, sub, delta, deltaSuffix = ' vs sem. ant.', children }) {
   const Tag = onClick ? 'button' : 'div'
+  const hasDelta = delta != null && Number.isFinite(delta) && delta !== 0
   return (
     <Tag
       {...(onClick ? { type: 'button', onClick } : {})}
@@ -54,7 +55,12 @@ export function KpiTile({ icon, label, value, format, suffix, color = 'var(--gol
     >
       <span className="dk-kpi-lbl">{icon && <Icon name={icon} size={12} />} {label}</span>
       <b className="dk-kpi-val"><CountUp value={value} format={format} />{suffix && <small>{suffix}</small>}</b>
-      {sub && <span className="dk-kpi-sub">{sub}</span>}
+      {hasDelta && (
+        <span className="dk-kpi-sub" style={{ color: delta > 0 ? 'var(--green)' : 'var(--red)' }}>
+          {delta > 0 ? '▲' : '▼'} {Math.abs(delta)}{deltaSuffix}
+        </span>
+      )}
+      {!hasDelta && sub && <span className="dk-kpi-sub">{sub}</span>}
       {children}
     </Tag>
   )

@@ -1,16 +1,16 @@
 # Graph Report - PIMPSTUDIO-desarrollo  (2026-07-16)
 
 ## Corpus Check
-- 128 files · ~1,742,476 words
+- 131 files · ~1,979,202 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 957 nodes · 1607 edges · 100 communities (57 shown, 43 thin omitted)
-- Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 41 edges (avg confidence: 0.83)
+- 1130 nodes · 1954 edges · 97 communities (66 shown, 31 thin omitted)
+- Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 54 edges (avg confidence: 0.81)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `4ea28d56`
+- Built from commit: `7e63bb69`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -52,6 +52,8 @@
 - vercel.json Config
 - Register Client API
 - Fintoc Payments API
+- Proposal Generator Script
+- CSS Stylesheets
 - Claude Dev Wrapper Script
 - Proposal Templates & Inbox Demo
 - DetailSheets.swift
@@ -63,6 +65,7 @@
 - Cursos.jsx
 - Vite Config & Fintoc Mock
 - Legacy Contact & Cursos Pages
+- interactive-selector.jsx
 - NewBookingModal.jsx
 - estilo.js
 - clients.js
@@ -80,6 +83,7 @@
 - services.js
 - api/barbers.js (team/permissions listing)
 - FintocCheckout.jsx
+- lamp.jsx
 - api/enrollments.js (course/workshop enrollments)
 - DetailSheets.swift
 - String
@@ -90,17 +94,15 @@
 - Brunetti single-barber rebrand
 - Hero gooey-effect removal
 - Light-mode polish pass
+- Spring Animations
+- Core Philosophy
 - BarberLogin.jsx
 - ADMIN_API_TOKEN env var
+- MobileDock.jsx
 - brunetticutz.cl (production domain)
-- Native iOS features (dashboard, agenda, clients, workshop, settings)
-- Liquid Glass with fallback for older systems
+- EditProvider.jsx
 - pimpstudio.cl (308 redirect to apex)
-- vercel dev --listen 3003 (local API server)
 - CSS Scoped Under brunetti-site Class
-- BrunettiCutz iOS app (SwiftUI, native)
-- BrunettiCutz.xcodeproj
-- cl.brunetticutz.internal (bundle id)
 - ELIJA agent layer (docs/knowledge/skills/scripts)
 - server.js (legacy local SQLite backend)
 - Archivos en desuso/ (legacy, gitignored)
@@ -109,15 +111,15 @@
 
 ## God Nodes (most connected - your core abstractions)
 1. `DashboardModel` - 56 edges
-2. `APIClient` - 26 edges
+2. `APIClient` - 34 edges
 3. `Client` - 22 edges
-4. `SessionStore` - 21 edges
-5. `BookingStatus` - 19 edges
-6. `ServiceItem` - 16 edges
-7. `Barber` - 15 edges
-8. `Expense` - 13 edges
-9. `AvailabilitySlot` - 13 edges
-10. `cleanPhone()` - 13 edges
+4. `CLP()` - 22 edges
+5. `SessionStore` - 21 edges
+6. `Apple Design` - 20 edges
+7. `BookingStatus` - 19 edges
+8. `requireInternal()` - 18 edges
+9. `ServiceItem` - 16 edges
+10. `Design Engineering` - 16 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `PIMP STUDIO Logo (JPG, used as brand header/footer image)` --semantically_similar_to--> `PIMP STUDIO Logo JPG (web/assets copy)`  [INFERRED] [semantically similar]
@@ -134,75 +136,79 @@
 ## Import Cycles
 - None detected.
 
-## Communities (100 total, 43 thin omitted)
+## Communities (97 total, 31 thin omitted)
 
 ### Community 0 - "iOS Data Models"
-Cohesion: 0.08
-Nodes (21): App, ColorScheme, Data, Foundation, BrunettiCutzApp, RootView, AppTab, Date (+13 more)
+Cohesion: 0.11
+Nodes (13): Data, Foundation, KeychainStore, String, Keys, SessionStore, Bool, Date (+5 more)
 
 ### Community 1 - "iOS API Client"
-Cohesion: 0.10
-Nodes (28): Any, Decodable, Error, APIClient, APIError, badStatus, invalidURL, missingData (+20 more)
+Cohesion: 0.18
+Nodes (8): Any, APIClient, Bool, Int, String, URL, cleanPhone(), T
 
 ### Community 2 - "Backend Auth & Project Docs"
-Cohesion: 0.06
-Nodes (33): Account, App(), BarberLogin, Booking, Cursos, Dashboard, EncuentraEstilo, isStandaloneLaunch() (+25 more)
+Cohesion: 0.15
+Nodes (12): Account, App(), BarberLogin, Booking, Cursos, Dashboard, EncuentraEstilo, Essentials (+4 more)
 
 ### Community 3 - "Workshop Page & Content"
-Cohesion: 0.11
-Nodes (18): calc(), Footer(), formatCLP(), Hero(), Pricing(), QuoteBlock(), Register(), Reveal() (+10 more)
+Cohesion: 0.06
+Nodes (36): Lamp(), FEATURE_CARDS, TESTIMONIALS, WK_BASE, WK_DIAS, WK_ED, WK_MESES, WORKSHOP (+28 more)
 
 ### Community 4 - "Vercel API Handlers"
-Cohesion: 0.19
-Nodes (18): b64url(), BARBER_PROFILES, fallbackLogin(), fallbackPasswords(), handleChangePassword(), handleLogin(), handler(), isAdmin() (+10 more)
+Cohesion: 0.08
+Nodes (48): b64url(), BARBER_PROFILES, fallbackLogin(), fallbackPasswords(), handleChangePassword(), handleLogin(), handler(), isAdmin() (+40 more)
 
 ### Community 5 - "Cursos.jsx"
-Cohesion: 0.06
-Nodes (33): CAT_COLORS, DashboardResumen(), getSvcIconByName(), localDateKey(), STATUS_DOT, TopSvc(), CATEGORY_META, daysInMonth() (+25 more)
+Cohesion: 0.13
+Nodes (14): Brandmark(), Stat(), AGENDA_SLOTS, buildWeek(), CFG_SECTIONS, ConfigPanel(), Dashboard(), DAY_LABELS (+6 more)
 
 ### Community 6 - "Legacy Static Site (web/app.js)"
 Cohesion: 0.07
 Nodes (27): API Error Handling, Architecture, Backend (Vercel Functions), Build & Deployment, Build for production, Common Tasks, Database (PostgreSQL), Database schema setup (after cloning) (+19 more)
 
 ### Community 7 - "UI Components & Login"
-Cohesion: 0.13
-Nodes (13): FEATURE_CARDS, TESTIMONIALS, WK_BASE, WK_DIAS, WK_ED, WK_MESES, WORKSHOP, WORKSHOP_DATES (+5 more)
+Cohesion: 0.07
+Nodes (25): Aggressive Escalation Triggers, Guidelines, Operating Posture, Part 1 — Findings table (REQUIRED), Part 2 — Verdict (REQUIRED), Remedial Preference Hierarchy, Required Output Format, Reviewing Animations (+17 more)
 
 ### Community 8 - "package.json Config"
 Cohesion: 0.07
-Nodes (26): dependencies, framer-motion, @neondatabase/serverless, react, react-dom, react-router-dom, @vercel/analytics, web-push (+18 more)
+Nodes (26): dependencies, framer-motion, @neondatabase/serverless, react-dom, react-router-dom, @vercel/analytics, @vercel/blob, web-push (+18 more)
 
 ### Community 9 - "iOS Detail Sheets & Module Views"
-Cohesion: 0.09
-Nodes (54): CaseIterable, Codable, Hashable, Identifiable, DashboardFocus, dia, semana, workshop (+46 more)
+Cohesion: 0.16
+Nodes (34): Codable, Hashable, Identifiable, DemoData, Booking, APIEndpointStatus, APIHealth, AvailabilitySlot (+26 more)
 
 ### Community 10 - "Fintoc Checkout & Site Nav"
-Cohesion: 0.23
-Nodes (6): EncuentraEstilo(), Hero(), Reveal(), smoothScroll(), useReveal(), Visagismo()
+Cohesion: 0.17
+Nodes (13): Sparkles(), FACE_SHAPES, GALLERY, GALLERY_CATS, HERO_PHOTOS, u(), CtaBand(), EncuentraEstilo() (+5 more)
 
 ### Community 11 - "Booking Page & Static Data"
 Cohesion: 0.08
 Nodes (25): 2026-06-12 - Base operativa clientes, agenda y panel interno, 2026-06-13 - Rediseño UI para web y componentes responsivos, 2026-06-22 - Marca personal Brunetti (un solo barbero) + módulo Cursos + panel interno solo-Brunetti, 2026-06-24 - Hero Brunetti sin efecto gooey + modo claro pulido en todos los módulos, Archivos modificados, Archivos modificados, Archivos modificados, Archivos principales tocados (+17 more)
 
 ### Community 12 - "iOS Agenda & Reservations Views"
-Cohesion: 0.15
-Nodes (25): Charts, BarberChartMode, ingresos, servicios, BarberDashboardCharts, BookingRow, ClientsView, DayRevenue (+17 more)
+Cohesion: 0.06
+Nodes (56): App, Charts, ColorScheme, BrunettiCutzApp, RootView, AppTab, Date, DashboardView (+48 more)
 
 ### Community 13 - "ExpensesModule.jsx"
-Cohesion: 0.39
-Nodes (7): AnimatedRing(), CountUp(), Donut(), prefersReduced(), ProgressBar(), Sparkline(), useCountUp()
+Cohesion: 0.17
+Nodes (19): react, Bars(), CAT_COLORS, getSvcIconByName(), PeakHours(), STATUS_DOT, TopSvc(), AnimatedRing() (+11 more)
 
 ### Community 14 - "workshop.js"
-Cohesion: 0.38
-Nodes (9): businessDateKey(), DEMO_BOOKINGS, handler(), buildDateRange(), formatCLP(), mapStatusToStage(), notionHeaders(), syncBookingToNotion() (+1 more)
+Cohesion: 0.09
+Nodes (21): 1. Purpose & frequency, 2. Easing & duration, 3. Physicality & origin, 4. Interruptibility, 5. Performance, 6. Accessibility, 7. Cohesion & tokens, 8. Missed opportunities (+13 more)
+
+### Community 15 - "EncuentraEstilo (Style Finder) Page"
+Cohesion: 0.10
+Nodes (20): 10. Gesture design details (the "feel" checklist), 11. Frame-level smoothness, 12. Materials & depth — translucency conveys hierarchy, 13. Multimodal feedback — motion + sound + haptics, 14. Reduced motion & accessibility, 15. Typography — optical sizing, tracking, leading, 16. Design foundations — the eight principles, 17. Process (+12 more)
 
 ### Community 16 - "Auth & Booking Concepts"
 Cohesion: 0.24
 Nodes (16): Admin Key Authentication (shared internal password pattern), Barber Availability Management (barber sets available slots per day), Barber Authentication Flow (username/password, sets active barber session), Dual Authentication System (client auth via phone vs barber/admin auth via username+password), Phone Number as Client Identity (celular = ID de cliente), Manual Slot Blocking (admin blocks time slots per barber per day), TNE Discount (20% for Tarjeta Nacional Estudiantil, non-Bruno services), PIMP STUDIO Logo (JPG, used as brand header/footer image) (+8 more)
 
 ### Community 17 - "ui.jsx"
-Cohesion: 0.09
-Nodes (16): ALL_MODULE_IDS, emptyBarber, MODULES, PERMS, NAV, Brandmark(), Emblem(), Icon() (+8 more)
+Cohesion: 0.11
+Nodes (13): ALL_MODULE_IDS, emptyBarber, MODULES, PERMS, Emblem(), Icon(), ICONS, MobileScreen() (+5 more)
 
 ### Community 18 - "iOS App Intents & Shortcuts"
 Cohesion: 0.15
@@ -213,20 +219,24 @@ Cohesion: 0.11
 Nodes (25): Axis, ButtonRole, CGFloat, BrunettiTheme, EmptyPanel, GlassActionButton, GlassField, GlassFormField (+17 more)
 
 ### Community 20 - "data.js"
-Cohesion: 0.13
-Nodes (19): GlareCard(), ALL_SLOTS, buildWeek(), CAT_LABEL, CLIENTS, DAYS_ES, EXPENSES, isoDate() (+11 more)
+Cohesion: 0.14
+Nodes (18): GlareCard(), ALL_SLOTS, CAT_LABEL, CLIENTS, DAYS_ES, EXPENSES, MONTHS_ES, SERVICE_BARBERS (+10 more)
 
 ### Community 21 - "iOS Booking Sheet & Reminders"
 Cohesion: 0.17
 Nodes (19): ASSETS_DIR, CONTENT_DIR, CORS, fileFromEditId(), fileQueues, handleListAssets(), handleSave(), handleSaveOverride() (+11 more)
 
 ### Community 22 - "BookingsInbox.jsx"
-Cohesion: 0.14
-Nodes (13): BookingsInbox(), FILTER_MAP, FILTERS, initialsOf(), NEXT_STATUS, ResCard(), ResModal(), resolveBarber() (+5 more)
+Cohesion: 0.12
+Nodes (23): BookingsInbox(), CalendarModal(), FILTER_MAP, FILTERS, initialsOf(), NEXT_STATUS, ResCard(), ResModal() (+15 more)
 
 ### Community 23 - "index.html PWA Setup"
 Cohesion: 0.22
 Nodes (9): apple-touch-icon PNG 180 rationale, Blackletter fonts (Pirata One, Manufacturing Consent), format-detection=telephone=no meta rationale, ps_theme_manual / ps_theme localStorage keys, theme-color meta dynamic sync rationale, index.html (entry, meta/PWA/no-flash theme), Hero image LCP preload (bruno-hero.jpg), No-flash theme init script (Santiago timezone based) (+1 more)
+
+### Community 24 - "ModuleFooter.jsx"
+Cohesion: 0.13
+Nodes (14): CaseIterable, DashboardFocus, dia, semana, workshop, Date, String, AppTab (+6 more)
 
 ### Community 25 - "iOS Codable Keys"
 Cohesion: 0.18
@@ -244,9 +254,13 @@ Nodes (3): editor, ROOT, vite
 Cohesion: 0.29
 Nodes (10): Barber / Instructor (PIMP & STUDIOS branded, tattooed, glasses, mic), Barbershop / studio interior with white brick wall, Client seated in barber chair wearing cape, Haircut / styling service in progress, estilo-teaser.jpg (style module teaser image), PIMP & STUDIOS brand logo (on barber shirt), Mood: professional, focused, editorial photography, Ring light (professional studio lighting behind barber) (+2 more)
 
+### Community 30 - "BookingsInbox.jsx"
+Cohesion: 0.11
+Nodes (17): Animation Vocabulary, Easing — how speed changes over an animation, Entrances & Exits — how elements appear and disappear, Examples, Feedback & Interaction — responding to the user's actions, Glossary, Instructions, Looping & Ambient Motion — animations that run on their own (+9 more)
+
 ### Community 32 - "DashboardModel"
-Cohesion: 0.31
-Nodes (13): authHeaders(), disablePush(), enablePush(), isIOS(), isStandalone(), notifyBarberOfBooking(), notifyLocal(), permissionState() (+5 more)
+Cohesion: 0.29
+Nodes (8): EditingContext, OverridesContext, Editable(), styleFromOverride(), EditableText(), loadFileOverrides(), MODULES, OverridesProvider()
 
 ### Community 33 - "ELIJA Agent Knowledge Base"
 Cohesion: 0.22
@@ -260,6 +274,14 @@ Nodes (5): buildCommand, framework, headers, outputDirectory, rewrites
 Cohesion: 0.25
 Nodes (7): Abrir en Xcode, APIs usadas, Brunetti Cutz iOS, Build nativo e IPA, Funciones nativas incluidas, Servidor local, Sesion interna y fallback
 
+### Community 37 - "Proposal Generator Script"
+Cohesion: 0.12
+Nodes (17): scrollToId(), useBrunettiFx(), EditContext, ContainerScroll(), InteractiveSelector(), CARD_IMAGES, CARDS, CAT_TAG (+9 more)
+
+### Community 38 - "CSS Stylesheets"
+Cohesion: 0.18
+Nodes (16): addToCart(), cartCount(), clearCart(), readCart(), removeFromCart(), setQty(), writeCart(), CHECKOUT_ITEMS (+8 more)
+
 ### Community 41 - "DetailSheets.swift"
 Cohesion: 0.38
 Nodes (5): Context, SafariView, URL, SFSafariViewController, UIViewControllerRepresentable
@@ -268,85 +290,121 @@ Nodes (5): Context, SafariView, URL, SFSafariViewController, UIViewControllerRep
 Cohesion: 0.40
 Nodes (4): Decisiones clave (confirmadas con el usuario), Estado / Checklist por fases, Notas de retoma (si se corta), Plan de implementación — Rediseño Brunetti (marca personal Bruno Herrera)
 
-### Community 48 - "Cursos.jsx"
-Cohesion: 0.29
-Nodes (5): Sparkles(), INCLUDE_ICONS, INCLUDES, LESSON_DURATIONS, MODULES
+### Community 51 - "interactive-selector.jsx"
+Cohesion: 0.25
+Nodes (14): Decodable, AvailabilityResponse, BarbersResponse, BookingResponse, BookingsResponse, ClientResponse, ClientsResponse, EmptyResponse (+6 more)
 
 ### Community 52 - "NewBookingModal.jsx"
-Cohesion: 0.22
-Nodes (12): ClientModal(), badgeClass(), GlobalSearch(), DEFAULT_SLOTS, NewBookingModal(), STATUS_OPTIONS, svcIcon(), todayKey() (+4 more)
+Cohesion: 0.33
+Nodes (7): DEFAULT_SLOTS, NewBookingModal(), STATUS_OPTIONS, svcIcon(), todayKey(), NewClientModal(), cleanPhone()
 
 ### Community 53 - "estilo.js"
-Cohesion: 0.33
-Nodes (4): FACE_SHAPES, GALLERY, GALLERY_CATS, HERO_PHOTOS
+Cohesion: 0.29
+Nodes (7): autoTheme(), FloatingThemeToggle(), santiagoHour(), ThemeCtx, ThemeProvider(), ThemeToggle(), useTheme()
 
 ### Community 54 - "clients.js"
-Cohesion: 0.80
-Nodes (4): cleanPhone(), DEMO_CLIENTS, handler(), validateClient()
+Cohesion: 0.22
+Nodes (8): Accessibility, Design Engineering, Initial Response, prefers-reduced-motion, Review Checklist, Review Format (Required), Stagger Animations, Touch device hover states
 
 ### Community 65 - "enrollmentsStore.js"
-Cohesion: 0.70
-Nodes (4): addLocalEnrollment(), mergeEnrollments(), readLocalEnrollments(), writeLocalEnrollments()
+Cohesion: 0.39
+Nodes (8): CATEGORY_META, daysInMonth(), EXPENSE_CATEGORIES, ExpenseModal(), ExpensesModule(), exportExpensesCSV(), metaOf(), monthKey()
 
 ### Community 66 - "bookings.js"
-Cohesion: 0.33
-Nodes (9): formatCLP(), formatDate(), sendBookingConfirmationEmail(), sendViaResend(), sendWorkshopConfirmationEmail(), cleanPhone(), DEMO, handler() (+1 more)
+Cohesion: 0.25
+Nodes (8): Animate enter states with @starting-style, Buttons must feel responsive, Component Building Principles, Make popovers origin-aware, Never animate from scale(0), Tooltips: skip delay on subsequent hovers, Use blur to mask imperfect transitions, Use CSS transitions over keyframes for interruptible UI
 
 ### Community 67 - "expenses.js"
-Cohesion: 0.67
-Nodes (3): DEMO_EXPENSES, handler(), validateExpense()
+Cohesion: 0.33
+Nodes (6): 1. Should this animate at all?, 2. What is the purpose?, 3. What easing should it use?, 4. How fast should it be?, Perceived performance, The Animation Decision Framework
 
 ### Community 68 - "Plan de mejora del Panel Interno (por etapas)"
 Cohesion: 0.17
 Nodes (11): Diagnóstico (estado actual), Etapa 0 — Fundaciones adaptativas (sistema, no parches), Etapa 1 — Agenda (el módulo con más aire muerto), Etapa 2 — Clientes (cards → tabla densa), Etapa 3 — Reservas (inbox operativo), Etapa 4 — Resumen (dashboard ejecutivo), Etapa 5 — Finanzas + Gastos, Etapa 6 — Servicios, Inscripciones, Marketing, Config (+3 more)
 
+### Community 69 - "services.js"
+Cohesion: 0.33
+Nodes (6): clip-path for Animation, Comparison sliders, Hold-to-delete pattern, Image reveals on scroll, Tabs with perfect color transitions, The inset shape
+
+### Community 70 - "api/barbers.js (team/permissions listing)"
+Cohesion: 0.31
+Nodes (13): authHeaders(), disablePush(), enablePush(), isIOS(), isStandalone(), notifyBarberOfBooking(), notifyLocal(), permissionState() (+5 more)
+
 ### Community 71 - "FintocCheckout.jsx"
-Cohesion: 0.14
-Nodes (12): DashboardModel, APIClient, Booking, Date, Double, Int, String, URL (+4 more)
+Cohesion: 0.16
+Nodes (12): DashboardModel, Booking, Double, Int, URL, BookingDraftSheet, ClientSheet, ExpenseSheet (+4 more)
+
+### Community 72 - "lamp.jsx"
+Cohesion: 0.33
+Nodes (6): CSS animations beat JS under load, CSS variables are inheritable, Framer Motion hardware acceleration caveat, Only animate transform and opacity, Performance Rules, Use WAAPI for programmatic CSS animations
+
+### Community 73 - "api/enrollments.js (course/workshop enrollments)"
+Cohesion: 0.44
+Nodes (9): cleanPhone(), flowRequest(), handleCheckout(), handler(), handleReturn(), handleStatus(), handleWebhook(), signParams() (+1 more)
 
 ### Community 74 - "DetailSheets.swift"
-Cohesion: 0.16
-Nodes (16): BookingDraftSheet, BookingSheet, encoded(), PaymentSheet, reminderDate(), scheduleReminder(), StatusChoiceButton, Booking (+8 more)
+Cohesion: 0.12
+Nodes (22): BookingSheet, encoded(), EnrollmentSheet, PaymentSheet, reminderDate(), scheduleReminder(), StatusChoiceButton, Booking (+14 more)
 
 ### Community 75 - "String"
-Cohesion: 0.15
-Nodes (17): exportBookingsCSV(), exportSummary(), FilterChip, MasTile, ProgressRow, SearchField, serviceIcon(), serviceSymbol() (+9 more)
+Cohesion: 0.33
+Nodes (6): Damping at boundaries, Friction instead of hard stops, Gesture and Drag Interactions, Momentum-based dismissal, Multi-touch protection, Pointer capture for drag
 
 ### Community 76 - "SwiftUI"
-Cohesion: 0.22
-Nodes (8): DashboardView, ModuleHost, AppTab, Int, LoginView, Bool, SafariServices, SwiftUI
+Cohesion: 0.40
+Nodes (5): 3D transforms for depth, CSS Transform Mastery, scale() scales children too, transform-origin, translateY with percentages
+
+### Community 77 - "api/register-client.js (public client registration fallback)"
+Cohesion: 0.39
+Nodes (7): DEMO_PRODUCTS, ensureTable(), handleProducts(), toClient(), uploadImage(), handler(), STATIC_SERVICES
 
 ### Community 78 - "Account.jsx"
-Cohesion: 0.32
-Nodes (12): addLocalBooking(), cancelKeyOf(), cancelLocalBooking(), isCancelled(), mergeBookings(), readCancelledKeys(), readLocalBookings(), writeLocalBookings() (+4 more)
+Cohesion: 0.36
+Nodes (11): addLocalBooking(), cancelKeyOf(), cancelLocalBooking(), isCancelled(), mergeBookings(), readCancelledKeys(), readLocalBookings(), writeLocalBookings() (+3 more)
 
 ### Community 79 - "theme.jsx"
-Cohesion: 0.60
-Nodes (5): getWebPush(), handler(), notifyAll(), notifyBarber(), sendDueReminders()
+Cohesion: 0.40
+Nodes (5): Asymmetric enter/exit timing, Cohesion matters, Review your work the next day, The opacity + height combination, The Sonner Principles (Building Loved Components)
+
+### Community 83 - "Spring Animations"
+Cohesion: 0.40
+Nodes (5): Interruptibility advantage, Spring Animations, Spring-based mouse interactions, Spring configuration, When to use springs
+
+### Community 84 - "Core Philosophy"
+Cohesion: 0.50
+Nodes (4): Beauty is leverage, Core Philosophy, Taste is trained, not innate, Unseen details compound
 
 ### Community 85 - "BarberLogin.jsx"
-Cohesion: 0.60
+Cohesion: 0.29
 Nodes (5): BARBERS, BarberLogin(), clearLockout(), getLockout(), setLockout()
 
+### Community 86 - "ADMIN_API_TOKEN env var"
+Cohesion: 0.33
+Nodes (6): Error, APIError, badStatus, invalidURL, missingData, LocalizedError
+
+### Community 87 - "MobileDock.jsx"
+Cohesion: 0.50
+Nodes (4): Debugging Animations, Frame-by-frame inspection, Slow motion testing, Test on real devices
+
 ## Knowledge Gaps
-- **269 isolated node(s):** `Quick Start`, `Frontend (React)`, `Backend (Vercel Functions)`, `Database (PostgreSQL)`, `Build & Deployment` (+264 more)
+- **385 isolated node(s):** `DEMO_PRODUCTS`, `STATIC_SERVICES`, `Abrir en Xcode`, `Servidor local`, `APIs usadas` (+380 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **43 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **31 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `SwiftUI` connect `SwiftUI` to `iOS Data Models`, `iOS Detail Sheets & Module Views`, `DetailSheets.swift`, `iOS Agenda & Reservations Views`, `iOS Design System`?**
-  _High betweenness centrality (0.024) - this node is a cross-community bridge._
-- **Why does `DashboardModel` connect `FintocCheckout.jsx` to `iOS Data Models`, `iOS Detail Sheets & Module Views`, `DetailSheets.swift`, `String`, `SwiftUI`, `iOS Agenda & Reservations Views`?**
+- **Why does `SwiftUI` connect `iOS Agenda & Reservations Views` to `iOS Data Models`, `iOS Detail Sheets & Module Views`, `DetailSheets.swift`, `iOS Design System`?**
   _High betweenness centrality (0.020) - this node is a cross-community bridge._
-- **Why does `Foundation` connect `iOS Data Models` to `iOS API Client`, `iOS App Intents & Shortcuts`, `iOS Detail Sheets & Module Views`?**
+- **Why does `DashboardModel` connect `FintocCheckout.jsx` to `iOS Data Models`, `iOS API Client`, `iOS Detail Sheets & Module Views`, `DetailSheets.swift`, `iOS Agenda & Reservations Views`, `ModuleFooter.jsx`?**
+  _High betweenness centrality (0.016) - this node is a cross-community bridge._
+- **Why does `dependencies` connect `package.json Config` to `ExpensesModule.jsx`?**
   _High betweenness centrality (0.015) - this node is a cross-community bridge._
-- **What connects `Quick Start`, `Frontend (React)`, `Backend (Vercel Functions)` to the rest of the system?**
-  _277 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `DEMO_PRODUCTS`, `STATIC_SERVICES`, `Abrir en Xcode` to the rest of the system?**
+  _392 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `iOS Data Models` be split into smaller, more focused modules?**
-  _Cohesion score 0.07751937984496124 - nodes in this community are weakly interconnected._
-- **Should `iOS API Client` be split into smaller, more focused modules?**
-  _Cohesion score 0.09653092006033183 - nodes in this community are weakly interconnected._
-- **Should `Backend Auth & Project Docs` be split into smaller, more focused modules?**
-  _Cohesion score 0.06280193236714976 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.10984848484848485 - nodes in this community are weakly interconnected._
+- **Should `Workshop Page & Content` be split into smaller, more focused modules?**
+  _Cohesion score 0.05725490196078432 - nodes in this community are weakly interconnected._
+- **Should `Vercel API Handlers` be split into smaller, more focused modules?**
+  _Cohesion score 0.07597895967270601 - nodes in this community are weakly interconnected._

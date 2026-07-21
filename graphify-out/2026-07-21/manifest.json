@@ -15,9 +15,9 @@
     "semantic_hash": ""
   },
   "api/_auth.js": {
-    "mtime": 1782522899.931935,
-    "ast_hash": "843d7fbfc4db0926f1a24fed2db792dd",
-    "semantic_hash": "843d7fbfc4db0926f1a24fed2db792dd"
+    "mtime": 1784593023.5879028,
+    "ast_hash": "b6f7e5823fc864f4f4c5b161e830e0aa",
+    "semantic_hash": ""
   },
   "api/auth-barber.js": {
     "mtime": 1782522899.932178,
@@ -25,28 +25,28 @@
     "semantic_hash": "3f696cc642350720147b1aadc13a3bef"
   },
   "api/auth-login.js": {
-    "mtime": 1781237703.0,
-    "ast_hash": "f0128edc2257ad4d283d39d40e8c6014",
-    "semantic_hash": "f0128edc2257ad4d283d39d40e8c6014"
+    "mtime": 1784592973.999792,
+    "ast_hash": "5c3cdcc719d5fb34ef67abd30a2e28d9",
+    "semantic_hash": ""
   },
   "api/availability.js": {
-    "mtime": 1781239358.0,
-    "ast_hash": "916d4b818cfcdcb55978db480763db24",
-    "semantic_hash": "916d4b818cfcdcb55978db480763db24"
+    "mtime": 1784603720.6544719,
+    "ast_hash": "fbd109a731b0ecb1a7b1880fe9906f8f",
+    "semantic_hash": ""
   },
   "api/barbers.js": {
-    "mtime": 1781238164.0,
-    "ast_hash": "80924df7ecf1f104245ccd92cd78b5cd",
-    "semantic_hash": "80924df7ecf1f104245ccd92cd78b5cd"
+    "mtime": 1784592749.900745,
+    "ast_hash": "1cabe9ed038aa45bbdb14d6fc803a45d",
+    "semantic_hash": ""
   },
   "api/bookings.js": {
-    "mtime": 1784234868.1742454,
-    "ast_hash": "f90d1d58c5e2a110fbcac5b0e19b190c",
+    "mtime": 1784603767.990752,
+    "ast_hash": "fbd379d221225730ab6430e46685d532",
     "semantic_hash": ""
   },
   "api/clients.js": {
-    "mtime": 1783806806.2642732,
-    "ast_hash": "eddc26bccc344ea6ee79533b5899afc0",
+    "mtime": 1784592964.1290843,
+    "ast_hash": "811cf068847666c67ace027720664265",
     "semantic_hash": ""
   },
   "api/enrollments.js": {
@@ -60,8 +60,8 @@
     "semantic_hash": ""
   },
   "api/push.js": {
-    "mtime": 1784237267.8266041,
-    "ast_hash": "834dd4cd22c8b5fefbedf344967a7d57",
+    "mtime": 1784592798.1236744,
+    "ast_hash": "20be0b4e87489f06152930a4b1d110f8",
     "semantic_hash": ""
   },
   "api/register-client.js": {
@@ -70,13 +70,13 @@
     "semantic_hash": "aa2c8ac0c0dbc111671fa1209f170cf3"
   },
   "api/services.js": {
-    "mtime": 1784242110.0559254,
-    "ast_hash": "e65e3ec9c96b957f3a6f53f460afa75c",
+    "mtime": 1784592757.4336839,
+    "ast_hash": "9096cbba8311b476fbf626b4a9d80e92",
     "semantic_hash": ""
   },
   "db/schema.sql": {
-    "mtime": 1784242020.9188247,
-    "ast_hash": "c72762a1b90befa42df467ff10cf0a93",
+    "mtime": 1784592614.4628046,
+    "ast_hash": "edc0cb6c45c678abe325055d3e531146",
     "semantic_hash": ""
   },
   "db/seed.sql": {
@@ -180,9 +180,9 @@
     "semantic_hash": "ef3ba2a81ba19f8ea5ddf625521e96f0"
   },
   "public/sw.js": {
-    "mtime": 1782685632.9323962,
-    "ast_hash": "544fcc7f6c81847758aca7b5a306e7f0",
-    "semantic_hash": "544fcc7f6c81847758aca7b5a306e7f0"
+    "mtime": 1784407056.2989676,
+    "ast_hash": "ad2e914f9bdb77ac7bc2d58f8e18084d",
+    "semantic_hash": ""
   },
   "src/App.jsx": {
     "mtime": 1784242405.6735377,
@@ -190,9 +190,9 @@
     "semantic_hash": ""
   },
   "src/bookingsStore.js": {
-    "mtime": 1782686874.1529999,
-    "ast_hash": "791acf3577f65be3d3ce98eedf7637e2",
-    "semantic_hash": "791acf3577f65be3d3ce98eedf7637e2"
+    "mtime": 1784593220.5573266,
+    "ast_hash": "c39b0f33aa6f9ab2475c4b618d1a9ead",
+    "semantic_hash": ""
   },
   "src/components/BarberModal.jsx": {
     "mtime": 1782686874.166458,
@@ -205,8 +205,8 @@
     "semantic_hash": "b8baf870791352a85cf36d45660fcde1"
   },
   "src/components/BookingsInbox.jsx": {
-    "mtime": 1783916637.0470645,
-    "ast_hash": "8d7c674a724bd00496eb0201b7ee0a90",
+    "mtime": 1784407184.4542658,
+    "ast_hash": "67af505e85d000e77af207bdc2a54b3b",
     "semantic_hash": ""
   },
   "src/components/ClientModal.jsx": {
@@ -215,8 +215,8 @@
     "semantic_hash": "29ad3edc81d0444c32187d7bc47a7e08"
   },
   "src/components/DashboardResumen.jsx": {
-    "mtime": 1783916516.8074489,
-    "ast_hash": "b5182f63db45a9da08ba95b6cd7a1d5c",
+    "mtime": 1784404264.0684054,
+    "ast_hash": "06b11bfe6b606d7c919625f867e999fa",
     "semantic_hash": ""
   },
   "src/components/GlareCard.jsx": {
@@ -295,8 +295,8 @@
     "semantic_hash": "fa09f92bf84f0f879d5f118545f0e4f5"
   },
   "src/pages/Account.jsx": {
-    "mtime": 1783734222.9625564,
-    "ast_hash": "8ab4399a4d95e8af920158be563ea869",
+    "mtime": 1784593256.0389557,
+    "ast_hash": "2952988365ddf1a4fc8e404e25b69706",
     "semantic_hash": ""
   },
   "src/pages/BarberLogin.jsx": {
@@ -305,8 +305,8 @@
     "semantic_hash": "ec9017c0886e63a56a742ab2208a4771"
   },
   "src/pages/Booking.jsx": {
-    "mtime": 1783733158.7204208,
-    "ast_hash": "3b8e769e2ffc3cdf5073dd65f5f8be22",
+    "mtime": 1784603788.626724,
+    "ast_hash": "6210b25ee5c293b16e03d5a57cc09db1",
     "semantic_hash": ""
   },
   "src/pages/Cursos.jsx": {
@@ -315,8 +315,8 @@
     "semantic_hash": ""
   },
   "src/pages/Dashboard.jsx": {
-    "mtime": 1784243345.48998,
-    "ast_hash": "c75f2bc2cf422f0945fe8573ac21046f",
+    "mtime": 1784615642.6870573,
+    "ast_hash": "8b7e08c8a8bee4deb887f200ed740716",
     "semantic_hash": ""
   },
   "src/pages/EncuentraEstilo.jsx": {
@@ -340,9 +340,9 @@
     "semantic_hash": ""
   },
   "src/push.js": {
-    "mtime": 1782686874.1861298,
-    "ast_hash": "f448d37ae7f2220344d2f63852f2f5cb",
-    "semantic_hash": "f448d37ae7f2220344d2f63852f2f5cb"
+    "mtime": 1784592806.228201,
+    "ast_hash": "a22e83c861b0918308b5fbc630f44655",
+    "semantic_hash": ""
   },
   "tailwind.config.js": {
     "mtime": 1782522899.953721,
@@ -1050,8 +1050,8 @@
     "semantic_hash": ""
   },
   "src/components/DashKit.jsx": {
-    "mtime": 1783806900.9036536,
-    "ast_hash": "609f6857a6b46229111aa9666c5d59f2",
+    "mtime": 1784615371.1422691,
+    "ast_hash": "d884712f57afd02283cb1e9a5c444a4f",
     "semantic_hash": ""
   },
   "src/components/ExpensesModule.jsx": {
@@ -1065,8 +1065,8 @@
     "semantic_hash": ""
   },
   "src/components/NewBookingModal.jsx": {
-    "mtime": 1783807098.2986655,
-    "ast_hash": "64cd7ab596eb717f6cc2b94e67dd142d",
+    "mtime": 1784615820.293315,
+    "ast_hash": "a299419e8b970a22e07299cb70af9bcf",
     "semantic_hash": ""
   },
   "src/components/NewClientModal.jsx": {
@@ -1180,8 +1180,8 @@
     "semantic_hash": ""
   },
   "src/components/ui/interactive-selector.jsx": {
-    "mtime": 1783903350.0555863,
-    "ast_hash": "10d4ddc945000bcb57e0acb04171ee84",
+    "mtime": 1784247523.532736,
+    "ast_hash": "091c5e0bd7d95d635a39136a706421df",
     "semantic_hash": ""
   },
   "src/components/ui/sparkles.jsx": {
@@ -1260,8 +1260,8 @@
     "semantic_hash": ""
   },
   "api/flow-payments.js": {
-    "mtime": 1784084571.9492133,
-    "ast_hash": "fe8db56ba085f5863dbc919be11a1a11",
+    "mtime": 1784592702.9726007,
+    "ast_hash": "0fcb552682dccc5a5749735be8e43fcd",
     "semantic_hash": ""
   },
   "src/components/FlowCheckout.jsx": {
@@ -1280,8 +1280,8 @@
     "semantic_hash": ""
   },
   "src/pages/Essentials.jsx": {
-    "mtime": 1784242988.5722682,
-    "ast_hash": "6016c6bf88aa4db37a06bd8dd9418a41",
+    "mtime": 1784247589.0997415,
+    "ast_hash": "7b8766c72d95159da147dd339ac1d7f5",
     "semantic_hash": ""
   },
   "public/assets/products/polera-barber-club-1.png": {
@@ -1297,6 +1297,31 @@
   "public/assets/products/polera-barber-club-3.png": {
     "mtime": 1784242195.7995162,
     "ast_hash": "0dcaa398a24df37ea863eaf462c61995",
+    "semantic_hash": ""
+  },
+  "api/_bookingAudit.js": {
+    "mtime": 1784593399.054046,
+    "ast_hash": "ccffa0080c379ae82bd6ca35a5611d27",
+    "semantic_hash": ""
+  },
+  "api/_rateLimit.js": {
+    "mtime": 1784592878.5089045,
+    "ast_hash": "332903722728b835632461f409a25236",
+    "semantic_hash": ""
+  },
+  "src/components/BookingSyncIssues.jsx": {
+    "mtime": 1784593571.0220354,
+    "ast_hash": "b7ddbf853d2e3016a87ca6e4ef612ef2",
+    "semantic_hash": ""
+  },
+  "api/_slots.js": {
+    "mtime": 1784603708.6545768,
+    "ast_hash": "56a845d9f79847d2bc866ceeac03a8d9",
+    "semantic_hash": ""
+  },
+  "docs/agenda-redesign-plan.md": {
+    "mtime": 1784604759.1028347,
+    "ast_hash": "e0f71947f1a02060692226bf2dc812d5",
     "semantic_hash": ""
   }
 }

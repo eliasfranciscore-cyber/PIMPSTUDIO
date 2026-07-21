@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Brandmark, Icon, Stat } from '../components/ui.jsx'
 import { ThemeProvider, ThemeToggle, useTheme } from '../components/theme.jsx'
@@ -25,6 +26,18 @@ import {
 const AGENDA_SLOTS = ["09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00"]
 const SESSION_TIMEOUT_MS = 30 * 60 * 1000 // 30 min sin actividad → cerrar sesión
 const DAY_LABELS = ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"]
+const DOW_LONG = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
+const MONTH_LONG = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+
+// Duración de un servicio expresada en bloques de 1h (lo que realmente
+// bloquea en la agenda — ver api/_slots.js), redondeando hacia arriba: un
+// servicio de 75 min sigue ocupando 2 horarios seguidos.
+function minToBlocks(min) {
+  return Math.max(1, Math.ceil(Number(min || 60) / 60))
+}
+function blocksToMin(blocks) {
+  return Math.max(1, Number(blocks) || 1) * 60
+}
 
 function getSvcIcon(svc) {
   const n = ((svc.name || '') + ' ' + (svc.cat || '')).toLowerCase()
@@ -99,6 +112,95 @@ function Panel({ title, action, children, style }) {
   )
 }
 
+// Popover de calendario propio de Agenda: sólo dentro de la ventana
+// administrable (semana actual + siguiente) los días son elegibles; el resto
+// se muestran deshabilitados para no sugerir una selección que igual va a
+// rebotar con el toast de "fuera de rango".
+function AgendaDatePicker({ month, year, selectedKey, onPrevMonth, onNextMonth, onPick, reservableKeys }) {
+  const todayKey = isoDate(new Date())
+  const first = new Date(year, month, 1)
+  const startOffset = (first.getDay() + 6) % 7 // semana empieza lunes
+  const daysInMonth = new Date(year, month + 1, 0).getDate()
+  const cells = [...Array(startOffset).fill(null), ...Array.from({ length: daysInMonth }, (_, i) => i + 1)]
+  return (
+    <div className="agenda-cal" role="dialog" aria-label="Elegir fecha">
+      <div className="agenda-cal-head">
+        <button type="button" onClick={onPrevMonth} aria-label="Mes anterior"><Icon name="arrowLeft" size={13} /></button>
+        <span>{MONTH_LONG[month]} {year}</span>
+        <button type="button" onClick={onNextMonth} aria-label="Mes siguiente"><Icon name="arrowRight" size={13} /></button>
+      </div>
+      <div className="agenda-cal-grid">
+        {["L", "M", "M", "J", "V", "S", "D"].map((d, i) => <span key={i} className="agenda-cal-dow">{d}</span>)}
+        {cells.map((d, i) => {
+          if (!d) return <span key={`e${i}`} />
+          const key = isoDate(new Date(year, month, d))
+          const isSel = key === selectedKey
+          const isToday = key === todayKey
+          const isReservable = reservableKeys.has(key)
+          return (
+            <button
+              key={key}
+              type="button"
+              className={`agenda-cal-day ${isSel ? "is-sel" : ""} ${isToday && !isSel ? "is-today" : ""}`}
+              disabled={!isReservable}
+              onClick={() => onPick(key)}
+            >
+              {d}
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+// Modal de detalle de una reserva (click en un slot "booked" o en la lista de
+// Reservas del día). Portal a document.body, mismo patrón que NewBookingModal.
+function BookingDetailModal({ booking, clients, onClose, onConfirm, onCancel }) {
+  useEffect(() => {
+    if (!booking) return
+    const onKey = (e) => { if (e.key === "Escape") onClose() }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [booking, onClose])
+
+  if (!booking) return null
+  const client = clients.find((c) => cleanPhone(c.phone) === cleanPhone(booking.phone))
+  const isRecurring = client && Number(client.visits || 0) > 1
+  const initial = (booking.client || "?").trim().charAt(0).toUpperCase() || "?"
+
+  return createPortal((
+    <div className="psn-modal" role="dialog" aria-modal="true" aria-label="Detalle de la reserva">
+      <button className="psn-scrim" aria-label="Cerrar" onClick={onClose} />
+      <div className="psn-modal-card agenda-detail">
+        <button className="psn-close" onClick={onClose} aria-label="Cerrar"><Icon name="close" size={17} /></button>
+        <span className={`chip ${booking.status === "confirmada" ? "chip-gold" : ""} agenda-detail-status`}>{booking.status}</span>
+        <div className="agenda-detail-client">
+          <span className="agenda-detail-avatar">{initial}</span>
+          <div>
+            <strong>{booking.client}</strong>
+            <span className="agenda-detail-tag">{isRecurring ? `Cliente recurrente · ${client.visits} visitas` : "Cliente nuevo"}</span>
+          </div>
+        </div>
+        <div className="agenda-detail-grid">
+          <div className="agenda-detail-cell"><span>Hora</span><b>{booking.time}</b></div>
+          <div className="agenda-detail-cell"><span>Servicio</span><b>{booking.service}</b></div>
+          <div className="agenda-detail-cell"><span>Fecha</span><b>{booking.date}</b></div>
+          <div className="agenda-detail-cell"><span>Precio</span><b>{CLP(Number(booking.price || 0))}</b></div>
+        </div>
+        <div className="agenda-detail-actions">
+          <button type="button" className="btn btn-gold btn-block" onClick={() => onConfirm(booking)}>
+            <Icon name="check" size={15} /> Confirmar
+          </button>
+          <button type="button" className="btn btn-ghost btn-block agenda-detail-cancel" onClick={() => onCancel(booking)}>
+            Cancelar cita
+          </button>
+        </div>
+      </div>
+    </div>
+  ), document.body)
+}
+
 export default function Dashboard() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -109,6 +211,19 @@ export default function Dashboard() {
   const [availability, setAvailability] = useState({})
   const [agendaBusy, setAgendaBusy] = useState("")
   const [agendaError, setAgendaError] = useState("")
+  // Rediseño Agenda: vista Bloques/Línea, buscador local, date-picker propio,
+  // modal de detalle de reserva, toasts de confirmación y comparativo vs.
+  // semana anterior para los deltas de KPI.
+  const [agendaView, setAgendaView] = useState("grid") // 'grid' | 'timeline'
+  const [agendaQuery, setAgendaQuery] = useState("")
+  const [calOpen, setCalOpen] = useState(false)
+  const [calMonth, setCalMonth] = useState(() => new Date().getMonth())
+  const [calYear, setCalYear] = useState(() => new Date().getFullYear())
+  const [detail, setDetail] = useState(null)
+  const [toasts, setToasts] = useState([])
+  const [prevWeekStats, setPrevWeekStats] = useState(null)
+  const dragRef = useRef({ active: false, mode: null })
+  const calRef = useRef(null)
   const [barber, setBarber] = useState(null)
   const [barbers, setBarbers] = useState(BARBERS.map((item) => ({ ...item, active: true })))
   const [bookings, setBookings] = useState(mergeBookings(TODAY_BOOKINGS.map((item, index) => ({ ...item, id: index + 1, date: isoDate(new Date()) }))))
@@ -348,6 +463,65 @@ export default function Dashboard() {
     if (!barber) return
     loadAgenda()
   }, [barber, agendaBarber, weekOffset])
+
+  // Comparativo liviano vs. la semana anterior (solo para los deltas de KPI
+  // del hero). Si cualquier día falla (API caída → fallback demo), NO se
+  // inventan cifras: se oculta el delta entero.
+  useEffect(() => {
+    if (!barber) return
+    let alive = true
+    const prevDays = buildWeek(weekOffset - 1)
+    Promise.all(prevDays.map((day) =>
+      fetch(`/api/availability?barberId=${agendaBarber}&date=${day.key}&detail=true`)
+        .then((r) => (r.headers.get("content-type")?.includes("application/json") ? r.json() : Promise.reject(new Error("api unavailable"))))
+        .then((data) => (data.slots?.length ? data.slots : null))
+        .catch(() => null)
+    )).then((results) => {
+      if (!alive) return
+      if (results.some((r) => !r)) { setPrevWeekStats(null); return }
+      const stats = results.flat().reduce((acc, s) => {
+        if (s.state === "booked") acc.booked += 1
+        else if (s.state === "free") acc.free += 1
+        else if (s.state === "blocked") acc.blocked += 1
+        return acc
+      }, { booked: 0, free: 0, blocked: 0 })
+      setPrevWeekStats(stats)
+    })
+    return () => { alive = false }
+  }, [barber, agendaBarber, weekOffset])
+
+  // Toasts de confirmación (agenda): auto-dismiss a los 3s.
+  const pushToast = useCallback((icon, msg) => {
+    const id = Date.now() + Math.random()
+    setToasts((t) => [...t, { id, icon, msg }])
+    setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), 3000)
+  }, [])
+
+  // Arrastre para bloquear/habilitar un rango de horarios en la grilla de la
+  // agenda: el mouseup/touchend puede ocurrir fuera de cualquier slot, así
+  // que el listener va en window para terminar el arrastre siempre.
+  useEffect(() => {
+    const up = () => { dragRef.current = { active: false, mode: null } }
+    window.addEventListener("mouseup", up)
+    window.addEventListener("touchend", up)
+    return () => { window.removeEventListener("mouseup", up); window.removeEventListener("touchend", up) }
+  }, [])
+
+  // Cierra el date-picker de Agenda al hacer click/tap fuera o con Escape
+  // (si no, quedaba abierto tapando el dock móvil hasta volver a tocar el botón).
+  useEffect(() => {
+    if (!calOpen) return
+    const onDown = (e) => { if (calRef.current && !calRef.current.contains(e.target)) setCalOpen(false) }
+    const onKey = (e) => { if (e.key === "Escape") setCalOpen(false) }
+    window.addEventListener("mousedown", onDown)
+    window.addEventListener("touchstart", onDown)
+    window.addEventListener("keydown", onKey)
+    return () => {
+      window.removeEventListener("mousedown", onDown)
+      window.removeEventListener("touchstart", onDown)
+      window.removeEventListener("keydown", onKey)
+    }
+  }, [calOpen])
 
   // Recarga manual desde el topbar: en la PWA instalada no hay pull-to-refresh
   // ni recarga de página, así que sin esto la única forma de ver una reserva
@@ -780,6 +954,17 @@ export default function Dashboard() {
     if (!wd.some((d) => d.key === agendaDayKey)) setAgendaDayKey(wd[0].key)
   }
 
+  // Date-picker propio de Agenda: solo las 2 semanas administrables (offset 0
+  // y 1) son elegibles — el cliente no puede reservar más allá de 7 días.
+  const calPrevMonth = () => setCalMonth((m) => { if (m === 0) { setCalYear((y) => y - 1); return 11 } return m - 1 })
+  const calNextMonth = () => setCalMonth((m) => { if (m === 11) { setCalYear((y) => y + 1); return 0 } return m + 1 })
+  const pickCalendarDay = (key) => {
+    setCalOpen(false)
+    if (buildWeek(0).some((d) => d.key === key)) { setWeekOffset(0); setAgendaDayKey(key); return }
+    if (buildWeek(1).some((d) => d.key === key)) { setWeekOffset(1); setAgendaDayKey(key); return }
+    pushToast("📅", "Fecha fuera del rango reservable (7 días)")
+  }
+
   if (!barber) return null
 
   return (
@@ -831,38 +1016,79 @@ export default function Dashboard() {
                 <button type="button" className="btn btn-dark btn-sm" onClick={() => setAgendaError("")}>Cerrar</button>
               </div>
             )}
-            {/* HERO: ocupación del día + KPIs de la semana + próximo slot libre. */}
+
+            {/* Cabecera propia del módulo: el topbar global ya trae título/tema/
+                campana/avatar/buscador general — acá solo va el kicker y un
+                buscador LOCAL de las reservas del día visible. */}
+            <div className="agenda-topline">
+              <span className="agenda-kicker">PANEL INTERNO</span>
+              <div className="agenda-search">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true">
+                  <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.35-4.35" />
+                </svg>
+                <input
+                  className="agenda-search-input"
+                  placeholder="Buscar reserva del día…"
+                  value={agendaQuery}
+                  onChange={(e) => setAgendaQuery(e.target.value)}
+                />
+                {agendaQuery && (
+                  <button type="button" className="agenda-search-clear" onClick={() => setAgendaQuery("")} aria-label="Limpiar búsqueda">
+                    <Icon name="close" size={12} />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* HERO: ocupación del día + KPIs de la semana + próxima cita. */}
             {(() => {
               const daySlots = availability[agendaDayKey] || []
               const bookedDay = daySlots.filter((s) => s.state === "booked").length
               const freeDay = daySlots.filter((s) => s.state === "free").length
               const dayOcc = (bookedDay + freeDay) ? Math.round((bookedDay / (bookedDay + freeDay)) * 100) : 0
-              const todayIso = isoDate(new Date())
-              const now = new Date()
-              const nowHM = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`
-              const nextFreeToday = (availability[todayIso] || []).filter((s) => s.state === "free").map((s) => s.slot).sort().find((slot) => slot >= nowHM)
-              const dayLabel = weekDays.find((d) => d.key === agendaDayKey)?.label || agendaDayKey
+              const [dy, dm, dd] = agendaDayKey.split("-").map(Number)
+              const dateObj = new Date(dy, dm - 1, dd)
+              const longDate = `${DOW_LONG[dateObj.getDay()]} ${dd} de ${MONTH_LONG[dm - 1]}`
               const weekSuffix = weekOffset === 0 ? "esta semana" : "próx. semana"
+              const dayBookingsToday = visibleBookings
+                .filter((b) => b.date === agendaDayKey && b.status !== "cancelada")
+                .sort((a, b) => (a.time || "").localeCompare(b.time || ""))
+              const nextBooking = dayBookingsToday[0]
+              // Nuevos vs recurrentes del día: cruza por teléfono con el
+              // registro de clientes (visits > 1 = recurrente).
+              let newCount = 0, recurringCount = 0
+              dayBookingsToday.forEach((b) => {
+                const c = clients.find((item) => cleanPhone(item.phone) === cleanPhone(b.phone))
+                if (c && Number(c.visits || 0) > 1) recurringCount += 1
+                else newCount += 1
+              })
+              // Deltas vs. la semana anterior: si no hay datos previos fiables
+              // (API caída), no se inventan cifras — se ocultan.
+              const weekDelta = prevWeekStats ? {
+                booked: weekStats.booked - prevWeekStats.booked,
+                free: weekStats.free - prevWeekStats.free,
+                blocked: weekStats.blocked - prevWeekStats.blocked,
+              } : null
               return (
                 <div className="dk-hero">
-                  <div className="dk-hero-grid cols-5 dk-stagger">
+                  <div className="dk-hero-grid cols-6 dk-stagger">
                     <div style={{ display: "flex", alignItems: "center", gap: ".9rem" }}>
-                      <AnimatedRing pct={dayOcc} size={80} label="del día" />
+                      <AnimatedRing pct={dayOcc} size={84} label="del día" />
                       <div>
-                        <h2 className="dk-hero-title">Agenda de Brunetti</h2>
-                        <span className="dk-hero-sub">{dayLabel} · {bookedDay}/{bookedDay + freeDay} horas reservadas</span>
-                        {nextFreeToday && (
-                          <div className="dk-hero-sub" style={{ marginTop: ".25rem", color: "var(--gold-lt)" }}>
-                            <Icon name="clock" size={11} /> Próximo libre hoy: <b>{nextFreeToday}</b>
-                          </div>
-                        )}
+                        <span className="agenda-kicker agenda-kicker-hero">AGENDA DE BRUNETTI</span>
+                        <h2 className="dk-hero-title">{longDate}</h2>
+                        <span className="dk-hero-sub">{bookedDay}/{bookedDay + freeDay} horas reservadas hoy</span>
+                        <span className="agenda-next-chip">
+                          <Icon name="clock" size={11} /> Próximo: {nextBooking ? `${nextBooking.client} · ${nextBooking.time}` : "sin reservas"}
+                        </span>
                       </div>
                     </div>
-                    <KpiTile icon="calendar" label={`Reservados · ${weekSuffix}`} value={weekStats.booked} />
-                    <KpiTile icon="clock" label={`Disponibles · ${weekSuffix}`} value={weekStats.free} suffix="h" color="var(--green, #6fbf86)" />
-                    <KpiTile icon="trend" label={`Bloqueados · ${weekSuffix}`} value={weekStats.blocked} color="var(--red, #d99a8f)" />
+                    <KpiTile icon="calendar" label={`Reservados · ${weekSuffix}`} value={weekStats.booked} delta={weekDelta?.booked} />
+                    <KpiTile icon="clock" label={`Disponibles · ${weekSuffix}`} value={weekStats.free} suffix="h" color="var(--green)" delta={weekDelta?.free} />
+                    <KpiTile icon="trend" label={`Bloqueados · ${weekSuffix}`} value={weekStats.blocked} color="var(--red)" delta={weekDelta?.blocked} />
+                    <KpiTile icon="user" label="Nuevos vs recurrentes" value={newCount} format={(n) => `${n}/${recurringCount}`} sub={`${recurringCount} recurrentes hoy`} />
                     <button className="btn btn-gold" style={{ display: "inline-flex", alignItems: "center", gap: ".5rem", alignSelf: "center" }} onClick={() => setNewBookingOpen(true)}>
-                      <Icon name="calendar" size={16} /> Nueva reserva
+                      <Icon name="plus" size={16} /> Nueva reserva
                     </button>
                   </div>
                 </div>
@@ -882,58 +1108,87 @@ export default function Dashboard() {
                   Semana siguiente
                 </button>
               </div>
-              <div className="agenda-day-scroll">
-                {weekDays.map((d) => {
-                  const isActive = d.key === agendaDayKey
-                  const isToday = d.key === isoDate(new Date())
-                  const [dow, num] = d.label.split(" ")
-                  return (
-                    <button
-                      key={d.key}
-                      type="button"
-                      className={`agenda-day-pill ${isActive ? "is-active" : ""}`}
-                      onClick={() => setAgendaDayKey(d.key)}
-                    >
-                      <span className="agenda-day-pill-dow">{isToday ? "Hoy" : dow}</span>
-                      <span className="agenda-day-pill-num">{num}</span>
-                    </button>
-                  )
-                })}
+              <div className="agenda-day-row">
+                <div className="agenda-day-scroll">
+                  {weekDays.map((d) => {
+                    const isActive = d.key === agendaDayKey
+                    const isToday = d.key === isoDate(new Date())
+                    const hasBookings = (availability[d.key] || []).some((s) => s.state === "booked")
+                    const [dow, num] = d.label.split(" ")
+                    return (
+                      <button
+                        key={d.key}
+                        type="button"
+                        className={`agenda-day-pill ${isActive ? "is-active" : ""}`}
+                        onClick={() => setAgendaDayKey(d.key)}
+                      >
+                        <span className="agenda-day-pill-dow">{isToday ? "Hoy" : dow}</span>
+                        <span className="agenda-day-pill-num">{num}</span>
+                        <span className={`agenda-day-pill-dot ${hasBookings ? "is-on" : ""}`} />
+                      </button>
+                    )
+                  })}
+                </div>
+                <div className="agenda-cal-wrap" ref={calRef}>
+                  <button type="button" className="btn btn-dark btn-sm agenda-cal-btn" onClick={() => setCalOpen((v) => !v)} aria-label="Elegir fecha">
+                    <Icon name="calendar" size={14} />
+                  </button>
+                  {calOpen && (
+                    <AgendaDatePicker
+                      month={calMonth}
+                      year={calYear}
+                      selectedKey={agendaDayKey}
+                      onPrevMonth={calPrevMonth}
+                      onNextMonth={calNextMonth}
+                      onPick={pickCalendarDay}
+                      reservableKeys={new Set([...buildWeek(0), ...buildWeek(1)].map((d) => d.key))}
+                    />
+                  )}
+                </div>
               </div>
               {/* Antes eran 6 botones sueltos (mañana/tarde/día/semana × bloquear/
                   habilitar) todos visibles a la vez. Mañana/tarde ahora son un
                   toggle contextual junto al título de cada periodo (más abajo);
                   acá solo quedan día completo y semana completa, y cada uno es
                   un único botón cuya etiqueta cambia según el estado actual. */}
-              <div className="agenda-bulk-actions">
+              <div className="agenda-bulk-actions agenda-bulk-row">
                 {(() => {
                   const dayFree = (availability[agendaDayKey] || []).filter((s) => s.state === "free").length
                   const dayIsBlocked = dayFree === 0
                   const weekIsBlocked = weekStats.free === 0
                   return (
                     <>
-                      <button type="button" className={`btn btn-sm ${dayIsBlocked ? "btn-gold" : "btn-dark"}`} disabled={!!agendaBusy} onClick={() => bulkAgenda("day", dayIsBlocked ? "enable" : "block")}>
+                      <button type="button" className={`btn btn-sm ${dayIsBlocked ? "btn-gold" : "btn-dark"}`} disabled={!!agendaBusy} onClick={() => { bulkAgenda("day", dayIsBlocked ? "enable" : "block"); pushToast(dayIsBlocked ? "✓" : "✕", dayIsBlocked ? "Día habilitado" : "Día bloqueado") }}>
                         <Icon name={dayIsBlocked ? "check" : "close"} size={13} /> {dayIsBlocked ? "Habilitar" : "Bloquear"} día completo
                       </button>
-                      <button type="button" className={`btn btn-sm ${weekIsBlocked ? "btn-gold" : "btn-dark"}`} disabled={!!agendaBusy} onClick={() => bulkAgenda("week", weekIsBlocked ? "enable" : "block")}>
+                      <button type="button" className={`btn btn-sm ${weekIsBlocked ? "btn-gold" : "btn-dark"}`} disabled={!!agendaBusy} onClick={() => { bulkAgenda("week", weekIsBlocked ? "enable" : "block"); pushToast(weekIsBlocked ? "✓" : "✕", weekIsBlocked ? "Semana habilitada" : "Semana bloqueada") }}>
                         <Icon name={weekIsBlocked ? "check" : "close"} size={13} /> {weekIsBlocked ? "Habilitar" : "Bloquear"} semana completa
                       </button>
                     </>
                   )
                 })()}
+                <span className="agenda-drag-hint">Arrastra sobre las horas para bloquear un rango ⇄</span>
               </div>
             </div>
             <div className="agenda-layout">
               <Panel
                 title={`${(barbers.find((item) => item.id === agendaBarber) || barberById(agendaBarber))?.name || "Barbero"}`}
-                action={<span className="chip chip-gold">{(availability[agendaDayKey] || []).filter((s) => s.state === "free").length} libres</span>}
+                action={(
+                  <div style={{ display: "flex", alignItems: "center", gap: ".5rem", flexWrap: "wrap", justifyContent: "flex-end" }}>
+                    <span className="chip chip-gold">{(availability[agendaDayKey] || []).filter((s) => s.state === "free").length} libres</span>
+                    <div className="agenda-view-toggle" role="group" aria-label="Vista de la agenda">
+                      <button type="button" className={`agenda-view-tab ${agendaView === "grid" ? "is-on" : ""}`} onClick={() => setAgendaView("grid")}>▦ Bloques</button>
+                      <button type="button" className={`agenda-view-tab ${agendaView === "timeline" ? "is-on" : ""}`} onClick={() => setAgendaView("timeline")}>☰ Línea</button>
+                    </div>
+                  </div>
+                )}
               >
                 <div className="agenda-legend">
                   <span><i className="free" /> Atiende</span>
                   <span><i className="blocked" /> Bloqueado</span>
                   <span><i className="booked" /> Reservado</span>
                 </div>
-                {["MAÑANA", "TARDE"].map((label) => {
+                {agendaView === "grid" && ["MAÑANA", "TARDE"].map((label) => {
                   const slots = AGENDA_SLOTS.filter((t) => label === "MAÑANA" ? Number(t.slice(0, 2)) < 12 : Number(t.slice(0, 2)) >= 12)
                   const periodStates = slots.map((t) => (availability[agendaDayKey] || []).find((item) => item.slot === t))
                   const periodIsBlocked = periodStates.every((s) => s?.state !== "free")
@@ -945,7 +1200,7 @@ export default function Dashboard() {
                           type="button"
                           className={`agenda-period-toggle ${periodIsBlocked ? "is-blocked" : ""}`}
                           disabled={!!agendaBusy}
-                          onClick={() => bulkAgenda(label === "MAÑANA" ? "morning" : "afternoon", periodIsBlocked ? "enable" : "block")}
+                          onClick={() => { bulkAgenda(label === "MAÑANA" ? "morning" : "afternoon", periodIsBlocked ? "enable" : "block"); pushToast(periodIsBlocked ? "✓" : "✕", `${label === "MAÑANA" ? "Mañana" : "Tarde"} ${periodIsBlocked ? "habilitada" : "bloqueada"}`) }}
                         >
                           {periodIsBlocked ? "Habilitar" : "Bloquear"}
                         </button>
@@ -956,15 +1211,35 @@ export default function Dashboard() {
                           const state = slotInfo?.state || (slotInfo?.available === false ? "blocked" : "free")
                           const busy = agendaBusy === `${agendaDayKey}-${t}`
                           const bk = state === "booked" ? visibleBookings.find((b) => b.date === agendaDayKey && b.time === t && b.status !== "cancelada") : null
+                          const tag = state === "booked" ? "Reservado" : state === "blocked" ? "Bloqueado" : "Libre"
+                          const applyToggle = () => {
+                            toggleSlot(agendaDayKey, t, state)
+                            pushToast(state === "free" ? "✕" : "✓", state === "free" ? `${t} bloqueado` : `${t} habilitado`)
+                          }
                           return (
                             <button
                               key={t}
                               className={`agenda-tile ${state}`}
                               disabled={busy}
-                              onClick={() => state === "booked" ? goToDayInReservas(agendaDayKey) : toggleSlot(agendaDayKey, t, state)}
-                              title={state === "booked" ? (bk ? `${bk.client} · ${bk.service}` : "Reservado — ver en Reservas") : state === "blocked" ? "Tocar para atender" : "Tocar para bloquear"}
+                              onMouseDown={() => {
+                                if (state === "booked") return
+                                dragRef.current = { active: true, mode: state === "free" ? "block" : "enable" }
+                                applyToggle()
+                              }}
+                              onTouchStart={() => {
+                                if (state === "booked") return
+                                dragRef.current = { active: true, mode: state === "free" ? "block" : "enable" }
+                              }}
+                              onMouseEnter={() => {
+                                if (!dragRef.current.active || state === "booked") return
+                                const { mode } = dragRef.current
+                                if ((mode === "block" && state === "free") || (mode === "enable" && state === "blocked")) applyToggle()
+                              }}
+                              onClick={() => { if (state === "booked" && bk) setDetail(bk) }}
+                              title={state === "booked" ? (bk ? `${bk.client} · ${bk.service}` : "Reservado") : state === "blocked" ? "Tocar para atender" : "Tocar para bloquear"}
                             >
-                              {busy ? "..." : t}
+                              <span className="agenda-tile-h">{busy ? "…" : t}</span>
+                              <span className="agenda-tile-tag">{tag}</span>
                             </button>
                           )
                         })}
@@ -972,14 +1247,57 @@ export default function Dashboard() {
                     </div>
                   )
                 })}
+                {agendaView === "timeline" && (
+                  <div className="agenda-timeline">
+                    {AGENDA_SLOTS.map((t) => {
+                      const slotInfo = (availability[agendaDayKey] || []).find((item) => item.slot === t)
+                      const state = slotInfo?.state || (slotInfo?.available === false ? "blocked" : "free")
+                      const bk = state === "booked" ? visibleBookings.find((b) => b.date === agendaDayKey && b.time === t && b.status !== "cancelada") : null
+                      return (
+                        <div
+                          key={t}
+                          className={`agenda-tl-row ${state}`}
+                          onClick={() => { if (state === "booked" && bk) setDetail(bk) }}
+                          role={state === "booked" ? "button" : undefined}
+                        >
+                          <span className="agenda-tl-time">{t}</span>
+                          <span className={`agenda-tl-rail ${state}`} />
+                          <div className="agenda-tl-card">
+                            {state === "booked" ? (
+                              <>
+                                <div className="agenda-tl-info">
+                                  <strong>{bk?.client || "Reservado"}</strong>
+                                  <span>{bk?.service}</span>
+                                </div>
+                                <span className={`agenda-tl-badge ${bk?.status === "confirmada" ? "is-gold" : ""}`}>{bk?.status === "confirmada" ? "confirmada" : "pendiente"}</span>
+                              </>
+                            ) : state === "blocked" ? (
+                              <span className="agenda-tl-empty">Bloqueado</span>
+                            ) : (
+                              <>
+                                <span className="agenda-tl-empty">Disponible</span>
+                                <span className="agenda-tl-badge">Libre</span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
               </Panel>
               <Panel title="Reservas del día" action={<span className="chip">{(weekDays.find((d) => d.key === agendaDayKey)?.label) || ""}</span>}>
                 <div className="agenda-day-panel">
                   {visibleBookings
                     .filter((b) => b.date === agendaDayKey && b.status !== "cancelada")
+                    .filter((b) => {
+                      const q = agendaQuery.trim().toLowerCase()
+                      if (!q) return true
+                      return `${b.client || ""} ${b.service || ""}`.toLowerCase().includes(q)
+                    })
                     .sort((a, b) => (a.time || "").localeCompare(b.time || ""))
                     .map((b) => (
-                      <button key={b.id || `${b.date}-${b.time}-${b.client}`} type="button" className="agenda-day-booking" onClick={() => goToDayInReservas(agendaDayKey)}>
+                      <button key={b.id || `${b.date}-${b.time}-${b.client}`} type="button" className="agenda-day-booking" onClick={() => setDetail(b)}>
                         <span className="adb-time">{b.time}</span>
                         <span className="adb-info">
                           <strong>{b.client}</strong>
@@ -1216,7 +1534,7 @@ export default function Dashboard() {
                     <div className="svc-card-ic"><Icon name={getSvcIcon(svc)} size={20} /></div>
                     <div className="svc-card-name">{svc.name}</div>
                     <div className="svc-card-price">{CLP(svc.price)}</div>
-                    <div className="svc-card-meta"><Icon name="clock" size={11} /> {svc.min} min · {svc.cat}</div>
+                    <div className="svc-card-meta"><Icon name="clock" size={11} /> {svc.min} min · bloquea {minToBlocks(svc.min)}h · {svc.cat}</div>
                     <span className={svc.active === false ? "chip" : "chip chip-gold"} style={{ fontSize: ".68rem" }}>{svc.active === false ? "Oculto" : "Publicado"}</span>
                   </button>
                 ))}
@@ -1241,8 +1559,19 @@ export default function Dashboard() {
                 </div>
                 <div className="psn-newbk-sec" style={{ gridTemplateColumns: "1fr 1fr", display: "grid", gap: ".5rem" }}>
                   <div><label className="dk-field-lbl">Precio</label><input className="input" inputMode="numeric" value={svc.price} onChange={(e) => setServices((items) => items.map((item) => item.id === svc.id ? { ...item, price: e.target.value.replace(/\D/g, "") } : item))} /></div>
-                  <div><label className="dk-field-lbl">Minutos</label><input className="input" inputMode="numeric" value={svc.min} onChange={(e) => setServices((items) => items.map((item) => item.id === svc.id ? { ...item, min: e.target.value.replace(/\D/g, "") } : item))} /></div>
+                  <div>
+                    <label className="dk-field-lbl">Bloquea en agenda</label>
+                    <div style={{ display: "flex", alignItems: "center", gap: ".4rem" }}>
+                      <button type="button" className="chip" style={{ padding: ".3rem .6rem" }}
+                        onClick={() => setServices((items) => items.map((item) => item.id === svc.id ? { ...item, min: String(blocksToMin(minToBlocks(item.min) - 1)) } : item))}
+                        disabled={minToBlocks(svc.min) <= 1}>−</button>
+                      <span style={{ flex: 1, textAlign: "center", fontSize: ".85rem" }}>{minToBlocks(svc.min)} {minToBlocks(svc.min) === 1 ? "bloque" : "bloques"}</span>
+                      <button type="button" className="chip" style={{ padding: ".3rem .6rem" }}
+                        onClick={() => setServices((items) => items.map((item) => item.id === svc.id ? { ...item, min: String(blocksToMin(minToBlocks(item.min) + 1)) } : item))}>+</button>
+                    </div>
+                  </div>
                 </div>
+                <p style={{ margin: 0, fontSize: ".7rem", color: "var(--muted)" }}>1 bloque = 1 hora de agenda. Duración real guardada: {svc.min} min.</p>
                 <div className="psn-confirm-actions" style={{ gridTemplateColumns: admin ? "1fr 1fr 1fr" : "1fr 1fr" }}>
                   <button className={svc.active === false ? "chip" : "chip chip-gold"} onClick={() => saveService({ ...svc, active: svc.active === false })}>{svc.active === false ? "Oculto" : "Publicado"}</button>
                   {admin && (
@@ -1399,8 +1728,34 @@ export default function Dashboard() {
           services={services}
           defaultBarberId={agendaBarber || 6}
           agendaSlots={AGENDA_SLOTS}
-          onCreate={createBooking}
+          onCreate={async (draft) => {
+            const result = await createBooking(draft)
+            if (result?.ok) pushToast("✓", `Reserva de ${draft.client} confirmada`)
+            return result
+          }}
         />
+
+        {/* MODAL DETALLE DE RESERVA (agenda: click en un slot reservado o en la
+            lista de "Reservas del día") */}
+        <BookingDetailModal
+          booking={detail}
+          clients={clients}
+          onClose={() => setDetail(null)}
+          onConfirm={(bk) => { updateBookingStatus(bk, "confirmada"); pushToast("✓", "Cita confirmada"); setDetail(null) }}
+          onCancel={(bk) => { updateBookingStatus(bk, "cancelada"); pushToast("✕", `Cita de ${bk.client} cancelada`); setDetail(null); loadAgenda() }}
+        />
+
+        {/* TOASTS de la agenda */}
+        {toasts.length > 0 && (
+          <div className="agenda-toasts">
+            {toasts.map((t) => (
+              <div key={t.id} className="agenda-toast">
+                <span>{t.icon}</span>
+                <span>{t.msg}</span>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* MODAL NUEVO CLIENTE */}
         <NewClientModal
@@ -1441,7 +1796,17 @@ export default function Dashboard() {
               <div className="admin-form-grid">
                 <input className="input" placeholder="Nombre del servicio" value={serviceDraft.name} onChange={(e) => setServiceDraft({ ...serviceDraft, name: e.target.value })} />
                 <input className="input" placeholder="Precio (CLP)" inputMode="numeric" value={serviceDraft.price} onChange={(e) => setServiceDraft({ ...serviceDraft, price: e.target.value.replace(/\D/g, "") })} />
-                <input className="input" placeholder="Minutos" inputMode="numeric" value={serviceDraft.min} onChange={(e) => setServiceDraft({ ...serviceDraft, min: e.target.value.replace(/\D/g, "") })} />
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: ".5rem", padding: ".55rem .7rem", border: "1px solid var(--hair-2)", borderRadius: 10 }}>
+                  <span style={{ fontSize: ".8rem", color: "var(--muted)" }}>Bloquea en agenda</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: ".4rem" }}>
+                    <button type="button" className="chip" style={{ padding: ".3rem .6rem" }}
+                      onClick={() => setServiceDraft((d) => ({ ...d, min: String(blocksToMin(minToBlocks(d.min) - 1)) }))}
+                      disabled={minToBlocks(serviceDraft.min) <= 1}>−</button>
+                    <span style={{ fontSize: ".85rem", minWidth: 64, textAlign: "center" }}>{minToBlocks(serviceDraft.min)} {minToBlocks(serviceDraft.min) === 1 ? "bloque" : "bloques"}</span>
+                    <button type="button" className="chip" style={{ padding: ".3rem .6rem" }}
+                      onClick={() => setServiceDraft((d) => ({ ...d, min: String(blocksToMin(minToBlocks(d.min) + 1)) }))}>+</button>
+                  </div>
+                </div>
                 <select className="input" value={serviceDraft.cat} onChange={(e) => setServiceDraft({ ...serviceDraft, cat: e.target.value })}>
                   <option value="general">General</option>
                   <option value="premium">Premium</option>
