@@ -1,8 +1,10 @@
 import { neon } from "@neondatabase/serverless"
 import { readSession, requireInternal } from "./_auth.js"
-import { notifyBarber } from "./push.js"
+import { notifyBarber, notifyAll } from "./push.js"
 import { sendBookingConfirmationEmail } from "./_email.js"
 import { syncBookingToNotion, updateNotionBookingStatus } from "./_notion.js"
+import { rateLimit, clientIp } from "./_rateLimit.js"
+import { logBookingAttempt } from "./_bookingAudit.js"
 
 const MIN_CANCEL_NOTICE_HOURS = 10
 const MAX_LEAD_DAYS = 7
@@ -33,7 +35,30 @@ export default async function handler(req, res) {
     const sql = neon(process.env.DATABASE_URL)
 
     if (req.method === "GET") {
-      const { phone, barberId, date } = req.query
+      const { phone, barberId, date, issues } = req.query
+      if (issues) {
+        const session = requireInternal(req, res)
+        if (!session) return
+        // Intentos de reserva rechazados o con error real en los últimos 7
+        // días: la razón por la que hoy no se pudo diagnosticar el
+        // incidente que originó esto es que esta información solo vivía en
+        // logs efímeros de Vercel. Best-effort: si la tabla aún no existe
+        // (nadie ha fallado nunca), no es un error, solo no hay nada que ver.
+        try {
+          const rows = await sql`
+            SELECT id, phone, barber_id as "barberId", service_id as "serviceId",
+                   booking_date::text as date, booking_time as time, outcome, reason, booking_id as "bookingId",
+                   created_at::text as "createdAt"
+            FROM booking_attempts
+            WHERE outcome IN ('rejected', 'error') AND created_at > NOW() - INTERVAL '7 days'
+            ORDER BY created_at DESC
+            LIMIT 50
+          `
+          return res.json({ ok: true, issues: rows })
+        } catch {
+          return res.json({ ok: true, issues: [] })
+        }
+      }
       if (!phone) {
         const session = requireInternal(req, res)
         if (!session) return
@@ -54,6 +79,11 @@ export default async function handler(req, res) {
         return res.json({ ok: true, bookings: bookings.map((item) => ({ ...item, time: item.time?.slice(0, 5) })) })
       }
       const cleanPhone = String(phone).replace(/\D/g, "")
+      // Consulta pública sin sesión (Account.jsx la llama solo con el
+      // teléfono): sin límite, cualquiera puede probar teléfonos al azar y
+      // ver el historial/precios de otra persona.
+      const allowed = await rateLimit(sql, `bookings-get:${clientIp(req)}`, { max: 30, windowSeconds: 60 })
+      if (!allowed) return res.status(429).json({ ok: false, error: "Demasiadas solicitudes. Intenta de nuevo en un momento." })
       const bookings = await sql`
         SELECT b.id, b.booking_date::text as date, b.booking_time::text as time,
                b.barber_id as "barberId", COALESCE(b.custom_service, s.name) as service, b.status,
@@ -136,9 +166,52 @@ export default async function handler(req, res) {
         return res.json({ ok: true, booking: { ...booking, time: booking.time?.slice(0, 5) } })
       }
 
-      const { phone, barberId, serviceId, date, time } = req.body || {}
+      const { phone, barberId, serviceId, date, time, idempotencyKey } = req.body || {}
       if (!phone || !barberId || !serviceId || !date || !time) {
         return res.status(400).json({ error: "Datos incompletos" })
+      }
+      const canBook = await rateLimit(sql, `bookings-post:${clientIp(req)}`, { max: 8, windowSeconds: 60 })
+      if (!canBook) return res.status(429).json({ error: "Demasiadas reservas seguidas. Espera un momento e intenta de nuevo." })
+
+      // Idempotencia: un doble-tap en "Confirmar" (muy fácil en mobile) o un
+      // reintento de red no debe crear dos reservas para el mismo intento.
+      // El front manda la misma key mientras no cambien barbero/servicio/
+      // fecha/hora; acá la reclamamos de forma atómica antes de escribir nada.
+      if (idempotencyKey) {
+        await sql`
+          CREATE TABLE IF NOT EXISTS booking_idempotency (
+            key        TEXT PRIMARY KEY,
+            booking_id INTEGER,
+            created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+          )
+        `
+        const [claim] = await sql`
+          INSERT INTO booking_idempotency (key) VALUES (${idempotencyKey})
+          ON CONFLICT (key) DO NOTHING
+          RETURNING key
+        `
+        if (!claim) {
+          // Ya existe un intento con esta key: si ya terminó de crear la
+          // reserva, devolvemos esa misma reserva (replay idempotente) en
+          // vez de crear una segunda.
+          const [prior] = await sql`SELECT booking_id, created_at FROM booking_idempotency WHERE key = ${idempotencyKey}`
+          if (prior?.booking_id) {
+            const [existingBooking] = await sql`
+              SELECT id, booking_date as date, booking_time as time, status
+              FROM bookings WHERE id = ${prior.booking_id}
+            `
+            if (existingBooking) return res.json({ ok: true, booking: existingBooking })
+          }
+          // Sin booking_id todavía: o hay otro intento en curso ahora mismo,
+          // o uno anterior falló a mitad de camino y dejó la key huérfana.
+          // Pasados unos segundos asumimos lo segundo y dejamos reintentar
+          // en vez de bloquear la reserva para siempre.
+          const ageMs = prior ? Date.now() - new Date(prior.created_at).getTime() : Infinity
+          if (ageMs < 20_000) {
+            return res.status(409).json({ error: "Esta reserva ya se está procesando. Espera un momento." })
+          }
+          await sql`UPDATE booking_idempotency SET created_at = NOW() WHERE key = ${idempotencyKey}`
+        }
       }
       // El cliente solo puede reservar dentro de los próximos MAX_LEAD_DAYS días
       // (el front ya lo oculta, pero validamos también acá para no depender
@@ -147,7 +220,9 @@ export default async function handler(req, res) {
       const maxDate = new Date()
       maxDate.setDate(maxDate.getDate() + MAX_LEAD_DAYS)
       const maxDateKey = businessDateKey(maxDate)
+      const auditBase = { phone, barberId, serviceId, date, time }
       if (date < todayKey || date > maxDateKey) {
+        await logBookingAttempt(sql, { ...auditBase, outcome: "rejected", reason: "fuera de la ventana de reserva" })
         return res.status(422).json({ error: `Solo puedes reservar dentro de los próximos ${MAX_LEAD_DAYS} días.` })
       }
       // Reservas de hoy requieren al menos MIN_BOOKING_LEAD_MINUTES de anticipación
@@ -155,12 +230,16 @@ export default async function handler(req, res) {
       if (date === todayKey) {
         const [slotH, slotM] = String(time).split(":").map(Number)
         if (slotH * 60 + slotM < businessNowMinutes(new Date()) + MIN_BOOKING_LEAD_MINUTES) {
+          await logBookingAttempt(sql, { ...auditBase, outcome: "rejected", reason: "anticipación insuficiente" })
           return res.status(422).json({ error: `Debes reservar con al menos ${MIN_BOOKING_LEAD_MINUTES} minutos de anticipación.` })
         }
       }
       const cleanPhone = String(phone).replace(/\D/g, "")
       const [user] = await sql`SELECT id FROM users WHERE phone = ${cleanPhone}`
-      if (!user) return res.status(404).json({ error: "Usuario no encontrado" })
+      if (!user) {
+        await logBookingAttempt(sql, { ...auditBase, outcome: "rejected", reason: "usuario no encontrado" })
+        return res.status(404).json({ error: "Usuario no encontrado" })
+      }
 
       // Check availability
       const [existing] = await sql`
@@ -168,13 +247,20 @@ export default async function handler(req, res) {
         WHERE barber_id = ${barberId} AND booking_date = ${date} AND booking_time = ${time}
         AND status NOT IN ('cancelada')
       `
-      if (existing) return res.status(409).json({ error: "Horario no disponible" })
+      if (existing) {
+        await logBookingAttempt(sql, { ...auditBase, outcome: "rejected", reason: "horario no disponible" })
+        return res.status(409).json({ error: "Horario no disponible" })
+      }
 
       const [booking] = await sql`
         INSERT INTO bookings (client_id, barber_id, service_id, booking_date, booking_time, status)
         VALUES (${user.id}, ${barberId}, ${serviceId}, ${date}, ${time}, 'confirmada')
         RETURNING id, booking_date as date, booking_time as time, status
       `
+      if (idempotencyKey) {
+        await sql`UPDATE booking_idempotency SET booking_id = ${booking.id} WHERE key = ${idempotencyKey}`
+      }
+      await logBookingAttempt(sql, { ...auditBase, outcome: "success", bookingId: booking.id })
 
       // Aviso push al barbero + correo de confirmación al cliente. Ninguno
       // de los dos bloquea la respuesta ni la reserva ya creada.
@@ -291,13 +377,45 @@ export default async function handler(req, res) {
   } catch (err) {
     console.error("bookings error:", err)
     if (req.method === "POST") {
-      // Un admin creando una reserva debe ver el error real; el flujo público
-      // conserva el éxito falso (el front tiene fallback local).
-      if (readSession(req)) return res.status(500).json({ ok: false, error: "No se pudo crear la reserva" })
-      return res.json({ ok: true, booking: { id: Date.now(), status: "confirmada" } })
+      // Tanto el panel interno como el flujo público deben ver el error real:
+      // fingir éxito en una escritura fallida deja al cliente creyendo que
+      // tiene una hora reservada cuando en realidad nunca se guardó.
+      // Además avisamos por push: así el barbero se entera por una
+      // notificación en vez de por un cliente reclamando una cita que
+      // nunca quedó agendada (que fue justo el incidente que originó esto).
+      try {
+        const sql = neon(process.env.DATABASE_URL)
+        const b = req.body || {}
+        await logBookingAttempt(sql, {
+          phone: b.phone, barberId: b.barberId, serviceId: b.serviceId, date: b.date, time: b.time,
+          outcome: "error", reason: String(err?.message || err).slice(0, 300),
+        })
+        const canAlert = await rateLimit(sql, "booking-fail-alert", { max: 1, windowSeconds: 120 })
+        if (canAlert) {
+          await notifyAll({
+            title: "⚠️ Reserva no se pudo guardar",
+            body: `Falló una reserva (tel. ${b.phone || "?"}, ${b.date || "?"} ${b.time || ""}). Revisa si el cliente necesita que la agendes a mano.`,
+            url: "/panel?tab=reservas",
+            tag: "booking-fail",
+          })
+        }
+      } catch (alertErr) {
+        console.error("booking fail alert error:", alertErr)
+      }
+      return res.status(500).json({ ok: false, error: "No se pudo crear la reserva. Intenta de nuevo." })
     }
-    if (req.method === "PATCH") return res.json({ ok: true, booking: req.body })
-    if (req.method === "DELETE") return res.json({ ok: true })
+    // PATCH (cambio de estado desde el panel) y DELETE (cancelación del
+    // cliente) tenían el mismo bug de "éxito falso" que POST: si la
+    // escritura real fallaba, igual se le decía ok:true a quien preguntó.
+    // Para PATCH eso corrompe reportes de ingresos (una reserva que no se
+    // marcó "completada" de verdad); para DELETE, el cliente cree que
+    // canceló y el horario le sigue apareciendo tomado a todos los demás.
+    if (req.method === "PATCH") {
+      return res.status(500).json({ ok: false, error: "No se pudo actualizar el estado de la reserva." })
+    }
+    if (req.method === "DELETE") {
+      return res.status(500).json({ error: "No se pudo cancelar la reserva. Intenta de nuevo." })
+    }
     return res.json({ ok: true, bookings: req.query?.phone ? [] : DEMO_BOOKINGS })
   }
 }

@@ -88,8 +88,9 @@ export default async function handler(req, res) {
   } catch (err) {
     console.error("barbers error:", err)
     if (req.method === "GET") return res.json({ ok: true, barbers: STATIC_BARBERS.map((item) => ({ ...item, active: true })) })
-    if (req.method === "POST") return res.json({ ok: true, barber: { id: Date.now(), ...(req.body || {}), active: true } })
-    if (req.method === "PATCH") return res.json({ ok: true, barber: req.body })
+    // POST/PATCH crean o editan un barbero real: fingir éxito aquí deja al
+    // admin creyendo que guardó un barbero (o un permiso) que nunca se
+    // escribió, igual que el bug de reservas.
     return res.status(500).json({ ok: false, error: "No se pudo procesar barberos" })
   }
 }

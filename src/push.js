@@ -109,20 +109,28 @@ export async function enablePush(barber) {
           applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
         })
       }
-      await fetch("/api/push", {
+      const saveRes = await fetch("/api/push", {
         method: "POST",
         headers: authHeaders({ "Content-Type": "application/json" }),
         body: JSON.stringify({ subscription: sub, barberId: barber?.id }),
-      }).catch(() => {})
-      result.subscribed = true
+      }).catch(() => null)
+      // Si el servidor no confirmó, la suscripción del navegador quedó
+      // activa pero sin guardar: el barbero nunca recibiría avisos y no
+      // habría forma de saberlo. No marcar como suscrito en ese caso.
+      if (saveRes?.ok) result.subscribed = true
+      else result.reason = "save-failed"
     } catch (err) {
       console.warn("push subscribe failed:", err)
+      result.reason = "subscribe-failed"
     }
   }
 
-  // Marca local: este dispositivo/usuario tiene push activo.
-  try { localStorage.setItem(`ps_push_enabled_${barber?.id ?? "me"}`, "1") } catch {}
-  result.ok = true
+  // Marca local: este dispositivo/usuario tiene push activo (solo si el
+  // servidor de verdad guardó la suscripción).
+  if (result.subscribed) {
+    try { localStorage.setItem(`ps_push_enabled_${barber?.id ?? "me"}`, "1") } catch {}
+  }
+  result.ok = result.subscribed
   return result
 }
 

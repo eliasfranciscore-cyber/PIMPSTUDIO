@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless"
 import { requireInternal } from "./_auth.js"
+import { rateLimit, clientIp } from "./_rateLimit.js"
 
 const DEMO_CLIENTS = [
   { id: 1, name: "Carlos Rodriguez", phone: "987654321", email: "carlos@ejemplo.com", visits: 4, totalSpent: 68960, lastVisit: "2026-05-22", status: "activo" },
@@ -28,8 +29,14 @@ export default async function handler(req, res) {
     if (req.method === "GET") {
       const phone = cleanPhone(req.query.phone)
       if (phone) {
+        const allowed = await rateLimit(sql, `clients-get:${clientIp(req)}`, { max: 30, windowSeconds: 60 })
+        if (!allowed) return res.status(429).json({ ok: false, error: "Demasiadas solicitudes. Intenta de nuevo en un momento." })
+        // Sin sesión: cualquiera que sepa este teléfono puede pedir esto
+        // (es como funciona el "login" del cliente hoy, sin contraseña).
+        // No devolver el email acá — el front público (Account.jsx) no lo
+        // usa, y es PII que no hace falta exponer sin verificar identidad.
         const [client] = await sql`
-          SELECT u.id, u.name, u.phone, u.email,
+          SELECT u.id, u.name, u.phone,
                  COUNT(b.id)::int as visits,
                  COALESCE(SUM(CASE WHEN b.status = 'completada' THEN COALESCE(b.custom_price, s.price) ELSE 0 END), 0)::int as "totalSpent",
                  MAX(b.booking_date)::text as "lastVisit",

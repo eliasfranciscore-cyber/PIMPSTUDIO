@@ -7,6 +7,11 @@ import crypto from "crypto"
    Configurar en producción: `vercel env add PS_SESSION_SECRET`. */
 const SECRET = process.env.PS_SESSION_SECRET || process.env.ADMIN_API_TOKEN || ""
 const HAS_SECRET = SECRET.length >= 16
+// Los tokens firmados nunca caducaban (se guardaba iat pero nunca se
+// validaba). Un token robado o compartido por error quedaba válido para
+// siempre. 30 días alcanza para uso normal en el celular del barbero
+// (PWA instalada) sin forzar logins frecuentes.
+const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000
 if (!HAS_SECRET && process.env.NODE_ENV === "production") {
   console.error("[_auth] PS_SESSION_SECRET no configurado: las sesiones internas se rechazarán.")
 }
@@ -29,6 +34,7 @@ export function createSession(barber) {
     tier: barber.tier || "general",
     admin: Boolean(barber.admin) || /brunetti|bruno|admin/i.test(`${barber.name || ""} ${barber.code || ""} ${barber.role || ""}`),
     iat: Date.now(),
+    exp: Date.now() + SESSION_TTL_MS,
   }))
   const mac = sign(body)
   if (!mac) return null
@@ -46,6 +52,10 @@ export function readSession(req) {
   try {
     const session = JSON.parse(Buffer.from(body, "base64url").toString("utf8"))
     if (!session?.name) return null
+    // Tokens emitidos antes de agregar `exp` no lo traen: se aceptan sin
+    // caducidad (no queremos desloguear a todo el mundo de golpe al
+    // desplegar esto). Todo login nuevo desde ahora sí expira.
+    if (session.exp && Date.now() > session.exp) return null
     return session
   } catch {
     return null

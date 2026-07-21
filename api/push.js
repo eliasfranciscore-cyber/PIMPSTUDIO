@@ -250,7 +250,13 @@ export default async function handler(req, res) {
     return res.status(405).json({ ok: false, error: "Method not allowed" })
   } catch (err) {
     console.error("push error:", err)
-    // No bloquear la UI por errores de almacenamiento del push.
-    return res.json({ ok: true, degraded: true })
+    // GET (últimas notificaciones para la campana) es de solo lectura: no
+    // bloquear la UI por eso, degradar en silencio está bien.
+    if (req.method === "GET") return res.json({ ok: true, degraded: true, notifications: [] })
+    // POST (registrar suscripción) y DELETE (desactivar) SÍ escriben estado
+    // real: si esto falla y el front cree que quedó "activado", el barbero
+    // deja de recibir avisos de reservas sin saberlo — el mismo bug que la
+    // reserva fantasma, aplicado a las notificaciones push.
+    return res.status(500).json({ ok: false, error: "No se pudo guardar la suscripción push" })
   }
 }

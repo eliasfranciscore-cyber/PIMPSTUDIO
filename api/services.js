@@ -94,9 +94,9 @@ export default async function handler(req, res) {
     if (req.method === "GET") return res.json({ ok: true, services: STATIC_SERVICES.map((service) => ({ ...service, active: true })) })
     const session = requireInternal(req, res, { admin: true })
     if (!session) return
-    if (req.method === "POST") return res.json({ ok: true, service: { id: Date.now(), ...(req.body || {}), active: true } })
-    if (req.method === "PATCH") return res.json({ ok: true, service: req.body })
-    if (req.method === "DELETE") return res.json({ ok: true })
+    // POST/PATCH/DELETE escriben el catálogo real: mismo bug de "éxito
+    // falso" que en reservas — el admin no debe creer que guardó/borró un
+    // servicio si la escritura falló de verdad.
     return res.status(500).json({ ok: false, error: "No se pudo procesar servicios" })
   }
 }

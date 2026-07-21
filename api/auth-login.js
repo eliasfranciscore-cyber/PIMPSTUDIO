@@ -1,4 +1,5 @@
 import { neon } from "@neondatabase/serverless"
+import { rateLimit, clientIp } from "./_rateLimit.js"
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" })
@@ -12,6 +13,11 @@ export default async function handler(req, res) {
   try {
     const sql = neon(process.env.DATABASE_URL)
 
+    // Sin esto, este endpoint es un oráculo de enumeración: probar teléfonos
+    // al azar en modo login revela si están registrados (y su nombre).
+    const allowed = await rateLimit(sql, `auth-login:${clientIp(req)}`, { max: 15, windowSeconds: 300 })
+    if (!allowed) return res.status(429).json({ error: "Demasiados intentos. Intenta de nuevo en unos minutos." })
+
     if (mode === "register") {
       if (!name?.trim()) return res.status(400).json({ error: "Nombre requerido" })
       const [user] = await sql`
@@ -22,7 +28,9 @@ export default async function handler(req, res) {
       `
       return res.json({ ok: true, user })
     } else {
-      const [user] = await sql`SELECT id, phone, name, email FROM users WHERE phone = ${cleanPhone}`
+      // El front (Login.jsx) no lee el email de esta respuesta — no hace
+      // falta devolverlo a quien solo escribió un número de teléfono.
+      const [user] = await sql`SELECT id, phone, name FROM users WHERE phone = ${cleanPhone}`
       if (!user) return res.status(404).json({ error: "Número no registrado. Crea una cuenta primero." })
       return res.json({ ok: true, user })
     }

@@ -242,11 +242,31 @@ async function handleWebhook(req, res) {
         message: 'Pago e inscripción registrados',
       })
     } catch (dbErr) {
-      console.error('[WEBHOOK] Error guardando inscripción:', dbErr?.message)
-      return res.status(200).json({ received: true, paymentId: id, error: 'No se pudo guardar la inscripción' })
+      // El pago YA está confirmado (data.status === 2, plata real movida) pero
+      // no logramos guardar la inscripción. Responder 200 aquí le diría a Flow
+      // "recibido, no reintentes" y el cliente quedaría pagado sin inscripción
+      // y sin ninguna forma de que esto se recupere solo. Respondemos error
+      // real para que Flow reintente el webhook, y avisamos por push para
+      // poder registrar la inscripción a mano si los reintentos no alcanzan.
+      console.error('[WEBHOOK] Error guardando inscripción (pago ya confirmado):', dbErr?.message)
+      try {
+        await notifyAll({
+          title: '⚠️ Pago confirmado sin inscripción',
+          body: `${name} · ${phone} · $${amount} · Flow ${id} — revisar manualmente`,
+          url: '/panel',
+          tag: `inscripcion-error-${id}`,
+        })
+      } catch (nerr) {
+        console.error('[WEBHOOK] notify de error (no bloquea):', nerr?.message)
+      }
+      return res.status(500).json({ received: false, paymentId: id, error: 'No se pudo guardar la inscripción' })
     }
   } catch (err) {
+    // No pudimos ni verificar el estado real del pago contra Flow (getStatus
+    // falló): no sabemos si el cliente pagó. Igual que arriba, un 200 aquí
+    // detendría los reintentos de Flow sobre una notificación que nunca
+    // llegamos a procesar.
     console.error('[WEBHOOK] Error:', err.data || err.message)
-    return res.status(200).json({ received: false, error: err.message })
+    return res.status(500).json({ received: false, error: err.message })
   }
 }

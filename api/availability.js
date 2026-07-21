@@ -75,8 +75,13 @@ export default async function handler(req, res) {
     return res.json({ ok: true, slots })
   } catch (err) {
     console.error("availability error:", err)
-    if (req.method === "POST") return res.json({ ok: true, block: { id: Date.now(), barberId, date, slot, reason } })
-    if (req.method === "DELETE") return res.json({ ok: true })
+    // Bloquear/desbloquear un horario es una acción del panel interno con
+    // sesión: si la escritura real falla, el barbero debe verlo (mismo bug
+    // que "reserva confirmada" pero al revés — un bloqueo que no se guardó
+    // deja el horario abierto sin que nadie lo sepa).
+    if (req.method === "POST" || req.method === "DELETE") {
+      return res.status(500).json({ ok: false, error: "No se pudo guardar el cambio de disponibilidad. Intenta de nuevo." })
+    }
     const isToday = date === businessDateKey(new Date())
     const minMinutes = isToday ? businessNowMinutes(new Date()) + MIN_LEAD_MINUTES : -1
     return res.json({ ok: true, slots: ALL_SLOTS.map(s => ({ slot: s, available: slotMinutes(s) >= minMinutes })) })

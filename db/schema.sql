@@ -55,8 +55,7 @@ CREATE TABLE IF NOT EXISTS bookings (
   status        VARCHAR(50) DEFAULT 'confirmada',
   notes         TEXT,
   created_at    TIMESTAMP   DEFAULT NOW(),
-  updated_at    TIMESTAMP   DEFAULT NOW(),
-  UNIQUE (barber_id, booking_date, booking_time)
+  updated_at    TIMESTAMP   DEFAULT NOW()
 );
 
 -- Para bases existentes (idempotente): reservas manuales del panel pueden
@@ -64,6 +63,19 @@ CREATE TABLE IF NOT EXISTS bookings (
 -- ⚠️ Ejecutar en la consola de Neon ANTES de desplegar la API que los usa.
 ALTER TABLE bookings ADD COLUMN IF NOT EXISTS custom_service VARCHAR(200);
 ALTER TABLE bookings ADD COLUMN IF NOT EXISTS custom_price  INTEGER;
+
+-- Para bases existentes (idempotente): el UNIQUE(barber_id, booking_date,
+-- booking_time) original bloqueaba PARA SIEMPRE cualquier horario que
+-- alguna vez hubiera tenido una reserva cancelada (el INSERT chocaba con el
+-- constraint aunque la reserva vieja estuviera en status 'cancelada', y esa
+-- excepción se colaba silenciosamente por el manejo de errores del endpoint).
+-- Un índice único parcial deja libres los horarios cancelados para
+-- reagendar, y sigue evitando doble reserva en horarios activos.
+-- ⚠️ Ejecutar en la consola de Neon ANTES de desplegar la API que los usa.
+ALTER TABLE bookings DROP CONSTRAINT IF EXISTS bookings_barber_id_booking_date_booking_time_key;
+CREATE UNIQUE INDEX IF NOT EXISTS bookings_slot_unique
+  ON bookings (barber_id, booking_date, booking_time)
+  WHERE status <> 'cancelada';
 
 -- Para bases existentes (idempotente): sincronización con Notion Calendar +
 -- recordatorios push 60min/15min antes de la hora. ⚠️ Ejecutar en la consola

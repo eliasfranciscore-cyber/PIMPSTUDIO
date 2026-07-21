@@ -7,6 +7,7 @@ import { BARBERS, CLIENTS, EXPENSES, SERVICES, TODAY_BOOKINGS, barberById, CLP, 
 import { addLocalBooking, mergeBookings, readLocalBookings } from '../bookingsStore.js'
 import { mergeEnrollments } from '../enrollmentsStore.js'
 import BookingsInbox from '../components/BookingsInbox.jsx'
+import BookingSyncIssues from '../components/BookingSyncIssues.jsx'
 import DashboardResumen from '../components/DashboardResumen.jsx'
 import NewBookingModal from '../components/NewBookingModal.jsx'
 import GlobalSearch from '../components/GlobalSearch.jsx'
@@ -815,7 +816,10 @@ export default function Dashboard() {
 
         {/* RESUMEN */}
         {tab === "resumen" && (
-          <DashboardResumen bookings={bookings} barbers={barbers} expenses={expenses} clients={clients} todaySlots={availability[isoDate(new Date())] || []} onNewBooking={() => setNewBookingOpen(true)} onGoToPending={goToPendingInReservas} />
+          <div style={{ display: "grid", gap: "1.1rem" }}>
+            <BookingSyncIssues />
+            <DashboardResumen bookings={bookings} barbers={barbers} expenses={expenses} clients={clients} todaySlots={availability[isoDate(new Date())] || []} onNewBooking={() => setNewBookingOpen(true)} onGoToPending={goToPendingInReservas} />
+          </div>
         )}
 
         {/* AGENDA */}
