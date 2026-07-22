@@ -1,28 +1,36 @@
 // =============================================================================
-// Servidor de guardado del EDITOR DE TEXTOS (solo local, solo desarrollo).
+// Servidor de guardado del EDITOR VISUAL (solo local, solo desarrollo).
 // -----------------------------------------------------------------------------
-// Recibe cambios desde el modo "Editar" del navegador y los escribe a los JSON
-// de src/data/content/. Cero dependencias: solo node:http / node:fs.
+// Recibe cambios desde el modo "Editar" del navegador. Maneja tres cosas:
+//   1. TEXTO      → escribe strings a los JSON de src/data/content/ (POST /save)
+//   2. OVERRIDES  → posición/tamaño/fuente/src de cada elemento, keyed por editId,
+//                   a los JSON de src/data/overrides/       (POST /save-override)
+//   3. IMÁGENES   → sube archivos a public/assets/uploads/   (POST /upload-image)
+//                   y lista los assets existentes            (GET  /list-assets)
 //
-// Se lanza automáticamente con `npm run edit`. Escucha en http://localhost:4100.
+// Cero dependencias: solo node:http / node:fs. Se lanza con `npm run edit`.
+// Escucha en http://localhost:4101.
 // =============================================================================
 
 import { createServer } from "node:http";
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile, writeFile, readdir, mkdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { dirname, join, resolve } from "node:path";
+import { dirname, join, resolve, extname, basename } from "node:path";
 
-// Puerto distinto al de otros proyectos con el mismo editor (p. ej. 4100) para
-// poder correr varios a la vez sin choques de puerto.
 const PORT = 4101;
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const CONTENT_DIR = join(ROOT, "src", "data", "content");
+const OVERRIDES_DIR = join(ROOT, "src", "data", "overrides");
+const ASSETS_DIR = join(ROOT, "public", "assets");
+const UPLOADS_DIR = join(ASSETS_DIR, "uploads");
 
 // Solo nombres de archivo simples: evita path traversal (../, rutas absolutas…).
 const SAFE_FILE = /^[a-z0-9-]+$/;
+// Extensiones de imagen permitidas para subida.
+const IMAGE_EXT = new Set([".jpg", ".jpeg", ".png", ".webp", ".svg", ".gif", ".avif"]);
+const MAX_UPLOAD_BYTES = 12 * 1024 * 1024; // 12 MB
 
-// Cabeceras CORS: el navegador sirve la web desde :5173 (Vite) y guarda contra :4100.
 const CORS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
@@ -51,10 +59,27 @@ function json(res, status, body) {
   res.end(JSON.stringify(body));
 }
 
-// Cola de escritura por archivo: dos guardados casi simultáneos al MISMO json
-// hacían read→modify→write en paralelo, pisándose entre sí y a veces
-// corrompiendo el archivo. Encolar por ruta de archivo serializa esas
-// escrituras sin frenar guardados de archivos distintos.
+/** Lee el cuerpo de la petición como texto (con tope de tamaño). */
+function readBody(req, maxBytes = MAX_UPLOAD_BYTES + 1024 * 1024) {
+  return new Promise((resolve, reject) => {
+    let raw = "";
+    let bytes = 0;
+    req.on("data", (c) => {
+      bytes += c.length;
+      if (bytes > maxBytes) {
+        reject(new Error("cuerpo demasiado grande"));
+        req.destroy();
+        return;
+      }
+      raw += c;
+    });
+    req.on("end", () => resolve(raw));
+    req.on("error", reject);
+  });
+}
+
+// Cola de escritura por archivo: serializa read→modify→write al MISMO json
+// para no pisarse entre guardados concurrentes.
 const fileQueues = new Map();
 function withFileLock(filePath, task) {
   const run = (fileQueues.get(filePath) || Promise.resolve()).then(task, task);
@@ -62,49 +87,154 @@ function withFileLock(filePath, task) {
   return run;
 }
 
+/** editId = "<file>:<rest>". Devuelve el nombre de archivo validado. */
+function fileFromEditId(editId) {
+  const file = String(editId).split(":")[0];
+  if (!file || !SAFE_FILE.test(file)) throw new Error("editId inválido");
+  return file;
+}
+
+/** Fusiona `patch` en la entrada `editId`; claves con valor null se borran. */
+function mergeOverride(data, editId, patch) {
+  const entry = { ...(data[editId] || {}) };
+  for (const [k, v] of Object.entries(patch)) {
+    if (v === null || v === undefined) delete entry[k];
+    else entry[k] = v;
+  }
+  if (Object.keys(entry).length === 0) delete data[editId];
+  else data[editId] = entry;
+}
+
+// --- Endpoints -------------------------------------------------------------
+
+async function handleSave(req, res) {
+  try {
+    const { file, path, value } = JSON.parse((await readBody(req)) || "{}");
+    if (!file || !SAFE_FILE.test(file)) throw new Error("file inválido");
+    if (typeof value !== "string") throw new Error("value debe ser texto");
+
+    const filePath = join(CONTENT_DIR, `${file}.json`);
+    if (!existsSync(filePath)) throw new Error(`no existe ${file}.json`);
+
+    await withFileLock(filePath, async () => {
+      const data = JSON.parse(await readFile(filePath, "utf8"));
+      setDeep(data, path, value);
+      await writeFile(filePath, JSON.stringify(data, null, 2) + "\n", "utf8");
+    });
+
+    console.log(`  ✓ texto  ${file}.json · ${path}`);
+    json(res, 200, { ok: true });
+  } catch (err) {
+    console.error(`  ✗ /save falló: ${err.message}`);
+    json(res, 400, { ok: false, error: err.message });
+  }
+}
+
+async function handleSaveOverride(req, res) {
+  try {
+    const { editId, patch } = JSON.parse((await readBody(req)) || "{}");
+    if (!editId || typeof editId !== "string") throw new Error("editId requerido");
+    if (!patch || typeof patch !== "object") throw new Error("patch debe ser objeto");
+
+    const file = fileFromEditId(editId);
+    const filePath = join(OVERRIDES_DIR, `${file}.json`);
+
+    await mkdir(OVERRIDES_DIR, { recursive: true });
+    await withFileLock(filePath, async () => {
+      const data = existsSync(filePath)
+        ? JSON.parse(await readFile(filePath, "utf8"))
+        : {};
+      mergeOverride(data, editId, patch);
+      await writeFile(filePath, JSON.stringify(data, null, 2) + "\n", "utf8");
+    });
+
+    console.log(`  ✓ override  ${file}.json · ${editId} · ${Object.keys(patch).join(",")}`);
+    json(res, 200, { ok: true });
+  } catch (err) {
+    console.error(`  ✗ /save-override falló: ${err.message}`);
+    json(res, 400, { ok: false, error: err.message });
+  }
+}
+
+async function handleUploadImage(req, res) {
+  try {
+    const { name, dataBase64 } = JSON.parse((await readBody(req)) || "{}");
+    if (!name || typeof name !== "string") throw new Error("name requerido");
+    if (!dataBase64 || typeof dataBase64 !== "string") throw new Error("dataBase64 requerido");
+
+    const ext = extname(name).toLowerCase();
+    if (!IMAGE_EXT.has(ext)) throw new Error(`extensión no permitida: ${ext || "(ninguna)"}`);
+
+    // Acepta data URL ("data:image/…;base64,XXXX") o base64 crudo.
+    const b64 = dataBase64.includes(",") ? dataBase64.split(",").pop() : dataBase64;
+    const buf = Buffer.from(b64, "base64");
+    if (buf.length === 0) throw new Error("imagen vacía");
+    if (buf.length > MAX_UPLOAD_BYTES) throw new Error("imagen supera 12 MB");
+
+    // Nombre seguro: slug del nombre base + timestamp para evitar colisiones.
+    const stem = basename(name, ext)
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 48) || "img";
+    const safeName = `${stem}-${Date.now().toString(36)}${ext}`;
+
+    await mkdir(UPLOADS_DIR, { recursive: true });
+    await writeFile(join(UPLOADS_DIR, safeName), buf);
+
+    const url = `/assets/uploads/${safeName}`;
+    console.log(`  ✓ imagen subida  ${url}  (${(buf.length / 1024).toFixed(0)} KB)`);
+    json(res, 200, { ok: true, url });
+  } catch (err) {
+    console.error(`  ✗ /upload-image falló: ${err.message}`);
+    json(res, 400, { ok: false, error: err.message });
+  }
+}
+
+async function handleListAssets(res) {
+  try {
+    const collect = async (dir, prefix) => {
+      if (!existsSync(dir)) return [];
+      const names = await readdir(dir);
+      return names
+        .filter((n) => IMAGE_EXT.has(extname(n).toLowerCase()))
+        .map((n) => `${prefix}/${n}`);
+    };
+    const root = await collect(ASSETS_DIR, "/assets");
+    const uploads = await collect(UPLOADS_DIR, "/assets/uploads");
+    const all = [...root, ...uploads].sort();
+    json(res, 200, { ok: true, assets: all });
+  } catch (err) {
+    json(res, 400, { ok: false, error: err.message });
+  }
+}
+
 const server = createServer(async (req, res) => {
   if (req.method === "OPTIONS") {
     res.writeHead(204, CORS);
     return res.end();
   }
-
-  // Sonda de disponibilidad usada por el botón "Editar".
   if (req.method === "GET" && req.url === "/ping") {
     return json(res, 200, { ok: true });
   }
-
-  if (req.method === "POST" && req.url === "/save") {
-    let raw = "";
-    req.on("data", (c) => (raw += c));
-    req.on("end", async () => {
-      try {
-        const { file, path, value } = JSON.parse(raw || "{}");
-        if (!file || !SAFE_FILE.test(file)) throw new Error("file inválido");
-        if (typeof value !== "string") throw new Error("value debe ser texto");
-
-        const filePath = join(CONTENT_DIR, `${file}.json`);
-        if (!existsSync(filePath)) throw new Error(`no existe ${file}.json`);
-
-        await withFileLock(filePath, async () => {
-          const data = JSON.parse(await readFile(filePath, "utf8"));
-          setDeep(data, path, value);
-          await writeFile(filePath, JSON.stringify(data, null, 2) + "\n", "utf8");
-        });
-
-        console.log(`  ✓ ${file}.json  ·  ${path}`);
-        json(res, 200, { ok: true });
-      } catch (err) {
-        console.error(`  ✗ guardado falló: ${err.message}`);
-        json(res, 400, { ok: false, error: err.message });
-      }
-    });
-    return;
+  if (req.method === "GET" && req.url === "/list-assets") {
+    return handleListAssets(res);
   }
-
+  if (req.method === "POST" && req.url === "/save") {
+    return handleSave(req, res);
+  }
+  if (req.method === "POST" && req.url === "/save-override") {
+    return handleSaveOverride(req, res);
+  }
+  if (req.method === "POST" && req.url === "/upload-image") {
+    return handleUploadImage(req, res);
+  }
   json(res, 404, { ok: false, error: "not found" });
 });
 
 server.listen(PORT, () => {
-  console.log(`\n  📝 Editor de textos escuchando en http://localhost:${PORT}`);
-  console.log(`     Guardando en ${CONTENT_DIR}\n`);
+  console.log(`\n  📝 Editor visual escuchando en http://localhost:${PORT}`);
+  console.log(`     Texto     → ${CONTENT_DIR}`);
+  console.log(`     Overrides → ${OVERRIDES_DIR}`);
+  console.log(`     Uploads   → ${UPLOADS_DIR}\n`);
 });

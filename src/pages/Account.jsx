@@ -2,7 +2,42 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Brandmark, Icon, MobileScreen } from '../components/ui.jsx'
 import { CLIENT_APPTS, barberById, CLP, MONTHS_ES } from '../data.js'
-import { readLocalBookings, cancelLocalBooking, isCancelled } from '../bookingsStore.js'
+import { readLocalBookings, cancelLocalBooking, isCancelled, isOrphanLocalBooking, removeOrphanLocalBooking, markLocalBookingSynced } from '../bookingsStore.js'
+
+/* Reservas locales "huérfanas" (creadas offline, sin id real del backend):
+   reintenta guardarlas de verdad ahora que hay conexión, y si el servidor
+   confirma que ya existen o que ese horario ya no es válido, deja de
+   mostrarlas como si fueran una cita real. Best-effort: sin esto no rompe
+   nada, solo evita que una reserva fantasma quede pegada para siempre. */
+async function reconcileOrphanLocalBookings(serverBookings, phone) {
+  const orphans = readLocalBookings().filter((b) => isOrphanLocalBooking(b) && String(b.phone || "").replace(/\D/g, "") === phone)
+  for (const orphan of orphans) {
+    const existsOnServer = serverBookings.some((sb) =>
+      Number(sb.barberId) === Number(orphan.barberId) && sb.date === orphan.date && sb.time === orphan.time)
+    if (existsOnServer) { removeOrphanLocalBooking(orphan); continue }
+    if (new Date(`${orphan.date}T${orphan.time}`).getTime() < Date.now()) { removeOrphanLocalBooking(orphan); continue }
+    if (!orphan.serviceId) continue // sin servicio no se puede reintentar; se revisa de nuevo en la próxima carga
+    try {
+      const res = await fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          phone, barberId: orphan.barberId, serviceId: orphan.serviceId, date: orphan.date, time: orphan.time,
+          idempotencyKey: `reconcile-${orphan.id}`,
+        }),
+      })
+      if (!res.headers.get("content-type")?.includes("application/json")) continue
+      const data = await res.json().catch(() => ({}))
+      if (res.ok && data?.booking?.id) {
+        markLocalBookingSynced(orphan, data.booking.id)
+      } else if (res.status === 409 || res.status === 422) {
+        // Rechazo definitivo (horario ya tomado / fuera de la ventana permitida): no insistir más.
+        removeOrphanLocalBooking(orphan)
+      }
+      // Otros errores (500, 429, etc.): se deja para reintentar en la próxima carga de la página.
+    } catch { /* sigue sin conexión real: se reintenta en la próxima carga */ }
+  }
+}
 
 // Combina las citas (API/demo) con las reservas locales del cliente para que su
 // reserva recién hecha aparezca de inmediato en "Próxima cita" / historial.
@@ -42,7 +77,14 @@ export default function Account() {
       .catch(() => {})
     fetch("/api/bookings?phone=" + parsed.phone)
       .then(r => r.json())
-      .then(data => { setAppts(withLocalAppts(data.bookings?.length ? data.bookings : CLIENT_APPTS, parsed.phone)) })
+      .then(async (data) => {
+        const serverBookings = data.bookings || []
+        setAppts(withLocalAppts(serverBookings.length ? serverBookings : CLIENT_APPTS, parsed.phone))
+        if (data.ok) {
+          await reconcileOrphanLocalBookings(serverBookings, parsed.phone)
+          setAppts(withLocalAppts(serverBookings.length ? serverBookings : CLIENT_APPTS, parsed.phone))
+        }
+      })
       .catch(() => {})
   }, [])
 

@@ -7,7 +7,9 @@ import { WORKSHOP } from '../data/workshop.js'
 import SiteNav from '../components/SiteNav.jsx'
 import { addLocalEnrollment } from '../enrollmentsStore.js'
 import { Lamp } from '../components/ui/lamp.jsx'
+import { Sparkles } from '../components/ui/sparkles.jsx'
 import { EditableText } from '../components/edit/EditableText.jsx'
+import { Editable } from '../components/edit/Editable.jsx'
 import WKC from '../data/content/workshop.json'
 import '../styles/workshop.css'
 
@@ -68,12 +70,17 @@ function Reveal({ children, className = "", style, as = "div" }) {
   );
 }
 
-/* Imagen B/N con fallback a placeholder si falla la carga */
-function Bw({ src, alt, label = "Foto", className = "", innerClass = "" }) {
+/* Imagen B/N con fallback a placeholder si falla la carga.
+   Con `editId` la imagen es editable (mover/redimensionar/reemplazar) desde el
+   editor visual; sin él, se renderiza plana como antes. */
+function Bw({ src, alt, label = "Foto", className = "", innerClass = "", editId }) {
   const [failed, setFailed] = useState(false);
+  const imgProps = { src, alt, loading: "lazy", onError: () => setFailed(true), className: innerClass };
   return (
     <div className={`wks-img ${className} ${failed ? "is-failed" : ""}`} data-label={label}>
-      {!failed && <img src={src} alt={alt} loading="lazy" onError={() => setFailed(true)} className={innerClass} />}
+      {!failed && (editId
+        ? <Editable as="img" editId={editId} {...imgProps} />
+        : <img {...imgProps} />)}
     </div>
   );
 }
@@ -132,9 +139,9 @@ function VideoShowcase() {
   if (!WK.video) return null;
   return (
     <section className="wks-section wks-vsl">
-      <Lamp className="bru-lamp--sec" />
       <div className="wks-container">
         <Reveal className="wks-head">
+          <Lamp className="bru-lamp--sec" />
           <span className="wks-eyebrow"><EditableText file="workshop" path="video.eyebrow">{WKC.video.eyebrow}</EditableText></span>
           <h2 className="wks-h2"><EditableText file="workshop" path="video.title" as="span">{WKC.video.title}</EditableText></h2>
           <hr className="wks-rule" />
@@ -196,13 +203,16 @@ function Hero({ onReserve }) {
   return (
     <section className="wks-hero" id="top">
       <div className={`wks-hero-media ${failed ? "is-failed" : ""}`}>
-        {!failed && <img src={WK.photos.hero} alt="Barbería premium" onError={() => setFailed(true)} />}
+        {!failed && <Editable as="img" editId="workshop:hero" src={WK.photos.hero} alt="Barbería premium" onError={() => setFailed(true)} />}
       </div>
       <div className="wks-hero-overlay" />
       <div className="wks-hero-inner">
         <div className="wks-container wks-hero-grid">
-          <div>
-            <img className="wks-hero-logo" src="/assets/ascension-logo.webp" alt="ASCENSIÓN" />
+          <div className="wks-hero-text">
+            <Editable as="img" editId="workshop:logo" className="wks-hero-logo" src="/assets/ascension-logo.webp" alt="ASCENSIÓN" />
+            <div className="wks-hero-figwrap" aria-hidden="true">
+              <Editable as="img" editId="workshop:heroCutout" src="/assets/ascension-hero-cutout.webp" alt="" />
+            </div>
             <div className="wks-hero-kicker">
               <span className="wks-chip"><Icon name="scissors" size={13} /> Edición barbería premium</span>
               <span className="wks-eyebrow"><EditableText file="workshop" path="meta.kicker">{WKC.meta.kicker}</EditableText></span>
@@ -261,7 +271,7 @@ function Transform() {
           {WK.transform.map((c, i) => (
             <Reveal key={c.n} className="wks-tcard" style={{ transitionDelay: `${i * 0.08}s` }}>
               <span className="wks-tcard-num">{c.n}</span>
-              <Bw src={WK.photos[c.photo]} alt={c.title} label={c.title} />
+              <Bw src={WK.photos[c.photo]} alt={c.title} label={c.title} editId={`workshop:card:${c.photo}`} />
               <div className="wks-tcard-body">
                 <h3><EditableText file="workshop" path={`transform.cards.${i}.title`} as="span">{WKC.transform.cards[i].title}</EditableText></h3>
                 <p><EditableText file="workshop" path={`transform.cards.${i}.body`} as="span">{WKC.transform.cards[i].body}</EditableText></p>
@@ -308,14 +318,14 @@ function FeatureRow({ data, contentKey, reversed }) {
   const c = WKC[contentKey]
   return (
     <section className="wks-section">
-      <Lamp className="bru-lamp--sec" />
       <div className="wks-container">
         <Reveal className={`wks-feature ${reversed ? "is-rev" : ""}`}>
           <div className="wks-feature-media">
-            <Bw src={WK.photos[data.photo]} alt={c.title} label={c.eyebrow} />
+            <Bw src={WK.photos[data.photo]} alt={c.title} label={c.eyebrow} editId={`workshop:feat:${data.photo}`} />
             <span className="wks-chip wks-feature-tag"><Icon name="bolt" size={12} /> En vivo</span>
           </div>
           <div className="wks-feature-body">
+            <Lamp className="bru-lamp--sec" />
             <span className="wks-eyebrow"><EditableText file="workshop" path={`${contentKey}.eyebrow`}>{c.eyebrow}</EditableText></span>
             <h2 className="wks-h2" style={{ fontSize: "clamp(1.7rem,3.4vw,2.6rem)" }}><EditableText file="workshop" path={`${contentKey}.title`} as="span">{c.title}</EditableText></h2>
             <ul className="wks-detail-list">
@@ -359,7 +369,13 @@ function Programa() {
           </div>
           <div className="wks-mod-panel" key={active}>
             <div className="wks-mod-panel-media wks-fade-key">
-              <Bw src={WK.photos[mod.photo]} alt={mod.title} label={mod.title} />
+              {mod.video ? (
+                <div className="wks-img" data-label={mod.title}>
+                  <video src={mod.video} poster={mod.poster} autoPlay muted loop playsInline preload="metadata" />
+                </div>
+              ) : (
+                <Bw src={WK.photos[mod.photo]} alt={mod.title} label={mod.title} editId={`workshop:mod:${mod.photo}`} />
+              )}
             </div>
             <div className="wks-mod-panel-body wks-fade-key">
               <span className="wks-eyebrow">{mod.n}</span>
@@ -392,7 +408,7 @@ function Cronograma() {
         </Reveal>
         <Reveal className="wks-timeline">
           {WK.timeline.map((t, i) => (
-            <div className="wks-tl-row" key={t.time}>
+            <div className="wks-tl-row" key={t.time} style={{ transitionDelay: `${i * 0.06}s` }}>
               <div className="wks-tl-time">{t.time}</div>
               <span className="wks-tl-dot" />
               <div className="wks-tl-main">
@@ -419,7 +435,7 @@ function GiveKit() {
           </div>
           <ul className="wks-give-list">
             {WK.give.map((g, i) => (
-              <li key={g.b}>
+              <li key={g.b} style={{ transitionDelay: `${i * 0.05}s` }}>
                 <span className="ck"><Icon name="check" size={16} /></span>
                 <div><b><EditableText file="workshop" path={`give.items.${i}.b`}>{WKC.give.items[i].b}</EditableText></b><span><EditableText file="workshop" path={`give.items.${i}.s`}>{WKC.give.items[i].s}</EditableText></span></div>
               </li>
@@ -433,7 +449,7 @@ function GiveKit() {
           </div>
           <ul className="wks-give-list">
             {WK.kit.map((g, i) => (
-              <li key={g.b}>
+              <li key={g.b} style={{ transitionDelay: `${i * 0.05}s` }}>
                 <span className="ck"><Icon name="check" size={16} /></span>
                 <div><b><EditableText file="workshop" path={`kit.items.${i}.b`}>{WKC.kit.items[i].b}</EditableText></b><span><EditableText file="workshop" path={`kit.items.${i}.s`}>{WKC.kit.items[i].s}</EditableText></span></div>
               </li>
@@ -455,7 +471,7 @@ function Pricing({ onReserve }) {
   return (
     <section className="wks-section wks-pricing" id="precio">
       <div className={`wks-pricing-bg ${failed ? "is-failed" : ""}`}>
-        {!failed && <img src={WK.photos.pricing} alt="" onError={() => setFailed(true)} />}
+        {!failed && <Editable as="img" editId="workshop:pricingBg" src={WK.photos.pricing} alt="" onError={() => setFailed(true)} />}
       </div>
       <div className="wks-container">
         <div className="wks-pricing-card" ref={ref}>
@@ -604,6 +620,27 @@ function Register({ formRef }) {
 }
 
 /* ============================================================ FAQ */
+/* Mide la altura real de la respuesta (en vez de un max-height fijo) para
+   que el acordeón nunca recorte respuestas largas. */
+function FaqItem({ i, f, isOpen, onToggle }) {
+  const pRef = useRef(null);
+  const [h, setH] = useState(0);
+  useEffect(() => {
+    if (pRef.current) setH(pRef.current.scrollHeight);
+  }, [isOpen, f.a]);
+  return (
+    <div className={`wks-faq-item ${isOpen ? "is-open" : ""}`}>
+      <button className="wks-faq-q" onClick={onToggle}>
+        <EditableText file="workshop" path={`faq.items.${i}.q`} as="span">{f.q}</EditableText>
+        <span className="pm"><Icon name="plus" size={14} /></span>
+      </button>
+      <div className="wks-faq-a" style={{ maxHeight: isOpen ? `${h}px` : 0 }}>
+        <p ref={pRef}><EditableText file="workshop" path={`faq.items.${i}.a`} as="span">{f.a}</EditableText></p>
+      </div>
+    </div>
+  );
+}
+
 function Faq() {
   const [open, setOpen] = useState(0);
   return (
@@ -616,15 +653,7 @@ function Faq() {
         </Reveal>
         <div className="wks-faq">
           {WKC.faq.items.map((f, i) => (
-            <div key={i} className={`wks-faq-item ${open === i ? "is-open" : ""}`}>
-              <button className="wks-faq-q" onClick={() => setOpen(open === i ? -1 : i)}>
-                <EditableText file="workshop" path={`faq.items.${i}.q`} as="span">{f.q}</EditableText>
-                <span className="pm"><Icon name="plus" size={14} /></span>
-              </button>
-              <div className="wks-faq-a" style={{ maxHeight: open === i ? "240px" : 0 }}>
-                <p><EditableText file="workshop" path={`faq.items.${i}.a`} as="span">{f.a}</EditableText></p>
-              </div>
-            </div>
+            <FaqItem key={i} i={i} f={f} isOpen={open === i} onToggle={() => setOpen(open === i ? -1 : i)} />
           ))}
         </div>
       </div>
@@ -647,7 +676,7 @@ function Footer({ onReserve }) {
       <div className="wks-footer-wide">
         <div className="wks-footer-cols">
           <div className="wks-footer-brand">
-            <span className="mfooter-wordmark" aria-label="Brunetti Cutz">Brunetti Cutz</span>
+            <img className="mfooter-wordmark" src="/assets/brunetti-workshop-wordmark.webp" alt="Brunetticutz" />
             <p className="wks-footer-tag">
               <EditableText file="workshop" path="footer.tagline" as="span">{WKC.footer.tagline}</EditableText>
             </p>
@@ -707,18 +736,23 @@ export default function Workshop() {
       <div className="wks-shell">
         <SiteNav />
         <Hero onReserve={reserve} />
-        <Transform />
-        <QuoteBlock />
-        <FeatureRow data={WK.experiencia} contentKey="experiencia" />
-        <FeatureRow data={WK.asesoria} contentKey="asesoria" reversed />
-        <VideoShowcase />
-        <Programa />
-        <Cronograma />
-        <GiveKit />
-        <Pricing onReserve={reserve} />
-        <Register formRef={formRef} />
-        <Faq />
-        <Footer onReserve={reserve} />
+        {/* Fondo de partículas moradas para todo el cuerpo del workshop (el hero
+            queda fuera, igual que en Home). Color a juego con la lámpara morada. */}
+        <div className="bru-sparkles-zone">
+          <Sparkles className="bru-sparkles--bg" color="180, 131, 243" />
+          <Transform />
+          <QuoteBlock />
+          <FeatureRow data={WK.experiencia} contentKey="experiencia" />
+          <FeatureRow data={WK.asesoria} contentKey="asesoria" reversed />
+          <VideoShowcase />
+          <Programa />
+          <Cronograma />
+          <GiveKit />
+          <Pricing onReserve={reserve} />
+          <Register formRef={formRef} />
+          <Faq />
+          <Footer onReserve={reserve} />
+        </div>
       </div>
     </div>
   );

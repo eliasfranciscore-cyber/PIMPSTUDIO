@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless"
 import { requireInternal } from "./_auth.js"
+import { handleProducts } from "./_products.js"
 
 const STATIC_SERVICES = [
   { id: 5,  name: "Asesoría de corte",              price: 24990, min: 90,  cat: "general",  tne: true,  desc: "Consulta profesional para encontrar tu estilo ideal." },
@@ -16,6 +17,10 @@ const STATIC_SERVICES = [
 ]
 
 export default async function handler(req, res) {
+  // El catálogo de productos ("Essentials") vive en su propio módulo pero
+  // reusa esta función serverless — Vercel Hobby tope 12 funciones.
+  if (req.query.scope === "shop") return handleProducts(req, res)
+
   try {
     const sql = neon(process.env.DATABASE_URL)
 
@@ -65,14 +70,33 @@ export default async function handler(req, res) {
       return res.json({ ok: true, service })
     }
 
+    if (req.method === "DELETE") {
+      const id = Number(req.query.id || (req.body || {}).id)
+      if (!id) return res.status(400).json({ ok: false, error: "id requerido" })
+      // Materializa nombre/precio en las reservas históricas antes de borrar:
+      // el FK bookings.service_id no tiene ON DELETE y no queremos perder el
+      // historial (COALESCE respeta un custom_price ya congelado).
+      await sql`
+        UPDATE bookings SET
+          custom_service = COALESCE(bookings.custom_service, s.name),
+          custom_price = COALESCE(bookings.custom_price, s.price),
+          service_id = NULL
+        FROM services s
+        WHERE bookings.service_id = ${id} AND s.id = ${id}
+      `
+      await sql`DELETE FROM services WHERE id = ${id}`
+      return res.json({ ok: true })
+    }
+
     return res.status(405).json({ error: "Method not allowed" })
   } catch (err) {
     console.error("services error:", err)
     if (req.method === "GET") return res.json({ ok: true, services: STATIC_SERVICES.map((service) => ({ ...service, active: true })) })
     const session = requireInternal(req, res, { admin: true })
     if (!session) return
-    if (req.method === "POST") return res.json({ ok: true, service: { id: Date.now(), ...(req.body || {}), active: true } })
-    if (req.method === "PATCH") return res.json({ ok: true, service: req.body })
+    // POST/PATCH/DELETE escriben el catálogo real: mismo bug de "éxito
+    // falso" que en reservas — el admin no debe creer que guardó/borró un
+    // servicio si la escritura falló de verdad.
     return res.status(500).json({ ok: false, error: "No se pudo procesar servicios" })
   }
 }

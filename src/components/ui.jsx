@@ -2,20 +2,20 @@ import React, { useState, useEffect, useRef } from 'react'
 
 export function Emblem({ size = 46 }) {
   return (
-    <span
+    <img
       className="pimp-mark"
-      style={{ width: size, height: size }}
-      aria-label="Brunetti"
-      role="img"
+      src="/assets/brunetti-hero-wordmark.webp"
+      alt="Brunetticutz"
+      style={{ height: size }}
     />
   )
 }
 
-export function Brandmark({ size = 44, sub = "Barber Studio", label = "BRUNETTI", onClick }) {
+export function Brandmark({ size = 44, sub = "Barber Studio", onClick }) {
   return (
     <div className="brandmark" onClick={onClick} style={{ cursor: onClick ? "pointer" : "default" }}>
       <Emblem size={size} />
-      <span className="wordmark">{label}<small>{sub}</small></span>
+      {sub && <small className="brandmark-sub">{sub}</small>}
     </div>
   )
 }
@@ -46,6 +46,10 @@ export const ICONS = {
   key: "M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4",
   instagram: "M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zM12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zM17.5 6.5h.01",
   refresh: "M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15",
+  cart: "M6 7V6a6 6 0 0 1 12 0v1M3.5 7h17l-1.2 12.1a2 2 0 0 1-2 1.9H6.7a2 2 0 0 1-2-1.9L3.5 7z",
+  plus: "M12 5v14M5 12h14",
+  minus: "M5 12h14",
+  image: "M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zM8 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM3 16l5-5 4 4 3-3 6 6",
 }
 
 export function Icon({ name, size = 20, stroke = 1.6, color = "currentColor", style }) {
@@ -88,7 +92,7 @@ export function Stat({ icon, label, value, delta, suffix, accent }) {
         <span style={{ fontSize: ".66rem", letterSpacing: ".12em", textTransform: "uppercase", color: "var(--muted)", fontFamily: "var(--font-display)", minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{label}</span>
         <span style={{ color: accent ? "var(--gold)" : "var(--muted)", flexShrink: 0, display: "inline-flex" }}><Icon name={icon} size={17} /></span>
       </div>
-      <div style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.35rem, 5vw, 1.85rem)", fontWeight: 600, letterSpacing: "-.01em", color: accent ? "var(--gold)" : "var(--ink)", minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+      <div style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.35rem, 5vw, 1.85rem)", fontWeight: 600, letterSpacing: "-.01em", fontVariantNumeric: "tabular-nums", color: accent ? "var(--gold)" : "var(--ink)", minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
         {value}{suffix && <span style={{ fontSize: "1rem", color: "var(--muted)", marginLeft: ".15em" }}>{suffix}</span>}
       </div>
       {delta != null && (

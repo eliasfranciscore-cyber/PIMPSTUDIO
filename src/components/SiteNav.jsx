@@ -20,6 +20,7 @@ const NAV = [
   ["style",     "Tu estilo"],
   ["cursos",    "Cursos"],
   ["workshop",  "Workshop"],
+  ["essentials","Essentials"],
   ["contacto",  "Contacto"],
 ]
 
@@ -30,6 +31,7 @@ export default function SiteNav({ onSection, scrolled: scrolledProp }) {
   const isWorkshop = location.pathname === "/workshop"
   const isCursos = location.pathname === "/cursos"
   const isStyle = location.pathname === "/style"
+  const isEssentials = location.pathname === "/essentials"
   const [scrolledWin, setScrolledWin] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -56,6 +58,7 @@ export default function SiteNav({ onSection, scrolled: scrolledProp }) {
     if (id === "workshop") navigate("/workshop")
     else if (id === "cursos") navigate("/cursos")
     else if (id === "style") navigate("/style")
+    else if (id === "essentials") navigate("/essentials")
     else if (id === "inicio") { navigate("/"); window.scrollTo({ top: 0, behavior: "smooth" }) }
     else goSection(id)
   }
@@ -83,8 +86,11 @@ export default function SiteNav({ onSection, scrolled: scrolledProp }) {
           aria-label="Brunetti Cutz — Barber Studio"
           onClick={(e) => { e.preventDefault(); navigate("/") }}
         >
-          <span className="site-nav-brand-word">Brunetti Cutz</span>
-          <span className="site-nav-brand-sub">Barber Studio</span>
+          <img
+            className="site-nav-brand-word"
+            src={isWorkshop ? "/assets/brunetti-workshop-wordmark.webp" : isCursos ? "/assets/brunetti-cursos-wordmark.webp" : "/assets/brunetti-hero-wordmark.webp"}
+            alt="Brunetticutz"
+          />
         </a>
         <nav className="home-nav-links">
           {NAV.map(([id, label]) => (
@@ -92,7 +98,7 @@ export default function SiteNav({ onSection, scrolled: scrolledProp }) {
               key={id}
               onClick={() => handleNav(id)}
               className="nav-link"
-              style={(id === "workshop" && isWorkshop) || (id === "cursos" && isCursos) || (id === "style" && isStyle) ? { color: "var(--gold-lt)" } : undefined}
+              style={(id === "workshop" && isWorkshop) || (id === "cursos" && isCursos) || (id === "style" && isStyle) || (id === "essentials" && isEssentials) ? { color: "var(--gold-lt)" } : undefined}
             >
               {label}
             </button>
@@ -122,7 +128,7 @@ export default function SiteNav({ onSection, scrolled: scrolledProp }) {
             key={id}
             role="menuitem"
             onClick={() => handleNav(id)}
-            className={(id === "workshop" && isWorkshop) || (id === "cursos" && isCursos) || (id === "style" && isStyle) ? "is-active" : ""}
+            className={(id === "workshop" && isWorkshop) || (id === "cursos" && isCursos) || (id === "style" && isStyle) || (id === "essentials" && isEssentials) ? "is-active" : ""}
           >
             {label}
           </button>

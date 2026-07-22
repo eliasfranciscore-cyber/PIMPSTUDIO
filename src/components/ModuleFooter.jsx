@@ -32,6 +32,7 @@ export default function ModuleFooter({
   primaryLabel = 'Reservar hora',
   bottomLeft = '© 2026 Brunetti · Bruno Herrera',
   bottomRight = 'Barbería premium · Visagismo',
+  logoSrc = null,
 }) {
   return (
     <footer className="mfooter">
@@ -39,7 +40,11 @@ export default function ModuleFooter({
         <div className="mfooter-cols">
           <div className="mfooter-brand">
             <div className="mfooter-word">
-              <span className="mfooter-wordmark" aria-label={brandName}>Brunetti Cutz</span>
+              {logoSrc ? (
+                <img className="mfooter-wordmark" src={logoSrc} alt={brandName} />
+              ) : (
+                <span className="mfooter-wordmark" aria-label={brandName}>Brunetti Cutz</span>
+              )}
             </div>
             <p className="mfooter-tag">{tagline}</p>
             {onPrimary && (

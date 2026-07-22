@@ -72,3 +72,30 @@ export function mergeBookings(serverBookings = []) {
   local.forEach((b) => { if (!byKey.has(keyOf(b))) byKey.set(keyOf(b), b) })
   return [...byKey.values()]
 }
+
+/* Una reserva local es "huérfana" cuando nunca recibió un id real del
+   servidor (se creó en modo offline: ver Booking.jsx confirm()). Son las
+   únicas candidatas a reconciliar — las que sí tienen id numérico ya se
+   crearon en el servidor, solo faltaba que este fetch las trajera. */
+export function isOrphanLocalBooking(b) {
+  return typeof b?.id === "string" && b.id.startsWith("local-")
+}
+
+const matchKeyOf = (b) => `${Number(b.barberId)}|${b.date}|${b.time}`
+
+/* La reserva huérfana ya existe de verdad en el servidor (se confirma
+   comparando contra la lista real) o el reintento en background falló sin
+   remedio: no tiene sentido seguir mostrándola como "confirmada". */
+export function removeOrphanLocalBooking(match) {
+  const key = matchKeyOf(match)
+  writeLocalBookings(readLocalBookings().filter((b) => matchKeyOf(b) !== key))
+}
+
+/* El reintento en background sí logró crear la reserva: reemplaza el id
+   local (local-<timestamp>) por el id real para que cancelar/reagendar
+   funcione contra el servidor en vez de contra un id inventado. */
+export function markLocalBookingSynced(match, realId) {
+  const key = matchKeyOf(match)
+  const list = readLocalBookings().map((b) => (matchKeyOf(b) === key ? { ...b, id: realId } : b))
+  writeLocalBookings(list)
+}

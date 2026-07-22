@@ -2,6 +2,24 @@ import { neon } from "@neondatabase/serverless"
 import { requireInternal } from "./_auth.js"
 
 const ALL_SLOTS = ["09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00"]
+const BUSINESS_TZ = "America/Santiago"
+const MIN_LEAD_MINUTES = 55
+
+// Igual que en bookings.js: calculamos "hoy" y la hora actual en la zona
+// horaria del negocio, no en UTC (Vercel corre las funciones en UTC).
+function businessDateKey(date) {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: BUSINESS_TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(date)
+}
+function businessNowMinutes(date) {
+  const parts = new Intl.DateTimeFormat("en-CA", { timeZone: BUSINESS_TZ, hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(date)
+  const h = Number(parts.find((p) => p.type === "hour").value)
+  const m = Number(parts.find((p) => p.type === "minute").value)
+  return h * 60 + m
+}
+function slotMinutes(slot) {
+  const [h, m] = slot.split(":").map(Number)
+  return h * 60 + m
+}
 
 export default async function handler(req, res) {
   const source = req.method === "GET" ? req.query : (req.body || {})
@@ -47,16 +65,25 @@ export default async function handler(req, res) {
     const bookedSet = new Set(booked.map(r => r.slot?.slice(0,5)))
     const blockedSet = new Set(blocked.map(r => r.slot?.slice(0,5)))
     const unavailable = new Set([...bookedSet, ...blockedSet])
+    const isToday = date === businessDateKey(new Date())
+    const minMinutes = isToday ? businessNowMinutes(new Date()) + MIN_LEAD_MINUTES : -1
     const slots = ALL_SLOTS.map(s => ({
       slot: s,
-      available: !unavailable.has(s),
-      state: bookedSet.has(s) ? "booked" : blockedSet.has(s) ? "blocked" : "free",
+      available: !unavailable.has(s) && slotMinutes(s) >= minMinutes,
+      state: bookedSet.has(s) ? "booked" : blockedSet.has(s) ? "blocked" : slotMinutes(s) < minMinutes ? "past" : "free",
     }))
     return res.json({ ok: true, slots })
   } catch (err) {
     console.error("availability error:", err)
-    if (req.method === "POST") return res.json({ ok: true, block: { id: Date.now(), barberId, date, slot, reason } })
-    if (req.method === "DELETE") return res.json({ ok: true })
-    return res.json({ ok: true, slots: ALL_SLOTS.map(s => ({ slot: s, available: true })) })
+    // Bloquear/desbloquear un horario es una acción del panel interno con
+    // sesión: si la escritura real falla, el barbero debe verlo (mismo bug
+    // que "reserva confirmada" pero al revés — un bloqueo que no se guardó
+    // deja el horario abierto sin que nadie lo sepa).
+    if (req.method === "POST" || req.method === "DELETE") {
+      return res.status(500).json({ ok: false, error: "No se pudo guardar el cambio de disponibilidad. Intenta de nuevo." })
+    }
+    const isToday = date === businessDateKey(new Date())
+    const minMinutes = isToday ? businessNowMinutes(new Date()) + MIN_LEAD_MINUTES : -1
+    return res.json({ ok: true, slots: ALL_SLOTS.map(s => ({ slot: s, available: slotMinutes(s) >= minMinutes })) })
   }
 }

@@ -61,6 +61,8 @@ extension View {
     }
 }
 
+// MARK: - Metric Tile
+
 struct MetricTile: View {
     var title: String
     var value: String
@@ -88,6 +90,8 @@ struct MetricTile: View {
     }
 }
 
+// MARK: - Status Badge
+
 struct StatusBadge: View {
     var status: BookingStatus
 
@@ -100,6 +104,8 @@ struct StatusBadge: View {
             .background(status.tint.opacity(0.16), in: Capsule())
     }
 }
+
+// MARK: - Empty Panel
 
 struct EmptyPanel: View {
     var title: String
@@ -118,4 +124,207 @@ struct EmptyPanel: View {
         .padding(.vertical, 36)
         .brunettiCard()
     }
+}
+
+// MARK: - Glass Field (login / dark overlay forms)
+
+struct GlassField: View {
+    var label: String
+    var placeholder: String
+    @Binding var text: String
+    var isSecure: Bool = false
+    var keyboard: UIKeyboardType = .default
+    var autocap: TextInputAutocapitalization = .never
+    @State private var showText = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            if !label.isEmpty {
+                Text(label)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.white.opacity(0.65))
+            }
+            HStack(spacing: 10) {
+                Group {
+                    if isSecure && !showText {
+                        SecureField(placeholder, text: $text)
+                    } else {
+                        TextField(placeholder, text: $text)
+                    }
+                }
+                .keyboardType(keyboard)
+                .textInputAutocapitalization(autocap)
+                .autocorrectionDisabled()
+                .foregroundStyle(.white)
+                .tint(BrunettiTheme.gold)
+
+                if isSecure {
+                    Button { showText.toggle() } label: {
+                        Image(systemName: showText ? "eye.slash.fill" : "eye.fill")
+                            .foregroundStyle(.white.opacity(0.5))
+                            .font(.footnote)
+                    }
+                    .buttonStyle(.borderless)
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+            .background(.white.opacity(0.1), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .stroke(.white.opacity(0.18), lineWidth: 1)
+            )
+        }
+    }
+}
+
+// MARK: - Glass Form Field (light-background editing forms)
+
+struct GlassFormField: View {
+    var label: String
+    var placeholder: String = ""
+    @Binding var text: String
+    var keyboard: UIKeyboardType = .default
+    var autocap: TextInputAutocapitalization = .words
+    var axis: Axis = .horizontal
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(label)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(BrunettiTheme.muted)
+            TextField(placeholder.isEmpty ? label : placeholder, text: $text, axis: axis)
+                .keyboardType(keyboard)
+                .textInputAutocapitalization(autocap)
+                .autocorrectionDisabled()
+                .padding(13)
+                .background(BrunettiTheme.field, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                .foregroundStyle(BrunettiTheme.text)
+        }
+    }
+}
+
+// MARK: - Sheet Row (read-only label + value)
+
+struct InfoRow: View {
+    var label: String
+    var value: String
+
+    var body: some View {
+        HStack(alignment: .top) {
+            Text(label)
+                .font(.subheadline)
+                .foregroundStyle(BrunettiTheme.muted)
+                .frame(width: 90, alignment: .leading)
+            Text(value)
+                .font(.subheadline.weight(.medium))
+                .foregroundStyle(BrunettiTheme.text)
+            Spacer()
+        }
+        .padding(.vertical, 3)
+    }
+}
+
+// MARK: - Sheet Section Header
+
+struct SheetSection: View {
+    var title: String
+    var body: some View {
+        Text(title.uppercased())
+            .font(.caption.weight(.bold))
+            .foregroundStyle(BrunettiTheme.muted)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.top, 6)
+    }
+}
+
+// MARK: - Glass Action Button (for sheets)
+
+struct GlassActionButton: View {
+    var title: String
+    var symbol: String
+    var tint: Color = BrunettiTheme.gold
+    var role: ButtonRole? = nil
+    var action: () -> Void
+
+    private var effectiveTint: Color {
+        role == .destructive ? .red : tint
+    }
+
+    var body: some View {
+        Button(role: role, action: action) {
+            Label(title, systemImage: symbol)
+                .font(.subheadline.weight(.semibold))
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 14)
+                .foregroundStyle(effectiveTint)
+                .brunettiGlass(radius: 16, tint: effectiveTint.opacity(0.12), interactive: true)
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+// MARK: - Lock Screen Overlay
+
+struct LockScreenOverlay: View {
+    @Environment(SessionStore.self) private var session
+
+    var body: some View {
+        ZStack {
+            Rectangle()
+                .fill(.ultraThinMaterial)
+                .ignoresSafeArea()
+
+            VStack(spacing: 36) {
+                Image("BrandLockup")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 260, height: 82)
+
+                VStack(spacing: 8) {
+                    Text("Brunetti")
+                        .font(.title.weight(.bold))
+                    Text("Panel bloqueado")
+                        .font(.subheadline)
+                        .opacity(0.6)
+                }
+
+                Button {
+                    Task { await session.unlock() }
+                } label: {
+                    Image(systemName: "faceid")
+                        .font(.system(size: 42))
+                        .foregroundStyle(BrunettiTheme.gold)
+                        .padding(28)
+                        .brunettiGlass(radius: 24, tint: BrunettiTheme.gold.opacity(0.18), interactive: true)
+                }
+                .buttonStyle(.plain)
+
+                Text("Toca para desbloquear")
+                    .font(.caption)
+                    .opacity(0.45)
+            }
+        }
+        .onTapGesture {
+            Task { await session.unlock() }
+        }
+        .transition(.opacity)
+    }
+}
+// MARK: - Haptics
+
+func haptic(_ style: UIImpactFeedbackGenerator.FeedbackStyle = .medium) {
+    UIImpactFeedbackGenerator(style: style).impactOccurred()
+}
+
+func hapticSuccess() {
+    UINotificationFeedbackGenerator().notificationOccurred(.success)
+}
+
+func hapticError() {
+    UINotificationFeedbackGenerator().notificationOccurred(.error)
+}
+
+func hapticSelection() {
+    UISelectionFeedbackGenerator().selectionChanged()
 }

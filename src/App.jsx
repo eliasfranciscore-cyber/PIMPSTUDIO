@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-
 import Home from './pages/Home.jsx'
 import { ThemeProvider, FloatingThemeToggle } from './components/theme.jsx'
 import EditProvider from './components/edit/EditProvider.jsx'
+import OverridesProvider from './components/edit/OverridesProvider.jsx'
 
 // ── Ruteo de lanzamiento de la PWA instalada (iOS "Agregar a inicio") ──────
 // iOS Safari ignora con frecuencia el start_url del manifest y abre la PWA en
@@ -42,6 +43,7 @@ const Dashboard = lazy(() => import('./pages/Dashboard.jsx'))
 const Workshop = lazy(() => import('./pages/Workshop.jsx'))
 const Cursos = lazy(() => import('./pages/Cursos.jsx'))
 const EncuentraEstilo = lazy(() => import('./pages/EncuentraEstilo.jsx'))
+const Essentials = lazy(() => import('./pages/Essentials.jsx'))
 
 function RouteFallback() {
   return (
@@ -54,6 +56,7 @@ function RouteFallback() {
 export default function App() {
   return (
     <ThemeProvider>
+      <OverridesProvider>
       <EditProvider>
         <div className="stage">
           <PWALaunchRouter />
@@ -63,6 +66,7 @@ export default function App() {
               <Route path="/workshop" element={<Workshop />} />
               <Route path="/cursos"   element={<Cursos />} />
               <Route path="/style"    element={<EncuentraEstilo />} />
+              <Route path="/essentials" element={<Essentials />} />
               <Route path="/encuentra-tu-estilo" element={<Navigate to="/style" replace />} />
               <Route path="/login"    element={<Login />} />
               <Route path="/reservar" element={<Booking />} />
@@ -75,6 +79,7 @@ export default function App() {
           <FloatingThemeToggle />
         </div>
       </EditProvider>
+      </OverridesProvider>
     </ThemeProvider>
   )
 }

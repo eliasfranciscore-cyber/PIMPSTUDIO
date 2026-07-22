@@ -1,0 +1,35 @@
+{
+  "workshop:meta.title1": {
+    "fontSize": 120
+  },
+  "workshop:meta.title2": {
+    "fontSize": 117
+  },
+  "workshop:meta.subtitle": {
+    "color": "#ffffff"
+  },
+  "workshop:card:cobrar": {
+    "src": "/assets/uploads/f0d7f8b8-5e3b-496b-baf5-68db5326f6c5-jpg-mrgubb6k.jpg"
+  },
+  "workshop:card:marca": {
+    "src": "/assets/uploads/img-7119-jpg-mrgudg5i.jpg"
+  },
+  "workshop:mod:bloque1": {
+    "src": "/assets/uploads/jos08607dsds-mri249qf.jpeg"
+  },
+  "workshop:mod:bloque2": {
+    "src": "/assets/uploads/jos08638dsds-mri25k7r.jpeg"
+  },
+  "workshop:feat:asesoria": {
+    "src": "/assets/uploads/jos08520dsds-mri26g1d.jpeg"
+  },
+  "workshop:feat:experiencia": {
+    "src": "/assets/uploads/e450c56b-a846-4972-9081-73cbce76b474-jpg-mri272ws.jpg"
+  },
+  "workshop:logo": {
+    "width": 275
+  },
+  "workshop:card:redes": {
+    "src": "/assets/uploads/5-jpg-mriinh5h.jpg"
+  }
+}

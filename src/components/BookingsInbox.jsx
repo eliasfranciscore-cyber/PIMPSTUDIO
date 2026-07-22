@@ -1,15 +1,15 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { Icon } from './IconsExtra.jsx'
-import { CLP, barberById } from '../data.js'
+import { CLP, barberById, isoDate, buildWeek } from '../data.js'
 
 /**
  * BookingsInbox — bandeja de reservas del Dashboard.
  *
- * Por fuera, cada tarjeta muestra sólo: resumen + selector de estado + botón
- * "Ver detalles". Al tocar la tarjeta se abre un modal (responsive) con toda la
- * gestión: acciones por estado, WhatsApp (mensaje según estado), cancelar con
- * confirmación y revertir la cancelación.
+ * Por fuera, cada tarjeta muestra sólo: resumen + acciones rápidas (hover) +
+ * selector de estado + botón "Ver detalles". Al tocar la tarjeta se abre un
+ * modal (responsive) con toda la gestión: acciones por estado, WhatsApp
+ * (mensaje según estado), cancelar (con deshacer) y revertir la cancelación.
  *
  * Admin (Bruno) ve la agenda de TODOS y puede filtrar por barbero. Un barbero
  * normal ve sólo SU agenda del día.
@@ -22,8 +22,13 @@ import { CLP, barberById } from '../data.js'
 
 const STATUS_LABEL = { pendiente: 'Pendiente', confirmada: 'Confirmada', 'en curso': 'En curso', completada: 'Completada', cancelada: 'Cancelada' }
 const STATUS_OPTIONS = ['pendiente', 'confirmada', 'en curso', 'completada', 'cancelada']
-const FILTERS = ['Todas', 'Pendientes', 'Confirmadas', 'Completadas']
-const FILTER_MAP = { Pendientes: 'pendiente', Confirmadas: 'confirmada', Completadas: 'completada' }
+const FILTERS = ['Todas', 'Pendientes', 'Confirmadas', 'En curso', 'Completadas', 'Canceladas']
+const FILTER_MAP = { Pendientes: 'pendiente', Confirmadas: 'confirmada', 'En curso': 'en curso', Completadas: 'completada', Canceladas: 'cancelada' }
+// Etiqueta de filtro ↔ estado, para sincronizar las tarjetas KPI clickables.
+const STATUS_TO_FILTER = { pendiente: 'Pendientes', confirmada: 'Confirmadas', 'en curso': 'En curso' }
+// Próximo estado natural al avanzar una reserva con un solo tap (acción rápida).
+const NEXT_STATUS = { pendiente: 'confirmada', confirmada: 'en curso', 'en curso': 'completada' }
+const SCOPES = [['dia', 'Hoy'], ['semana', 'Semana'], ['todas', 'Todas']]
 
 function waLink(bk, barberShort, status) {
   const first = (bk.client || 'Hola').split(' ')[0]
@@ -42,14 +47,22 @@ function waLink(bk, barberShort, status) {
 const resolveBarber = (bk, barbers) => barbers.find((x) => Number(x.id) === Number(bk.barberId)) || barberById(bk.barberId) || {}
 const initialsOf = (name) => (name || 'C').split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase()
 
-/* Tarjeta compacta: resumen + selector de estado + "Ver detalles". */
-function ResCard({ bk, barbers, isAdmin, onOpen, onStatusSelect }) {
+/* Tarjeta (o fila, en vista lista): resumen + acciones rápidas + selector + "Ver detalles". */
+function ResCard({ bk, barbers, isAdmin, onOpen, onStatusSelect, onQuickAdvance, onQuickCancel }) {
   const barber = resolveBarber(bk, barbers)
   const short = barber?.short || barber?.name || 'Barbero'
   const cls = String(bk.status).replace(' ', '-')
+  const waStatus = bk.status === 'cancelada' ? 'cancelada' : bk.status === 'pendiente' ? 'default' : bk.status
+  const next = NEXT_STATUS[bk.status]
+  const cancelable = bk.status !== 'cancelada' && bk.status !== 'completada'
   return (
     <div className={`psn-res-card ${cls}`}>
-      <button type="button" className="psn-res-tap" onClick={() => onOpen(bk)} aria-label={`Ver detalles de ${bk.client}`}>
+      <div
+        className="psn-res-tap" role="button" tabIndex={0}
+        onClick={() => onOpen(bk)}
+        onKeyDown={(e) => { if (e.key === 'Enter') onOpen(bk) }}
+        aria-label={`Ver detalles de ${bk.client}`}
+      >
         <div className="psn-res-top">
           <span className="psn-res-time"><Icon name="clock" size={15} /> {bk.time} <small>{bk.date}</small></span>
           <span className={`psn-res-badge ${cls}`}>{STATUS_LABEL[bk.status] || bk.status}</span>
@@ -66,7 +79,25 @@ function ResCard({ bk, barbers, isAdmin, onOpen, onStatusSelect }) {
           {isAdmin && <div className="psn-res-row"><span>Barbero</span><b>{short}</b></div>}
           <div className="psn-res-row"><span>Total</span><b className="gold-text">{CLP(bk.price)}</b></div>
         </div>
-      </button>
+      </div>
+      <div className="psn-res-quick">
+        {next && (() => {
+          const label = bk.status === 'pendiente' ? 'Confirmar' : bk.status === 'confirmada' ? 'Iniciar atención' : 'Completar'
+          return (
+            <button type="button" className="qk-confirm" data-tip={label} aria-label={label} onClick={(e) => { e.stopPropagation(); onQuickAdvance(bk) }}>
+              <Icon name="check" size={14} />
+            </button>
+          )
+        })()}
+        <a className="qk-wa" data-tip="Enviar WhatsApp" aria-label="Enviar WhatsApp" href={waLink(bk, short, waStatus)} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+          <Icon name="whatsapp" size={14} />
+        </a>
+        {cancelable && (
+          <button type="button" className="qk-cancel" data-tip="Cancelar reserva" aria-label="Cancelar reserva" onClick={(e) => { e.stopPropagation(); onQuickCancel(bk) }}>
+            <Icon name="x" size={14} />
+          </button>
+        )}
+      </div>
       <div className="psn-res-foot">
         <select
           className={`psn-res-status ${cls}`}
@@ -85,7 +116,7 @@ function ResCard({ bk, barbers, isAdmin, onOpen, onStatusSelect }) {
 }
 
 /* Modal de gestión de la reserva (responsive). */
-function ResModal({ bk, barbers, isAdmin, onClose, onStatus, onReschedule, onAskCancel, onAskDelete, prevStatus }) {
+function ResModal({ bk, barbers, isAdmin, onClose, onStatus, onReschedule, onCancel, onAskDelete, prevStatus }) {
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') onClose() }
     window.addEventListener('keydown', onKey)
@@ -138,7 +169,7 @@ function ResModal({ bk, barbers, isAdmin, onClose, onStatus, onReschedule, onAsk
               <Icon name="reschedule" size={16} /> Revertir cancelación
             </button>
           ) : bk.status !== 'completada' ? (
-            <button className="btn btn-danger btn-block" onClick={() => onAskCancel(bk)}>
+            <button className="btn btn-danger btn-block" onClick={() => { onCancel(bk); onClose() }}>
               <Icon name="x" size={16} /> Cancelar reserva
             </button>
           ) : null}
@@ -152,26 +183,7 @@ function ResModal({ bk, barbers, isAdmin, onClose, onStatus, onReschedule, onAsk
   ), document.body)
 }
 
-/* Popup de confirmación de cancelación. */
-function ConfirmCancel({ bk, onClose, onConfirm }) {
-  if (!bk) return null
-  return createPortal((
-    <div className="psn-modal psn-modal-top" role="alertdialog" aria-modal="true">
-      <button className="psn-scrim" aria-label="Cerrar" onClick={onClose} />
-      <div className="psn-modal-card psn-confirm">
-        <span className="psn-confirm-ic"><Icon name="x" size={22} /></span>
-        <h3 className="font-display">¿Cancelar esta reserva?</h3>
-        <p>Vas a cancelar la hora de <b>{bk.client}</b> ({bk.time} · {bk.date}). Podrás revertir la cancelación después.</p>
-        <div className="psn-confirm-actions">
-          <button className="btn btn-ghost btn-block" onClick={onClose}>Volver</button>
-          <button className="btn btn-danger btn-block" onClick={() => onConfirm(bk)}><Icon name="x" size={15} /> Sí, cancelar</button>
-        </div>
-      </div>
-    </div>
-  ), document.body)
-}
-
-/* Popup de confirmación de eliminación definitiva. */
+/* Popup de confirmación de eliminación definitiva (única acción irreversible: se mantiene el confirm). */
 function ConfirmDelete({ bk, onClose, onConfirm }) {
   if (!bk) return null
   return createPortal((
@@ -190,88 +202,373 @@ function ConfirmDelete({ bk, onClose, onConfirm }) {
   ), document.body)
 }
 
-export default function BookingsInbox({ bookings = [], barbers = [], barber, admin = false, onStatus = () => {}, onDelete = () => {}, onReschedule }) {
+/* Toast de deshacer (cancelación es reversible: feedback en vez de confirmación previa). */
+function UndoToast({ toast, onUndo }) {
+  if (!toast) return null
+  return createPortal((
+    <div className="psn-toast" role="status">
+      <span>{toast.message}</span>
+      <button type="button" onClick={onUndo}>Deshacer</button>
+    </div>
+  ), document.body)
+}
+
+/* Anillo de ocupación (donut SVG). */
+function OccRing({ pct }) {
+  const p = Math.max(0, Math.min(100, Math.round(pct)))
+  const r = 18
+  const c = 2 * Math.PI * r
+  return (
+    <svg className="psn-ring" viewBox="0 0 44 44" width="44" height="44" aria-hidden="true">
+      <circle cx="22" cy="22" r={r} className="psn-ring-bg" />
+      <circle cx="22" cy="22" r={r} className="psn-ring-fg"
+        strokeDasharray={c} strokeDashoffset={c * (1 - p / 100)} transform="rotate(-90 22 22)" />
+      <text x="22" y="22" className="psn-ring-txt" dominantBaseline="central" textAnchor="middle">{p}%</text>
+    </svg>
+  )
+}
+
+/* Modal calendario: 4 semanas con conteo de reservas por día. */
+function CalendarModal({ onClose, countsByDay, selectedDay, todayKey, onPick }) {
+  const weeks = [0, 1, 2, 3].map((o) => buildWeek(o))
+  const dows = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom']
+  return createPortal((
+    <div className="psn-modal" role="dialog" aria-modal="true">
+      <button className="psn-scrim" aria-label="Cerrar" onClick={onClose} />
+      <div className="psn-modal-card psn-cal">
+        <button className="psn-close" onClick={onClose} aria-label="Cerrar"><Icon name="close" size={17} /></button>
+        <h3 className="font-display">Calendario de reservas</h3>
+        <p className="psn-role">Toca un día para ver su agenda</p>
+        <div className="psn-cal-head">{dows.map((d) => <span key={d}>{d}</span>)}</div>
+        <div className="psn-cal-grid">
+          {weeks.flat().map((d) => {
+            const n = countsByDay[d.key] || 0
+            const cls = [
+              'psn-cal-day',
+              d.key === selectedDay && 'is-sel',
+              d.key === todayKey && 'is-today',
+              n > 0 && 'has-res',
+            ].filter(Boolean).join(' ')
+            return (
+              <button key={d.key} className={cls} onClick={() => onPick(d.key)}>
+                <span className="psn-cal-num">{d.num}</span>
+                {n > 0 && <span className="psn-cal-badge">{n}</span>}
+              </button>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  ), document.body)
+}
+
+export default function BookingsInbox({ bookings = [], barbers = [], barber, admin = false, slotsPerDay = 14, onStatus = () => {}, onDelete = () => {}, onReschedule, onNewBooking, focus }) {
   const [filter, setFilter] = useState('Todas')
+  const [dateScope, setDateScope] = useState('dia')
+  const [viewMode, setViewMode] = useState(() => {
+    try { return localStorage.getItem('ps_res_view') === 'lista' ? 'lista' : 'cards' } catch { return 'cards' }
+  })
   const [barberFilter, setBarberFilter] = useState('all')
   const [query, setQuery] = useState('')
   const [detailId, setDetailId] = useState(null)
-  const [cancelTarget, setCancelTarget] = useState(null)
   const [deleteTarget, setDeleteTarget] = useState(null)
+  const [toast, setToast] = useState(null)
   const prevStatus = useRef({})
+  const toastTimer = useRef(null)
 
-  // Componentes locales, no UTC: toISOString() adelanta la fecha durante la
-  // noche en Chile (UTC-3/-4), lo que desalineaba "hoy" en el inbox de reservas.
-  const todayKey = (() => {
-    const d = new Date()
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
-  })()
+  const [weekOffset, setWeekOffset] = useState(0)
+  const [selectedDay, setSelectedDay] = useState(() => isoDate())
+  const [calOpen, setCalOpen] = useState(false)
+  const [slideKey, setSlideKey] = useState(0) // re-dispara animate-in al cambiar de día
+  const dayScrollRef = useRef(null)
+  const touchX = useRef(null)
+
+  useEffect(() => { try { localStorage.setItem('ps_res_view', viewMode) } catch {} }, [viewMode])
+  useEffect(() => () => clearTimeout(toastTimer.current), [])
+
+  const todayKey = isoDate()
   const idOf = (b) => b.id ?? `${b.barberId}-${b.time}`
-  // Con un solo barbero (Brunetti) no tiene sentido el filtro ni la columna de barbero.
   const multiBarber = barbers.length > 1
+  const searching = query.trim().length > 0
 
-  // Alcance base: admin = todo; barbero = solo su agenda del día.
-  const scope = useMemo(() => {
-    if (admin) return bookings
-    return bookings.filter((b) => Number(b.barberId) === Number(barber?.id) && (!b.date || b.date === todayKey))
-  }, [bookings, admin, barber, todayKey])
+  // Alcance base: admin ve a todos; barbero ve solo lo suyo (cualquier fecha,
+  // para poder navegar por días). El recorte por día se hace más abajo.
+  const mine = useMemo(() => (
+    admin ? bookings : bookings.filter((b) => Number(b.barberId) === Number(barber?.id))
+  ), [bookings, admin, barber])
 
-  const visible = useMemo(() => {
-    let list = scope
-    if (admin && barberFilter !== 'all') list = list.filter((b) => Number(b.barberId) === Number(barberFilter))
-    // "Todas" oculta las completadas (ya se atendieron); sólo aparecen al elegir el filtro Completadas.
-    if (filter !== 'Todas') list = list.filter((b) => b.status === FILTER_MAP[filter])
-    else list = list.filter((b) => b.status !== 'completada')
-    if (query.trim()) {
-      const q = query.toLowerCase()
-      list = list.filter((b) => `${b.client || ''} ${b.phone || ''} ${b.service || ''}`.toLowerCase().includes(q))
+  // Conteo de reservas activas por día (badges de la tira y el calendario).
+  const countsByDay = useMemo(() => {
+    const m = {}
+    for (const b of mine) {
+      if (b.status === 'cancelada' || !b.date) continue
+      m[b.date] = (m[b.date] || 0) + 1
     }
-    return [...list].sort((a, b) => String(a.time).localeCompare(String(b.time)))
-  }, [scope, admin, barberFilter, filter, query])
+    return m
+  }, [mine])
 
-  const count = (st) => scope.filter((b) => b.status === st).length
-  const dayTotal = scope.filter((b) => b.status !== 'cancelada').reduce((s, b) => s + Number(b.price || 0), 0)
+  const weekDays = useMemo(() => buildWeek(weekOffset), [weekOffset])
+  const weekKeys = useMemo(() => weekDays.map((d) => d.key), [weekDays])
+
+  // Reservas del día seleccionado (con filtro de barbero en multi-barbero). Es
+  // la base de los KPIs del hero, que siempre hablan del día, sin importar el
+  // rango de fechas elegido para la lista de abajo.
+  const dayBookings = useMemo(() => {
+    let list = mine.filter((b) => b.date === selectedDay)
+    if (admin && multiBarber && barberFilter !== 'all') list = list.filter((b) => Number(b.barberId) === Number(barberFilter))
+    return list
+  }, [mine, selectedDay, admin, multiBarber, barberFilter])
+
+  // Rango de fechas rápido (Hoy / Semana / Todas) para la LISTA de reservas
+  // (independiente del día del hero). Con filtro de barbero aplicado.
+  const scopeList = useMemo(() => {
+    let list = mine
+    if (dateScope === 'dia') list = list.filter((b) => b.date === selectedDay)
+    else if (dateScope === 'semana') list = list.filter((b) => weekKeys.includes(b.date))
+    if (admin && multiBarber && barberFilter !== 'all') list = list.filter((b) => Number(b.barberId) === Number(barberFilter))
+    return list
+  }, [mine, dateScope, selectedDay, weekKeys, admin, multiBarber, barberFilter])
+
+  const scopeCount = (st) => scopeList.filter((b) => b.status === st).length
+
+  // Lista visible: búsqueda global (todas las fechas) o el rango elegido.
+  const visible = useMemo(() => {
+    if (searching) {
+      const q = query.toLowerCase()
+      let list = mine.filter((b) => `${b.client || ''} ${b.phone || ''} ${b.service || ''}`.toLowerCase().includes(q))
+      if (admin && multiBarber && barberFilter !== 'all') list = list.filter((b) => Number(b.barberId) === Number(barberFilter))
+      return [...list].sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`))
+    }
+    let list = scopeList
+    if (filter !== 'Todas') list = list.filter((b) => b.status === FILTER_MAP[filter])
+    else list = list.filter((b) => b.status !== 'cancelada')
+    return [...list].sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`))
+  }, [searching, query, mine, scopeList, filter, admin, multiBarber, barberFilter])
+
+  // KPIs del día (hero).
+  const count = (st) => dayBookings.filter((b) => b.status === st).length
+  const activeCount = dayBookings.filter((b) => b.status !== 'cancelada').length
+  const dayTotal = dayBookings.filter((b) => b.status !== 'cancelada').reduce((s, b) => s + Number(b.price || 0), 0)
+  const occPct = slotsPerDay ? (activeCount / slotsPerDay) * 100 : 0
+
+  // Próxima cita: primera no cancelada/completada; si es hoy, la primera cuya hora no pasó.
+  const now = new Date()
+  const nowMin = now.getHours() * 60 + now.getMinutes()
+  const isToday = selectedDay === todayKey
+  const nextAppt = useMemo(() => {
+    const pool = dayBookings
+      .filter((b) => b.status !== 'cancelada' && b.status !== 'completada')
+      .sort((a, b) => String(a.time).localeCompare(String(b.time)))
+    if (!isToday) return pool[0] || null
+    return pool.find((b) => {
+      const [h, m] = String(b.time).split(':').map(Number)
+      return (h * 60 + m) >= nowMin
+    }) || null
+  }, [dayBookings, isToday, nowMin])
+  const nextEta = (() => {
+    if (!nextAppt || !isToday) return ''
+    const [h, m] = String(nextAppt.time).split(':').map(Number)
+    const diff = (h * 60 + m) - nowMin
+    if (diff <= 0) return 'ahora'
+    return diff >= 60 ? `en ${Math.floor(diff / 60)}h ${diff % 60}m` : `en ${diff}m`
+  })()
+
+  // KPIs de la semana visible.
+  const weekCount = weekKeys.reduce((s, k) => s + (countsByDay[k] || 0), 0)
+  const weekRevenue = mine
+    .filter((b) => b.status !== 'cancelada' && weekKeys.includes(b.date))
+    .reduce((s, b) => s + Number(b.price || 0), 0)
 
   // La reserva del modal se resuelve en vivo desde props para reflejar cambios.
   const detailBk = detailId != null ? bookings.find((b) => idOf(b) === detailId) || null : null
 
+  // --- Navegación de días -------------------------------------------------
+  const selectDay = (key) => { setSelectedDay(key); setSlideKey((k) => k + 1); setDateScope('dia') }
+  const goToWeek = (offset) => {
+    setWeekOffset(offset)
+    const wd = buildWeek(offset)
+    if (!wd.some((d) => d.key === selectedDay)) selectDay(wd[0].key)
+  }
+  const shiftDay = (delta) => {
+    const d = new Date(`${selectedDay}T00:00:00`)
+    d.setDate(d.getDate() + delta)
+    const key = isoDate(d)
+    selectDay(key)
+    if (!weekDays.some((x) => x.key === key)) setWeekOffset((o) => o + (delta > 0 ? 1 : -1))
+  }
+  const pickFromCalendar = (key) => {
+    selectDay(key)
+    setCalOpen(false)
+    for (const o of [-1, 0, 1, 2, 3, 4]) {
+      if (buildWeek(o).some((d) => d.key === key)) { setWeekOffset(o); break }
+    }
+  }
+  // Auto-scroll del día activo a la vista.
+  useEffect(() => {
+    const el = dayScrollRef.current?.querySelector('.is-active')
+    el?.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' })
+  }, [selectedDay, weekOffset])
+
+  // Foco externo (desde la búsqueda global): salta a una fecha ARBITRARIA.
+  // pickFromCalendar sólo escanea −1..+4 semanas, así que aquí calculamos el
+  // weekOffset real por diferencia de lunes. `ts` re-dispara focos repetidos.
+  useEffect(() => {
+    if (!focus?.day) return
+    const mondayOf = (iso) => {
+      const d = new Date(`${iso}T00:00:00`)
+      const dow = d.getDay() || 7
+      d.setDate(d.getDate() - dow + 1)
+      d.setHours(0, 0, 0, 0)
+      return d
+    }
+    const diffWeeks = Math.round((mondayOf(focus.day) - mondayOf(isoDate())) / (7 * 86400000))
+    setWeekOffset(diffWeeks)
+    setSelectedDay(focus.day)
+    setDateScope(focus.scope || 'dia')
+    if (focus.filter) setFilter(focus.filter)
+    setSlideKey((k) => k + 1)
+    setQuery('')
+    // Deep-link a una reserva puntual (notificación push / popup de campana):
+    // abre directo su modal de detalle, además de ubicar el día/filtro.
+    if (focus.bookingId != null) setDetailId(Number(focus.bookingId))
+  }, [focus?.day, focus?.ts])
+
+  // --- Swipe (móvil): cambia de día ---------------------------------------
+  const onTouchStart = (e) => { touchX.current = e.touches[0].clientX }
+  const onTouchEnd = (e) => {
+    if (searching || touchX.current == null) return
+    const dx = e.changedTouches[0].clientX - touchX.current
+    touchX.current = null
+    if (Math.abs(dx) > 50) shiftDay(dx < 0 ? 1 : -1)
+  }
+
+  // Estado ↔ filtro (tarjetas KPI clickables).
+  const toggleStatusFilter = (status) => {
+    const f = STATUS_TO_FILTER[status]
+    setFilter((cur) => (cur === f ? 'Todas' : f))
+    setQuery('')
+  }
+
+  // Cancelación: reversible → feedback con deshacer, sin diálogo de confirmación previo.
+  const cancelWithUndo = (bk) => {
+    const prev = bk.status === 'cancelada' ? 'pendiente' : bk.status
+    prevStatus.current[idOf(bk)] = prev
+    onStatus(bk, 'cancelada')
+    clearTimeout(toastTimer.current)
+    setToast({ id: idOf(bk), prev, message: `Reserva de ${bk.client} cancelada` })
+    toastTimer.current = setTimeout(() => setToast(null), 8000)
+  }
+  const undoToast = () => {
+    if (!toast) return
+    const bk = bookings.find((b) => idOf(b) === toast.id)
+    if (bk) onStatus(bk, toast.prev)
+    clearTimeout(toastTimer.current)
+    setToast(null)
+  }
   const onStatusSelect = (bk, value) => {
     if (value === bk.status) return
-    if (value === 'cancelada') { setCancelTarget(bk); return }
+    if (value === 'cancelada') { cancelWithUndo(bk); return }
     onStatus(bk, value)
   }
-  const confirmCancel = (bk) => {
-    prevStatus.current[idOf(bk)] = bk.status === 'cancelada' ? 'pendiente' : bk.status
-    onStatus(bk, 'cancelada')
-    setCancelTarget(null)
-  }
+  const onQuickAdvance = (bk) => { const next = NEXT_STATUS[bk.status]; if (next) onStatus(bk, next) }
   const confirmDelete = (bk) => {
     onDelete(bk)
     setDeleteTarget(null)
     if (detailId != null && idOf(bk) === detailId) setDetailId(null)
   }
 
+  const DOW_SHORT = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
+  const selLabel = weekDays.find((d) => d.key === selectedDay)?.label
+    || (() => { const d = new Date(`${selectedDay}T00:00:00`); return `${DOW_SHORT[d.getDay()]} ${d.getDate()}` })()
+
+  const scopeLabel = dateScope === 'semana' ? 'la semana' : dateScope === 'todas' ? 'todas las fechas' : null
+
   return (
     <div className="animate-in psn-inbox">
       <div className="psn-mod-head">
         <div>
           <h2 className="font-display">Reservas recibidas</h2>
-          <p>{admin ? (multiBarber ? 'Vista administrador · agenda de todos los barberos' : 'Agenda de Brunetti') : `Tu agenda de hoy · ${barber?.name || 'Barbero'}`}</p>
+          <p>{admin ? (multiBarber ? 'Vista administrador · agenda de todos' : 'Agenda de Brunetti') : `Tu agenda · ${barber?.name || 'Barbero'}`}</p>
         </div>
         <span className="chip chip-gold"><Icon name="bell" size={13} /> {count('pendiente')} por confirmar</span>
       </div>
 
-      <div className="psn-inbox-stats">
-        <div className="psn-stat"><b style={{ color: 'var(--gold-lt)' }}>{count('pendiente')}</b><span>Pendientes</span></div>
-        <div className="psn-stat"><b style={{ color: '#9fd7af' }}>{count('confirmada')}</b><span>Confirmadas</span></div>
-        <div className="psn-stat"><b style={{ color: '#aac4ff' }}>{count('en curso')}</b><span>En curso</span></div>
-        <div className="psn-stat"><b>{CLP(dayTotal)}</b><span>Total del día</span></div>
+      {/* HERO de KPIs (siempre habla del día seleccionado) */}
+      <div className="psn-hero">
+        <div className="psn-hk psn-hk-next">
+          <span className="psn-hk-lbl"><Icon name="clock" size={12} /> Próxima cita {isToday ? '· hoy' : `· ${selLabel}`}</span>
+          {nextAppt ? (
+            <>
+              <b className="psn-hk-time">{nextAppt.time}{nextEta && <em>{nextEta}</em>}</b>
+              <span className="psn-hk-sub">{nextAppt.client} · {nextAppt.service}</span>
+            </>
+          ) : <span className="psn-hk-empty">Sin próximas citas</span>}
+        </div>
+
+        <div className="psn-hk psn-hk-occ">
+          <OccRing pct={occPct} />
+          <div><b>{activeCount}/{slotsPerDay}</b><span>Ocupación del día</span></div>
+        </div>
+
+        <button type="button" className={`psn-hk psn-hk-state pendiente ${filter === 'Pendientes' ? 'is-on' : ''}`} onClick={() => toggleStatusFilter('pendiente')}>
+          <b>{count('pendiente')}</b><span>Pendientes</span>
+        </button>
+        <button type="button" className={`psn-hk psn-hk-state confirmada ${filter === 'Confirmadas' ? 'is-on' : ''}`} onClick={() => toggleStatusFilter('confirmada')}>
+          <b>{count('confirmada')}</b><span>Confirmadas</span>
+        </button>
+        <button type="button" className={`psn-hk psn-hk-state en-curso ${filter === 'En curso' ? 'is-on' : ''}`} onClick={() => toggleStatusFilter('en curso')}>
+          <b>{count('en curso')}</b><span>En curso</span>
+        </button>
+
+        <div className="psn-hk psn-hk-total">
+          <b className="gold-text">{CLP(dayTotal)}</b><span>Total del día</span>
+        </div>
       </div>
 
+      {/* VISOR DE SEMANA (oculto durante la búsqueda global) */}
+      {!searching && <div className="psn-week">
+        <div className="psn-week-head">
+          <div className="psn-seg" role="group" aria-label="Rango de fechas">
+            {SCOPES.map(([key, label]) => (
+              <button key={key} type="button" className={dateScope === key ? 'is-on' : ''} onClick={() => setDateScope(key)}>{label}</button>
+            ))}
+          </div>
+          {dateScope !== 'todas' && (
+            <div className="psn-week-toggle">
+              <button type="button" className={`btn btn-sm ${weekOffset === 0 ? 'btn-gold' : 'btn-dark'}`} onClick={() => goToWeek(0)}>Esta semana</button>
+              <button type="button" className={`btn btn-sm ${weekOffset === 1 ? 'btn-gold' : 'btn-dark'}`} onClick={() => goToWeek(1)}>Siguiente</button>
+              <button type="button" className="btn btn-dark btn-sm" onClick={() => setCalOpen(true)}><Icon name="calendar" size={13} /> Calendario</button>
+            </div>
+          )}
+          <span className="psn-week-sum">{weekCount} reservas esta semana · <b className="gold-text">{CLP(weekRevenue)}</b></span>
+        </div>
+        {dateScope !== 'todas' && <div className="psn-day-scroll" ref={dayScrollRef}>
+          {weekDays.map((d) => {
+            const n = countsByDay[d.key] || 0
+            const isActive = d.key === selectedDay && dateScope === 'dia'
+            const isTdy = d.key === todayKey
+            return (
+              <button key={d.key} type="button" className={`psn-day-pill ${isActive ? 'is-active' : ''} ${isTdy ? 'is-today' : ''}`} onClick={() => selectDay(d.key)}>
+                <span className="psn-day-dow">{isTdy ? 'Hoy' : d.dow}</span>
+                <span className="psn-day-num">{d.num}</span>
+                {n > 0 && <span className="psn-day-badge">{n}</span>}
+              </button>
+            )
+          })}
+        </div>}
+      </div>}
+
+      {/* TOOLBAR */}
       <div className="psn-inbox-toolbar">
-        <div className="psn-inbox-filters">
-          {FILTERS.map((f) => (
-            <button key={f} className={`chip ${filter === f ? 'chip-gold' : ''} psn-chip-btn`} onClick={() => setFilter(f)}>{f}</button>
-          ))}
+        <div className="psn-status-seg" role="group" aria-label="Filtrar por estado">
+          {FILTERS.map((f) => {
+            const n = f === 'Todas' ? scopeList.filter((b) => b.status !== 'cancelada').length : scopeCount(FILTER_MAP[f])
+            return (
+              <button key={f} type="button" className={filter === f && !searching ? 'is-on' : ''} onClick={() => { setFilter(f); setQuery('') }}>
+                {f}<span className="psn-seg-count">{n}</span>
+              </button>
+            )
+          })}
         </div>
         {admin && multiBarber && (
           <select className="psn-barber-filter" value={barberFilter} onChange={(e) => setBarberFilter(e.target.value)}>
@@ -281,18 +578,46 @@ export default function BookingsInbox({ bookings = [], barbers = [], barber, adm
         )}
         <div className="psn-inbox-search">
           <Icon name="user" size={15} />
-          <input placeholder="Buscar cliente o teléfono" value={query} onChange={(e) => setQuery(e.target.value)} />
+          <input placeholder="Buscar en todas las fechas" value={query} onChange={(e) => setQuery(e.target.value)} />
+          {searching && <button type="button" className="psn-search-clear" onClick={() => setQuery('')} aria-label="Limpiar"><Icon name="close" size={13} /></button>}
         </div>
+        <div className="psn-view-toggle" role="group" aria-label="Vista">
+          <button type="button" className={viewMode === 'cards' ? 'is-on' : ''} onClick={() => setViewMode('cards')} data-tip="Vista tarjetas" aria-label="Vista tarjetas"><Icon name="grid" size={15} /></button>
+          <button type="button" className={viewMode === 'lista' ? 'is-on' : ''} onClick={() => setViewMode('lista')} data-tip="Vista lista" aria-label="Vista lista"><Icon name="list" size={15} /></button>
+        </div>
+        {onNewBooking && (
+          <button type="button" className="btn btn-gold btn-sm" style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem' }} onClick={onNewBooking}>
+            <Icon name="calendar" size={14} /> Nueva reserva
+          </button>
+        )}
       </div>
 
+      {searching && <p className="psn-search-note"><Icon name="user" size={12} /> {visible.length} resultado{visible.length === 1 ? '' : 's'} en todas las fechas</p>}
+      {!searching && scopeLabel && <p className="psn-search-note"><Icon name="calendar" size={12} /> Mostrando reservas de {scopeLabel}</p>}
+
       {visible.length ? (
-        <div className="psn-inbox-grid">
+        <div key={slideKey} className={`psn-inbox-grid animate-in ${viewMode === 'lista' ? 'is-list' : ''}`} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
           {visible.map((bk) => (
-            <ResCard key={idOf(bk)} bk={bk} barbers={barbers} isAdmin={admin && multiBarber} onOpen={(b) => setDetailId(idOf(b))} onStatusSelect={onStatusSelect} />
+            <ResCard
+              key={idOf(bk)} bk={bk} barbers={barbers} isAdmin={admin && multiBarber}
+              onOpen={(b) => setDetailId(idOf(b))} onStatusSelect={onStatusSelect}
+              onQuickAdvance={onQuickAdvance} onQuickCancel={cancelWithUndo}
+            />
           ))}
         </div>
       ) : (
-        <div className="card" style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--muted)' }}>No hay reservas que coincidan con el filtro.</div>
+        <div className="card psn-empty" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--muted)', display: 'grid', gap: '.9rem', justifyItems: 'center' }}>
+          <span>{searching ? 'Sin resultados para tu búsqueda.' : `Sin reservas para ${isToday && dateScope === 'dia' ? 'hoy' : scopeLabel || selLabel}.`}</span>
+          {!searching && onNewBooking && (
+            <button type="button" className="btn btn-gold btn-sm" onClick={onNewBooking}>
+              <Icon name="calendar" size={14} /> Nueva reserva
+            </button>
+          )}
+        </div>
+      )}
+
+      {calOpen && (
+        <CalendarModal onClose={() => setCalOpen(false)} countsByDay={countsByDay} selectedDay={selectedDay} todayKey={todayKey} onPick={pickFromCalendar} />
       )}
 
       {detailBk && (
@@ -303,19 +628,17 @@ export default function BookingsInbox({ bookings = [], barbers = [], barber, adm
           onClose={() => setDetailId(null)}
           onStatus={onStatus}
           onReschedule={onReschedule}
-          onAskCancel={(b) => setCancelTarget(b)}
+          onCancel={cancelWithUndo}
           onAskDelete={(b) => setDeleteTarget(b)}
           prevStatus={prevStatus.current[idOf(detailBk)]}
         />
       )}
 
-      {cancelTarget && (
-        <ConfirmCancel bk={cancelTarget} onClose={() => setCancelTarget(null)} onConfirm={confirmCancel} />
-      )}
-
       {deleteTarget && (
         <ConfirmDelete bk={deleteTarget} onClose={() => setDeleteTarget(null)} onConfirm={confirmDelete} />
       )}
+
+      <UndoToast toast={toast} onUndo={undoToast} />
     </div>
   )
 }

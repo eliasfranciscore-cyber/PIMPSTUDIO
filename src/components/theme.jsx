@@ -97,7 +97,7 @@ export function ThemeToggle({ className = '' }) {
       type="button"
       onClick={toggle}
       aria-label={isDark ? 'Activar modo claro' : 'Activar modo oscuro'}
-      title={isDark ? 'Modo claro' : 'Modo oscuro'}
+      data-tip={isDark ? 'Modo claro' : 'Modo oscuro'}
       className={`theme-toggle ${className}`}
     >
       {isDark ? (

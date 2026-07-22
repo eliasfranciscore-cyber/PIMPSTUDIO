@@ -20,6 +20,7 @@
 		001001000000000000000011 /* DetailSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001000000000000000000011 /* DetailSheets.swift */; };
 		001001000000000000000012 /* BrunettiAppIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001000000000000000000012 /* BrunettiAppIntents.swift */; };
 		001001000000000000000013 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 001000000000000000000013 /* Assets.xcassets */; };
+		C1900DE92FF9B02A00E463C1 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1900DE82FF9B02A00E463C1 /* KeychainStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		001000000000000000000013 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		001000000000000000000014 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		001000000000000000000015 /* BrunettiCutz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BrunettiCutz.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1900DE82FF9B02A00E463C1 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +78,7 @@
 				001000000000000000000012 /* BrunettiAppIntents.swift */,
 				001000000000000000000013 /* Assets.xcassets */,
 				001000000000000000000014 /* Info.plist */,
+				C1900DE82FF9B02A00E463C1 /* KeychainStore.swift */,
 			);
 			path = BrunettiCutz;
 			sourceTree = "<group>";
@@ -159,6 +162,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				001001000000000000000001 /* BrunettiCutzApp.swift in Sources */,
+				C1900DE92FF9B02A00E463C1 /* KeychainStore.swift in Sources */,
 				001001000000000000000002 /* Models.swift in Sources */,
 				001001000000000000000003 /* DemoData.swift in Sources */,
 				001001000000000000000004 /* APIClient.swift in Sources */,
@@ -302,7 +306,7 @@
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = BrunettiCutz/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Brunetti Cutz";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -329,7 +333,7 @@
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = BrunettiCutz/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Brunetti Cutz";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

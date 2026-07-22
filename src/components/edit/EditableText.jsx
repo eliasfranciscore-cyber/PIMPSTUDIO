@@ -1,72 +1,26 @@
 // =============================================================================
-// EditableText — envoltura de un texto editable desde el navegador.
+// EditableText — wrapper delgado sobre <Editable> para editar un texto.
 // -----------------------------------------------------------------------------
-// Uso:  <EditableText file="home-hero" path="h1.line">{texto}</EditableText>
-//   • En producción / fuera del modo edición: renderiza el texto tal cual.
-//   • En modo edición (botón "Editar textos"): el texto se vuelve editable
-//     in-situ; al salir del campo (blur) o pulsar Enter, guarda contra el
-//     servidor local (scripts/content-server.mjs).
+// Se mantiene por retrocompatibilidad: todas las páginas ya lo usan como
+//   <EditableText file="home-hero" path="kicker">{texto}</EditableText>
+// La lógica real (aplicar overrides, selección, edición inline) vive en
+// Editable.jsx. Aquí solo reexponemos la API previa.
 //
-// `file`  = nombre del JSON en src/data/content (sin extensión).
-// `path`  = ruta dentro del JSON, ej. "h2" o "pillars.0.body".
-// `as`    = etiqueta HTML a renderizar (por defecto "span").
+// `EditContext` se reexporta como alias de `EditingContext` para el código que
+// hacía `useContext(EditContext)` (p. ej. Home.jsx lee `editing`).
 // =============================================================================
 
-import { createContext, useContext } from 'react'
+import { Editable } from './Editable.jsx'
+import { EditingContext } from './context.js'
 
-export const EditContext = createContext({
-  editing: false,
-  serverUp: false,
-  save: async () => false,
-})
+export const EditContext = EditingContext
 
-export function EditableText({ file, path, as: Tag = 'span', className, children }) {
-  const { editing, save } = useContext(EditContext)
-
-  // Texto original como string (los children siempre son texto plano aquí).
-  const original = typeof children === 'string' ? children : String(children ?? '')
-
-  if (!editing) {
-    return <Tag className={className}>{children}</Tag>
-  }
-
-  async function commit(el) {
-    const next = el.innerText.replace(/ /g, ' ').trim()
-    if (next === original) return
-    if (next === '') {
-      // No permitimos borrar por completo: revertimos.
-      el.innerText = original
-      return
-    }
-    const ok = await save(file, path, next)
-    if (!ok) el.innerText = original // revertir si falló el guardado
-  }
-
+export function EditableText({ file, path, as = 'span', className, children }) {
   return (
-    <Tag
-      className={`taag-editing ${className ?? ''}`}
-      contentEditable
-      suppressContentEditableWarning
-      spellCheck={false}
-      title={`${file} · ${path}`}
-      // En modo edición, un texto dentro de un <a>/<button> no debe navegar
-      // ni disparar la acción del padre: solo enfocar para editar.
-      onClickCapture={(e) => {
-        e.preventDefault()
-        e.stopPropagation()
-      }}
-      onBlur={(e) => commit(e.currentTarget)}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-          e.preventDefault()
-          e.currentTarget.blur()
-        } else if (e.key === 'Escape') {
-          e.currentTarget.innerText = original
-          e.currentTarget.blur()
-        }
-      }}
-    >
+    <Editable file={file} path={path} as={as} className={className}>
       {children}
-    </Tag>
+    </Editable>
   )
 }
+
+export default EditableText

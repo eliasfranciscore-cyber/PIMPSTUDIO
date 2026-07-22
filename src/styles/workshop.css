@@ -99,6 +99,7 @@
   filter: grayscale(100%) contrast(1.06) brightness(0.92);
   transition: transform 0.9s cubic-bezier(.2,.7,.3,1), filter 0.6s ease;
 }
+.wks-img video { width: 100%; height: 100%; object-fit: cover; display: block; }
 .wks-img.is-failed img { display: none; }
 .wks-img.is-failed {
   background:
@@ -127,24 +128,28 @@
   position: relative; overflow: hidden; white-space: nowrap;
   transition: transform .25s cubic-bezier(.2,.7,.3,1), box-shadow .25s, background .25s, border-color .25s, color .25s;
 }
-.wks-btn:active { transform: translateY(1px) scale(0.99); }
+.wks-btn:active { transform: translateY(1px) scale(0.97); }
 .wks-btn-gold {
   background: #8838d8;
   color: #ffffff;
   box-shadow: var(--wk-shadow-gold);
   transition: box-shadow 0.22s ease, transform 0.22s ease, background 0.22s ease;
 }
-.wks-btn-gold:hover {
-  background: #9944e8;
-  transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(0,0,0,0.38), 0 0 24px rgba(136,56,216,0.5);
+@media (hover: hover) and (pointer: fine) {
+  .wks-btn-gold:hover {
+    background: #9944e8;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.38), 0 0 24px rgba(136,56,216,0.5);
+  }
 }
 .wks-btn-gold:active {
-  transform: translateY(0px) scale(0.99);
+  transform: translateY(0px) scale(0.97);
   box-shadow: 0 4px 14px rgba(0,0,0,0.3), 0 0 32px rgba(136,56,216,0.65);
 }
 .wks-btn-ghost { background: rgba(255,255,255,0.02); border-color: var(--wk-hair-2); color: var(--wk-ink-soft); }
-.wks-btn-ghost:hover { border-color: var(--wk-gold-line); color: #fff; background: rgba(136,56,216,0.07); }
+@media (hover: hover) and (pointer: fine) {
+  .wks-btn-ghost:hover { border-color: var(--wk-gold-line); color: #fff; background: rgba(136,56,216,0.07); }
+}
 .wks-btn-block { width: 100%; }
 .wks-btn-sm { padding: 0.6rem 1.05rem; min-height: 40px; font-size: 0.68rem; }
 
@@ -174,7 +179,9 @@
 .wks-brand b small { display: block; font-size: 0.52rem; letter-spacing: 0.3em; color: var(--wk-muted); margin-top: 2px; }
 .wks-nav-links { display: none; align-items: center; gap: clamp(0.6rem, 1.6vw, 1.7rem); }
 .wks-nav-links a { color: var(--wk-ink-soft); font-size: 0.82rem; letter-spacing: 0.03em; transition: color .2s; }
-.wks-nav-links a:hover { color: var(--wk-gold-lt); }
+@media (hover: hover) and (pointer: fine) {
+  .wks-nav-links a:hover { color: var(--wk-gold-lt); }
+}
 .wks-nav-cta { display: none; }
 .wks-burger {
   display: inline-grid; place-items: center; width: 44px; height: 44px;
@@ -204,7 +211,9 @@
    ============================================================ */
 .wks-hero { position: relative; min-height: 100vh; display: grid; align-items: end; isolation: isolate; }
 .wks-hero-media { position: absolute; inset: 0; z-index: -2; }
-.wks-hero-media img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) contrast(1.1) brightness(0.5); }
+/* Mismo tratamiento de fondo que Home/Cursos (.bhero-bgphoto/.course-hero-bg
+   img): saturate+brightness, sin blanco y negro — no grayscale(100%). */
+.wks-hero-media img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.92) brightness(0.6); }
 .wks-hero-media.is-failed { background: linear-gradient(160deg, #1a1a18, #0b0b0a); }
 .wks-hero-media.is-failed img { display: none; }
 .wks-hero-overlay {
@@ -213,8 +222,36 @@
     radial-gradient(820px 560px at 80% 12%, rgba(136,56,216,0.12), transparent 60%),
     linear-gradient(180deg, rgba(8,8,7,0.55) 0%, rgba(8,8,7,0.45) 40%, rgba(8,8,7,0.97) 100%);
 }
-.wks-hero-inner { padding-block: clamp(4rem, 9vw, 7rem) clamp(2.6rem, 5vw, 4rem); width: 100%; }
-.wks-hero-grid { display: grid; gap: clamp(1.6rem, 4vw, 3rem); align-items: end; }
+/* Figura recortada (sin fondo) del presentador — se dibuja POR ENCIMA del
+   overlay oscuro (a diferencia de .wks-hero-media, que va detrás) para que no
+   se lave con el gradiente pensado para fotos rectangulares. En desktop es un
+   overlay absoluto anclado a la derecha; en móvil pasa a flujo normal y se
+   reordena entre el logo y el texto (ver bloque de reordenamiento móvil). */
+.wks-hero-figwrap {
+  position: absolute; right: clamp(0.5rem, 3vw, 2.5rem);
+  /* top (no alto fijo) para que el hueco quede debajo del logo sin cálculos
+     en px atados a un alto de viewport específico. */
+  top: clamp(8rem, 14vw, 11.5rem); bottom: 0; z-index: 0;
+  width: min(540px, 42vw); pointer-events: none;
+}
+.wks-hero-figwrap img {
+  display: block; width: 100%; height: 100%;
+  object-fit: contain; object-position: center bottom;
+  filter: drop-shadow(0 30px 55px rgba(0,0,0,0.6));
+}
+
+/* z-index (no position:relative): .wks-hero-inner es hijo directo del grid de
+   .wks-hero, así que respeta z-index estando en position:static — evita que
+   se vuelva contenedor de posicionamiento y rompa el anclaje absoluto del
+   logo (que debe anclarse a .wks-hero, no a .wks-hero-inner). */
+.wks-hero-inner { z-index: 1; padding-block: clamp(4rem, 9vw, 7rem) clamp(2.6rem, 5vw, 4rem); width: 100%; }
+/* minmax(0,1fr) en la columna implícita evita un bug pre-existente (confirmado
+   también en producción, no lo causó nada de esta sesión): sin esto, la pista
+   "auto" del grid se dimensiona por el max-content de los hijos con
+   flex-wrap (.wks-hero-kicker/.wks-hero-actions) COMO SI no fueran a envolver,
+   ensanchando el grid ~66px más que el viewport en mobile y recortando
+   "CONTENIDO"/"QUE VENDE" contra el borde derecho (overflow-x:clip). */
+.wks-hero-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(1.6rem, 4vw, 3rem); align-items: end; }
 @media (min-width: 980px) { .wks-hero-grid { grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.75fr); } }
 .wks-hero-kicker { display: flex; flex-wrap: wrap; gap: 0.7rem; align-items: center; margin-bottom: 1.4rem; }
 .wks-hero h1 {
@@ -229,12 +266,39 @@
 .wks-hero-sub { margin: 1.4rem 0 0; max-width: 42ch; color: var(--wk-ink-soft); font-size: clamp(1rem, 1.5vw, 1.2rem); line-height: 1.6; }
 .wks-hero-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.8rem; }
 
-/* Móvil/tablet (hero apilado a 1 columna): centrar todo el texto del hero. */
+/* Móvil/tablet (hero apilado a 1 columna): centrar todo el texto del hero y
+   reordenar el sujeto (cutout) entre el logo y el texto — mismo patrón que el
+   hero de Home (.bhero-text con display:contents + order en los hijos),
+   adaptado porque aquí el logo es una imagen, no texto. */
 @media (max-width: 979px) {
-  .wks-hero-grid > div:first-child { text-align: center; }
-  .wks-hero-kicker { justify-content: center; }
-  .wks-hero-sub { margin-left: auto; margin-right: auto; }
-  .wks-hero-actions { justify-content: center; }
+  .wks-hero-text { display: contents; text-align: center; }
+  .wks-hero-logo { order: 1; }
+  .wks-hero-figwrap {
+    order: 2;
+    display: block;
+    position: static;
+    width: min(440px, 90vw);
+    max-height: 74vh;
+    /* Margen inferior negativo: el título (order 4) se solapa con los pies
+       del sujeto en vez de empezar debajo — "QUE VENDE" es texto hueco
+       (-webkit-text-stroke, sin relleno), así que el sujeto se asoma a
+       través de las letras. El orden (2 antes que 3 y 4) ya garantiza que
+       kicker/h1 se pinten encima sin necesitar z-index aparte. */
+    margin: 0.4rem auto -6rem;
+  }
+  /* Difuminado ligero desde los pies: el sujeto se "esfuma" hacia la sección
+     de texto en vez de cortarse en seco — solo el último tramo baja opacidad. */
+  .wks-hero-figwrap img {
+    height: auto;
+    max-height: 74vh;
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 80%, transparent 98%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 80%, transparent 98%);
+  }
+  .wks-hero-kicker { order: 3; justify-content: center; }
+  .wks-hero h1 { order: 4; }
+  .wks-hero-sub { order: 5; margin-left: auto; margin-right: auto; }
+  .wks-hero-actions { order: 6; justify-content: center; }
+  .wks-hero-card { order: 7; }
 }
 
 /* Móvil: centrar TODO el texto y evitar desbordes horizontales. */
@@ -270,20 +334,81 @@
 .wks-scroll-hint i { width: 1px; height: 32px; background: linear-gradient(var(--wk-gold), transparent); animation: wksScroll 2s ease-in-out infinite; }
 @keyframes wksScroll { 0%,100% { opacity: 0.3; transform: scaleY(0.6); transform-origin: top; } 50% { opacity: 1; transform: scaleY(1); } }
 
+/* Móvil: el logo y el título son los protagonistas del hero (grandes, casi al
+   borde del contenedor) — el hero ya NO intenta caber en una sola pantalla
+   (el sujeto en flujo lo impide de por sí), así que se prioriza impacto
+   visual sobre compacidad. El !important en el logo sigue siendo necesario
+   porque el editor visual fija su ancho con estilo inline. */
+@media (max-width: 979px) {
+  /* El padding-top tiene un piso de ~7.75rem (124px) que NO baja de ahí: el
+     navbar es fixed (76px) y va POR ENCIMA del hero, y el offset del logo
+     (-36px, fijo, del editor visual) resta de ese padding — con menos de
+     ~124px el logo queda tapado detrás/debajo del navbar. */
+  .wks-hero-inner { padding-block: clamp(7.75rem, 8vh, 8.5rem) clamp(0.5rem, 2.5vh, 1rem); }
+  .wks-hero-logo { width: min(357px, 76.5vw) !important; margin-bottom: 0.6rem; }
+  .wks-hero-kicker { margin-bottom: 0.4rem; gap: 0.35rem; }
+  /* El editor visual fija el font-size de "CONTENIDO"/"QUE VENDE" como estilo
+     inline en cada span (data-edit-id), que le gana a .wks-hero h1 de abajo
+     — por eso el !important apuntado al atributo, si no el título se queda
+     pegado a los ~120px del override y no baja de tamaño en móvil. */
+  .wks-hero h1 { font-size: clamp(3.22rem, 18.4vw, 5.75rem); }
+  .wks-hero [data-edit-id="workshop:meta.title1"],
+  .wks-hero [data-edit-id="workshop:meta.title2"] { font-size: clamp(3.22rem, 18.4vw, 5.75rem) !important; }
+  .wks-hero-sub { margin-top: 0.4rem; font-size: 0.8rem; line-height: 1.4; }
+  .wks-hero-actions { margin-top: 0.5rem; gap: 0.4rem; }
+  .wks-hero-actions .wks-btn { min-height: 36px; padding: 0.5rem 1rem; font-size: 0.64rem; }
+  .wks-hero-card { padding: 1.1rem; gap: 0.75rem; }
+  .wks-countdown { gap: 0.5rem; }
+  .wks-cd-cell { padding: 0.55rem 0.3rem; }
+  .wks-cd-cell b { font-size: 1.09rem; }
+  .wks-cd-cell span { font-size: 0.58rem; margin-top: 0.2rem; }
+  .wks-date-badge b { font-size: 1.21rem; }
+  .wks-date-badge span { font-size: 0.69rem; margin-top: 0.15rem; }
+  .wks-price-now { font-size: 1.44rem; }
+  .wks-price-was { font-size: 0.98rem; }
+  .wks-price-off { font-size: 0.64rem; padding: 0.3rem 0.55rem; }
+  /* El scroll-hint ("SCROLL" + línea) se ancla al fondo de .wks-hero — con el
+     hero ya mucho más alto (sujeto + textos grandes) queda flotando encima
+     de la tarjeta de precio a mitad de camino en vez de al pie real de la
+     página. Ya no tiene sentido en un hero que de por sí requiere scroll. */
+  .wks-scroll-hint { display: none; }
+}
+
+/* Desktop: el hero debe caber en una sola pantalla (sin scroll) incluso en
+   ventanas anchas y bajas (laptop con poca altura). Antes el título/el logo
+   se dimensionaban solo por vw, así que en una ventana ancha-pero-baja
+   seguían gigantes y el hero medía más que el 100vh disponible. Aquí se
+   incorpora vh a cada bloque vertical (padding, logo, título, márgenes) para
+   que todo se achique junto si falta alto, no solo si falta ancho. El
+   !important del logo es necesario porque el editor visual fija su ancho
+   con un estilo inline (que siempre le gana a una regla de hoja de estilos). */
+@media (min-width: 980px) {
+  .wks-hero-inner { padding-block: clamp(1rem, 3.5vh, 2.2rem) clamp(0.8rem, 2vh, 1.5rem); }
+  .wks-hero-logo { width: min(420px, 34vh) !important; margin-bottom: 0.8rem; margin-top: -2.4rem; }
+  .wks-hero-kicker { margin-bottom: 0.8rem; }
+  .wks-hero h1 { font-size: clamp(2rem, 9vh, 6.5rem); }
+  .wks-hero [data-edit-id="workshop:meta.title1"],
+  .wks-hero [data-edit-id="workshop:meta.title2"] { font-size: clamp(2rem, 9vh, 6.5rem) !important; }
+  .wks-hero-sub { margin-top: 0.8rem; font-size: clamp(0.9rem, 1.6vh, 1.1rem); }
+  .wks-hero-actions { margin-top: 1rem; }
+}
+
 /* ============================================================
    SECTION shell
    ============================================================ */
 .wks-section { padding-block: clamp(3.6rem, 8vw, 6.4rem); position: relative; }
 .wks-section-alt { background: linear-gradient(180deg, var(--wk-bg-1), var(--wk-bg)); border-block: 1px solid var(--wk-hair); }
-.wks-head { display: grid; gap: 0.9rem; max-width: 760px; margin-bottom: clamp(2rem, 4vw, 3.2rem); }
+.wks-head { position: relative; display: grid; gap: 0.9rem; max-width: 760px; margin-bottom: clamp(2rem, 4vw, 3.2rem); }
 .wks-head.is-center { margin-inline: auto; justify-items: center; text-align: center; }
 
 /* transform cards */
 .wks-transform-grid { display: grid; gap: 1.1rem; grid-template-columns: 1fr; }
 @media (min-width: 760px) { .wks-transform-grid { grid-template-columns: repeat(3, 1fr); } }
 .wks-tcard { position: relative; border: 1px solid var(--wk-hair); border-radius: 18px; overflow: hidden; background: var(--wk-panel); transition: transform .4s cubic-bezier(.2,.7,.3,1), border-color .4s; }
-.wks-tcard:hover { transform: translateY(-5px); border-color: var(--wk-gold-line); }
-.wks-tcard:hover .wks-img img { transform: scale(1.06); }
+@media (hover: hover) and (pointer: fine) {
+  .wks-tcard:hover { transform: translateY(-5px); border-color: var(--wk-gold-line); }
+  .wks-tcard:hover .wks-img img { transform: scale(1.06); }
+}
 .wks-tcard .wks-img { aspect-ratio: 4 / 3; }
 .wks-tcard-body { padding: 1.3rem; display: grid; gap: 0.5rem; }
 .wks-tcard-body h3 { font-family: var(--wk-font-display); margin: 0; font-size: 1.25rem; font-weight: 600; }
@@ -339,19 +464,21 @@
 .wks-video-poster img {
   position: absolute; inset: 0; width: 100%; height: 100%;
   object-fit: cover; filter: grayscale(100%) contrast(1.08) brightness(0.7);
-  transition: transform .5s ease, filter .4s ease;
+  transition: transform .25s cubic-bezier(.2,.7,.3,1), filter .25s ease;
 }
-.wks-video-poster:hover img { transform: scale(1.05); filter: grayscale(55%) contrast(1.08) brightness(0.8); }
 .wks-video-play {
   position: relative; z-index: 2;
   width: 74px; height: 74px; border-radius: 999px;
   display: grid; place-items: center;
   color: #fff; background: var(--wk-gold-grad);
   box-shadow: 0 12px 34px -8px rgba(136, 56, 216, 0.65), inset 0 0 0 1px rgba(255,255,255,0.18);
-  transition: transform .25s ease;
+  transition: transform .2s cubic-bezier(.2,.7,.3,1);
 }
 .wks-video-play svg { margin-left: 3px; } /* centra ópticamente el triángulo */
-.wks-video-poster:hover .wks-video-play { transform: scale(1.09); }
+@media (hover: hover) and (pointer: fine) {
+  .wks-video-poster:hover img { transform: scale(1.05); filter: grayscale(55%) contrast(1.08) brightness(0.8); }
+  .wks-video-poster:hover .wks-video-play { transform: scale(1.09); }
+}
 
 /* Sección VSL dedicada: video centrado y prominente */
 .wks-vsl-frame {
@@ -361,7 +488,7 @@
   border-radius: 18px;
 }
 
-.wks-feature-body { display: grid; gap: 1.3rem; }
+.wks-feature-body { position: relative; display: grid; gap: 1.3rem; }
 .wks-detail-list { display: grid; gap: 0.85rem; margin: 0; padding: 0; list-style: none; }
 .wks-detail-list li { display: grid; grid-template-columns: auto 1fr; gap: 0.9rem; align-items: start; }
 .wks-detail-list .ic { width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center; border: 1px solid var(--wk-gold-line); background: rgba(136,56,216,0.06); color: var(--wk-gold-lt); flex-shrink: 0; }
@@ -379,7 +506,9 @@
   background: rgba(255,255,255,0.015); color: var(--wk-ink-soft); cursor: pointer;
   display: grid; gap: 0.3rem; transition: border-color .3s, background .3s, transform .3s;
 }
-.wks-mod-tab:hover { border-color: var(--wk-hair-2); transform: translateY(-2px); }
+@media (hover: hover) and (pointer: fine) {
+  .wks-mod-tab:hover { border-color: var(--wk-hair-2); transform: translateY(-2px); }
+}
 .wks-mod-tab.is-active { border-color: var(--wk-gold-line); background: rgba(136,56,216,0.07); }
 .wks-mod-tab .n { font-family: var(--wk-font-display); font-size: 0.66rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--wk-gold); }
 .wks-mod-tab .t { font-family: var(--wk-font-display); font-size: 1.1rem; font-weight: 600; color: var(--wk-ink); }
@@ -397,13 +526,18 @@
 .wks-mod-points b { font-family: var(--wk-font-display); color: var(--wk-ink); font-weight: 600; }
 .wks-mod-points span { color: var(--wk-muted); }
 .wks-mod-points .dot { width: 20px; height: 20px; border-radius: 999px; display: grid; place-items: center; border: 1px solid var(--wk-gold-line); color: var(--wk-gold-lt); margin-top: 1px; }
-.wks-fade-key { animation: wksFade .5s ease both; }
+.wks-fade-key { animation: wksFade .45s cubic-bezier(.2,.7,.3,1) both; }
 @keyframes wksFade { from { opacity: 0.3; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
 /* ============================================================
    CRONOGRAMA timeline
    ============================================================ */
 .wks-timeline { display: grid; gap: 0; position: relative; }
+.wks-timeline.wks-reveal .wks-tl-row {
+  opacity: 0; transform: translateY(10px);
+  transition: opacity .5s cubic-bezier(.2,.7,.3,1), transform .5s cubic-bezier(.2,.7,.3,1);
+}
+.wks-timeline.wks-reveal.is-in .wks-tl-row { opacity: 1; transform: none; }
 .wks-tl-row {
   display: grid; grid-template-columns: 92px 1fr; gap: clamp(1rem, 3vw, 2rem); align-items: center;
   padding: 1.3rem 0; border-bottom: 1px solid var(--wk-hair); position: relative;
@@ -426,6 +560,11 @@
 .wks-panel-head h3 { font-family: var(--wk-font-display); margin: 0; font-size: 1.35rem; font-weight: 600; }
 .wks-give-list { display: grid; gap: 0.7rem; margin: 0; padding: 0; list-style: none; }
 .wks-give-list li { display: grid; grid-template-columns: auto 1fr; gap: 0.7rem; align-items: start; padding: 0.7rem 0; border-bottom: 1px solid var(--wk-hair); }
+.wks-panel.wks-reveal .wks-give-list li {
+  opacity: 0; transform: translateY(10px);
+  transition: opacity .5s cubic-bezier(.2,.7,.3,1), transform .5s cubic-bezier(.2,.7,.3,1);
+}
+.wks-panel.wks-reveal.is-in .wks-give-list li { opacity: 1; transform: none; }
 .wks-give-list li:last-child { border-bottom: 0; }
 .wks-give-list b { font-family: var(--wk-font-display); display: block; }
 .wks-give-list span { color: var(--wk-muted); font-size: 0.88rem; }
@@ -501,7 +640,7 @@
 .wks-faq-q { width: 100%; text-align: left; background: none; border: 0; color: var(--wk-ink); padding: 1.1rem 1.3rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; font-family: var(--wk-font-display); font-size: 1.02rem; font-weight: 500; cursor: pointer; }
 .wks-faq-q .pm { width: 26px; height: 26px; border-radius: 999px; border: 1px solid var(--wk-gold-line); display: grid; place-items: center; color: var(--wk-gold-lt); flex-shrink: 0; transition: transform .3s; }
 .wks-faq-item.is-open .pm { transform: rotate(45deg); }
-.wks-faq-a { max-height: 0; overflow: hidden; transition: max-height .4s ease; }
+.wks-faq-a { max-height: 0; overflow: hidden; transition: max-height .35s cubic-bezier(.2,.7,.3,1); }
 .wks-faq-a p { margin: 0; padding: 0 1.3rem 1.2rem; color: var(--wk-muted); line-height: 1.6; }
 
 /* ============================================================
@@ -534,8 +673,11 @@
 .wks-reveal { opacity: 1; transform: translateY(18px); transition: transform .8s cubic-bezier(.2,.7,.3,1), opacity .8s ease; }
 .wks-reveal.is-in { transform: translateY(0); }
 @media (prefers-reduced-motion: reduce) {
-  .wks-reveal, .wks-5050-bar i, .wks-cupos-bar i { transition-duration: 0.05s !important; }
-  .wks-scroll-hint i { animation: none; }
+  .wks-reveal, .wks-5050-bar i, .wks-cupos-bar i,
+  .wks-timeline .wks-tl-row, .wks-give-list li { transition-duration: 0.05s !important; }
+  .wks-scroll-hint i,
+  .wks-lamp-dot, .wks-lamp-bar, .wks-lamp-cone,
+  .wks-panel, .wks-pricing-amount .now, .wks-btn-gold.wks-btn-block { animation: none; }
 }
 
 /* ============================================================
@@ -628,7 +770,7 @@
    GLOW EN PANEL CARDS — mismo estilo que pillar/home
    ============================================================ */
 @keyframes wksGlowBorder {
-  0%, 100% {
+  0% {
     box-shadow:
       0 0 8px 1px rgba(136, 56, 216, 0.1),
       inset 0 0 0 1px rgba(136, 56, 216, 0.1);
@@ -640,12 +782,18 @@
       inset 0 0 0 1px rgba(136, 56, 216, 0.3);
     border-color: rgba(136, 56, 216, 0.32);
   }
+  100% {
+    box-shadow:
+      0 0 8px 1px rgba(136, 56, 216, 0.1),
+      inset 0 0 0 1px rgba(136, 56, 216, 0.1);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
 }
 .wks-panel {
-  animation: wksGlowBorder 4s ease-in-out infinite;
+  animation: wksGlowBorder 2.6s cubic-bezier(.2,.7,.3,1) 1;
 }
 .wks-panel:nth-child(2) {
-  animation-delay: 2s;
+  animation-delay: 0.15s;
 }
 
 /* ============================================================
@@ -681,11 +829,12 @@
    BOTÓN SUBMIT — glow dorado pulsante
    ============================================================ */
 @keyframes wksGlowBtn {
-  0%, 100% { box-shadow: var(--wk-shadow-gold), 0 0 0 0 rgba(136, 56, 216, 0); }
+  0% { box-shadow: var(--wk-shadow-gold), 0 0 0 0 rgba(136, 56, 216, 0); }
   50% { box-shadow: 0 8px 44px -12px rgba(136, 56, 216, 0.7), 0 0 32px 4px rgba(136, 56, 216, 0.22); }
+  100% { box-shadow: var(--wk-shadow-gold), 0 0 0 0 rgba(136, 56, 216, 0); }
 }
 .wks-btn-gold.wks-btn-block {
-  animation: wksGlowBtn 2.4s ease-in-out infinite;
+  animation: wksGlowBtn 2.4s cubic-bezier(.2,.7,.3,1) 1;
 }
 
 /* ============================================================
@@ -732,7 +881,9 @@
   color: var(--wk-ink-soft); font-family: var(--wk-font-body);
   font-size: 0.92rem; letter-spacing: 0.01em; transition: color .2s;
 }
-.wks-footer-link:hover { color: var(--wk-gold-lt); }
+@media (hover: hover) and (pointer: fine) {
+  .wks-footer-link:hover { color: var(--wk-gold-lt); }
+}
 @media (max-width: 759px) {
   .wks-footer-brand { justify-items: center; text-align: center; }
   .wks-footer-col { justify-items: center; text-align: center; }

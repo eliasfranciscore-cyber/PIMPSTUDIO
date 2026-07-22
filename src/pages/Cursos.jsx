@@ -4,13 +4,15 @@ import { useBrunettiFx, scrollToId } from '../components/brunetti.jsx'
 import SiteNav from '../components/SiteNav.jsx'
 import ModuleFooter from '../components/ModuleFooter.jsx'
 import { Lamp } from '../components/ui/lamp.jsx'
-import FintocCheckout from '../components/FintocCheckout.jsx'
+import { Sparkles } from '../components/ui/sparkles.jsx'
+import FlowCheckout from '../components/FlowCheckout.jsx'
 import { EditableText } from '../components/edit/EditableText.jsx'
+import { Editable } from '../components/edit/Editable.jsx'
 import CURSOS from '../data/content/cursos.json'
 
 /* ================================================================
    CURSOS BRUNETTI — Formación en visagismo & barbería
-   Flujo: usuario ve módulos → paga vía Fintoc → accede a Skool
+   Flujo: usuario ve módulos → paga vía Flow → accede a Skool
    ================================================================ */
 
 // La duración de cada lección es dato fijo (no editable por texto libre); el
@@ -54,7 +56,7 @@ export default function Cursos() {
       <main>
         {/* ============ HERO ============ */}
         <section className="course-hero">
-          <div className="course-hero-bg" aria-hidden="true"><img src="/assets/bruno-hero-bg.webp" alt="" fetchpriority="high" decoding="async" /></div>
+          <div className="course-hero-bg" aria-hidden="true"><Editable as="img" editId="cursos:heroBg" src="/assets/bruno-hero-bg.webp" alt="" fetchpriority="high" decoding="async" /></div>
           <div className="course-hero-inner">
             <span className="bhero-kicker"><span className="dot" /><EditableText file="cursos" path="hero.kicker">{CURSOS.hero.kicker}</EditableText></span>
             <h1><EditableText file="cursos" path="hero.title1">{CURSOS.hero.title1}</EditableText><br /><EditableText file="cursos" path="hero.title2">{CURSOS.hero.title2}</EditableText></h1>
@@ -71,9 +73,13 @@ export default function Cursos() {
             </div>
           </div>
           <div className="course-hero-figwrap" aria-hidden="true">
-            <img src="/assets/cursos-hero-cutout.webp" alt="" />
+            <Editable as="img" editId="cursos:heroCutout" src="/assets/cursos-hero-cutout.webp" alt="" />
           </div>
         </section>
+
+        {/* Fondo de partículas azules para el cuerpo de cursos (hero fuera). */}
+        <div className="bru-sparkles-zone">
+          <Sparkles className="bru-sparkles--bg" color="107, 116, 240" />
 
         {/* ============ INTRO ============ */}
         <section className="bsection">
@@ -141,20 +147,22 @@ export default function Cursos() {
 
         {/* ============ CHECKOUT ============ */}
         <section className="bsection bsection-lamp" id="inscripcion">
-          <Lamp className="bru-lamp--sec" />
           <div className="bwrap">
             <div className="bhead center" data-reveal>
+              <Lamp className="bru-lamp--sec" />
               <p className="kicker"><EditableText file="cursos" path="checkout.kicker">{CURSOS.checkout.kicker}</EditableText></p>
               <h2><EditableText file="cursos" path="checkout.h2" as="span">{CURSOS.checkout.h2}</EditableText></h2>
               <p><EditableText file="cursos" path="checkout.body" as="span">{CURSOS.checkout.body}</EditableText></p>
             </div>
 
-            <FintocCheckout />
+            <FlowCheckout />
           </div>
         </section>
+        </div>
       </main>
 
       <ModuleFooter
+        logoSrc="/assets/brunetti-cursos-wordmark.webp"
         links={[
           [() => goAnchor('curriculum'), 'Programa'],
           [() => goAnchor('inscripcion'), 'Acceder'],

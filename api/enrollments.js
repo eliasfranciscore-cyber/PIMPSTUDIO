@@ -1,6 +1,7 @@
 import { neon } from "@neondatabase/serverless"
 import { requireInternal } from "./_auth.js"
 import { notifyAll } from "./push.js"
+import { sendWorkshopConfirmationEmail } from "./_email.js"
 
 /* Tabla esperada en Neon (créala si no existe):
    CREATE TABLE IF NOT EXISTS enrollments (
@@ -112,6 +113,16 @@ export default async function handler(req, res) {
         })
       } catch (nerr) {
         console.error("enrollments notify (no bloquea):", nerr?.message)
+      }
+
+      /* 4) Correo de confirmación al inscrito (solo workshop por ahora).
+         Best-effort: si falla o no hay RESEND_API_KEY, no bloquea. */
+      if (source === "workshop") {
+        try {
+          await sendWorkshopConfirmationEmail({ to: email, name, edition })
+        } catch (eerr) {
+          console.error("enrollments email (no bloquea):", eerr?.message)
+        }
       }
 
       return sendJson(res, 200, { ok: true, id: row.id })

@@ -6,144 +6,140 @@ struct DashboardView: View {
     @State private var model = DashboardModel()
 
     private var barber: Barber { session.barber ?? DemoData.barber }
-    private var tabs: [AppTab] {
-        [.resumen, .agenda, .reservas, .inscripciones, .finanzas, .clientes, .servicios, .gastos, .marketing, .config]
-    }
 
     var body: some View {
-        TabView(selection: $selectedTab) {
-            ForEach(tabs) { tab in
-                NavigationStack {
-                    ModuleHost(tab: tab, model: model)
-                        .navigationTitle(tab.title)
-                        .toolbar {
-                            ToolbarItem(placement: .topBarLeading) {
-                                HStack(spacing: 8) {
-                                    Image("LogoIcon")
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 28, height: 28)
-                        Text(barber.short ?? barber.name)
-                            .font(.subheadline.weight(.semibold))
-                    }
-                    .foregroundStyle(BrunettiTheme.text)
-                            }
-                            ToolbarItem(placement: .topBarTrailing) {
-                                Button {
-                                    Task { await model.refresh(api: session.api, barberId: barber.id) }
-                                } label: {
-                                    Image(systemName: model.isLoading ? "hourglass" : "arrow.clockwise")
+        ZStack {
+            TabView(selection: $selectedTab) {
+                ForEach(AppTab.allCases) { tab in
+                    NavigationStack {
+                        ModuleHost(tab: tab, model: model)
+                            .navigationTitle(tab.title)
+                            .navigationBarTitleDisplayMode(.large)
+                            .toolbar {
+                                ToolbarItem(placement: .topBarLeading) {
+                                    barberChip
                                 }
-                                .accessibilityLabel("Actualizar")
+                                ToolbarItem(placement: .topBarTrailing) {
+                                    addBookingButton
+                                }
                             }
-                        }
-                        .background(BrunettiTheme.background.ignoresSafeArea())
+                            .background(BrunettiTheme.background.ignoresSafeArea())
+                    }
+                    .tabItem { Label(tab.title, systemImage: tab.symbol) }
+                    .tag(tab)
+                    .badge(tab == .reservas ? model.pendingCount : 0)
                 }
-                .tabItem { Label(tab.title, systemImage: tab.symbol) }
-                .tag(tab)
+            }
+            .tint(BrunettiTheme.gold)
+            .task {
+                await model.refresh(api: session.api, barberId: barber.id)
+                while !Task.isCancelled {
+                    try? await Task.sleep(for: .seconds(120))
+                    guard !Task.isCancelled else { break }
+                    await model.refresh(api: session.api, barberId: barber.id)
+                }
+            }
+            .onChange(of: model.selectedDate) { _, _ in
+                Task { await model.refreshAgenda(api: session.api, barberId: barber.id) }
+            }
+
+            // Biometric lock screen
+            if session.isLocked {
+                LockScreenOverlay()
+                    .zIndex(100)
             }
         }
-        .tint(BrunettiTheme.gold)
-        .task {
-            await model.refresh(api: session.api, barberId: barber.id)
+        .animation(.easeInOut(duration: 0.22), value: session.isLocked)
+    }
+
+    private var barberChip: some View {
+        Button {
+            selectedTab = .hoy
+        } label: {
+            HStack(spacing: 8) {
+                Image("BrandLockup")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 112, height: 34)
+                Text(barber.short ?? String(barber.name.split(separator: " ").first ?? "Brunetti"))
+                    .font(.subheadline.weight(.semibold))
+                    .lineLimit(1)
+            }
         }
-        .onChange(of: model.selectedDate) { _, _ in
-            Task { await model.refreshAgenda(api: session.api, barberId: barber.id) }
+        .buttonStyle(.plain)
+        .foregroundStyle(BrunettiTheme.text)
+        .accessibilityLabel("Ir al inicio")
+    }
+
+    private var addBookingButton: some View {
+        Button {
+            model.beginBooking()
+        } label: {
+            Image(systemName: "calendar.badge.plus")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 24, height: 24)
         }
+        .accessibilityLabel("Nueva reserva")
     }
 }
+
+// MARK: - Module Host
 
 struct ModuleHost: View {
     @Environment(SessionStore.self) private var session
     var tab: AppTab
     @Bindable var model: DashboardModel
 
+    private var barberId: Int { session.barber?.id ?? DemoData.barber.id }
+
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
-                HeaderPanel(tab: tab, pending: model.pendingCount, message: model.message)
-
                 switch tab {
-                case .resumen:
-                    SummaryView(model: model)
-                case .agenda:
-                    AgendaView(model: model, barberId: session.barber?.id ?? DemoData.barber.id)
+                case .hoy:
+                    HoyView(model: model, barberId: barberId)
                 case .reservas:
                     ReservationsView(model: model)
-                case .inscripciones:
-                    EnrollmentsView(model: model)
-                case .finanzas:
-                    FinanceView(model: model)
                 case .clientes:
                     ClientsView(model: model)
-                case .servicios:
-                    ServicesView(model: model)
-                case .gastos:
-                    ExpensesView(model: model)
-                case .marketing:
-                    MarketingView(model: model)
-                case .config:
-                    SettingsView(model: model)
+                case .finanzas:
+                    FinanceCombinedView(model: model)
+                case .mas:
+                    MasView(model: model)
                 }
             }
             .padding(16)
-            .padding(.bottom, 28)
+            .padding(.bottom, 32)
         }
         .scrollIndicators(.hidden)
-        .sheet(item: $model.selectedBooking) { booking in
-            BookingSheet(booking: booking, model: model)
+        .refreshable {
+            await model.refresh(api: session.api, barberId: barberId)
         }
-        .sheet(item: $model.selectedClient) { client in
-            ClientSheet(client: client, model: model)
-        }
-        .sheet(item: $model.selectedService) { service in
-            ServiceSheet(service: service, model: model)
-        }
-        .sheet(item: $model.selectedExpense) { expense in
-            ExpenseSheet(expense: expense, model: model)
-        }
-        .sheet(item: $model.bookingDraft) { draft in
-            BookingDraftSheet(draft: draft, model: model, barberId: session.barber?.id ?? DemoData.barber.id)
-        }
-        .sheet(item: $model.enrollmentDraft) { draft in
-            EnrollmentSheet(draft: draft, model: model)
-        }
-        .sheet(item: $model.paymentDraft) { draft in
-            PaymentSheet(draft: draft, model: model)
+        .sheet(item: $model.selectedBooking) { BookingSheet(booking: $0, model: model) }
+        .sheet(item: $model.selectedClient) { ClientSheet(client: $0, model: model) }
+        .sheet(item: $model.selectedService) { ServiceSheet(service: $0, model: model) }
+        .sheet(item: $model.selectedExpense) { ExpenseSheet(expense: $0, model: model) }
+        .sheet(item: $model.bookingDraft) { BookingDraftSheet(draft: $0, model: model, barberId: barberId) }
+        .sheet(item: $model.enrollmentDraft) { EnrollmentSheet(draft: $0, model: model) }
+        .sheet(item: $model.paymentDraft) { PaymentSheet(draft: $0, model: model) }
+        .sheet(isPresented: Binding(get: { model.paymentSessionURL != nil }, set: { if !$0 { model.paymentSessionURL = nil } })) {
+            if let url = model.paymentSessionURL {
+                SafariView(url: url)
+                    .presentationCornerRadius(28)
+            }
         }
     }
 }
 
-struct HeaderPanel: View {
-    var tab: AppTab
-    var pending: Int
-    var message: String?
+// MARK: - Safari sheet for Fintoc
 
-    var body: some View {
-        HStack(spacing: 14) {
-            Image(systemName: tab.symbol)
-                .font(.title2)
-                .foregroundStyle(BrunettiTheme.gold)
-                .frame(width: 44, height: 44)
-                .brunettiGlass(radius: 14, tint: BrunettiTheme.gold.opacity(0.18), interactive: true)
-            VStack(alignment: .leading, spacing: 4) {
-                Text(tab.title)
-                    .font(.title2.weight(.bold))
-                    .foregroundStyle(BrunettiTheme.text)
-                Text(message ?? "Panel interno Brunetti")
-                    .font(.caption)
-                    .foregroundStyle(BrunettiTheme.muted)
-            }
-            Spacer()
-            if pending > 0 {
-                Label("\(pending)", systemImage: "bell.fill")
-                    .font(.caption.weight(.bold))
-                    .foregroundStyle(.black)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 7)
-                    .background(BrunettiTheme.gold, in: Capsule())
-            }
-        }
-        .brunettiCard(radius: 24)
+import SafariServices
+
+struct SafariView: UIViewControllerRepresentable {
+    let url: URL
+    func makeUIViewController(context: Context) -> SFSafariViewController {
+        SFSafariViewController(url: url)
     }
+    func updateUIViewController(_ uiViewController: SFSafariViewController, context: Context) {}
 }

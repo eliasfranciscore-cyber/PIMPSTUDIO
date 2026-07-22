@@ -8,7 +8,7 @@ enum DemoData {
         short: "Brunetti",
         code: "bruno-herrera",
         role: "Visagista · Director de imagen",
-        tier: "premium",
+        tier: nil,
         admin: true,
         active: true,
         canViewFinance: true,

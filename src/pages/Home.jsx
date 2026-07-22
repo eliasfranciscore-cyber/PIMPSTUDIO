@@ -4,8 +4,12 @@ import { useBrunettiFx, scrollToId } from '../components/brunetti.jsx'
 import SiteNav from '../components/SiteNav.jsx'
 import ModuleFooter from '../components/ModuleFooter.jsx'
 import { Lamp } from '../components/ui/lamp.jsx'
+import { ContainerScroll } from '../components/ui/container-scroll-animation.jsx'
+import { InteractiveSelector } from '../components/ui/interactive-selector.jsx'
+import { Sparkles } from '../components/ui/sparkles.jsx'
 import { CLP } from '../data.js'
 import { EditableText, EditContext } from '../components/edit/EditableText.jsx'
+import { Editable } from '../components/edit/Editable.jsx'
 import HERO from '../data/content/home-hero.json'
 import VISAGISMO from '../data/content/home-visagismo.json'
 import ESTILO_TEASER from '../data/content/home-estilo-teaser.json'
@@ -31,7 +35,17 @@ const PILLAR_ICONS = [
   (<><path d="M3 12a9 9 0 1 0 9-9M3 12l3-3M3 12l3 3" /><path d="M12 8v4l3 2" /></>),
   (<><path d="M23 7l-7 5 7 5V7z" /><rect x="1" y="5" width="15" height="14" rx="2" /></>),
 ]
-const PILLARS = VISAGISMO.pillars.map((p, i) => ({ ...p, icon: PILLAR_ICONS[i] }))
+// Medios de fondo de cada panel del carrusel de visagismo: fotos reales en los
+// pasos 1-4 y un video en loop en el paso 5. Sin `image`/`video` el panel cae
+// al ícono sobre tinte dorado (fallback del InteractiveSelector).
+const PILLAR_MEDIA = [
+  { image: '/assets/visagismo-paso-1.jpg' },
+  { image: '/assets/visagismo-paso-2.jpg' },
+  { image: '/assets/visagismo-paso-3.jpg' },
+  { image: '/assets/visagismo-paso-4.jpg' },
+  { video: '/assets/visagismo-paso-5.mp4', poster: '/assets/visagismo-paso-5-poster.jpg' },
+]
+const PILLARS = VISAGISMO.pillars.map((p, i) => ({ ...p, icon: PILLAR_ICONS[i], ...PILLAR_MEDIA[i] }))
 
 // Respaldo solo para cuando /api/services no responde (ver graceful degradation
 // en CLAUDE.md). La fuente real son los servicios activos configurados en el
@@ -69,10 +83,16 @@ function toDisplayService(svc, featuredId) {
 const CARD_IMAGES = ['/assets/bruno-feature.jpg', '/assets/gallery-1.jpg', '/assets/gallery-2.jpg', '/assets/gallery-3.jpg', '/assets/workshop-2026.jpg', '/assets/bruno-portrait.jpg']
 const CARDS = EXPERIENCIAS.cards.map((c, i) => ({ ...c, img: CARD_IMAGES[i] }))
 
-const TESTIMONIAL_IMAGES = ['/assets/bruno-feature.jpg', '/assets/gallery-1.jpg', '/assets/workshop-2026.jpg', '/assets/bruno-portrait.jpg']
+// Antes las 4 reseñas reutilizaban fotos de Bruno (el barbero) en vez de
+// clientes reales. Se reemplazan por fotos de la galería de "Tu estilo"
+// (/tu-estilo), eligiendo una persona distinta y reconocible por reseña.
+const TESTIMONIAL_IMAGES = [
+  '/assets/estilo/estilo-fade-clasico.jpg',
+  '/assets/estilo/estilo-side-part.jpg',
+  '/assets/estilo/estilo-textura-barba.jpg',
+  '/assets/estilo/estilo-skin-fade.jpg',
+]
 const TESTIMONIALS = TESTIMONIOS_INTRO.items.map((t, i) => ({ ...t, img: TESTIMONIAL_IMAGES[i] }))
-
-const NAME = 'Brunetti'.split('')
 
 export default function Home() {
   const navigate = useNavigate()
@@ -228,13 +248,13 @@ export default function Home() {
         {/* ============ HERO ============ */}
         <section id="hero" className="bhero">
           <div className="bhero-bgphoto" aria-hidden="true">
-            <img src="/assets/bruno-hero-bg.webp" alt="" fetchpriority="high" decoding="async" />
+            <Editable as="img" editId="home-hero:bg" src="/assets/bruno-hero-bg.webp" alt="" fetchpriority="high" decoding="async" />
           </div>
           <Lamp className="bru-lamp--hero" />
           <div className="bhero-grid">
             <div className="bhero-text">
-              <h1 className="bhero-name" aria-label="Brunetti">
-                {NAME.map((ch, i) => (<span key={i} style={{ '--l': i }}>{ch}</span>))}
+              <h1 className="bhero-name bhero-name--img" aria-label="Brunetticutz">
+                <Editable as="img" editId="home-hero:wordmark" className="bhero-name-img" src="/assets/brunetti-hero-wordmark.webp" alt="Brunetticutz" fetchpriority="high" decoding="async" />
               </h1>
               <span className="bhero-kicker"><span className="dot" /><EditableText file="home-hero" path="kicker">{HERO.kicker}</EditableText></span>
               <p className="bhero-role">
@@ -256,7 +276,7 @@ export default function Home() {
             <div className="bhero-figwrap">
               <div className="bhero-figure bhero-figure--cutout" data-tilt>
                 <a className="bhero-fig-link" href="https://instagram.com/brunetticutz" target="_blank" rel="noopener noreferrer" aria-label="Ver Instagram de @brunetticutz">
-                  <img src="/assets/bruno-hero-cutout.webp" alt="Bruno Herrera, Brunetti — visagista" fetchpriority="high" decoding="async" />
+                  <Editable as="img" editId="home-hero:cutout" src="/assets/bruno-hero-cutout.webp" alt="Bruno Herrera, Brunetti — visagista" fetchpriority="high" decoding="async" />
                   <div className="fig-tag">
                     <span><EditableText file="home-hero" path="figHandle">{HERO.figHandle}</EditableText></span>
                   </div>
@@ -271,31 +291,35 @@ export default function Home() {
           </div>
         </section>
 
+        <div className="bru-sparkles-zone">
+          <Sparkles className="bru-sparkles--bg" />
+
         {/* ============ MARQUEE ============ */}
         <div className="bmarquee" aria-hidden="true">
           <div className="bmarquee-track">{marquee}{marquee}</div>
         </div>
 
         {/* ============ VISAGISMO ============ */}
-        <section id="visagismo" className="bsection">
+        <section id="visagismo" className="bsection bsection--full">
           <div className="bwrap">
-            <div className="bhead" data-reveal>
+            <div className="bhead center" data-reveal>
               <p className="kicker"><EditableText file="home-visagismo" path="kicker">{VISAGISMO.kicker}</EditableText></p>
               <h2><EditableText file="home-visagismo" path="h2" as="span">{VISAGISMO.h2}</EditableText></h2>
               <p><EditableText file="home-visagismo" path="body" as="span">{VISAGISMO.body}</EditableText></p>
             </div>
-            <div className="visagismo-grid">
-              {PILLARS.map((p, i) => (
-                <article className="pillar" data-reveal style={{ '--i': i }} key={p.num}>
-                  <div className="picon"><svg viewBox="0 0 24 24">{p.icon}</svg></div>
-                  <div>
-                    <span className="num">{p.num}</span>
-                    <h3><EditableText file="home-visagismo" path={`pillars.${i}.title`} as="span">{p.title}</EditableText></h3>
-                    <p><EditableText file="home-visagismo" path={`pillars.${i}.body`} as="span">{p.body}</EditableText></p>
-                  </div>
-                </article>
-              ))}
-            </div>
+          </div>
+          <div className="bwrap">
+            <InteractiveSelector
+              items={PILLARS.map((p, i) => ({
+                num: p.num,
+                icon: p.icon,
+                image: p.image,
+                video: p.video,
+                poster: p.poster,
+                title: <EditableText file="home-visagismo" path={`pillars.${i}.title`} as="span">{p.title}</EditableText>,
+                body: <EditableText file="home-visagismo" path={`pillars.${i}.body`} as="span">{p.body}</EditableText>,
+              }))}
+            />
           </div>
         </section>
 
@@ -303,7 +327,7 @@ export default function Home() {
         <section className="bsection" id="estilo-teaser">
           <div className="bwrap">
             <div className="bteaser" data-reveal="scale">
-              <div className="bteaser-bg"><img src="/assets/estilo-teaser.jpg" alt="Asesoría de visagismo Brunetti" loading="lazy" decoding="async" /></div>
+              <div className="bteaser-bg"><Editable as="img" editId="home-estilo:teaserBg" src="/assets/estilo-teaser.jpg" alt="Asesoría de visagismo Brunetti" loading="lazy" decoding="async" /></div>
               <div className="bteaser-inner">
                 <p className="kicker"><EditableText file="home-estilo-teaser" path="kicker">{ESTILO_TEASER.kicker}</EditableText></p>
                 <h2><EditableText file="home-estilo-teaser" path="h2" as="span">{ESTILO_TEASER.h2}</EditableText></h2>
@@ -321,13 +345,17 @@ export default function Home() {
 
         {/* ============ SOBRE BRUNO ============ */}
         <section id="sobre" className="bsection">
-          <Lamp className="bru-lamp--sec" />
           <div className="bwrap babout">
-            <figure className="babout-figure" data-reveal="left">
-              <img src="/assets/workshop-2026.jpg" alt="Bruno Herrera con su comunidad de barberos" loading="lazy" decoding="async" />
-              <figcaption className="sig"><EditableText file="home-sobre" path="figCaption">{SOBRE.figCaption}</EditableText></figcaption>
-            </figure>
+            <div data-reveal="left">
+              <ContainerScroll>
+                <figure className="babout-figure">
+                  <Editable as="img" editId="home-sobre:figure" src="/assets/workshop-2026.jpg" alt="Bruno Herrera con su comunidad de barberos" loading="lazy" decoding="async" />
+                  <figcaption className="sig"><EditableText file="home-sobre" path="figCaption">{SOBRE.figCaption}</EditableText></figcaption>
+                </figure>
+              </ContainerScroll>
+            </div>
             <div className="babout-body" data-reveal="right">
+              <Lamp className="bru-lamp--sec" />
               <p className="kicker" style={{ letterSpacing: '0.3em', textTransform: 'uppercase', fontSize: '0.72rem', color: 'var(--gold-bright)', margin: '0 0 0.8rem' }}><EditableText file="home-sobre" path="kicker">{SOBRE.kicker}</EditableText></p>
               <h2><EditableText file="home-sobre" path="h2" as="span">{SOBRE.h2}</EditableText></h2>
               <p><span className="lead"><EditableText file="home-sobre" path="leadText" as="span">{SOBRE.leadText}</EditableText></span> <EditableText file="home-sobre" path="bodyText" as="span">{SOBRE.bodyText}</EditableText></p>
@@ -376,8 +404,8 @@ export default function Home() {
           </div>
           <div className="compare" data-reveal="scale">
             <div className="cmp-frame" id="compare-frame">
-              <img className="cmp-img cmp-after" src="/assets/compare-after.jpg" alt="Después del corte" loading="lazy" decoding="async" />
-              <img className="cmp-img cmp-before" src="/assets/compare-before.jpg" alt="Antes del corte" loading="lazy" decoding="async" />
+              <Editable as="img" editId="home:compareAfter" className="cmp-img cmp-after" src="/assets/compare-after.jpg" alt="Después del corte" loading="lazy" decoding="async" />
+              <Editable as="img" editId="home:compareBefore" className="cmp-img cmp-before" src="/assets/compare-before.jpg" alt="Antes del corte" loading="lazy" decoding="async" />
               <span className="cmp-tag before"><EditableText file="home-transformaciones" path="tagBefore">{TRANSFORMACIONES.tagBefore}</EditableText></span>
               <span className="cmp-tag after"><EditableText file="home-transformaciones" path="tagAfter">{TRANSFORMACIONES.tagAfter}</EditableText></span>
               <div className="cmp-divider" />
@@ -420,11 +448,11 @@ export default function Home() {
 
         {/* ============ CURSOS TEASER ============ */}
         <section className="bsection" id="cursos-teaser">
-          <Lamp className="bru-lamp--sec" />
           <div className="bwrap">
             <div className="bteaser" data-reveal="scale">
-              <div className="bteaser-bg"><img src="/assets/workshop-2026.jpg" alt="Workshop Brunetti con su comunidad de barberos" loading="lazy" decoding="async" /></div>
+              <div className="bteaser-bg"><Editable as="img" editId="home-cursos:teaserBg" src="/assets/workshop-2026.jpg" alt="Workshop Brunetti con su comunidad de barberos" loading="lazy" decoding="async" /></div>
               <div className="bteaser-inner">
+                <Lamp className="bru-lamp--teaser" />
                 <p className="kicker"><EditableText file="home-cursos-teaser" path="kicker">{CURSOS_TEASER.kicker}</EditableText></p>
                 <h2><EditableText file="home-cursos-teaser" path="h2" as="span">{CURSOS_TEASER.h2}</EditableText></h2>
                 <p><EditableText file="home-cursos-teaser" path="body" as="span">{CURSOS_TEASER.body}</EditableText></p>
@@ -526,10 +554,12 @@ export default function Home() {
             </div>
           </div>
         </section>
+        </div>
 
       </main>
 
       <ModuleFooter
+        logoSrc="/assets/brunetti-hero-wordmark.webp"
         links={[
           [() => navTo('visagismo'), 'Visagismo'],
           [() => navTo('servicios'), 'Servicios'],

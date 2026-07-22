@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless"
 import { requireInternal } from "./_auth.js"
+import { rateLimit, clientIp } from "./_rateLimit.js"
 
 const DEMO_CLIENTS = [
   { id: 1, name: "Carlos Rodriguez", phone: "987654321", email: "carlos@ejemplo.com", visits: 4, totalSpent: 68960, lastVisit: "2026-05-22", status: "activo" },
@@ -28,10 +29,16 @@ export default async function handler(req, res) {
     if (req.method === "GET") {
       const phone = cleanPhone(req.query.phone)
       if (phone) {
+        const allowed = await rateLimit(sql, `clients-get:${clientIp(req)}`, { max: 30, windowSeconds: 60 })
+        if (!allowed) return res.status(429).json({ ok: false, error: "Demasiadas solicitudes. Intenta de nuevo en un momento." })
+        // Sin sesión: cualquiera que sepa este teléfono puede pedir esto
+        // (es como funciona el "login" del cliente hoy, sin contraseña).
+        // No devolver el email acá — el front público (Account.jsx) no lo
+        // usa, y es PII que no hace falta exponer sin verificar identidad.
         const [client] = await sql`
-          SELECT u.id, u.name, u.phone, u.email,
+          SELECT u.id, u.name, u.phone,
                  COUNT(b.id)::int as visits,
-                 COALESCE(SUM(CASE WHEN b.status = 'completada' THEN s.price ELSE 0 END), 0)::int as "totalSpent",
+                 COALESCE(SUM(CASE WHEN b.status = 'completada' THEN COALESCE(b.custom_price, s.price) ELSE 0 END), 0)::int as "totalSpent",
                  MAX(b.booking_date)::text as "lastVisit",
                  CASE WHEN COUNT(b.id) > 0 THEN 'activo' ELSE 'nuevo' END as status
           FROM users u
@@ -49,7 +56,7 @@ export default async function handler(req, res) {
       const clients = await sql`
         SELECT u.id, u.name, u.phone, u.email,
                COUNT(b.id)::int as visits,
-               COALESCE(SUM(CASE WHEN b.status = 'completada' THEN s.price ELSE 0 END), 0)::int as "totalSpent",
+               COALESCE(SUM(CASE WHEN b.status = 'completada' THEN COALESCE(b.custom_price, s.price) ELSE 0 END), 0)::int as "totalSpent",
                MAX(b.booking_date)::text as "lastVisit",
                CASE WHEN COUNT(b.id) > 0 THEN 'activo' ELSE 'nuevo' END as status
         FROM users u
@@ -77,6 +84,19 @@ export default async function handler(req, res) {
       return res.json({ ok: true, client: { ...client, visits: 0, totalSpent: 0, status: "nuevo" } })
     }
 
+    if (req.method === "DELETE") {
+      const session = requireInternal(req, res)
+      if (!session) return
+      const phone = cleanPhone(req.query.phone)
+      if (phone.length !== 9) return res.status(400).json({ ok: false, error: "Telefono invalido" })
+      const [user] = await sql`SELECT id FROM users WHERE phone = ${phone}`
+      if (!user) return res.status(404).json({ ok: false, error: "Cliente no encontrado" })
+      // bookings.client_id no tiene ON DELETE: borrar primero sus reservas.
+      await sql`DELETE FROM bookings WHERE client_id = ${user.id}`
+      await sql`DELETE FROM users WHERE id = ${user.id}`
+      return res.json({ ok: true })
+    }
+
     return res.status(405).json({ ok: false, error: "Method not allowed" })
   } catch (err) {
     console.error("clients error:", err)
@@ -95,6 +115,11 @@ export default async function handler(req, res) {
       const payload = validateClient(req.body)
       if (payload.error) return res.status(400).json({ ok: false, error: payload.error })
       return res.json({ ok: true, client: { id: Date.now(), ...payload, visits: 0, totalSpent: 0, status: "nuevo" } })
+    }
+    if (req.method === "DELETE") {
+      const session = requireInternal(req, res)
+      if (!session) return
+      return res.json({ ok: true })
     }
     return res.status(500).json({ ok: false, error: "No se pudo procesar clientes" })
   }

@@ -13,8 +13,8 @@
   },
   "visagismo": {
     "eyebrow": "El método, paso a paso",
-    "h2": "Tu rostro decide",
-    "h2Highlight": "el corte",
+    "h2": "Tú Rostro Decide",
+    "h2Highlight": "el Corte.",
     "lead": "El visagismo estudia las proporciones de tu rostro para diseñar una imagen que te favorezca de verdad. Empieza eligiendo la forma con la que más te identificas.",
     "step1": "Elige tu forma de rostro",
     "step2": "Recibe tu diagnóstico",
@@ -28,74 +28,158 @@
   },
   "faceShapes": [
     {
-      "name": "Ovalado", "tagline": "El equilibrio natural",
-      "traits": ["Frente y mandíbula proporcionadas", "Largo mayor que el ancho", "Líneas suaves"],
+      "name": "Ovalado",
+      "tagline": "El equilibrio natural",
+      "traits": [
+        "Frente y mandíbula proporcionadas",
+        "Largo mayor que el ancho",
+        "Líneas suaves"
+      ],
       "diagnosis": "El rostro más versátil. Las proporciones ya están equilibradas, así que casi cualquier corte funciona — el objetivo es resaltar tu estilo, no corregir.",
       "goal": "Mantener la armonía y jugar con la personalidad.",
       "best": [
-        { "name": "Texturizado medio", "note": "Movimiento natural sin perder estructura." },
-        { "name": "Fade clásico", "note": "Limpio en los lados, definido arriba." },
-        { "name": "Pompadour suave", "note": "Volumen frontal para un aire elegante." }
+        {
+          "name": "Texturizado medio",
+          "note": "Movimiento natural sin perder estructura."
+        },
+        {
+          "name": "Fade clásico",
+          "note": "Limpio en los lados, definido arriba."
+        },
+        {
+          "name": "Pompadour suave",
+          "note": "Volumen frontal para un aire elegante."
+        }
       ],
       "avoid": "Flequillos muy pesados que tapen la frente y rompan la proporción."
     },
     {
-      "name": "Redondo", "tagline": "Suavidad que pide ángulos",
-      "traits": ["Ancho y largo similares", "Mejillas llenas", "Mandíbula redondeada"],
+      "name": "Redondo",
+      "tagline": "Suavidad que pide ángulos",
+      "traits": [
+        "Ancho y largo similares",
+        "Mejillas llenas",
+        "Mandíbula redondeada"
+      ],
       "diagnosis": "Buscamos crear altura y ángulos para estilizar el rostro. Volumen arriba y lados más cerrados alargan visualmente la cara.",
       "goal": "Añadir altura y definición vertical.",
       "best": [
-        { "name": "Pompadour / Quiff", "note": "Altura arriba que estiliza el conjunto." },
-        { "name": "Undercut con volumen", "note": "Contraste marcado lados-tope." },
-        { "name": "Fade alto", "note": "Cierra los lados y sube la mirada." }
+        {
+          "name": "Pompadour / Quiff",
+          "note": "Altura arriba que estiliza el conjunto."
+        },
+        {
+          "name": "Undercut con volumen",
+          "note": "Contraste marcado lados-tope."
+        },
+        {
+          "name": "Fade alto",
+          "note": "Cierra los lados y sube la mirada."
+        }
       ],
       "avoid": "Cortes redondeados y volumen a los costados — ensanchan aún más."
     },
     {
-      "name": "Cuadrado", "tagline": "Mandíbula de carácter",
-      "traits": ["Mandíbula marcada y ancha", "Frente angular", "Líneas fuertes"],
+      "name": "Cuadrado",
+      "tagline": "Mandíbula de carácter",
+      "traits": [
+        "Mandíbula marcada y ancha",
+        "Frente angular",
+        "Líneas fuertes"
+      ],
       "diagnosis": "Una estructura fuerte que admite cortes potentes. Podemos exaltar la mandíbula o suavizarla según el resultado que busques.",
       "goal": "Resaltar la fuerza o equilibrar con textura.",
       "best": [
-        { "name": "Crop texturizado", "note": "Textura arriba que moderna la estructura." },
-        { "name": "Buzz / corte corto", "note": "Limpio, deja hablar a la mandíbula." },
-        { "name": "Fade + barba definida", "note": "Combo de carácter, muy fotogénico." }
+        {
+          "name": "Crop texturizado",
+          "note": "Textura arriba que moderna la estructura."
+        },
+        {
+          "name": "Buzz / corte corto",
+          "note": "Limpio, deja hablar a la mandíbula."
+        },
+        {
+          "name": "Fade + barba definida",
+          "note": "Combo de carácter, muy fotogénico."
+        }
       ],
       "avoid": "Volúmenes extremos que exageren demasiado la angulosidad."
     },
     {
-      "name": "Alargado", "tagline": "Vertical y elegante",
-      "traits": ["Rostro más largo que ancho", "Frente alta", "Mentón alargado"],
+      "name": "Alargado",
+      "tagline": "Vertical y elegante",
+      "traits": [
+        "Rostro más largo que ancho",
+        "Frente alta",
+        "Mentón alargado"
+      ],
       "diagnosis": "El objetivo es acortar visualmente el rostro: menos altura arriba y algo de volumen a los lados crean equilibrio.",
       "goal": "Restar largo y sumar ancho.",
       "best": [
-        { "name": "Flequillo / French crop", "note": "Baja la frente y acorta el rostro." },
-        { "name": "Lados con cuerpo", "note": "Algo de volumen lateral para ensanchar." },
-        { "name": "Barba media", "note": "Da peso al tercio inferior." }
+        {
+          "name": "Flequillo / French crop",
+          "note": "Baja la frente y acorta el rostro."
+        },
+        {
+          "name": "Lados con cuerpo",
+          "note": "Algo de volumen lateral para ensanchar."
+        },
+        {
+          "name": "Barba media",
+          "note": "Da peso al tercio inferior."
+        }
       ],
       "avoid": "Mucho volumen arriba y lados rapados al cero — alargan más."
     },
     {
-      "name": "Triangular", "tagline": "Base fuerte, frente fina",
-      "traits": ["Mandíbula ancha", "Frente más estrecha", "Pómulos discretos"],
+      "name": "Triangular",
+      "tagline": "Base fuerte, frente fina",
+      "traits": [
+        "Mandíbula ancha",
+        "Frente más estrecha",
+        "Pómulos discretos"
+      ],
       "diagnosis": "Compensamos llevando volumen y amplitud a la zona superior, para equilibrar una mandíbula más ancha que la frente.",
       "goal": "Sumar volumen en la parte alta.",
       "best": [
-        { "name": "Volumen arriba", "note": "Ensancha la frente ópticamente." },
-        { "name": "Pompadour", "note": "Altura y cuerpo en el tope." },
-        { "name": "Lados moderados", "note": "Ni muy abiertos ni rapados." }
+        {
+          "name": "Volumen arriba",
+          "note": "Ensancha la frente ópticamente."
+        },
+        {
+          "name": "Pompadour",
+          "note": "Altura y cuerpo en el tope."
+        },
+        {
+          "name": "Lados moderados",
+          "note": "Ni muy abiertos ni rapados."
+        }
       ],
       "avoid": "Lados muy voluminosos que ensanchen aún más la mandíbula."
     },
     {
-      "name": "Diamante", "tagline": "Pómulos protagonistas",
-      "traits": ["Pómulos anchos", "Frente y mentón más estrechos", "Rasgos definidos"],
+      "name": "Diamante",
+      "tagline": "Pómulos protagonistas",
+      "traits": [
+        "Pómulos anchos",
+        "Frente y mentón más estrechos",
+        "Rasgos definidos"
+      ],
       "diagnosis": "Aprovechamos los pómulos marcados. Damos amplitud a frente y mentón para equilibrar el centro más ancho.",
       "goal": "Ensanchar frente y mentón.",
       "best": [
-        { "name": "Flequillo texturizado", "note": "Suma ancho en la frente." },
-        { "name": "Volumen frontal", "note": "Equilibra el tercio superior." },
-        { "name": "Barba en la mandíbula", "note": "Da peso y ancho al mentón." }
+        {
+          "name": "Flequillo texturizado",
+          "note": "Suma ancho en la frente."
+        },
+        {
+          "name": "Volumen frontal",
+          "note": "Equilibra el tercio superior."
+        },
+        {
+          "name": "Barba en la mandíbula",
+          "note": "Da peso y ancho al mentón."
+        }
       ],
       "avoid": "Lados rapados al extremo que estrechen el rostro."
     }
@@ -103,26 +187,62 @@
   "galeria": {
     "eyebrow": "Galería de estilos",
     "h2": "Explora",
-    "h2Highlight": "por tipo de corte",
+    "h2Highlight": "por Tipo de Corte",
     "lead": "Una guía visual para inspirarte. Filtra por estilo y lleva tus referencias favoritas a la asesoría.",
     "items": [
-      { "title": "Skin fade", "sub": "Degradado al cero" },
-      { "title": "Mid fade + diseño", "sub": "Línea marcada" },
-      { "title": "Crop texturizado", "sub": "Movimiento natural" },
-      { "title": "Side part", "sub": "Elegancia atemporal" },
-      { "title": "Perfilado de barba", "sub": "Contorno definido" },
-      { "title": "Taper en la nuca", "sub": "Acabado limpio" },
-      { "title": "Afeitado a navaja", "sub": "Ritual clásico" },
-      { "title": "Corte ejecutivo", "sub": "Pulcro y prolijo" },
-      { "title": "Largo con textura", "sub": "Caída con cuerpo" },
-      { "title": "Barba escultural", "sub": "Trabajo de detalle" },
-      { "title": "Quiff texturizado", "sub": "Volumen direccional" },
-      { "title": "El estudio", "sub": "Ambiente Brunetti" }
+      {
+        "title": "Skin fade",
+        "sub": "Degradado al cero"
+      },
+      {
+        "title": "Mid fade + diseño",
+        "sub": "Línea marcada"
+      },
+      {
+        "title": "Crop texturizado",
+        "sub": "Movimiento natural"
+      },
+      {
+        "title": "Side part",
+        "sub": "Elegancia atemporal"
+      },
+      {
+        "title": "Perfilado de barba",
+        "sub": "Contorno definido"
+      },
+      {
+        "title": "Taper en la nuca",
+        "sub": "Acabado limpio"
+      },
+      {
+        "title": "Afeitado a navaja",
+        "sub": "Ritual clásico"
+      },
+      {
+        "title": "Corte ejecutivo",
+        "sub": "Pulcro y prolijo"
+      },
+      {
+        "title": "Largo con textura",
+        "sub": "Caída con cuerpo"
+      },
+      {
+        "title": "Barba escultural",
+        "sub": "Trabajo de detalle"
+      },
+      {
+        "title": "Quiff texturizado",
+        "sub": "Volumen direccional"
+      },
+      {
+        "title": "El estudio",
+        "sub": "Ambiente Brunetti"
+      }
     ]
   },
   "cta": {
     "eyebrow": "Tu transformación empieza aquí",
-    "h2": "Lleva tu diagnóstico a la silla de Bruno",
+    "h2": "Lleva tu Diagnóstico a la Silla de Brunneti.",
     "body": "Agenda una asesoría de imagen y convirtamos tu forma de rostro y tu estilo de vida en un corte hecho a tu medida.",
     "ctaPrimary": "Reservar asesoría",
     "igHandle": "@brunetticutz"

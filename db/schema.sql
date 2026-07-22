@@ -55,9 +55,34 @@ CREATE TABLE IF NOT EXISTS bookings (
   status        VARCHAR(50) DEFAULT 'confirmada',
   notes         TEXT,
   created_at    TIMESTAMP   DEFAULT NOW(),
-  updated_at    TIMESTAMP   DEFAULT NOW(),
-  UNIQUE (barber_id, booking_date, booking_time)
+  updated_at    TIMESTAMP   DEFAULT NOW()
 );
+
+-- Para bases existentes (idempotente): reservas manuales del panel pueden
+-- llevar servicio/precio personalizado (service_id queda NULL en ese caso).
+-- ⚠️ Ejecutar en la consola de Neon ANTES de desplegar la API que los usa.
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS custom_service VARCHAR(200);
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS custom_price  INTEGER;
+
+-- Para bases existentes (idempotente): el UNIQUE(barber_id, booking_date,
+-- booking_time) original bloqueaba PARA SIEMPRE cualquier horario que
+-- alguna vez hubiera tenido una reserva cancelada (el INSERT chocaba con el
+-- constraint aunque la reserva vieja estuviera en status 'cancelada', y esa
+-- excepción se colaba silenciosamente por el manejo de errores del endpoint).
+-- Un índice único parcial deja libres los horarios cancelados para
+-- reagendar, y sigue evitando doble reserva en horarios activos.
+-- ⚠️ Ejecutar en la consola de Neon ANTES de desplegar la API que los usa.
+ALTER TABLE bookings DROP CONSTRAINT IF EXISTS bookings_barber_id_booking_date_booking_time_key;
+CREATE UNIQUE INDEX IF NOT EXISTS bookings_slot_unique
+  ON bookings (barber_id, booking_date, booking_time)
+  WHERE status <> 'cancelada';
+
+-- Para bases existentes (idempotente): sincronización con Notion Calendar +
+-- recordatorios push 60min/15min antes de la hora. ⚠️ Ejecutar en la consola
+-- de Neon ANTES de desplegar la API que los usa.
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS notion_page_id   VARCHAR(64);
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS reminder_60_sent BOOLEAN DEFAULT false;
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS reminder_15_sent BOOLEAN DEFAULT false;
 
 CREATE TABLE IF NOT EXISTS availability_blocks (
   id         SERIAL PRIMARY KEY,
@@ -98,8 +123,44 @@ CREATE TABLE IF NOT EXISTS push_subscriptions (
   created_at TIMESTAMP DEFAULT NOW()
 );
 
+-- Catálogo de productos del módulo "Essentials" (tienda de clientes).
+-- Gestionado desde el panel interno (pestaña Essentials); api/_products.js
+-- también crea esta tabla en caliente si no existe (igual que enrollments).
+CREATE TABLE IF NOT EXISTS products (
+  id          SERIAL PRIMARY KEY,
+  name        VARCHAR(200) NOT NULL,
+  brand       VARCHAR(120) DEFAULT '',
+  description TEXT         DEFAULT '',
+  price       INTEGER      NOT NULL,
+  old_price   INTEGER,
+  stock       INTEGER      NOT NULL DEFAULT 0,
+  active      BOOLEAN      NOT NULL DEFAULT true,
+  sort_order  INTEGER      NOT NULL DEFAULT 0,
+  img_front   TEXT,
+  img_back    TEXT,
+  img_detail  TEXT,
+  created_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+  updated_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+);
+
+-- Historial de notificaciones push enviadas (para el popup de la campana en
+-- el panel). barber_id nullable para permitir a futuro avisos de notifyAll()
+-- que no son de un barbero concreto. api/push.js también la crea en caliente
+-- si no existe (igual que push_subscriptions/products).
+CREATE TABLE IF NOT EXISTS notifications (
+  id         SERIAL PRIMARY KEY,
+  barber_id  INTEGER REFERENCES barbers(id),
+  title      TEXT NOT NULL,
+  body       TEXT,
+  url        TEXT,
+  tag        TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 CREATE INDEX IF NOT EXISTS idx_push_subs_barber       ON push_subscriptions(barber_id);
+CREATE INDEX IF NOT EXISTS idx_notifications_barber   ON notifications(barber_id, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_bookings_barber_date  ON bookings(barber_id, booking_date);
 CREATE INDEX IF NOT EXISTS idx_bookings_client       ON bookings(client_id);
 CREATE INDEX IF NOT EXISTS idx_users_phone           ON users(phone);
+CREATE INDEX IF NOT EXISTS idx_products_sort         ON products(sort_order, id);
 CREATE INDEX IF NOT EXISTS idx_expenses_date         ON expenses(expense_date);

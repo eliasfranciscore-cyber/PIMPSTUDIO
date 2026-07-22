@@ -1,13 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
+import { createPortal } from 'react-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Brandmark, Icon, Stat } from '../components/ui.jsx'
 import { ThemeProvider, ThemeToggle, useTheme } from '../components/theme.jsx'
 import MobileDock from '../components/MobileDock.jsx'
-import { BARBERS, CLIENTS, EXPENSES, SERVICES, TODAY_BOOKINGS, barberById, CLP, CLPk, isAdminUser } from '../data.js'
-import { mergeBookings, readLocalBookings } from '../bookingsStore.js'
+import { BARBERS, CLIENTS, EXPENSES, SERVICES, TODAY_BOOKINGS, barberById, CLP, CLPk, isAdminUser, cleanPhone } from '../data.js'
+import { addLocalBooking, mergeBookings, readLocalBookings } from '../bookingsStore.js'
 import { mergeEnrollments } from '../enrollmentsStore.js'
 import BookingsInbox from '../components/BookingsInbox.jsx'
+import BookingSyncIssues from '../components/BookingSyncIssues.jsx'
 import DashboardResumen from '../components/DashboardResumen.jsx'
+import NewBookingModal from '../components/NewBookingModal.jsx'
+import GlobalSearch from '../components/GlobalSearch.jsx'
+import NewClientModal from '../components/NewClientModal.jsx'
+import ExpensesModule, { EXPENSE_CATEGORIES, CATEGORY_META } from '../components/ExpensesModule.jsx'
+import { KpiTile, AnimatedRing } from '../components/DashKit.jsx'
 import ClientModal from '../components/ClientModal.jsx'
 import BarberModal from '../components/BarberModal.jsx'
 import {
@@ -19,6 +26,18 @@ import {
 const AGENDA_SLOTS = ["09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00"]
 const SESSION_TIMEOUT_MS = 30 * 60 * 1000 // 30 min sin actividad → cerrar sesión
 const DAY_LABELS = ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"]
+const DOW_LONG = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
+const MONTH_LONG = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+
+// Duración de un servicio expresada en bloques de 1h (lo que realmente
+// bloquea en la agenda — ver api/_slots.js), redondeando hacia arriba: un
+// servicio de 75 min sigue ocupando 2 horarios seguidos.
+function minToBlocks(min) {
+  return Math.max(1, Math.ceil(Number(min || 60) / 60))
+}
+function blocksToMin(blocks) {
+  return Math.max(1, Number(blocks) || 1) * 60
+}
 
 function getSvcIcon(svc) {
   const n = ((svc.name || '') + ' ' + (svc.cat || '')).toLowerCase()
@@ -93,8 +112,98 @@ function Panel({ title, action, children, style }) {
   )
 }
 
+// Popover de calendario propio de Agenda: sólo dentro de la ventana
+// administrable (semana actual + siguiente) los días son elegibles; el resto
+// se muestran deshabilitados para no sugerir una selección que igual va a
+// rebotar con el toast de "fuera de rango".
+function AgendaDatePicker({ month, year, selectedKey, onPrevMonth, onNextMonth, onPick, reservableKeys }) {
+  const todayKey = isoDate(new Date())
+  const first = new Date(year, month, 1)
+  const startOffset = (first.getDay() + 6) % 7 // semana empieza lunes
+  const daysInMonth = new Date(year, month + 1, 0).getDate()
+  const cells = [...Array(startOffset).fill(null), ...Array.from({ length: daysInMonth }, (_, i) => i + 1)]
+  return (
+    <div className="agenda-cal" role="dialog" aria-label="Elegir fecha">
+      <div className="agenda-cal-head">
+        <button type="button" onClick={onPrevMonth} aria-label="Mes anterior"><Icon name="arrowLeft" size={13} /></button>
+        <span>{MONTH_LONG[month]} {year}</span>
+        <button type="button" onClick={onNextMonth} aria-label="Mes siguiente"><Icon name="arrowRight" size={13} /></button>
+      </div>
+      <div className="agenda-cal-grid">
+        {["L", "M", "M", "J", "V", "S", "D"].map((d, i) => <span key={i} className="agenda-cal-dow">{d}</span>)}
+        {cells.map((d, i) => {
+          if (!d) return <span key={`e${i}`} />
+          const key = isoDate(new Date(year, month, d))
+          const isSel = key === selectedKey
+          const isToday = key === todayKey
+          const isReservable = reservableKeys.has(key)
+          return (
+            <button
+              key={key}
+              type="button"
+              className={`agenda-cal-day ${isSel ? "is-sel" : ""} ${isToday && !isSel ? "is-today" : ""}`}
+              disabled={!isReservable}
+              onClick={() => onPick(key)}
+            >
+              {d}
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+// Modal de detalle de una reserva (click en un slot "booked" o en la lista de
+// Reservas del día). Portal a document.body, mismo patrón que NewBookingModal.
+function BookingDetailModal({ booking, clients, onClose, onConfirm, onCancel }) {
+  useEffect(() => {
+    if (!booking) return
+    const onKey = (e) => { if (e.key === "Escape") onClose() }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [booking, onClose])
+
+  if (!booking) return null
+  const client = clients.find((c) => cleanPhone(c.phone) === cleanPhone(booking.phone))
+  const isRecurring = client && Number(client.visits || 0) > 1
+  const initial = (booking.client || "?").trim().charAt(0).toUpperCase() || "?"
+
+  return createPortal((
+    <div className="psn-modal" role="dialog" aria-modal="true" aria-label="Detalle de la reserva">
+      <button className="psn-scrim" aria-label="Cerrar" onClick={onClose} />
+      <div className="psn-modal-card agenda-detail">
+        <button className="psn-close" onClick={onClose} aria-label="Cerrar"><Icon name="close" size={17} /></button>
+        <span className={`chip ${booking.status === "confirmada" ? "chip-gold" : ""} agenda-detail-status`}>{booking.status}</span>
+        <div className="agenda-detail-client">
+          <span className="agenda-detail-avatar">{initial}</span>
+          <div>
+            <strong>{booking.client}</strong>
+            <span className="agenda-detail-tag">{isRecurring ? `Cliente recurrente · ${client.visits} visitas` : "Cliente nuevo"}</span>
+          </div>
+        </div>
+        <div className="agenda-detail-grid">
+          <div className="agenda-detail-cell"><span>Hora</span><b>{booking.time}</b></div>
+          <div className="agenda-detail-cell"><span>Servicio</span><b>{booking.service}</b></div>
+          <div className="agenda-detail-cell"><span>Fecha</span><b>{booking.date}</b></div>
+          <div className="agenda-detail-cell"><span>Precio</span><b>{CLP(Number(booking.price || 0))}</b></div>
+        </div>
+        <div className="agenda-detail-actions">
+          <button type="button" className="btn btn-gold btn-block" onClick={() => onConfirm(booking)}>
+            <Icon name="check" size={15} /> Confirmar
+          </button>
+          <button type="button" className="btn btn-ghost btn-block agenda-detail-cancel" onClick={() => onCancel(booking)}>
+            Cancelar cita
+          </button>
+        </div>
+      </div>
+    </div>
+  ), document.body)
+}
+
 export default function Dashboard() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const [tab, setTab] = useState("agenda")
   const [agendaBarber, setAgendaBarber] = useState(null)
   const [agendaDayKey, setAgendaDayKey] = useState(null)
@@ -102,22 +211,49 @@ export default function Dashboard() {
   const [availability, setAvailability] = useState({})
   const [agendaBusy, setAgendaBusy] = useState("")
   const [agendaError, setAgendaError] = useState("")
+  // Rediseño Agenda: vista Bloques/Línea, buscador local, date-picker propio,
+  // modal de detalle de reserva, toasts de confirmación y comparativo vs.
+  // semana anterior para los deltas de KPI.
+  const [agendaView, setAgendaView] = useState("grid") // 'grid' | 'timeline'
+  const [agendaQuery, setAgendaQuery] = useState("")
+  const [calOpen, setCalOpen] = useState(false)
+  const [calMonth, setCalMonth] = useState(() => new Date().getMonth())
+  const [calYear, setCalYear] = useState(() => new Date().getFullYear())
+  const [detail, setDetail] = useState(null)
+  const [toasts, setToasts] = useState([])
+  const [prevWeekStats, setPrevWeekStats] = useState(null)
+  const dragRef = useRef({ active: false, mode: null })
+  const calRef = useRef(null)
   const [barber, setBarber] = useState(null)
   const [barbers, setBarbers] = useState(BARBERS.map((item) => ({ ...item, active: true })))
   const [bookings, setBookings] = useState(mergeBookings(TODAY_BOOKINGS.map((item, index) => ({ ...item, id: index + 1, date: isoDate(new Date()) }))))
   const [clients, setClients] = useState(CLIENTS)
   const [clientQuery, setClientQuery] = useState("")
   const [clientFilter, setClientFilter] = useState("all")
+  const [clientSort, setClientSort] = useState({ key: "name", dir: "asc" })
+  const [financePeriod, setFinancePeriod] = useState("mes") // "semana" | "mes" | "año"
+  const [financeSort, setFinanceSort] = useState({ key: "date", dir: "desc" })
+  const [topbarScrolled, setTopbarScrolled] = useState(false)
   const [selectedClient, setSelectedClient] = useState(null)
   const [clientHistory, setClientHistory] = useState([])
   const [clientEditing, setClientEditing] = useState(false)
   const [services, setServices] = useState(SERVICES.map((item) => ({ ...item, active: true })))
   const [expenses, setExpenses] = useState(EXPENSES)
   const [serviceDraft, setServiceDraft] = useState({ name: "", price: "", min: 60, cat: "general", desc: "", tne: false })
-  const [expenseDraft, setExpenseDraft] = useState({ date: new Date().toISOString().slice(0, 10), category: "Insumos", detail: "", amount: "" })
-  const [expenseOpen, setExpenseOpen] = useState(false)
+  const [products, setProducts] = useState([])
+  const [productDraft, setProductDraft] = useState({ name: "", brand: "", price: "", stock: "0", description: "" })
+  const [productOpen, setProductOpen] = useState(false)
+  const [editProductId, setEditProductId] = useState(null)
+  const [deleteProduct, setDeleteProduct] = useState(null)
+  const [productUploading, setProductUploading] = useState(null) // `${id}-${slot}` mientras sube
+  const [expenseBudgets, setExpenseBudgets] = useState(() => { try { return JSON.parse(localStorage.getItem("ps_expense_budgets") || "{}") } catch { return {} } })
+  useEffect(() => { try { localStorage.setItem("ps_expense_budgets", JSON.stringify(expenseBudgets)) } catch {} }, [expenseBudgets])
   const [serviceOpen, setServiceOpen] = useState(false)
+  const [newBookingOpen, setNewBookingOpen] = useState(false)
+  const [newClientOpen, setNewClientOpen] = useState(false)
+  const [inboxFocus, setInboxFocus] = useState(null)
   const [editSvcId, setEditSvcId] = useState(null)
+  const [deleteSvc, setDeleteSvc] = useState(null)
   const [barberDraft, setBarberDraft] = useState({ name: "", code: "", role: "Barbero", tier: "general", pin: "1234", canViewFinance: false, canManageTeam: false, canEditServices: false, canManageBlocks: true })
   // Preferencias de navegación (persisten por dispositivo): qué módulos se ven y
   // qué 4 atajos van en el dock. Se aplican al nav/dock reales.
@@ -129,12 +265,22 @@ export default function Dashboard() {
   const canViewFinance = admin || barber?.canViewFinance
   const canEditServices = admin || barber?.canEditServices
   const canManageTeam = admin || barber?.canManageTeam
-  const completedBookings = bookings.filter((item) => item.status === "completada" || item.status === "confirmada" || item.status === "en curso")
+  // Periodo de Finanzas (semana/mes/año): fecha de corte desde la que se
+  // cuentan ingresos, ranking y movimientos. Semana empieza el lunes.
+  const periodStartKey = (() => {
+    const d = new Date()
+    if (financePeriod === "semana") { const dow = d.getDay() || 7; d.setDate(d.getDate() - dow + 1) }
+    else if (financePeriod === "mes") d.setDate(1)
+    else d.setMonth(0, 1)
+    d.setHours(0, 0, 0, 0)
+    return isoDate(d)
+  })()
+  const completedBookings = bookings.filter((item) => (item.status === "completada" || item.status === "confirmada" || item.status === "en curso") && (item.date || "") >= periodStartKey)
   const revenueTotal = completedBookings.reduce((sum, item) => sum + Number(item.price || 0), 0)
   const avgTicket = completedBookings.length ? Math.round(revenueTotal / completedBookings.length) : 0
   const visibleBookings = admin ? bookings : bookings.filter((item) => Number(item.barberId) === Number(barber?.id))
   const ranking = barbers.map((b) => {
-    const own = bookings.filter((item) => Number(item.barberId) === Number(b.id) && item.status !== "cancelada")
+    const own = bookings.filter((item) => Number(item.barberId) === Number(b.id) && item.status !== "cancelada" && (item.date || "") >= periodStartKey)
     return { id: b.id, cuts: own.filter((item) => item.status === "completada").length || own.length, rev: own.reduce((sum, item) => sum + Number(item.price || 0), 0) }
   }).filter((item) => item.cuts || item.rev).sort((a, b) => b.rev - a.rev)
   const maxRev = Math.max(1, ...ranking.map((r) => r.rev))
@@ -178,6 +324,34 @@ export default function Dashboard() {
     if (clientFilter === "top") return Number(client.visits || 0) >= 3
     return true
   })
+  // Encabezado de columna clickeable: mismo criterio dos veces = invierte el
+  // orden; distinto criterio = orden por defecto (nombre asc, el resto desc
+  // porque lo útil ahí es ver primero al que más visita/gasta).
+  const toggleClientSort = (key) => {
+    setClientSort((s) => s.key === key ? { key, dir: s.dir === "asc" ? "desc" : "asc" } : { key, dir: key === "name" ? "asc" : "desc" })
+  }
+  const toggleFinanceSort = (key) => {
+    setFinanceSort((s) => s.key === key ? { key, dir: s.dir === "asc" ? "desc" : "asc" } : { key, dir: key === "date" || key === "price" ? "desc" : "asc" })
+  }
+  const sortedFinanceRows = [...completedBookings].sort((a, b) => {
+    const dir = financeSort.dir === "asc" ? 1 : -1
+    if (financeSort.key === "price") return ((a.price || 0) - (b.price || 0)) * dir
+    if (financeSort.key === "client") return (a.client || "").localeCompare(b.client || "") * dir
+    if (financeSort.key === "service") return (a.service || "").localeCompare(b.service || "") * dir
+    if (financeSort.key === "barber") {
+      const an = barberById(a.barberId)?.short || ""
+      const bn = barberById(b.barberId)?.short || ""
+      return an.localeCompare(bn) * dir
+    }
+    return `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`) * dir
+  })
+  const sortedClients = [...filteredClients].sort((a, b) => {
+    const dir = clientSort.dir === "asc" ? 1 : -1
+    if (clientSort.key === "visits") return ((a.visits || 0) - (b.visits || 0)) * dir
+    if (clientSort.key === "totalSpent") return ((a.totalSpent || 0) - (b.totalSpent || 0)) * dir
+    if (clientSort.key === "lastVisit") return ((a.lastVisit || "") > (b.lastVisit || "") ? 1 : -1) * dir
+    return (a.name || "").localeCompare(b.name || "") * dir
+  })
 
   // Modo panel: bloquea el scroll del body para que el scroll viva dentro de
   // .dashboard-main. Así el topbar (sticky) y el dock (fixed) no rebotan con el
@@ -186,6 +360,35 @@ export default function Dashboard() {
     document.body.classList.add('dash-mode')
     return () => document.body.classList.remove('dash-mode')
   }, [])
+
+  // Deep-link desde una notificación push (recordatorio, nueva reserva o
+  // cancelación) o desde el popup de notificaciones de la campana: la URL
+  // trae ?tab=reservas&date=...&bookingId=... y hay que abrir esa reserva
+  // puntual, no solo la pestaña. Reutiliza el mismo mecanismo `inboxFocus`
+  // que ya usan GlobalSearch/goToDayInReservas para saltar a un día.
+  useEffect(() => {
+    const qTab = searchParams.get('tab')
+    const qBookingId = searchParams.get('bookingId')
+    const qDate = searchParams.get('date')
+    if (!qTab && !qBookingId) return
+    if (qTab) setTab(qTab)
+    if (qBookingId) {
+      setInboxFocus({ day: qDate || isoDate(new Date()), ts: Date.now(), filter: 'Todas', scope: 'dia', bookingId: Number(qBookingId) })
+    }
+  }, [searchParams])
+
+  // Si la PWA ya está abierta cuando se toca una notificación push, el
+  // service worker no puede navegarla directamente (no controla el router de
+  // React) — le manda un postMessage y acá lo escuchamos para navegar sin
+  // perder el estado ya cargado (ver public/sw.js `notificationclick`).
+  useEffect(() => {
+    if (!('serviceWorker' in navigator)) return
+    const onMessage = (event) => {
+      if (event.data?.type === 'ps-navigate' && event.data.url) navigate(event.data.url)
+    }
+    navigator.serviceWorker.addEventListener('message', onMessage)
+    return () => navigator.serviceWorker.removeEventListener('message', onMessage)
+  }, [navigate])
 
   useEffect(() => {
     const stored = localStorage.getItem("ps_barber")
@@ -202,6 +405,7 @@ export default function Dashboard() {
     fetch("/api/bookings", { headers }).then((r) => r.json()).then((data) => { setBookings(mergeBookings(data.bookings?.length ? data.bookings : TODAY_BOOKINGS.map((item, index) => ({ ...item, id: index + 1, date: isoDate(new Date()) })))) }).catch(() => {})
     fetch("/api/services?includeInactive=true", { headers }).then((r) => r.json()).then((data) => { if (data.services?.length) setServices(data.services) }).catch(() => {})
     fetch("/api/expenses", { headers }).then((r) => r.json()).then((data) => { if (data.expenses?.length) setExpenses(data.expenses) }).catch(() => {})
+    fetch("/api/services?scope=shop&includeInactive=true", { headers }).then((r) => r.json()).then((data) => { if (data.products) setProducts(data.products) }).catch(() => {})
   }, [])
 
   const logout = (reason) => {
@@ -260,6 +464,65 @@ export default function Dashboard() {
     loadAgenda()
   }, [barber, agendaBarber, weekOffset])
 
+  // Comparativo liviano vs. la semana anterior (solo para los deltas de KPI
+  // del hero). Si cualquier día falla (API caída → fallback demo), NO se
+  // inventan cifras: se oculta el delta entero.
+  useEffect(() => {
+    if (!barber) return
+    let alive = true
+    const prevDays = buildWeek(weekOffset - 1)
+    Promise.all(prevDays.map((day) =>
+      fetch(`/api/availability?barberId=${agendaBarber}&date=${day.key}&detail=true`)
+        .then((r) => (r.headers.get("content-type")?.includes("application/json") ? r.json() : Promise.reject(new Error("api unavailable"))))
+        .then((data) => (data.slots?.length ? data.slots : null))
+        .catch(() => null)
+    )).then((results) => {
+      if (!alive) return
+      if (results.some((r) => !r)) { setPrevWeekStats(null); return }
+      const stats = results.flat().reduce((acc, s) => {
+        if (s.state === "booked") acc.booked += 1
+        else if (s.state === "free") acc.free += 1
+        else if (s.state === "blocked") acc.blocked += 1
+        return acc
+      }, { booked: 0, free: 0, blocked: 0 })
+      setPrevWeekStats(stats)
+    })
+    return () => { alive = false }
+  }, [barber, agendaBarber, weekOffset])
+
+  // Toasts de confirmación (agenda): auto-dismiss a los 3s.
+  const pushToast = useCallback((icon, msg) => {
+    const id = Date.now() + Math.random()
+    setToasts((t) => [...t, { id, icon, msg }])
+    setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), 3000)
+  }, [])
+
+  // Arrastre para bloquear/habilitar un rango de horarios en la grilla de la
+  // agenda: el mouseup/touchend puede ocurrir fuera de cualquier slot, así
+  // que el listener va en window para terminar el arrastre siempre.
+  useEffect(() => {
+    const up = () => { dragRef.current = { active: false, mode: null } }
+    window.addEventListener("mouseup", up)
+    window.addEventListener("touchend", up)
+    return () => { window.removeEventListener("mouseup", up); window.removeEventListener("touchend", up) }
+  }, [])
+
+  // Cierra el date-picker de Agenda al hacer click/tap fuera o con Escape
+  // (si no, quedaba abierto tapando el dock móvil hasta volver a tocar el botón).
+  useEffect(() => {
+    if (!calOpen) return
+    const onDown = (e) => { if (calRef.current && !calRef.current.contains(e.target)) setCalOpen(false) }
+    const onKey = (e) => { if (e.key === "Escape") setCalOpen(false) }
+    window.addEventListener("mousedown", onDown)
+    window.addEventListener("touchstart", onDown)
+    window.addEventListener("keydown", onKey)
+    return () => {
+      window.removeEventListener("mousedown", onDown)
+      window.removeEventListener("touchstart", onDown)
+      window.removeEventListener("keydown", onKey)
+    }
+  }, [calOpen])
+
   // Recarga manual desde el topbar: en la PWA instalada no hay pull-to-refresh
   // ni recarga de página, así que sin esto la única forma de ver una reserva
   // nueva era cerrar y volver a abrir la app.
@@ -273,6 +536,7 @@ export default function Dashboard() {
       fetch("/api/bookings", { headers }).then((r) => r.json()).then((data) => { if (data.bookings) setBookings(mergeBookings(data.bookings)) }).catch(() => {}),
       fetch("/api/services?includeInactive=true", { headers }).then((r) => r.json()).then((data) => { if (data.services?.length) setServices(data.services) }).catch(() => {}),
       fetch("/api/expenses", { headers }).then((r) => r.json()).then((data) => { if (data.expenses?.length) setExpenses(data.expenses) }).catch(() => {}),
+      fetch("/api/services?scope=shop&includeInactive=true", { headers }).then((r) => r.json()).then((data) => { if (data.products) setProducts(data.products) }).catch(() => {}),
       loadAgenda(),
     ])
     setRefreshing(false)
@@ -311,6 +575,7 @@ export default function Dashboard() {
     ["clientes",       "user",     "Clientes"],
     ["inscripciones",  "spark",    "Inscripciones"],
     ...(canEditServices ? [["servicios", "cut", "Servicios"]] : []),
+    ...(admin ? [["essentials", "gift", "Essentials"]] : []),
     ...(admin ? [["gastos", "wallet", "Gastos"]] : []),
     ["marketing",      "spark",    "Marketing"],
     ["config",         "key",      "Config."],
@@ -350,14 +615,76 @@ export default function Dashboard() {
     if (!payload.id) setServiceDraft({ name: "", price: "", min: 60, cat: "general", desc: "", tne: false })
   }
 
-  const saveExpense = async () => {
-    if (!expenseDraft.detail || !expenseDraft.amount) return
-    const payload = { ...expenseDraft, amount: Number(expenseDraft.amount), owner: barber?.name || "Brunetti" }
+  // Borra un servicio (optimista con revert). La API materializa nombre/precio
+  // en las reservas históricas antes de borrar, así que el historial se conserva.
+  const deleteService = async (service) => {
+    setEditSvcId(null)
+    setServices((items) => items.filter((item) => item.id !== service.id))
+    const res = await fetch(`/api/services?id=${service.id}`, { method: "DELETE", headers: authHeaders() }).catch(() => null)
+    if (res && !res.ok) setServices((items) => [service, ...items].sort((a, b) => a.id - b.id))
+  }
+
+  const saveProduct = async (product) => {
+    const payload = product?.id ? product : productDraft
+    if (!String(payload.name || "").trim() || !payload.price) return
+    const method = payload.id ? "PATCH" : "POST"
+    const data = { ...payload, price: Number(payload.price), stock: Number(payload.stock) || 0 }
+    const res = await fetch("/api/services?scope=shop", { method, headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(data) }).catch(() => null)
+    const json = res ? await res.json().catch(() => ({})) : {}
+    const saved = json.product || data
+    setProducts((items) => payload.id ? items.map((item) => item.id === saved.id ? { ...item, ...saved } : item) : [{ ...saved, id: saved.id || Date.now(), active: true }, ...items])
+    if (!payload.id) setProductDraft({ name: "", brand: "", price: "", stock: "0", description: "" })
+  }
+
+  // Borra un producto (optimista con revert). A diferencia de servicios, no hay
+  // historial que preservar (bookings no referencia productos), así que borra directo.
+  const removeProduct = async (product) => {
+    setEditProductId(null)
+    setProducts((items) => items.filter((item) => item.id !== product.id))
+    const res = await fetch(`/api/services?scope=shop&id=${product.id}`, { method: "DELETE", headers: authHeaders() }).catch(() => null)
+    if (res && !res.ok) setProducts((items) => [product, ...items].sort((a, b) => a.id - b.id))
+  }
+
+  // Sube una foto (portada / hover / detalle) a Vercel Blob vía el endpoint
+  // de productos y actualiza la URL en el producto ya guardado.
+  const uploadProductPhoto = async (productId, slot, file) => {
+    if (!file || !productId) return
+    const dataUrl = await new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => resolve(reader.result)
+      reader.onerror = reject
+      reader.readAsDataURL(file)
+    }).catch(() => null)
+    if (!dataUrl) return
+    setProductUploading(`${productId}-${slot}`)
+    const res = await fetch("/api/services?scope=shop&upload=1", {
+      method: "POST",
+      headers: authHeaders({ "Content-Type": "application/json" }),
+      body: JSON.stringify({ id: productId, slot, dataUrl }),
+    }).catch(() => null)
+    const json = res ? await res.json().catch(() => ({})) : {}
+    setProductUploading(null)
+    if (json.product) setProducts((items) => items.map((item) => item.id === productId ? { ...item, ...json.product } : item))
+    else if (!res || !res.ok) alert(json.error || "No se pudo subir la foto")
+  }
+
+  const createExpense = async (draft) => {
+    const payload = { ...draft, amount: Number(draft.amount), owner: barber?.name || "Brunetti" }
     const res = await fetch("/api/expenses", { method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload) }).catch(() => null)
     const json = res ? await res.json().catch(() => ({})) : {}
     setExpenses((items) => [json.expense || { ...payload, id: Date.now() }, ...items])
-    setExpenseDraft({ date: new Date().toISOString().slice(0, 10), category: "Insumos", detail: "", amount: "" })
-    setExpenseOpen(false)
+  }
+  const updateExpense = async (expense) => {
+    const prev = expenses
+    setExpenses((items) => items.map((item) => item.id === expense.id ? { ...item, ...expense } : item))
+    const res = await fetch("/api/expenses", { method: "PATCH", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(expense) }).catch(() => null)
+    if (res && !res.ok) setExpenses(prev)
+  }
+  const deleteExpense = async (expense) => {
+    const prev = expenses
+    setExpenses((items) => items.filter((item) => item.id !== expense.id))
+    const res = await fetch(`/api/expenses?id=${expense.id}`, { method: "DELETE", headers: authHeaders() }).catch(() => null)
+    if (res && !res.ok) setExpenses(prev)
   }
 
   const saveBarber = async (payload) => {
@@ -386,6 +713,7 @@ export default function Dashboard() {
     let name = "datos", csv = ""
     if (type === "Clientes") { name = "clientes"; csv = toCSV(["Nombre", "Telefono", "Email", "Visitas", "Total", "Ultima visita", "Estado"], clients.map((c) => [c.name, c.phone, c.email, c.visits, c.totalSpent, c.lastVisit, c.status])) }
     else if (type === "Reservas") { name = "reservas"; csv = toCSV(["Fecha", "Hora", "Cliente", "Telefono", "Servicio", "Barbero", "Precio", "Estado"], bookings.map((b) => { const bb = barberById(b.barberId); return [b.date, b.time, b.client, b.phone, b.service, bb?.short || bb?.name || "", b.price, b.status] })) }
+    else if (type === "Finanzas") { name = `finanzas-${financePeriod}`; csv = toCSV(["Fecha", "Hora", "Cliente", "Servicio", "Barbero", "Precio", "Estado"], sortedFinanceRows.map((b) => { const bb = barberById(b.barberId); return [b.date, b.time, b.client, b.service, bb?.short || bb?.name || "", b.price, b.status] })) }
     else if (type === "Gastos") { name = "gastos"; csv = toCSV(["Fecha", "Categoria", "Detalle", "Monto", "Responsable"], expenses.map((e) => [e.date, e.category, e.detail, e.amount, e.owner])) }
     else if (type === "Servicios") { name = "servicios"; csv = toCSV(["Nombre", "Precio", "Minutos", "Categoria", "Estado"], services.map((s) => [s.name, s.price, s.min, s.cat, s.active === false ? "oculto" : "publicado"])) }
     const blob = new Blob([`﻿${csv}`], { type: "text/csv;charset=utf-8;" })
@@ -395,6 +723,28 @@ export default function Dashboard() {
     a.download = `brunetti-${name}-${new Date().toISOString().slice(0, 10)}.csv`
     document.body.appendChild(a); a.click(); a.remove()
     setTimeout(() => URL.revokeObjectURL(url), 1000)
+  }
+
+  // Reserva manual desde el panel (modo interno del POST: sin límite de 7
+  // días, servicio/precio personalizado). Espeja el patrón del flujo público:
+  // si la API responde error real (409, validación) se muestra en el modal;
+  // si está offline, se guarda localmente igual (demo/dev).
+  const createBooking = async (draft) => {
+    const res = await fetch("/api/bookings", {
+      method: "POST",
+      headers: authHeaders({ "Content-Type": "application/json" }),
+      body: JSON.stringify(draft),
+    }).catch(() => null)
+    if (res) {
+      const json = await res.json().catch(() => ({}))
+      if (!res.ok) return { ok: false, error: json.error || "No se pudo crear la reserva" }
+      addLocalBooking({ ...draft, id: json.booking?.id })
+    } else {
+      addLocalBooking(draft)
+    }
+    setBookings((current) => mergeBookings(current))
+    loadAgenda()
+    return { ok: true }
   }
 
   const updateBookingStatus = async (booking, status) => {
@@ -442,6 +792,28 @@ export default function Dashboard() {
     setSelectedClient(null)
     setClientEditing(false)
     fetch(`/api/clients?phone=${client.phone}`, { method: "DELETE", headers: authHeaders() }).catch(() => {})
+  }
+  // Alta manual (upsert por teléfono). Prepende el cliente devuelto; si ya
+  // existía lo actualiza en su lugar. Fallback offline con registro local.
+  const upsertClientLocal = (client) => setClients((list) => {
+    const idx = list.findIndex((c) => cleanPhone(c.phone) === cleanPhone(client.phone))
+    if (idx >= 0) { const copy = [...list]; copy[idx] = { ...copy[idx], ...client }; return copy }
+    return [client, ...list]
+  })
+  const createClient = async (draft) => {
+    let saved = null
+    try {
+      const res = await fetch("/api/clients", { method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(draft) })
+      if (res.headers.get("content-type")?.includes("application/json")) {
+        const json = await res.json()
+        if (!res.ok || json.ok === false) throw new Error(json.error || "No se pudo guardar el cliente.")
+        saved = json.client
+      }
+    } catch (err) {
+      if (err instanceof TypeError) saved = null // red caída → fallback offline
+      else throw err                             // error de validación real → propaga al modal
+    }
+    upsertClientLocal(saved || { ...draft, visits: 0, totalSpent: 0, status: "nuevo" })
   }
 
   // Actualiza en el momento (optimista) y solo revierte si la API falla.
@@ -550,6 +922,16 @@ export default function Dashboard() {
     setAgendaBusy("")
   }
 
+  // Salta a Reservas con el día enfocado (mismo patrón que usan GlobalSearch y
+  // el resumen para "próxima cita"): clickear una hora reservada en la agenda
+  // ahora lleva al detalle real de esa reserva en vez de estar deshabilitada.
+  const goToDayInReservas = (dayKey) => { setTab("reservas"); setInboxFocus({ day: dayKey, ts: Date.now() }) }
+
+  // Acceso rápido contextual desde Resumen: salta a Reservas con el filtro
+  // "Pendientes" ya aplicado y el rango en "Todas" (las pendientes pueden ser
+  // de cualquier fecha, no solo hoy).
+  const goToPendingInReservas = () => { setTab("reservas"); setInboxFocus({ day: isoDate(new Date()), ts: Date.now(), filter: "Pendientes", scope: "todas" }) }
+
   // Totales de la semana visible (no solo del día seleccionado): permite ver
   // de un vistazo cuántas horas quedan libres/bloqueadas antes de publicar la
   // semana siguiente.
@@ -572,6 +954,17 @@ export default function Dashboard() {
     if (!wd.some((d) => d.key === agendaDayKey)) setAgendaDayKey(wd[0].key)
   }
 
+  // Date-picker propio de Agenda: solo las 2 semanas administrables (offset 0
+  // y 1) son elegibles — el cliente no puede reservar más allá de 7 días.
+  const calPrevMonth = () => setCalMonth((m) => { if (m === 0) { setCalYear((y) => y - 1); return 11 } return m - 1 })
+  const calNextMonth = () => setCalMonth((m) => { if (m === 11) { setCalYear((y) => y + 1); return 0 } return m + 1 })
+  const pickCalendarDay = (key) => {
+    setCalOpen(false)
+    if (buildWeek(0).some((d) => d.key === key)) { setWeekOffset(0); setAgendaDayKey(key); return }
+    if (buildWeek(1).some((d) => d.key === key)) { setWeekOffset(1); setAgendaDayKey(key); return }
+    pushToast("📅", "Fecha fuera del rango reservable (7 días)")
+  }
+
   if (!barber) return null
 
   return (
@@ -582,8 +975,9 @@ export default function Dashboard() {
       dockItems={dockItems}
       barber={barber}
       onLogout={logout}
+      onNewBooking={() => setNewBookingOpen(true)}
     >
-      <main className="dashboard-main">
+      <main className="dashboard-main" onScroll={(e) => setTopbarScrolled(e.currentTarget.scrollTop > 4)}>
         <DashboardTopbar
           title={nav.find((n) => n[0] === tab)?.[2] || 'Panel'}
           barber={barber}
@@ -591,14 +985,26 @@ export default function Dashboard() {
           tab={tab}
           setTab={setTab}
           nav={visibleNav}
-          notifCount={visibleBookings.filter((b) => b.status === 'pendiente').length}
+          navigate={navigate}
           onRefresh={refreshAll}
           refreshing={refreshing}
+          scrolled={topbarScrolled}
+          search={(
+            <GlobalSearch
+              clients={clients}
+              bookings={visibleBookings}
+              onPickClient={(c) => { setTab('clientes'); openClient(c) }}
+              onPickBooking={(b) => { setTab('reservas'); setInboxFocus({ day: b.date, ts: Date.now() }) }}
+            />
+          )}
         />
 
         {/* RESUMEN */}
         {tab === "resumen" && (
-          <DashboardResumen bookings={bookings} barbers={barbers} expenses={expenses} clients={clients} todaySlots={availability[isoDate(new Date())] || []} />
+          <div style={{ display: "grid", gap: "1.1rem" }}>
+            <BookingSyncIssues />
+            <DashboardResumen bookings={bookings} barbers={barbers} expenses={expenses} clients={clients} todaySlots={availability[isoDate(new Date())] || []} onNewBooking={() => setNewBookingOpen(true)} onGoToPending={goToPendingInReservas} />
+          </div>
         )}
 
         {/* AGENDA */}
@@ -610,6 +1016,84 @@ export default function Dashboard() {
                 <button type="button" className="btn btn-dark btn-sm" onClick={() => setAgendaError("")}>Cerrar</button>
               </div>
             )}
+
+            {/* Cabecera propia del módulo: el topbar global ya trae título/tema/
+                campana/avatar/buscador general — acá solo va el kicker y un
+                buscador LOCAL de las reservas del día visible. */}
+            <div className="agenda-topline">
+              <span className="agenda-kicker">PANEL INTERNO</span>
+              <div className="agenda-search">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true">
+                  <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.35-4.35" />
+                </svg>
+                <input
+                  className="agenda-search-input"
+                  placeholder="Buscar reserva del día…"
+                  value={agendaQuery}
+                  onChange={(e) => setAgendaQuery(e.target.value)}
+                />
+                {agendaQuery && (
+                  <button type="button" className="agenda-search-clear" onClick={() => setAgendaQuery("")} aria-label="Limpiar búsqueda">
+                    <Icon name="close" size={12} />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* HERO: ocupación del día + KPIs de la semana + próxima cita. */}
+            {(() => {
+              const daySlots = availability[agendaDayKey] || []
+              const bookedDay = daySlots.filter((s) => s.state === "booked").length
+              const freeDay = daySlots.filter((s) => s.state === "free").length
+              const dayOcc = (bookedDay + freeDay) ? Math.round((bookedDay / (bookedDay + freeDay)) * 100) : 0
+              const [dy, dm, dd] = agendaDayKey.split("-").map(Number)
+              const dateObj = new Date(dy, dm - 1, dd)
+              const longDate = `${DOW_LONG[dateObj.getDay()]} ${dd} de ${MONTH_LONG[dm - 1]}`
+              const weekSuffix = weekOffset === 0 ? "esta semana" : "próx. semana"
+              const dayBookingsToday = visibleBookings
+                .filter((b) => b.date === agendaDayKey && b.status !== "cancelada")
+                .sort((a, b) => (a.time || "").localeCompare(b.time || ""))
+              const nextBooking = dayBookingsToday[0]
+              // Nuevos vs recurrentes del día: cruza por teléfono con el
+              // registro de clientes (visits > 1 = recurrente).
+              let newCount = 0, recurringCount = 0
+              dayBookingsToday.forEach((b) => {
+                const c = clients.find((item) => cleanPhone(item.phone) === cleanPhone(b.phone))
+                if (c && Number(c.visits || 0) > 1) recurringCount += 1
+                else newCount += 1
+              })
+              // Deltas vs. la semana anterior: si no hay datos previos fiables
+              // (API caída), no se inventan cifras — se ocultan.
+              const weekDelta = prevWeekStats ? {
+                booked: weekStats.booked - prevWeekStats.booked,
+                free: weekStats.free - prevWeekStats.free,
+                blocked: weekStats.blocked - prevWeekStats.blocked,
+              } : null
+              return (
+                <div className="dk-hero">
+                  <div className="dk-hero-grid cols-6 dk-stagger">
+                    <div style={{ display: "flex", alignItems: "center", gap: ".9rem" }}>
+                      <AnimatedRing pct={dayOcc} size={84} label="del día" />
+                      <div>
+                        <span className="agenda-kicker agenda-kicker-hero">AGENDA DE BRUNETTI</span>
+                        <h2 className="dk-hero-title">{longDate}</h2>
+                        <span className="dk-hero-sub">{bookedDay}/{bookedDay + freeDay} horas reservadas hoy</span>
+                        <span className="agenda-next-chip">
+                          <Icon name="clock" size={11} /> Próximo: {nextBooking ? `${nextBooking.client} · ${nextBooking.time}` : "sin reservas"}
+                        </span>
+                      </div>
+                    </div>
+                    <KpiTile icon="calendar" label={`Reservados · ${weekSuffix}`} value={weekStats.booked} delta={weekDelta?.booked} />
+                    <KpiTile icon="clock" label={`Disponibles · ${weekSuffix}`} value={weekStats.free} suffix="h" color="var(--green)" delta={weekDelta?.free} />
+                    <KpiTile icon="trend" label={`Bloqueados · ${weekSuffix}`} value={weekStats.blocked} color="var(--red)" delta={weekDelta?.blocked} />
+                    <KpiTile icon="user" label="Nuevos vs recurrentes" value={newCount} format={(n) => `${n}/${recurringCount}`} sub={`${recurringCount} recurrentes hoy`} />
+                    <button className="btn btn-gold" style={{ display: "inline-flex", alignItems: "center", gap: ".5rem", alignSelf: "center" }} onClick={() => setNewBookingOpen(true)}>
+                      <Icon name="plus" size={16} /> Nueva reserva
+                    </button>
+                  </div>
+                </div>
+              )
+            })()}
             <div className="agenda-controls">
               {/* Selector de barbero retirado: la agenda es exclusiva de Brunetti.
                   (Se conserva agendaBarber fijado a Bruno para la API de disponibilidad.) */}
@@ -624,85 +1108,209 @@ export default function Dashboard() {
                   Semana siguiente
                 </button>
               </div>
-              <div className="agenda-day-scroll">
-                {weekDays.map((d) => {
-                  const isActive = d.key === agendaDayKey
-                  const isToday = d.key === isoDate(new Date())
-                  const [dow, num] = d.label.split(" ")
-                  return (
-                    <button
-                      key={d.key}
-                      type="button"
-                      className={`agenda-day-pill ${isActive ? "is-active" : ""}`}
-                      onClick={() => setAgendaDayKey(d.key)}
-                    >
-                      <span className="agenda-day-pill-dow">{isToday ? "Hoy" : dow}</span>
-                      <span className="agenda-day-pill-num">{num}</span>
-                    </button>
-                  )
-                })}
+              <div className="agenda-day-row">
+                <div className="agenda-day-scroll">
+                  {weekDays.map((d) => {
+                    const isActive = d.key === agendaDayKey
+                    const isToday = d.key === isoDate(new Date())
+                    const hasBookings = (availability[d.key] || []).some((s) => s.state === "booked")
+                    const [dow, num] = d.label.split(" ")
+                    return (
+                      <button
+                        key={d.key}
+                        type="button"
+                        className={`agenda-day-pill ${isActive ? "is-active" : ""}`}
+                        onClick={() => setAgendaDayKey(d.key)}
+                      >
+                        <span className="agenda-day-pill-dow">{isToday ? "Hoy" : dow}</span>
+                        <span className="agenda-day-pill-num">{num}</span>
+                        <span className={`agenda-day-pill-dot ${hasBookings ? "is-on" : ""}`} />
+                      </button>
+                    )
+                  })}
+                </div>
+                <div className="agenda-cal-wrap" ref={calRef}>
+                  <button type="button" className="btn btn-dark btn-sm agenda-cal-btn" onClick={() => setCalOpen((v) => !v)} aria-label="Elegir fecha">
+                    <Icon name="calendar" size={14} />
+                  </button>
+                  {calOpen && (
+                    <AgendaDatePicker
+                      month={calMonth}
+                      year={calYear}
+                      selectedKey={agendaDayKey}
+                      onPrevMonth={calPrevMonth}
+                      onNextMonth={calNextMonth}
+                      onPick={pickCalendarDay}
+                      reservableKeys={new Set([...buildWeek(0), ...buildWeek(1)].map((d) => d.key))}
+                    />
+                  )}
+                </div>
               </div>
-              <div className="agenda-bulk-actions">
-                <button type="button" className="btn btn-dark btn-sm" disabled={!!agendaBusy} onClick={() => bulkAgenda("morning", "block")}>
-                  <Icon name="clock" size={13} /> Bloquear mañana
-                </button>
-                <button type="button" className="btn btn-dark btn-sm" disabled={!!agendaBusy} onClick={() => bulkAgenda("afternoon", "block")}>
-                  <Icon name="clock" size={13} /> Bloquear tarde
-                </button>
-                <button type="button" className="btn btn-dark btn-sm" disabled={!!agendaBusy} onClick={() => bulkAgenda("day", "block")}>
-                  <Icon name="close" size={13} /> Bloquear día completo
-                </button>
-                <button type="button" className="btn btn-gold btn-sm" disabled={!!agendaBusy} onClick={() => bulkAgenda("day", "enable")}>
-                  <Icon name="check" size={13} /> Habilitar día completo
-                </button>
-                <button type="button" className="btn btn-dark btn-sm" disabled={!!agendaBusy} onClick={() => bulkAgenda("week", "block")}>
-                  <Icon name="close" size={13} /> Bloquear semana completa
-                </button>
-                <button type="button" className="btn btn-gold btn-sm" disabled={!!agendaBusy} onClick={() => bulkAgenda("week", "enable")}>
-                  <Icon name="check" size={13} /> Habilitar semana completa
-                </button>
+              {/* Antes eran 6 botones sueltos (mañana/tarde/día/semana × bloquear/
+                  habilitar) todos visibles a la vez. Mañana/tarde ahora son un
+                  toggle contextual junto al título de cada periodo (más abajo);
+                  acá solo quedan día completo y semana completa, y cada uno es
+                  un único botón cuya etiqueta cambia según el estado actual. */}
+              <div className="agenda-bulk-actions agenda-bulk-row">
+                {(() => {
+                  const dayFree = (availability[agendaDayKey] || []).filter((s) => s.state === "free").length
+                  const dayIsBlocked = dayFree === 0
+                  const weekIsBlocked = weekStats.free === 0
+                  return (
+                    <>
+                      <button type="button" className={`btn btn-sm ${dayIsBlocked ? "btn-gold" : "btn-dark"}`} disabled={!!agendaBusy} onClick={() => { bulkAgenda("day", dayIsBlocked ? "enable" : "block"); pushToast(dayIsBlocked ? "✓" : "✕", dayIsBlocked ? "Día habilitado" : "Día bloqueado") }}>
+                        <Icon name={dayIsBlocked ? "check" : "close"} size={13} /> {dayIsBlocked ? "Habilitar" : "Bloquear"} día completo
+                      </button>
+                      <button type="button" className={`btn btn-sm ${weekIsBlocked ? "btn-gold" : "btn-dark"}`} disabled={!!agendaBusy} onClick={() => { bulkAgenda("week", weekIsBlocked ? "enable" : "block"); pushToast(weekIsBlocked ? "✓" : "✕", weekIsBlocked ? "Semana habilitada" : "Semana bloqueada") }}>
+                        <Icon name={weekIsBlocked ? "check" : "close"} size={13} /> {weekIsBlocked ? "Habilitar" : "Bloquear"} semana completa
+                      </button>
+                    </>
+                  )
+                })()}
+                <span className="agenda-drag-hint">Arrastra sobre las horas para bloquear un rango ⇄</span>
               </div>
             </div>
-            <Panel
-              title={`${(barbers.find((item) => item.id === agendaBarber) || barberById(agendaBarber))?.name || "Barbero"}`}
-              action={<span className="chip chip-gold">{(availability[agendaDayKey] || []).filter((s) => s.state === "free").length} libres</span>}
-            >
-              <div className="agenda-legend">
-                <span><i className="free" /> Atiende</span>
-                <span><i className="blocked" /> Bloqueado</span>
-                <span><i className="booked" /> Reservado</span>
-              </div>
-              {["MAÑANA", "TARDE"].map((label) => {
-                const slots = AGENDA_SLOTS.filter((t) => label === "MAÑANA" ? Number(t.slice(0, 2)) < 12 : Number(t.slice(0, 2)) >= 12)
-                return (
-                  <div key={label} className="agenda-period">
-                    <p className="agenda-period-title">{label}</p>
-                    <div className="agenda-tile-grid">
-                      {slots.map((t) => {
-                        const slotInfo = (availability[agendaDayKey] || []).find((item) => item.slot === t)
-                        const state = slotInfo?.state || (slotInfo?.available === false ? "blocked" : "free")
-                        const busy = agendaBusy === `${agendaDayKey}-${t}`
-                        return (
-                          <button
-                            key={t}
-                            className={`agenda-tile ${state}`}
-                            disabled={state === "booked" || busy}
-                            onClick={() => toggleSlot(agendaDayKey, t, state)}
-                            title={state === "booked" ? "Reservado" : state === "blocked" ? "Tocar para atender" : "Tocar para bloquear"}
-                          >
-                            {busy ? "..." : t}
-                          </button>
-                        )
-                      })}
+            <div className="agenda-layout">
+              <Panel
+                title={`${(barbers.find((item) => item.id === agendaBarber) || barberById(agendaBarber))?.name || "Barbero"}`}
+                action={(
+                  <div style={{ display: "flex", alignItems: "center", gap: ".5rem", flexWrap: "wrap", justifyContent: "flex-end" }}>
+                    <span className="chip chip-gold">{(availability[agendaDayKey] || []).filter((s) => s.state === "free").length} libres</span>
+                    <div className="agenda-view-toggle" role="group" aria-label="Vista de la agenda">
+                      <button type="button" className={`agenda-view-tab ${agendaView === "grid" ? "is-on" : ""}`} onClick={() => setAgendaView("grid")}>▦ Bloques</button>
+                      <button type="button" className={`agenda-view-tab ${agendaView === "timeline" ? "is-on" : ""}`} onClick={() => setAgendaView("timeline")}>☰ Línea</button>
                     </div>
                   </div>
-                )
-              })}
-            </Panel>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3,minmax(0,1fr))", gap: ".6rem" }}>
-              <Stat icon="calendar" label={`Reservados · ${weekOffset === 0 ? "esta semana" : "próx. semana"}`} value={weekStats.booked} />
-              <Stat icon="clock"    label={`Disponibles · ${weekOffset === 0 ? "esta semana" : "próx. semana"}`} value={weekStats.free} suffix="h" />
-              <Stat icon="trend"    label={`Bloqueados · ${weekOffset === 0 ? "esta semana" : "próx. semana"}`} value={weekStats.blocked} accent />
+                )}
+              >
+                <div className="agenda-legend">
+                  <span><i className="free" /> Atiende</span>
+                  <span><i className="blocked" /> Bloqueado</span>
+                  <span><i className="booked" /> Reservado</span>
+                </div>
+                {agendaView === "grid" && ["MAÑANA", "TARDE"].map((label) => {
+                  const slots = AGENDA_SLOTS.filter((t) => label === "MAÑANA" ? Number(t.slice(0, 2)) < 12 : Number(t.slice(0, 2)) >= 12)
+                  const periodStates = slots.map((t) => (availability[agendaDayKey] || []).find((item) => item.slot === t))
+                  const periodIsBlocked = periodStates.every((s) => s?.state !== "free")
+                  return (
+                    <div key={label} className="agenda-period">
+                      <div className="agenda-period-head">
+                        <p className="agenda-period-title">{label}</p>
+                        <button
+                          type="button"
+                          className={`agenda-period-toggle ${periodIsBlocked ? "is-blocked" : ""}`}
+                          disabled={!!agendaBusy}
+                          onClick={() => { bulkAgenda(label === "MAÑANA" ? "morning" : "afternoon", periodIsBlocked ? "enable" : "block"); pushToast(periodIsBlocked ? "✓" : "✕", `${label === "MAÑANA" ? "Mañana" : "Tarde"} ${periodIsBlocked ? "habilitada" : "bloqueada"}`) }}
+                        >
+                          {periodIsBlocked ? "Habilitar" : "Bloquear"}
+                        </button>
+                      </div>
+                      <div className="agenda-tile-grid">
+                        {slots.map((t) => {
+                          const slotInfo = (availability[agendaDayKey] || []).find((item) => item.slot === t)
+                          const state = slotInfo?.state || (slotInfo?.available === false ? "blocked" : "free")
+                          const busy = agendaBusy === `${agendaDayKey}-${t}`
+                          const bk = state === "booked" ? visibleBookings.find((b) => b.date === agendaDayKey && b.time === t && b.status !== "cancelada") : null
+                          const tag = state === "booked" ? "Reservado" : state === "blocked" ? "Bloqueado" : "Libre"
+                          const applyToggle = () => {
+                            toggleSlot(agendaDayKey, t, state)
+                            pushToast(state === "free" ? "✕" : "✓", state === "free" ? `${t} bloqueado` : `${t} habilitado`)
+                          }
+                          return (
+                            <button
+                              key={t}
+                              className={`agenda-tile ${state}`}
+                              disabled={busy}
+                              onMouseDown={() => {
+                                if (state === "booked") return
+                                dragRef.current = { active: true, mode: state === "free" ? "block" : "enable" }
+                                applyToggle()
+                              }}
+                              onTouchStart={() => {
+                                if (state === "booked") return
+                                dragRef.current = { active: true, mode: state === "free" ? "block" : "enable" }
+                              }}
+                              onMouseEnter={() => {
+                                if (!dragRef.current.active || state === "booked") return
+                                const { mode } = dragRef.current
+                                if ((mode === "block" && state === "free") || (mode === "enable" && state === "blocked")) applyToggle()
+                              }}
+                              onClick={() => { if (state === "booked" && bk) setDetail(bk) }}
+                              title={state === "booked" ? (bk ? `${bk.client} · ${bk.service}` : "Reservado") : state === "blocked" ? "Tocar para atender" : "Tocar para bloquear"}
+                            >
+                              <span className="agenda-tile-h">{busy ? "…" : t}</span>
+                              <span className="agenda-tile-tag">{tag}</span>
+                            </button>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  )
+                })}
+                {agendaView === "timeline" && (
+                  <div className="agenda-timeline">
+                    {AGENDA_SLOTS.map((t) => {
+                      const slotInfo = (availability[agendaDayKey] || []).find((item) => item.slot === t)
+                      const state = slotInfo?.state || (slotInfo?.available === false ? "blocked" : "free")
+                      const bk = state === "booked" ? visibleBookings.find((b) => b.date === agendaDayKey && b.time === t && b.status !== "cancelada") : null
+                      return (
+                        <div
+                          key={t}
+                          className={`agenda-tl-row ${state}`}
+                          onClick={() => { if (state === "booked" && bk) setDetail(bk) }}
+                          role={state === "booked" ? "button" : undefined}
+                        >
+                          <span className="agenda-tl-time">{t}</span>
+                          <span className={`agenda-tl-rail ${state}`} />
+                          <div className="agenda-tl-card">
+                            {state === "booked" ? (
+                              <>
+                                <div className="agenda-tl-info">
+                                  <strong>{bk?.client || "Reservado"}</strong>
+                                  <span>{bk?.service}</span>
+                                </div>
+                                <span className={`agenda-tl-badge ${bk?.status === "confirmada" ? "is-gold" : ""}`}>{bk?.status === "confirmada" ? "confirmada" : "pendiente"}</span>
+                              </>
+                            ) : state === "blocked" ? (
+                              <span className="agenda-tl-empty">Bloqueado</span>
+                            ) : (
+                              <>
+                                <span className="agenda-tl-empty">Disponible</span>
+                                <span className="agenda-tl-badge">Libre</span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+              </Panel>
+              <Panel title="Reservas del día" action={<span className="chip">{(weekDays.find((d) => d.key === agendaDayKey)?.label) || ""}</span>}>
+                <div className="agenda-day-panel">
+                  {visibleBookings
+                    .filter((b) => b.date === agendaDayKey && b.status !== "cancelada")
+                    .filter((b) => {
+                      const q = agendaQuery.trim().toLowerCase()
+                      if (!q) return true
+                      return `${b.client || ""} ${b.service || ""}`.toLowerCase().includes(q)
+                    })
+                    .sort((a, b) => (a.time || "").localeCompare(b.time || ""))
+                    .map((b) => (
+                      <button key={b.id || `${b.date}-${b.time}-${b.client}`} type="button" className="agenda-day-booking" onClick={() => setDetail(b)}>
+                        <span className="adb-time">{b.time}</span>
+                        <span className="adb-info">
+                          <strong>{b.client}</strong>
+                          <span>{b.service}</span>
+                        </span>
+                        <span className={`chip ${b.status === "confirmada" ? "chip-gold" : ""}`} style={{ fontSize: ".64rem" }}>{b.status}</span>
+                      </button>
+                    ))}
+                  {!visibleBookings.some((b) => b.date === agendaDayKey && b.status !== "cancelada") && (
+                    <div className="empty-state">Sin reservas este día.</div>
+                  )}
+                </div>
+              </Panel>
             </div>
           </div>
         )}
@@ -714,17 +1322,31 @@ export default function Dashboard() {
             barbers={barbers}
             barber={barber}
             admin={admin}
+            slotsPerDay={AGENDA_SLOTS.length}
             onStatus={(bk, status) => updateBookingStatus(bk, status)}
             onDelete={deleteBooking}
             onReschedule={() => setTab("agenda")}
+            onNewBooking={() => setNewBookingOpen(true)}
+            focus={inboxFocus}
           />
         )}
 
         {/* FINANZAS */}
         {tab === "finanzas" && (
           <div className="animate-in" style={{ display: "grid", gap: "1.1rem" }}>
+            <div className="fin-toolbar">
+              <div className="psn-seg" role="group" aria-label="Periodo">
+                <button type="button" className={financePeriod === "semana" ? "is-on" : ""} onClick={() => setFinancePeriod("semana")}>Semana</button>
+                <button type="button" className={financePeriod === "mes" ? "is-on" : ""} onClick={() => setFinancePeriod("mes")}>Mes</button>
+                <button type="button" className={financePeriod === "año" ? "is-on" : ""} onClick={() => setFinancePeriod("año")}>Año</button>
+              </div>
+              <button type="button" className="btn btn-dark btn-sm" onClick={() => exportCSV("Finanzas")}>
+                <Icon name="wallet" size={13} /> Exportar CSV
+              </button>
+            </div>
+
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: "1rem" }}>
-              <Stat icon="wallet"   label="Ingresos agenda" value={CLP(revenueTotal)} accent />
+              <Stat icon="wallet"   label="Ingresos del periodo" value={CLP(revenueTotal)} accent />
               <Stat icon="chart"    label="Ticket promedio" value={CLP(avgTicket)} />
               <Stat icon="scissors" label="Servicios"       value={completedBookings.length} />
               <Stat icon="wallet"   label="Gastos del mes"  value={CLP(monthExpensesTotal)} />
@@ -733,11 +1355,11 @@ export default function Dashboard() {
               <Panel title="Ingresos por día">
                 {revenueByDate.length
                   ? <BarChart data={revenueByDate} fmt={CLP} />
-                  : <p style={{ color: "var(--muted)", fontSize: ".84rem" }}>Sin datos aún.</p>}
+                  : <p style={{ color: "var(--muted)", fontSize: ".84rem" }}>Sin datos en este periodo.</p>}
               </Panel>
               <Panel title="Ingresos por servicio">
                 <div style={{ display: "grid", gap: ".75rem" }}>
-                  {!revenueByService.length && <p style={{ color: "var(--muted)", fontSize: ".84rem" }}>Sin datos aún.</p>}
+                  {!revenueByService.length && <p style={{ color: "var(--muted)", fontSize: ".84rem" }}>Sin datos en este periodo.</p>}
                   {revenueByService.slice(0, 5).map((item) => {
                     const p = Math.round((item.total / Math.max(1, revenueTotal)) * 100)
                     return (
@@ -752,7 +1374,7 @@ export default function Dashboard() {
             </div>
             <Panel title="Ingresos por barbero">
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(160px,1fr))", gap: ".8rem" }}>
-                {!ranking.length && <p style={{ color: "var(--muted)", fontSize: ".84rem" }}>Sin datos aún.</p>}
+                {!ranking.length && <p style={{ color: "var(--muted)", fontSize: ".84rem" }}>Sin datos en este periodo.</p>}
                 {ranking.map((r) => {
                   const b = barbers.find((item) => item.id === r.id) || barberById(r.id)
                   return (
@@ -765,6 +1387,48 @@ export default function Dashboard() {
                 })}
               </div>
             </Panel>
+
+            <Panel title="Movimientos" action={<span className="chip">{sortedFinanceRows.length} en el periodo</span>}>
+              <div className="fin-table-head" style={{ gridTemplateColumns: admin ? "100px 1.3fr 1.1fr 110px 90px 100px" : "100px 1.3fr 1.1fr 90px 100px" }}>
+                <button type="button" onClick={() => toggleFinanceSort("date")} className={financeSort.key === "date" ? "is-sorted" : ""}>Fecha {financeSort.key === "date" && (financeSort.dir === "asc" ? "↑" : "↓")}</button>
+                <button type="button" onClick={() => toggleFinanceSort("client")} className={financeSort.key === "client" ? "is-sorted" : ""}>Cliente {financeSort.key === "client" && (financeSort.dir === "asc" ? "↑" : "↓")}</button>
+                <button type="button" onClick={() => toggleFinanceSort("service")} className={financeSort.key === "service" ? "is-sorted" : ""}>Servicio {financeSort.key === "service" && (financeSort.dir === "asc" ? "↑" : "↓")}</button>
+                {admin && <button type="button" onClick={() => toggleFinanceSort("barber")} className={financeSort.key === "barber" ? "is-sorted" : ""}>Barbero {financeSort.key === "barber" && (financeSort.dir === "asc" ? "↑" : "↓")}</button>}
+                <button type="button" onClick={() => toggleFinanceSort("price")} className={financeSort.key === "price" ? "is-sorted" : ""}>Precio {financeSort.key === "price" && (financeSort.dir === "asc" ? "↑" : "↓")}</button>
+                <span>Estado</span>
+              </div>
+              <div className="fin-mov-scroll">
+                <div className="fin-mov-list">
+                  {sortedFinanceRows.map((b) => {
+                    const bb = barberById(b.barberId)
+                    return (
+                      <div key={b.id} className="fin-row" style={{ gridTemplateColumns: admin ? "100px 1.3fr 1.1fr 110px 90px 100px" : "100px 1.3fr 1.1fr 90px 100px" }}>
+                        <div><strong>{b.date?.slice(5)}</strong><span>{b.time}</span></div>
+                        <div><strong>{b.client}</strong></div>
+                        <div><span>{b.service}</span></div>
+                        {admin && <div><span>{bb?.short || bb?.name || "—"}</span></div>}
+                        <div><strong className="gold-text">{CLP(b.price)}</strong></div>
+                        <span className="chip">{b.status}</span>
+                      </div>
+                    )
+                  })}
+                  {!sortedFinanceRows.length && (
+                    <div className="empty-state" style={{ display: "grid", gap: ".7rem", justifyItems: "center" }}>
+                      <span>Sin movimientos en este periodo.</span>
+                      <button type="button" className="btn btn-gold btn-sm" onClick={() => setNewBookingOpen(true)}>
+                        <Icon name="calendar" size={14} /> Nueva reserva
+                      </button>
+                    </div>
+                  )}
+                </div>
+                {sortedFinanceRows.length > 0 && (
+                  <div className="fin-row-total">
+                    <span>Total del periodo</span>
+                    <b className="gold-text">{CLP(revenueTotal)}</b>
+                  </div>
+                )}
+              </div>
+            </Panel>
           </div>
         )}
 
@@ -773,28 +1437,47 @@ export default function Dashboard() {
           <div className="animate-in" style={{ display: "grid", gap: "1.1rem" }}>
             <div className="client-filter-grid">
               <button type="button" className={`client-filter-card ${clientFilter === "active" ? "is-active" : ""}`} onClick={() => setClientFilter((f) => f === "active" ? "all" : "active")}>
-                <Icon name="user" size={18} />
-                <strong>{activeClients.length}</strong>
-                <span>Activos</span>
+                <span className="cf-ic"><Icon name="user" size={16} /></span>
+                <span className="cf-body"><strong>{activeClients.length}</strong><span className="cf-label">Activos</span></span>
               </button>
               <button type="button" className={`client-filter-card ${clientFilter === "inactive" ? "is-active" : ""}`} onClick={() => setClientFilter((f) => f === "inactive" ? "all" : "inactive")}>
-                <Icon name="clock" size={18} />
-                <strong>{inactiveClients.length}</strong>
-                <span>Inactivos 30+ días</span>
+                <span className="cf-ic"><Icon name="clock" size={16} /></span>
+                <span className="cf-body"><strong>{inactiveClients.length}</strong><span className="cf-label">Inactivos 30+ días</span></span>
               </button>
               <button type="button" className={`client-filter-card ${clientFilter === "top" ? "is-active" : ""}`} onClick={() => setClientFilter((f) => f === "top" ? "all" : "top")}>
-                <Icon name="star" size={18} />
-                <strong>{topClients.length}</strong>
-                <span>Más activos</span>
+                <span className="cf-ic"><Icon name="star" size={16} /></span>
+                <span className="cf-body"><strong>{topClients.length}</strong><span className="cf-label">Más activos</span></span>
               </button>
             </div>
-            <Panel title="Panel de clientes" action={<span className="chip chip-gold">Telefono como ID</span>}>
+            <Panel
+              title="Panel de clientes"
+              action={(
+                <div style={{ display: "flex", gap: ".5rem", alignItems: "center" }}>
+                  <span className="chip chip-gold">Teléfono como ID</span>
+                  <button className="btn btn-gold btn-sm" onClick={() => setNewClientOpen(true)}>
+                    <Icon name="user" size={14} /> Nuevo
+                  </button>
+                </div>
+              )}
+            >
               <div className="client-search">
                 <Icon name="user" size={15} />
                 <input value={clientQuery} onChange={(e) => setClientQuery(e.target.value)} placeholder="Buscar por nombre, telefono o correo" />
               </div>
+              <div className="client-table-head">
+                <button type="button" onClick={() => toggleClientSort("name")} className={clientSort.key === "name" ? "is-sorted" : ""}>
+                  Cliente {clientSort.key === "name" && (clientSort.dir === "asc" ? "↑" : "↓")}
+                </button>
+                <button type="button" onClick={() => toggleClientSort("visits")} className={clientSort.key === "visits" ? "is-sorted" : ""}>
+                  Visitas {clientSort.key === "visits" && (clientSort.dir === "asc" ? "↑" : "↓")}
+                </button>
+                <button type="button" onClick={() => toggleClientSort("totalSpent")} className={clientSort.key === "totalSpent" ? "is-sorted" : ""}>
+                  Total {clientSort.key === "totalSpent" && (clientSort.dir === "asc" ? "↑" : "↓")}
+                </button>
+                <span />
+              </div>
               <div className="client-list">
-                {filteredClients.map((client) => (
+                {sortedClients.map((client) => (
                   <div key={client.id || client.phone} className="client-row" onClick={() => openClient(client)} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter') openClient(client) }}>
                     <div style={{ minWidth: 0 }}>
                       <strong>{client.name}</strong>
@@ -807,8 +1490,13 @@ export default function Dashboard() {
                     </button>
                   </div>
                 ))}
-                {!filteredClients.length && (
-                  <div className="empty-state">No hay clientes que coincidan con la busqueda.</div>
+                {!sortedClients.length && (
+                  <div className="empty-state" style={{ display: "grid", gap: ".7rem", justifyItems: "center" }}>
+                    <span>No hay clientes que coincidan con la busqueda.</span>
+                    <button type="button" className="btn btn-gold btn-sm" onClick={() => setNewClientOpen(true)}>
+                      <Icon name="user" size={14} /> Nuevo cliente
+                    </button>
+                  </div>
                 )}
               </div>
             </Panel>
@@ -841,80 +1529,253 @@ export default function Dashboard() {
             </button>
             <Panel title="Servicios publicados" action={<span className="chip chip-gold">{services.filter((s) => s.active !== false).length} activos</span>}>
               <div className="svc-grid">
-                {services.map((svc) => {
-                  const isEditing = editSvcId === svc.id
-                  return (
-                    <div key={svc.id} className={`svc-card ${isEditing ? "is-open" : ""}`} onClick={() => !isEditing && setEditSvcId(svc.id)}>
-                      <div className="svc-card-ic"><Icon name={getSvcIcon(svc)} size={20} /></div>
-                      <div className="svc-card-name">{svc.name}</div>
-                      <div className="svc-card-price">{CLP(svc.price)}</div>
-                      <div className="svc-card-meta"><Icon name="clock" size={11} /> {svc.min} min · {svc.cat}</div>
-                      <span className={svc.active === false ? "chip" : "chip chip-gold"} style={{ fontSize: ".68rem" }}>{svc.active === false ? "Oculto" : "Publicado"}</span>
-                      {isEditing && (
-                        <div className="svc-card-edit" onClick={(e) => e.stopPropagation()}>
-                          <input className="input" value={svc.name} onChange={(e) => setServices((items) => items.map((item) => item.id === svc.id ? { ...item, name: e.target.value } : item))} />
-                          <input className="input" inputMode="numeric" placeholder="Precio" value={svc.price} onChange={(e) => setServices((items) => items.map((item) => item.id === svc.id ? { ...item, price: e.target.value.replace(/\D/g, "") } : item))} />
-                          <input className="input" inputMode="numeric" placeholder="Minutos" value={svc.min} onChange={(e) => setServices((items) => items.map((item) => item.id === svc.id ? { ...item, min: e.target.value.replace(/\D/g, "") } : item))} />
-                          <div style={{ display: "flex", gap: ".5rem" }}>
-                            <button className={svc.active === false ? "chip" : "chip chip-gold"} onClick={() => saveService({ ...svc, active: svc.active === false })}>{svc.active === false ? "Oculto" : "Activo"}</button>
-                            <button className="btn btn-gold btn-sm" style={{ flex: 1 }} onClick={() => { saveService(svc); setEditSvcId(null) }}><Icon name="check" size={14} /> Guardar</button>
-                            <button className="btn btn-dark btn-sm" onClick={() => setEditSvcId(null)}><Icon name="close" size={14} /></button>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )
-                })}
-              </div>
-            </Panel>
-          </div>
-        )}
-
-        {/* GASTOS */}
-        {tab === "gastos" && admin && (
-          <div className="animate-in" style={{ display: "grid", gap: "1.1rem" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: "1rem" }}>
-              <Stat icon="wallet" label="Gastos mes" value={CLP(expenses.reduce((sum, item) => sum + Number(item.amount || 0), 0))} accent />
-              <Stat icon="chart" label="Registros" value={expenses.length} />
-            </div>
-            <button className="btn btn-gold btn-block" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: ".5rem" }} onClick={() => setExpenseOpen(true)}>
-              <Icon name="wallet" size={16} /> Ingresar gasto
-            </button>
-            <Panel title="Ultimos gastos">
-              <div style={{ display: "grid", gap: ".55rem" }}>
-                {expenses.map((expense) => (
-                  <div key={expense.id} className="admin-row">
-                    <div><strong>{expense.category}</strong><span>{expense.detail}</span></div>
-                    <div><strong>{CLP(expense.amount)}</strong><span>{expense.date}</span></div>
-                    <span className="chip">{expense.owner}</span>
-                  </div>
+                {services.map((svc) => (
+                  <button key={svc.id} type="button" className="svc-card" onClick={() => setEditSvcId(svc.id)}>
+                    <div className="svc-card-ic"><Icon name={getSvcIcon(svc)} size={20} /></div>
+                    <div className="svc-card-name">{svc.name}</div>
+                    <div className="svc-card-price">{CLP(svc.price)}</div>
+                    <div className="svc-card-meta"><Icon name="clock" size={11} /> {svc.min} min · bloquea {minToBlocks(svc.min)}h · {svc.cat}</div>
+                    <span className={svc.active === false ? "chip" : "chip chip-gold"} style={{ fontSize: ".68rem" }}>{svc.active === false ? "Oculto" : "Publicado"}</span>
+                  </button>
                 ))}
               </div>
             </Panel>
           </div>
         )}
 
-        {/* MODAL INGRESAR GASTO */}
-        {expenseOpen && (
-          <div style={{ position: "fixed", inset: 0, zIndex: 1200, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }} onClick={() => setExpenseOpen(false)}>
+        {/* DRAWER edición de servicio (antes expandía la card a fila completa) */}
+        {tab === "servicios" && editSvcId != null && (() => {
+          const svc = services.find((item) => item.id === editSvcId)
+          if (!svc) return null
+          return (
+            <div className="psn-modal is-drawer" role="dialog" aria-modal="true">
+              <button className="psn-scrim" aria-label="Cerrar" onClick={() => setEditSvcId(null)} />
+              <div className="psn-modal-card psn-newbk psn-drawer-card">
+                <button className="psn-close" onClick={() => setEditSvcId(null)} aria-label="Cerrar"><Icon name="close" size={17} /></button>
+                <h3><Icon name={getSvcIcon(svc)} size={20} /> Editar servicio</h3>
+                <div className="psn-newbk-sec">
+                  <label className="dk-field-lbl">Nombre</label>
+                  <input className="input" value={svc.name} onChange={(e) => setServices((items) => items.map((item) => item.id === svc.id ? { ...item, name: e.target.value } : item))} />
+                </div>
+                <div className="psn-newbk-sec" style={{ gridTemplateColumns: "1fr 1fr", display: "grid", gap: ".5rem" }}>
+                  <div><label className="dk-field-lbl">Precio</label><input className="input" inputMode="numeric" value={svc.price} onChange={(e) => setServices((items) => items.map((item) => item.id === svc.id ? { ...item, price: e.target.value.replace(/\D/g, "") } : item))} /></div>
+                  <div>
+                    <label className="dk-field-lbl">Bloquea en agenda</label>
+                    <div style={{ display: "flex", alignItems: "center", gap: ".4rem" }}>
+                      <button type="button" className="chip" style={{ padding: ".3rem .6rem" }}
+                        onClick={() => setServices((items) => items.map((item) => item.id === svc.id ? { ...item, min: String(blocksToMin(minToBlocks(item.min) - 1)) } : item))}
+                        disabled={minToBlocks(svc.min) <= 1}>−</button>
+                      <span style={{ flex: 1, textAlign: "center", fontSize: ".85rem" }}>{minToBlocks(svc.min)} {minToBlocks(svc.min) === 1 ? "bloque" : "bloques"}</span>
+                      <button type="button" className="chip" style={{ padding: ".3rem .6rem" }}
+                        onClick={() => setServices((items) => items.map((item) => item.id === svc.id ? { ...item, min: String(blocksToMin(minToBlocks(item.min) + 1)) } : item))}>+</button>
+                    </div>
+                  </div>
+                </div>
+                <p style={{ margin: 0, fontSize: ".7rem", color: "var(--muted)" }}>1 bloque = 1 hora de agenda. Duración real guardada: {svc.min} min.</p>
+                <div className="psn-confirm-actions" style={{ gridTemplateColumns: admin ? "1fr 1fr 1fr" : "1fr 1fr" }}>
+                  <button className={svc.active === false ? "chip" : "chip chip-gold"} onClick={() => saveService({ ...svc, active: svc.active === false })}>{svc.active === false ? "Oculto" : "Publicado"}</button>
+                  {admin && (
+                    <button className="btn btn-sm psn-res-delete" onClick={() => setDeleteSvc(svc)}><Icon name="close" size={14} /> Eliminar</button>
+                  )}
+                  <button className="btn btn-gold btn-sm" onClick={() => { saveService(svc); setEditSvcId(null) }}><Icon name="check" size={14} /> Guardar</button>
+                </div>
+              </div>
+            </div>
+          )
+        })()}
+
+        {/* ESSENTIALS (tienda de clientes) */}
+        {tab === "essentials" && admin && (
+          <div className="animate-in" style={{ display: "grid", gap: "1.1rem" }}>
+            <button className="btn btn-gold btn-block" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: ".5rem" }} onClick={() => setProductOpen(true)}>
+              <Icon name="spark" size={16} /> Nuevo producto
+            </button>
+            <Panel title="Productos" action={<span className="chip chip-gold">{products.filter((p) => p.active !== false).length} activos</span>}>
+              {products.length === 0 ? (
+                <p style={{ margin: 0, color: "var(--muted)", fontSize: ".88rem" }}>Aún no hay productos. Crea el primero con el botón de arriba.</p>
+              ) : (
+                <div className="svc-grid">
+                  {products.map((p) => (
+                    <button key={p.id} type="button" className="svc-card" onClick={() => setEditProductId(p.id)}>
+                      <div className="svc-card-ic" style={{ width: 36, height: 36, overflow: "hidden", padding: 0 }}>
+                        {p.imgFront ? <img src={p.imgFront} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <Icon name="gift" size={18} />}
+                      </div>
+                      <div className="svc-card-name">{p.name}</div>
+                      <div className="svc-card-price">{CLP(p.price)}</div>
+                      <div className="svc-card-meta"><Icon name="wallet" size={11} /> Stock {p.stock}</div>
+                      <span className={p.active === false ? "chip" : "chip chip-gold"} style={{ fontSize: ".68rem" }}>{p.active === false ? "Oculto" : "Publicado"}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </Panel>
+          </div>
+        )}
+
+        {/* DRAWER edición de producto */}
+        {tab === "essentials" && editProductId != null && (() => {
+          const p = products.find((item) => item.id === editProductId)
+          if (!p) return null
+          const slots = [["imgFront", "front", "Portada"], ["imgBack", "back", "Hover"], ["imgDetail", "detail", "Detalle / modal"]]
+          return (
+            <div className="psn-modal is-drawer" role="dialog" aria-modal="true">
+              <button className="psn-scrim" aria-label="Cerrar" onClick={() => setEditProductId(null)} />
+              <div className="psn-modal-card psn-newbk psn-drawer-card">
+                <button className="psn-close" onClick={() => setEditProductId(null)} aria-label="Cerrar"><Icon name="close" size={17} /></button>
+                <h3><Icon name="gift" size={20} /> Editar producto</h3>
+
+                <div style={{ display: "flex", gap: ".6rem", marginBottom: ".2rem" }}>
+                  {slots.map(([field, slot, label]) => (
+                    <label key={slot} style={{ flex: 1, aspectRatio: "4/5", borderRadius: 10, overflow: "hidden", position: "relative", border: "1px dashed var(--hair-2)", cursor: "pointer", background: "var(--panel)", display: "block" }}>
+                      {p[field]
+                        ? <img src={p[field]} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                        : <div style={{ width: "100%", height: "100%", display: "grid", placeItems: "center", color: "var(--muted-2)" }}><Icon name="image" size={18} /></div>}
+                      <span style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "2px", textAlign: "center", fontSize: ".58rem", letterSpacing: ".03em", background: "rgba(0,0,0,.55)", color: "#e6cd90" }}>
+                        {productUploading === `${p.id}-${slot}` ? "Subiendo…" : label}
+                      </span>
+                      <input
+                        type="file"
+                        accept="image/png,image/jpeg,image/webp"
+                        style={{ position: "absolute", inset: 0, opacity: 0, cursor: "pointer" }}
+                        onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ""; if (f) uploadProductPhoto(p.id, slot, f) }}
+                      />
+                    </label>
+                  ))}
+                </div>
+
+                <div className="psn-newbk-sec">
+                  <label className="dk-field-lbl">Nombre</label>
+                  <input className="input" value={p.name} onChange={(e) => setProducts((items) => items.map((item) => item.id === p.id ? { ...item, name: e.target.value } : item))} />
+                </div>
+                <div className="psn-newbk-sec">
+                  <label className="dk-field-lbl">Marca</label>
+                  <input className="input" value={p.brand || ""} onChange={(e) => setProducts((items) => items.map((item) => item.id === p.id ? { ...item, brand: e.target.value } : item))} />
+                </div>
+                <div className="psn-newbk-sec">
+                  <label className="dk-field-lbl">Descripción</label>
+                  <input className="input" value={p.description || ""} onChange={(e) => setProducts((items) => items.map((item) => item.id === p.id ? { ...item, description: e.target.value } : item))} />
+                </div>
+                <div className="psn-newbk-sec" style={{ gridTemplateColumns: "1fr 1fr", display: "grid", gap: ".5rem" }}>
+                  <div><label className="dk-field-lbl">Precio</label><input className="input" inputMode="numeric" value={p.price} onChange={(e) => setProducts((items) => items.map((item) => item.id === p.id ? { ...item, price: e.target.value.replace(/\D/g, "") } : item))} /></div>
+                  <div><label className="dk-field-lbl">Stock</label><input className="input" inputMode="numeric" value={p.stock} onChange={(e) => setProducts((items) => items.map((item) => item.id === p.id ? { ...item, stock: e.target.value.replace(/\D/g, "") } : item))} /></div>
+                </div>
+                <div className="psn-confirm-actions" style={{ gridTemplateColumns: "1fr 1fr 1fr" }}>
+                  <button className={p.active === false ? "chip" : "chip chip-gold"} onClick={() => saveProduct({ ...p, active: p.active === false })}>{p.active === false ? "Oculto" : "Publicado"}</button>
+                  <button className="btn btn-sm psn-res-delete" onClick={() => setDeleteProduct(p)}><Icon name="close" size={14} /> Eliminar</button>
+                  <button className="btn btn-gold btn-sm" onClick={() => { saveProduct(p); setEditProductId(null) }}><Icon name="check" size={14} /> Guardar</button>
+                </div>
+              </div>
+            </div>
+          )
+        })()}
+
+        {/* CONFIRMAR ELIMINAR PRODUCTO */}
+        {deleteProduct && (
+          <div className="psn-modal psn-modal-top" role="alertdialog" aria-modal="true">
+            <button className="psn-scrim" aria-label="Cerrar" onClick={() => setDeleteProduct(null)} />
+            <div className="psn-modal-card psn-confirm">
+              <span className="psn-confirm-ic"><Icon name="close" size={22} /></span>
+              <h3 className="font-display">¿Eliminar “{deleteProduct.name}”?</h3>
+              <p>Esta acción no se puede deshacer. El producto desaparece de inmediato del catálogo público.</p>
+              <div className="psn-confirm-actions">
+                <button className="btn btn-ghost btn-block" onClick={() => setDeleteProduct(null)}>Volver</button>
+                <button className="btn btn-danger btn-block" onClick={() => { removeProduct(deleteProduct); setDeleteProduct(null) }}>Sí, eliminar</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL NUEVO PRODUCTO */}
+        {productOpen && (
+          <div style={{ position: "fixed", inset: 0, zIndex: 1200, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }} onClick={() => setProductOpen(false)}>
             <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)" }} />
             <div className="card" style={{ position: "relative", width: "100%", maxWidth: 420, padding: "1.6rem", display: "grid", gap: "1.1rem", zIndex: 1 }} onClick={(e) => e.stopPropagation()}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <h3 className="font-display" style={{ margin: 0, fontSize: "1.1rem" }}>Ingresar gasto</h3>
-                <button style={{ background: "none", border: 0, color: "var(--muted)", cursor: "pointer", padding: ".3rem" }} onClick={() => setExpenseOpen(false)} aria-label="Cerrar">
+                <h3 className="font-display" style={{ margin: 0, fontSize: "1.1rem" }}>Nuevo producto</h3>
+                <button style={{ background: "none", border: 0, color: "var(--muted)", cursor: "pointer", padding: ".3rem" }} onClick={() => setProductOpen(false)} aria-label="Cerrar">
                   <Icon name="close" size={18} />
                 </button>
               </div>
+              <span className="chip" style={{ justifySelf: "start" }}>Impacta la web pública · agrega las fotos después de crearlo</span>
               <div className="admin-form-grid">
-                <input className="input" type="date" value={expenseDraft.date} onChange={(e) => setExpenseDraft({ ...expenseDraft, date: e.target.value })} />
-                <select className="input" value={expenseDraft.category} onChange={(e) => setExpenseDraft({ ...expenseDraft, category: e.target.value })}>
-                  {["Insumos", "Equipamiento", "Arriendo", "Marketing", "Personal", "Servicios", "Otros"].map((c) => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                </select>
-                <input className="input" placeholder="Detalle del gasto" value={expenseDraft.detail} onChange={(e) => setExpenseDraft({ ...expenseDraft, detail: e.target.value })} />
-                <input className="input" placeholder="Monto" inputMode="numeric" value={expenseDraft.amount} onChange={(e) => setExpenseDraft({ ...expenseDraft, amount: e.target.value.replace(/\D/g, "") })} />
-                <button className="btn btn-gold btn-block" onClick={saveExpense}><Icon name="check" size={15} /> Registrar</button>
+                <input className="input" placeholder="Nombre del producto" value={productDraft.name} onChange={(e) => setProductDraft({ ...productDraft, name: e.target.value })} />
+                <input className="input" placeholder="Marca" value={productDraft.brand} onChange={(e) => setProductDraft({ ...productDraft, brand: e.target.value })} />
+                <input className="input" placeholder="Precio (CLP)" inputMode="numeric" value={productDraft.price} onChange={(e) => setProductDraft({ ...productDraft, price: e.target.value.replace(/\D/g, "") })} />
+                <input className="input" placeholder="Stock inicial" inputMode="numeric" value={productDraft.stock} onChange={(e) => setProductDraft({ ...productDraft, stock: e.target.value.replace(/\D/g, "") })} />
+                <input className="input" placeholder="Descripción" value={productDraft.description} onChange={(e) => setProductDraft({ ...productDraft, description: e.target.value })} />
+                <button className="btn btn-gold btn-block" onClick={async () => { await saveProduct(); setProductOpen(false) }}><Icon name="check" size={15} /> Crear producto</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* GASTOS */}
+        {tab === "gastos" && admin && (
+          <ExpensesModule
+            expenses={expenses}
+            budgets={expenseBudgets}
+            onCreate={createExpense}
+            onUpdate={updateExpense}
+            onDelete={deleteExpense}
+          />
+        )}
+
+        {/* MODAL NUEVA RESERVA (accesible desde cualquier pestaña: hero, dock, inbox) */}
+        <NewBookingModal
+          open={newBookingOpen}
+          onClose={() => setNewBookingOpen(false)}
+          clients={clients}
+          services={services}
+          defaultBarberId={agendaBarber || 6}
+          agendaSlots={AGENDA_SLOTS}
+          onCreate={async (draft) => {
+            const result = await createBooking(draft)
+            if (result?.ok) pushToast("✓", `Reserva de ${draft.client} confirmada`)
+            return result
+          }}
+        />
+
+        {/* MODAL DETALLE DE RESERVA (agenda: click en un slot reservado o en la
+            lista de "Reservas del día") */}
+        <BookingDetailModal
+          booking={detail}
+          clients={clients}
+          onClose={() => setDetail(null)}
+          onConfirm={(bk) => { updateBookingStatus(bk, "confirmada"); pushToast("✓", "Cita confirmada"); setDetail(null) }}
+          onCancel={(bk) => { updateBookingStatus(bk, "cancelada"); pushToast("✕", `Cita de ${bk.client} cancelada`); setDetail(null); loadAgenda() }}
+        />
+
+        {/* TOASTS de la agenda */}
+        {toasts.length > 0 && (
+          <div className="agenda-toasts">
+            {toasts.map((t) => (
+              <div key={t.id} className="agenda-toast">
+                <span>{t.icon}</span>
+                <span>{t.msg}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* MODAL NUEVO CLIENTE */}
+        <NewClientModal
+          open={newClientOpen}
+          onClose={() => setNewClientOpen(false)}
+          clients={clients}
+          onCreate={createClient}
+        />
+
+        {/* CONFIRMAR ELIMINAR SERVICIO */}
+        {deleteSvc && (
+          <div className="psn-modal psn-modal-top" role="alertdialog" aria-modal="true">
+            <button className="psn-scrim" aria-label="Cerrar" onClick={() => setDeleteSvc(null)} />
+            <div className="psn-modal-card psn-confirm">
+              <span className="psn-confirm-ic"><Icon name="close" size={22} /></span>
+              <h3 className="font-display">¿Eliminar “{deleteSvc.name}”?</h3>
+              <p>Las reservas existentes conservarán su nombre y precio. Esta acción no se puede deshacer.</p>
+              <div className="psn-confirm-actions">
+                <button className="btn btn-ghost btn-block" onClick={() => setDeleteSvc(null)}>Volver</button>
+                <button className="btn btn-danger btn-block" onClick={() => { deleteService(deleteSvc); setDeleteSvc(null) }}>Sí, eliminar</button>
               </div>
             </div>
           </div>
@@ -935,7 +1796,17 @@ export default function Dashboard() {
               <div className="admin-form-grid">
                 <input className="input" placeholder="Nombre del servicio" value={serviceDraft.name} onChange={(e) => setServiceDraft({ ...serviceDraft, name: e.target.value })} />
                 <input className="input" placeholder="Precio (CLP)" inputMode="numeric" value={serviceDraft.price} onChange={(e) => setServiceDraft({ ...serviceDraft, price: e.target.value.replace(/\D/g, "") })} />
-                <input className="input" placeholder="Minutos" inputMode="numeric" value={serviceDraft.min} onChange={(e) => setServiceDraft({ ...serviceDraft, min: e.target.value.replace(/\D/g, "") })} />
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: ".5rem", padding: ".55rem .7rem", border: "1px solid var(--hair-2)", borderRadius: 10 }}>
+                  <span style={{ fontSize: ".8rem", color: "var(--muted)" }}>Bloquea en agenda</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: ".4rem" }}>
+                    <button type="button" className="chip" style={{ padding: ".3rem .6rem" }}
+                      onClick={() => setServiceDraft((d) => ({ ...d, min: String(blocksToMin(minToBlocks(d.min) - 1)) }))}
+                      disabled={minToBlocks(serviceDraft.min) <= 1}>−</button>
+                    <span style={{ fontSize: ".85rem", minWidth: 64, textAlign: "center" }}>{minToBlocks(serviceDraft.min)} {minToBlocks(serviceDraft.min) === 1 ? "bloque" : "bloques"}</span>
+                    <button type="button" className="chip" style={{ padding: ".3rem .6rem" }}
+                      onClick={() => setServiceDraft((d) => ({ ...d, min: String(blocksToMin(minToBlocks(d.min) + 1)) }))}>+</button>
+                  </div>
+                </div>
                 <select className="input" value={serviceDraft.cat} onChange={(e) => setServiceDraft({ ...serviceDraft, cat: e.target.value })}>
                   <option value="general">General</option>
                   <option value="premium">Premium</option>
@@ -968,6 +1839,8 @@ export default function Dashboard() {
             setNavSettings={setNavSettings}
             dockShortcuts={dockShortcuts}
             setDockShortcuts={setDockShortcuts}
+            expenseBudgets={expenseBudgets}
+            setExpenseBudgets={setExpenseBudgets}
           />
         )}
 
@@ -1006,16 +1879,17 @@ export default function Dashboard() {
    Config Panel — Santa Julieta style two-column settings
    ============================================================ */
 const CFG_SECTIONS = [
-  { id: "cuenta",        icon: "user",     label: "Cuenta y seguridad" },
-  { id: "apariencia",    icon: "star",     label: "Apariencia" },
-  { id: "accesos",       icon: "pin",      label: "Accesos directos" },
-  { id: "navegacion",    icon: "grid",     label: "Navegacion" },
-  { id: "notificaciones",icon: "bell",     label: "Notificaciones" },
-  { id: "whatsapp",      icon: "whatsapp", label: "WhatsApp" },
-  { id: "negocio",       icon: "scissors", label: "Negocio" },
-  { id: "equipo",        icon: "key",      label: "Equipo y permisos" },
-  { id: "datos",         icon: "wallet",   label: "Datos y respaldos" },
-  { id: "acerca",        icon: "spark",    label: "Acerca de" },
+  { id: "cuenta",        icon: "user",     label: "Cuenta y seguridad", kw: "contraseña password usuario nombre rol" },
+  { id: "apariencia",    icon: "star",     label: "Apariencia", kw: "tema modo claro oscuro" },
+  { id: "accesos",       icon: "pin",      label: "Accesos directos", kw: "dock atajos shortcuts" },
+  { id: "navegacion",    icon: "grid",     label: "Navegacion", kw: "pestañas tabs orden menu" },
+  { id: "notificaciones",icon: "bell",     label: "Notificaciones", kw: "push alertas avisos" },
+  { id: "whatsapp",      icon: "whatsapp", label: "WhatsApp", kw: "recordatorio plantillas mensajes" },
+  { id: "negocio",       icon: "scissors", label: "Negocio", kw: "horario direccion telefono nombre local" },
+  { id: "presupuestos",  icon: "wallet",   label: "Presupuestos", kw: "gastos categoria limite" },
+  { id: "equipo",        icon: "key",      label: "Equipo y permisos", kw: "barberos permisos roles" },
+  { id: "datos",         icon: "wallet",   label: "Datos y respaldos", kw: "exportar csv respaldo backup" },
+  { id: "acerca",        icon: "spark",    label: "Acerca de", kw: "version creditos" },
 ]
 
 /* ============================================================
@@ -1065,11 +1939,9 @@ function EnrollmentsPanel() {
         <Stat icon="scissors" label="Workshop" value={rows.filter(r => r.source === "workshop").length} />
       </div>
       <Panel title="Inscripciones" action={
-        <div style={{ display: "flex", gap: "0.5rem" }}>
+        <div className="psn-seg" role="group" aria-label="Filtrar por origen">
           {["todos","cursos","workshop"].map(f => (
-            <button key={f} onClick={() => setFilter(f)}
-              className={"btn btn-sm " + (filter === f ? "btn-gold" : "btn-dark")}
-              style={{ textTransform: "capitalize" }}>{f}</button>
+            <button key={f} type="button" className={filter === f ? "is-on" : ""} style={{ textTransform: "capitalize" }} onClick={() => setFilter(f)}>{f}</button>
           ))}
         </div>
       }>
@@ -1077,23 +1949,29 @@ function EnrollmentsPanel() {
           <Icon name="user" size={15} />
           <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Buscar por nombre, teléfono o email" />
         </div>
+        <div className="client-table-head" style={{ gridTemplateColumns: "1.4fr 1fr auto auto" }}>
+          <span>Cliente</span>
+          <span>Detalle</span>
+          <span>Origen</span>
+          <span>Fecha</span>
+        </div>
         <div className="client-list">
           {loading && <div className="empty-state">Cargando inscripciones…</div>}
           {!loading && !filtered.length && <div className="empty-state">No hay inscripciones que coincidan.</div>}
           {filtered.map((r) => (
-            <div key={r.id} className="client-row" style={{ cursor: "default" }}>
+            <div key={r.id} className="client-row" style={{ gridTemplateColumns: "1.4fr 1fr auto auto", cursor: "default" }}>
               <div style={{ minWidth: 0 }}>
                 <strong>{r.name}</strong>
                 <span>{r.phone} · {r.email}</span>
-                {r.level && <span style={{ fontSize: "0.75rem", color: "var(--muted)" }}>{r.level}</span>}
-                {r.edition && <span style={{ fontSize: "0.75rem", color: "var(--muted)" }}>Edición: {r.edition}</span>}
               </div>
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.3rem" }}>
-                <span style={{ fontSize: "0.7rem", padding: "2px 8px", borderRadius: 999, ...( r.source === "cursos" ? cursosBadge : workshopBadge) }}>
-                  {r.source === "cursos" ? "Cursos" : "Workshop"}
-                </span>
-                <span style={{ fontSize: "0.75rem", color: "var(--muted)" }}>{fmtDate(r.created_at)}</span>
+              <div style={{ minWidth: 0 }}>
+                <span>{r.level || "—"}</span>
+                {r.edition && <span>Edición: {r.edition}</span>}
               </div>
+              <span style={{ fontSize: "0.7rem", padding: "2px 8px", borderRadius: 999, justifySelf: "start", ...( r.source === "cursos" ? cursosBadge : workshopBadge) }}>
+                {r.source === "cursos" ? "Cursos" : "Workshop"}
+              </span>
+              <span style={{ fontSize: "0.75rem", color: "var(--muted)" }}>{fmtDate(r.created_at)}</span>
             </div>
           ))}
         </div>
@@ -1228,10 +2106,13 @@ function isStrongPassword(pw) {
   return /^[A-Za-z0-9]{8,64}$/.test(pw) && /[A-Z]/.test(pw) && /[0-9]/.test(pw)
 }
 
-function ConfigPanel({ brunettiOnly, barber, barbers, admin, canManageTeam, barberDraft, setBarberDraft, saveBarber, updateBarberLocal, deleteBarber, onExport, onLogout, nav, navSettings, setNavSettings, dockShortcuts, setDockShortcuts }) {
+function ConfigPanel({ brunettiOnly, barber, barbers, admin, canManageTeam, barberDraft, setBarberDraft, saveBarber, updateBarberLocal, deleteBarber, onExport, onLogout, nav, navSettings, setNavSettings, dockShortcuts, setDockShortcuts, expenseBudgets = {}, setExpenseBudgets = () => {} }) {
   const [section, setSection] = useState(null)
   // En modo "solo Brunetti" se oculta la gestión de Equipo/barberos (código conservado).
-  const sections = brunettiOnly ? CFG_SECTIONS.filter((s) => s.id !== "equipo") : CFG_SECTIONS
+  // Presupuestos es exclusivo de admin (gestiona finanzas del negocio).
+  const sections = CFG_SECTIONS
+    .filter((s) => brunettiOnly ? s.id !== "equipo" : true)
+    .filter((s) => s.id !== "presupuestos" || admin)
   const [teamModal, setTeamModal] = useState(null) // null=cerrado; {barber:null}=crear; {barber:obj}=editar
   const [biz, setBiz] = useState(() => {
     try { return { name: "Brunetti Barber Studio", address: "Maipú, Santiago", phone: "+56 9 1234 5678", waPhone: "+56 9 1234 5678", ...JSON.parse(localStorage.getItem("ps_biz") || "{}") } } catch { return { name: "Brunetti Barber Studio", address: "Maipú, Santiago", phone: "+56 9 1234 5678", waPhone: "+56 9 1234 5678" } }
@@ -1291,32 +2172,44 @@ function ConfigPanel({ brunettiOnly, barber, barbers, admin, canManageTeam, barb
   const { theme, toggle } = useTheme()
 
   const current = sections.find((s) => s.id === section)
+  const [sectionQuery, setSectionQuery] = useState("")
+  const visibleSections = sections.filter((s) => {
+    const q = sectionQuery.trim().toLowerCase()
+    if (!q) return true
+    return s.label.toLowerCase().includes(q) || s.kw?.toLowerCase().includes(q)
+  })
 
-  // If no section picked: show full-screen list
-  if (!section) {
-    return (
-      <div className="animate-in cfg-list-screen">
+  // Escritorio (≥1024px): lista + contenido lado a lado, la lista nunca se
+  // oculta — "secciones colapsables" en vez de navegar a pantalla completa.
+  // Móvil: la lista desaparece mientras hay una sección abierta (regla CSS
+  // con :has, ver .cfg-split) — mismo comportamiento de siempre ahí.
+  return (
+    <div className="animate-in cfg-split">
+      <div className="cfg-list-screen">
         <p className="cfg-nav-head">Configuraciones</p>
+        <div className="cfg-search">
+          <Icon name="user" size={15} />
+          <input value={sectionQuery} onChange={(e) => setSectionQuery(e.target.value)} placeholder="Buscar un ajuste…" />
+        </div>
         <div className="cfg-list">
-          {sections.map((s) => (
+          {visibleSections.map((s) => (
             <button
               key={s.id}
               type="button"
-              className="cfg-list-item"
-              onClick={() => setSection(s.id)}
+              className={`cfg-list-item ${section === s.id ? "is-active" : ""}`}
+              onClick={() => setSection(section === s.id ? null : s.id)}
             >
               <span className="cfg-list-icon"><Icon name={s.icon} size={18} /></span>
               <span className="cfg-list-label">{s.label}</span>
-              <Icon name="arrowRight" size={16} style={{ opacity: .4 }} />
+              <Icon name={section === s.id ? "close" : "arrowRight"} size={16} style={{ opacity: .4 }} />
             </button>
           ))}
+          {!visibleSections.length && <p className="empty-state" style={{ fontSize: ".84rem" }}>Sin ajustes que coincidan.</p>}
         </div>
       </div>
-    )
-  }
 
-  return (
-    <div className="animate-in cfg-detail-screen">
+      {section && (
+      <div className="cfg-detail-screen">
       <button type="button" className="cfg-back" onClick={() => setSection(null)}>
         <Icon name="arrowLeft" size={16} /> Volver a ajustes
       </button>
@@ -1553,6 +2446,39 @@ function ConfigPanel({ brunettiOnly, barber, barbers, admin, canManageTeam, barb
           </div>
         )}
 
+        {/* PRESUPUESTOS por categoría (se guarda en este dispositivo) */}
+        {section === "presupuestos" && (
+          <div style={{ display: "grid", gap: "1.4rem" }}>
+            <div className="cfg-card">
+              <p className="cfg-card-head">Presupuesto mensual por categoría</p>
+              <p style={{ fontSize: ".78rem", color: "var(--muted)", margin: "0 0 .8rem" }}>
+                Define un tope por categoría para activar el semáforo de gastos. Se guarda en este dispositivo.
+              </p>
+              <div style={{ display: "grid", gap: ".6rem" }}>
+                {EXPENSE_CATEGORIES.map((cat) => {
+                  const m = CATEGORY_META[cat]
+                  return (
+                    <div key={cat} style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
+                      <span className="dk-badge" style={{ "--c": m.color, minWidth: 130 }}><Icon name={m.icon} size={12} /> {cat}</span>
+                      <input
+                        className="input"
+                        inputMode="numeric"
+                        placeholder="Sin presupuesto"
+                        style={{ flex: 1 }}
+                        value={expenseBudgets[cat] ? String(expenseBudgets[cat]) : ""}
+                        onChange={(e) => {
+                          const v = e.target.value.replace(/\D/g, "")
+                          setExpenseBudgets((b) => { const next = { ...b }; if (v) next[cat] = Number(v); else delete next[cat]; return next })
+                        }}
+                      />
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* EQUIPO */}
         {section === "equipo" && (
           <div style={{ display: "grid", gap: "1.4rem" }}>
@@ -1606,7 +2532,7 @@ function ConfigPanel({ brunettiOnly, barber, barbers, admin, canManageTeam, barb
             <div className="cfg-card">
               <p className="cfg-card-head">Exportar datos</p>
               <div style={{ display: "grid", gap: ".7rem" }}>
-                {[["Clientes","CSV con historial y contactos","user"],["Reservas","Historial completo de citas","calendar"],["Gastos","Registro de egresos por categoria","wallet"],["Servicios","Catalogo actual publicado","scissors"]].map(([label, sub, icon]) => (
+                {[["Clientes","CSV con historial y contactos","user"],["Reservas","Historial completo de citas","calendar"],["Finanzas","Movimientos de ingresos del periodo activo","chart"],["Gastos","Registro de egresos por categoria","wallet"],["Servicios","Catalogo actual publicado","scissors"]].map(([label, sub, icon]) => (
                   <div key={label} className="cfg-setting-row">
                     <div>
                       <div className="cfg-setting-label">{label}</div>
@@ -1646,6 +2572,8 @@ function ConfigPanel({ brunettiOnly, barber, barbers, admin, canManageTeam, barb
           </div>
         )}
       </div>
+      </div>
+      )}
 
       {teamModal && (
         <BarberModal
@@ -1663,7 +2591,7 @@ function ConfigPanel({ brunettiOnly, barber, barbers, admin, canManageTeam, barb
 /* ============================================================
    Shell + Topbar — UI envoltura responsive
    ============================================================ */
-function DashboardShell({ tab, setTab, nav, dockItems, barber, onLogout, children }) {
+function DashboardShell({ tab, setTab, nav, dockItems, barber, onLogout, onNewBooking, children }) {
   return (
     <div className="dashboard-shell">
       <aside className="dashboard-sidebar">
@@ -1686,12 +2614,24 @@ function DashboardShell({ tab, setTab, nav, dockItems, barber, onLogout, childre
         </div>
       </aside>
       {children}
-      <MobileDock tab={tab} setTab={setTab} nav={nav} shortcuts={dockItems} />
+      <MobileDock tab={tab} setTab={setTab} nav={nav} shortcuts={dockItems} onNewBooking={onNewBooking} />
     </div>
   )
 }
 
-function DashboardTopbar({ title, barber, onLogout, tab, setTab, nav, notifCount = 0, onRefresh, refreshing = false }) {
+// "hace 5m" / "hace 2h" / "hace 3d" — sin librerías, mismo estilo breve que
+// el resto de los indicadores de tiempo del panel (ver nextEta más arriba).
+function timeAgo(iso) {
+  if (!iso) return ''
+  const diffMin = Math.max(0, Math.round((Date.now() - new Date(iso).getTime()) / 60000))
+  if (diffMin < 1) return 'ahora'
+  if (diffMin < 60) return `hace ${diffMin}m`
+  const diffH = Math.round(diffMin / 60)
+  if (diffH < 24) return `hace ${diffH}h`
+  return `hace ${Math.round(diffH / 24)}d`
+}
+
+function DashboardTopbar({ title, barber, onLogout, tab, setTab, nav, onRefresh, refreshing = false, search = null, scrolled = false, navigate }) {
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
   useEffect(() => {
@@ -1701,8 +2641,59 @@ function DashboardTopbar({ title, barber, onLogout, tab, setTab, nav, notifCount
     return () => document.removeEventListener('mousedown', h)
   }, [open])
   const initial = (barber?.name || 'B')[0].toUpperCase()
+
+  // Popup de "últimas 5 notificaciones" — ver GET /api/push (sin ?job=) en
+  // api/push.js. El badge cuenta las que llegaron después de la última vez
+  // que se abrió el popup (marca local por barbero, mismo patrón que
+  // ps_push_enabled_${barberId} en src/push.js).
+  const seenKey = `ps_notif_seen_at_${barber?.id ?? 'me'}`
+  const [notifOpen, setNotifOpen] = useState(false)
+  const notifRef = useRef(null)
+  const [notifications, setNotifications] = useState([])
+  const [seenAt, setSeenAt] = useState(() => { try { return Number(localStorage.getItem(seenKey) || 0) } catch { return 0 } })
+
+  useEffect(() => {
+    if (!notifOpen) return
+    const h = (e) => { if (notifRef.current && !notifRef.current.contains(e.target)) setNotifOpen(false) }
+    document.addEventListener('mousedown', h)
+    return () => document.removeEventListener('mousedown', h)
+  }, [notifOpen])
+
+  const loadNotifications = async () => {
+    try {
+      const token = localStorage.getItem('ps_barber_token') || ''
+      const res = await fetch('/api/push', { headers: token ? { Authorization: `Bearer ${token}` } : {} })
+      const data = await res.json()
+      setNotifications(data.notifications || [])
+    } catch {
+      setNotifications([])
+    }
+  }
+  // Carga inicial: para que el badge de no-vistas ya tenga datos apenas se
+  // abre el panel, no solo al tocar la campana.
+  useEffect(() => { loadNotifications() }, [])
+
+  const unseenCount = notifications.filter((n) => new Date(n.createdAt).getTime() > seenAt).length
+
+  const toggleNotif = () => {
+    setNotifOpen((v) => {
+      const next = !v
+      if (next) {
+        loadNotifications()
+        const now = Date.now()
+        setSeenAt(now)
+        try { localStorage.setItem(seenKey, String(now)) } catch {}
+      }
+      return next
+    })
+  }
+
+  const openNotification = (n) => {
+    setNotifOpen(false)
+    if (n.url) navigate?.(n.url)
+  }
   return (
-    <header className="dashboard-topbar">
+    <header className={`dashboard-topbar ${scrolled ? 'is-scrolled' : ''}`}>
       <div className="dashboard-topbar-left">
         <button
           type="button"
@@ -1722,11 +2713,12 @@ function DashboardTopbar({ title, barber, onLogout, tab, setTab, nav, notifCount
         </div>
       </div>
       <div className="dashboard-topbar-actions">
+        {search}
         <ThemeToggle />
         <button
           type="button"
           className="notif-pill"
-          title={refreshing ? 'Actualizando…' : 'Actualizar datos'}
+          data-tip={refreshing ? 'Actualizando…' : 'Actualizar datos'}
           aria-label="Actualizar datos"
           onClick={onRefresh}
           disabled={refreshing}
@@ -1734,15 +2726,33 @@ function DashboardTopbar({ title, barber, onLogout, tab, setTab, nav, notifCount
         >
           <Icon name="refresh" size={14} style={refreshing ? { animation: 'spin 0.8s linear infinite' } : undefined} />
         </button>
-        <button
-          type="button"
-          className="notif-pill"
-          title={notifCount ? `${notifCount} reserva(s) pendiente(s)` : 'Sin pendientes'}
-          onClick={() => setTab('reservas')}
-          style={{ cursor: 'pointer' }}
-        >
-          <Icon name="bell" size={14} /> {notifCount}
-        </button>
+        <div className="notif-chip" ref={notifRef}>
+          <button
+            type="button"
+            className="notif-pill"
+            data-tip={unseenCount ? `${unseenCount} notificación(es) nueva(s)` : 'Notificaciones'}
+            aria-label={unseenCount ? `${unseenCount} notificación(es) nueva(s)` : 'Notificaciones'}
+            aria-haspopup="true"
+            aria-expanded={notifOpen}
+            onClick={toggleNotif}
+            style={{ cursor: 'pointer' }}
+          >
+            <Icon name="bell" size={14} /> {unseenCount > 0 && unseenCount}
+          </button>
+          {notifOpen && (
+            <div className="notif-chip-pop" role="menu">
+              <div className="notif-pop-head">Notificaciones</div>
+              {!notifications.length && <div className="notif-pop-empty">Sin notificaciones recientes.</div>}
+              {notifications.map((n) => (
+                <button key={n.id} type="button" className="notif-pop-item" onClick={() => openNotification(n)}>
+                  <div className="notif-pop-title">{n.title}</div>
+                  {n.body && <div className="notif-pop-body">{n.body}</div>}
+                  <div className="notif-pop-time">{timeAgo(n.createdAt)}</div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
         <div className="user-chip" ref={ref}>
           <button
             type="button"

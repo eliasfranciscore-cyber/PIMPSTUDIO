@@ -8,16 +8,11 @@ enum IntentKeys {
 extension AppTab: AppEnum {
     static var typeDisplayRepresentation = TypeDisplayRepresentation(name: "Modulo Brunetti")
     static var caseDisplayRepresentations: [AppTab: DisplayRepresentation] = [
-        .resumen: "Resumen",
-        .agenda: "Agenda",
+        .hoy: "Hoy",
         .reservas: "Reservas",
-        .inscripciones: "Workshop",
-        .finanzas: "Finanzas",
         .clientes: "Clientes",
-        .servicios: "Servicios",
-        .gastos: "Gastos",
-        .marketing: "Marketing",
-        .config: "Configuracion"
+        .finanzas: "Finanzas",
+        .mas: "Más"
     ]
 }
 
@@ -29,13 +24,8 @@ struct OpenBrunettiModuleIntent: AppIntent {
     @Parameter(title: "Modulo")
     var module: AppTab
 
-    init() {
-        module = .agenda
-    }
-
-    init(module: AppTab) {
-        self.module = module
-    }
+    init() { module = .reservas }
+    init(module: AppTab) { self.module = module }
 
     func perform() async throws -> some IntentResult {
         UserDefaults.standard.set(module.rawValue, forKey: IntentKeys.pendingTab)
@@ -46,15 +36,14 @@ struct OpenBrunettiModuleIntent: AppIntent {
 struct BrunettiShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
         AppShortcut(
-            intent: OpenBrunettiModuleIntent(module: .agenda),
+            intent: OpenBrunettiModuleIntent(module: .hoy),
             phrases: [
-                "Abrir agenda en \(.applicationName)",
-                "Ver agenda de Brunetti en \(.applicationName)"
+                "Abrir agenda de hoy en \(.applicationName)",
+                "Ver reservas de hoy en \(.applicationName)"
             ],
-            shortTitle: "Agenda",
-            systemImageName: "calendar"
+            shortTitle: "Hoy",
+            systemImageName: "sun.max.fill"
         )
-
         AppShortcut(
             intent: OpenBrunettiModuleIntent(module: .reservas),
             phrases: [
@@ -64,7 +53,6 @@ struct BrunettiShortcuts: AppShortcutsProvider {
             shortTitle: "Reservas",
             systemImageName: "scissors"
         )
-
         AppShortcut(
             intent: OpenBrunettiModuleIntent(module: .clientes),
             phrases: [
@@ -73,16 +61,6 @@ struct BrunettiShortcuts: AppShortcutsProvider {
             ],
             shortTitle: "Clientes",
             systemImageName: "person.2.fill"
-        )
-
-        AppShortcut(
-            intent: OpenBrunettiModuleIntent(module: .inscripciones),
-            phrases: [
-                "Abrir workshop en \(.applicationName)",
-                "Ver inscripciones de Brunetti en \(.applicationName)"
-            ],
-            shortTitle: "Workshop",
-            systemImageName: "graduationcap.fill"
         )
     }
 }

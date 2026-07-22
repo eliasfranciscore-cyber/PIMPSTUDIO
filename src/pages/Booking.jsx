@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Emblem, Icon, MobileScreen } from '../components/ui.jsx'
 import { GlareCard } from '../components/GlareCard.jsx'
@@ -6,6 +6,11 @@ import { BARBERS, SERVICES, SERVICE_BARBERS, SLOT_GROUPS, DAYS_ES, MONTHS_ES, sl
 import { addLocalBooking } from '../bookingsStore.js'
 
 const ALL_BOOKING_SLOTS = Object.values(SLOT_GROUPS).flat()
+
+function genIdempotencyKey() {
+  if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID()
+  return `${Date.now()}-${Math.random().toString(36).slice(2)}`
+}
 
 function localBlockKey(barberId, date, slot) {
   return `${barberId}|${date}|${slot}`
@@ -25,6 +30,18 @@ function readLocalBlocks() {
   try { return JSON.parse(localStorage.getItem("ps_availability_blocks") || "{}") } catch { return {} }
 }
 
+// El cliente debe reservar con al menos MIN_LEAD_MINUTES de anticipación
+// (ej: a las 15:53 ya no puede tomar la hora de las 16:00, pero sí la de
+// las 17:00). Solo aplica al día de hoy — días futuros no tienen "pasado".
+const MIN_LEAD_MINUTES = 55
+function isSlotTooSoon(dateKey, slot, todayKey, now) {
+  if (dateKey !== todayKey) return false
+  const [h, m] = slot.split(":").map(Number)
+  const slotDate = new Date(now)
+  slotDate.setHours(h, m, 0, 0)
+  return (slotDate - now) / 60000 < MIN_LEAD_MINUTES
+}
+
 export default function Booking() {
   const navigate = useNavigate()
   // Marca personal de un solo barbero: Brunetti. Se reserva siempre con él.
@@ -41,6 +58,14 @@ export default function Booking() {
   const [dateKey, setDateKey] = useState(null)
   const [slot, setSlot] = useState(null)
   const [saving, setSaving] = useState(false)
+
+  // Idempotency key para la creación de la reserva: se mantiene estable
+  // mientras no cambie lo que se va a reservar, así que un doble-tap en
+  // "Confirmar" (fácil en mobile) reusa la misma key y el backend lo
+  // deduplica. Cambiar de servicio/fecha/hora genera una key nueva, porque
+  // ahí sí es un intento de reserva distinto.
+  const idempotencyKeyRef = useRef(genIdempotencyKey())
+  useEffect(() => { idempotencyKeyRef.current = genIdempotencyKey() }, [barberId, serviceId, dateKey, slot])
 
   useEffect(() => {
     const user = localStorage.getItem("ps_user")
@@ -86,7 +111,8 @@ export default function Booking() {
 
   const firstDow = new Date(year, month, 1).getDay()
   const daysInMonth = new Date(year, month + 1, 0).getDate()
-  const todayKey = localDateKey(new Date())
+  const now = new Date()
+  const todayKey = localDateKey(now)
   // El cliente solo puede reservar dentro de los próximos MAX_LEAD_DAYS días:
   // más allá de eso el barbero todavía no publicó su disponibilidad de esa
   // semana (ver agenda del panel interno, que se administra semana a semana).
@@ -106,22 +132,42 @@ export default function Booking() {
   const nextMonthFirstKey = `${month === 11 ? year + 1 : year}-${String(month === 11 ? 1 : month + 2).padStart(2, "0")}-01`
   const canGoNextMonth = month < 11 && nextMonthFirstKey <= maxDateKey
 
+  const [bookingError, setBookingError] = useState(null)
+
   const confirm = async () => {
     setSaving(true)
+    setBookingError(null)
     const user = JSON.parse(localStorage.getItem("ps_user") || "{}")
     let savedId = null
+    let reachedServer = false
     try {
       const res = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone: user.phone, barberId, serviceId, date: dateKey, time: slot }),
+        body: JSON.stringify({ phone: user.phone, barberId, serviceId, date: dateKey, time: slot, idempotencyKey: idempotencyKeyRef.current }),
       })
-      const data = await res.json().catch(() => ({}))
-      savedId = data?.booking?.id || null
-    } catch { /* fallback: persistimos localmente igualmente */ }
+      // API real (JSON) vs. sin backend disponible (ej. `npm run dev` sin
+      // `vercel dev`, que responde 404 vacío): solo un error JSON real del
+      // endpoint debe bloquear la reserva; la ausencia total de API cae al
+      // respaldo local (modo offline documentado en CLAUDE.md).
+      if (res.headers.get("content-type")?.includes("application/json")) {
+        reachedServer = true
+        const data = await res.json().catch(() => ({}))
+        if (!res.ok || data?.error || !data?.booking?.id) {
+          setSaving(false)
+          setBookingError(data?.error || "No se pudo confirmar la reserva. Intenta de nuevo.")
+          return
+        }
+        savedId = data.booking.id
+      }
+    } catch {
+      // Sin conexión al servidor: seguimos con respaldo local (modo offline).
+      // Si sí llegamos al servidor y este respondió con error, ya se manejó arriba.
+    }
+    if (reachedServer && !savedId) { setSaving(false); return }
 
     // Respaldo local: la reserva aparece de inmediato en el panel interno
-    // (Reservas) aunque el backend no esté disponible.
+    // (Reservas) aunque el backend no esté disponible (modo offline real).
     addLocalBooking({
       id: savedId,
       barberId,
@@ -287,7 +333,7 @@ export default function Booking() {
                         {list.map((t) => {
                           const fromApi = availableSlots.find((item) => item.slot === t)
                           const st = fromApi ? (fromApi.available ? "free" : "booked") : slotState(barberId, dateKey, t)
-                          const taken = st !== "free"
+                          const taken = st !== "free" || isSlotTooSoon(dateKey, t, todayKey, now)
                           const sel = slot === t
                           return (
                             <button key={t} disabled={taken} onClick={() => setSlot(t)} className="booking-slot" style={{
@@ -317,7 +363,7 @@ export default function Booking() {
             </div>
             <div>
               <h2 className="font-display" style={{ margin: 0, fontSize: "1.2rem", fontWeight: 700 }}>¡Reserva confirmada!</h2>
-              <p style={{ margin: ".3rem 0 0", color: "var(--muted)", fontSize: ".8rem" }}>Te enviaremos un recordatorio por WhatsApp.</p>
+              <p style={{ margin: ".3rem 0 0", color: "var(--muted)", fontSize: ".8rem" }}>Te enviamos la confirmación por correo.</p>
             </div>
             <div className="card card-line" style={{ width: "100%", padding: ".8rem", display: "grid", gap: ".5rem", textAlign: "left", fontSize: ".8rem" }}>
               {[["Barbero", barber?.name], ["Servicio", service?.name], ["Fecha", dateKey && `${dateKey.split("-")[2]} ${MONTHS_ES[parseInt(dateKey.split("-")[1]) - 1]}`], ["Hora", `${slot} hrs`], ["Total", service && CLP(service.price)]].map(([k, v]) => (
@@ -334,6 +380,12 @@ export default function Booking() {
           </div>
         )}
       </div>
+
+      {bookingError && step === 2 && (
+        <div style={{ margin: "0 1.2rem .6rem", padding: ".6rem .8rem", borderRadius: 10, background: "rgba(220,80,60,0.1)", border: "1px solid rgba(220,80,60,0.35)", color: "#c94b3a", fontSize: ".75rem" }}>
+          {bookingError}
+        </div>
+      )}
 
       {step < 3 && (
         <div className="booking-footer">

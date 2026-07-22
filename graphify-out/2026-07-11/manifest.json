@@ -1,0 +1,1127 @@
+{
+  ".claude/dev-wrapper.sh": {
+    "mtime": 1782609253.900725,
+    "ast_hash": "fff8bcf59b4168ac79dbcc95a0ae2d50",
+    "semantic_hash": "fff8bcf59b4168ac79dbcc95a0ae2d50"
+  },
+  ".claude/launch.json": {
+    "mtime": 1783737946.8219743,
+    "ast_hash": "e819fa7176b4a9d31b7dc32d240e0165",
+    "semantic_hash": ""
+  },
+  ".claude/settings.local.json": {
+    "mtime": 1783804678.3818083,
+    "ast_hash": "55cddc990daaa47cf4f12713fcb32d32",
+    "semantic_hash": ""
+  },
+  "api/_auth.js": {
+    "mtime": 1782522899.931935,
+    "ast_hash": "843d7fbfc4db0926f1a24fed2db792dd",
+    "semantic_hash": "843d7fbfc4db0926f1a24fed2db792dd"
+  },
+  "api/auth-barber.js": {
+    "mtime": 1782522899.932178,
+    "ast_hash": "3f696cc642350720147b1aadc13a3bef",
+    "semantic_hash": "3f696cc642350720147b1aadc13a3bef"
+  },
+  "api/auth-login.js": {
+    "mtime": 1781237703.0,
+    "ast_hash": "f0128edc2257ad4d283d39d40e8c6014",
+    "semantic_hash": "f0128edc2257ad4d283d39d40e8c6014"
+  },
+  "api/availability.js": {
+    "mtime": 1781239358.0,
+    "ast_hash": "916d4b818cfcdcb55978db480763db24",
+    "semantic_hash": "916d4b818cfcdcb55978db480763db24"
+  },
+  "api/barbers.js": {
+    "mtime": 1781238164.0,
+    "ast_hash": "80924df7ecf1f104245ccd92cd78b5cd",
+    "semantic_hash": "80924df7ecf1f104245ccd92cd78b5cd"
+  },
+  "api/bookings.js": {
+    "mtime": 1783806770.2433765,
+    "ast_hash": "e93a30a22885cedfe5f8957082ddb07d",
+    "semantic_hash": ""
+  },
+  "api/clients.js": {
+    "mtime": 1783806806.2642732,
+    "ast_hash": "eddc26bccc344ea6ee79533b5899afc0",
+    "semantic_hash": ""
+  },
+  "api/enrollments.js": {
+    "mtime": 1783679841.4325376,
+    "ast_hash": "5bba08864a93d7ac37b8b24e92cf51e4",
+    "semantic_hash": ""
+  },
+  "api/expenses.js": {
+    "mtime": 1783806834.7709491,
+    "ast_hash": "95ab9efc1ad5216cbf0266ff416d4a0d",
+    "semantic_hash": ""
+  },
+  "api/fintoc-payments.js": {
+    "mtime": 1783679696.8804126,
+    "ast_hash": "b966cb4103c7e13cead5315b8110ec00",
+    "semantic_hash": ""
+  },
+  "api/push.js": {
+    "mtime": 1783680449.4185176,
+    "ast_hash": "9fdb1c6f1260e8c4944986ffecb3f52b",
+    "semantic_hash": ""
+  },
+  "api/register-client.js": {
+    "mtime": 1782522899.932457,
+    "ast_hash": "aa2c8ac0c0dbc111671fa1209f170cf3",
+    "semantic_hash": "aa2c8ac0c0dbc111671fa1209f170cf3"
+  },
+  "api/services.js": {
+    "mtime": 1783806821.0444171,
+    "ast_hash": "f33cc0e06337c9614e6168a0aed8149b",
+    "semantic_hash": ""
+  },
+  "db/schema.sql": {
+    "mtime": 1783806727.613088,
+    "ast_hash": "a25ec7b113f4904da22c5949d6a03d7c",
+    "semantic_hash": ""
+  },
+  "db/seed.sql": {
+    "mtime": 1783792587.5086474,
+    "ast_hash": "dd6882577dd14f9ec2128fd91979d55c",
+    "semantic_hash": ""
+  },
+  "ios/BrunettiCutz/BrunettiCutz/APIClient.swift": {
+    "mtime": 1783043141.00733,
+    "ast_hash": "f55ef535d7de68cddee87cfab5675e76",
+    "semantic_hash": "f55ef535d7de68cddee87cfab5675e76"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/AppIcon.appiconset/Contents.json": {
+    "mtime": 1783044384.467099,
+    "ast_hash": "9040e2b9f417fc380db2bf909d941d55",
+    "semantic_hash": "9040e2b9f417fc380db2bf909d941d55"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/BrandHero.imageset/Contents.json": {
+    "mtime": 1783041530.3833873,
+    "ast_hash": "0b64181097291a2c7dd724778a1c97a5",
+    "semantic_hash": "0b64181097291a2c7dd724778a1c97a5"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/Contents.json": {
+    "mtime": 1783041530.3822477,
+    "ast_hash": "9deb2ada1cc834bbebf8bbad9c8978a1",
+    "semantic_hash": "9deb2ada1cc834bbebf8bbad9c8978a1"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/GalleryInterior.imageset/Contents.json": {
+    "mtime": 1783041530.383592,
+    "ast_hash": "f99384b60525903dacf39290278d6cc6",
+    "semantic_hash": "f99384b60525903dacf39290278d6cc6"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/LogoIcon.imageset/Contents.json": {
+    "mtime": 1783041530.384496,
+    "ast_hash": "1116dcaa58e74db2718794aa67591356",
+    "semantic_hash": "1116dcaa58e74db2718794aa67591356"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/BrunettiAppIntents.swift": {
+    "mtime": 1783199963.3198688,
+    "ast_hash": "46f3b477bbcdc404b989c0f77b43a586",
+    "semantic_hash": ""
+  },
+  "ios/BrunettiCutz/BrunettiCutz/BrunettiCutzApp.swift": {
+    "mtime": 1783285217.2527382,
+    "ast_hash": "d77137dd0ddf38760b1e1a74c4c117ee",
+    "semantic_hash": ""
+  },
+  "ios/BrunettiCutz/BrunettiCutz/DashboardModel.swift": {
+    "mtime": 1783287169.983702,
+    "ast_hash": "624d752fd0bb17bf7559dbd641d0701e",
+    "semantic_hash": ""
+  },
+  "ios/BrunettiCutz/BrunettiCutz/DashboardView.swift": {
+    "mtime": 1783288053.7861545,
+    "ast_hash": "b699830f2f6ee8f0bf67e4b50c1c60d5",
+    "semantic_hash": ""
+  },
+  "ios/BrunettiCutz/BrunettiCutz/DemoData.swift": {
+    "mtime": 1783287169.9848564,
+    "ast_hash": "bab945451e7ecf6378397eab11ca0b10",
+    "semantic_hash": ""
+  },
+  "ios/BrunettiCutz/BrunettiCutz/DesignSystem.swift": {
+    "mtime": 1783288146.776269,
+    "ast_hash": "8d3d877a68cc136047ceba7faf1a01de",
+    "semantic_hash": ""
+  },
+  "ios/BrunettiCutz/BrunettiCutz/DetailSheets.swift": {
+    "mtime": 1783288124.0229902,
+    "ast_hash": "363f4aefab55c3b7c35327d6a35270f4",
+    "semantic_hash": ""
+  },
+  "ios/BrunettiCutz/BrunettiCutz/LoginView.swift": {
+    "mtime": 1783288036.1994228,
+    "ast_hash": "6de550e78439d50706c4e75d8134daa5",
+    "semantic_hash": ""
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Models.swift": {
+    "mtime": 1783199953.1308024,
+    "ast_hash": "9fea34f6a4acad84bc498e715794fec2",
+    "semantic_hash": ""
+  },
+  "ios/BrunettiCutz/BrunettiCutz/ModuleViews.swift": {
+    "mtime": 1783288146.7755773,
+    "ast_hash": "0526653d4293b211727e197a4e6d9691",
+    "semantic_hash": ""
+  },
+  "ios/BrunettiCutz/BrunettiCutz/SessionStore.swift": {
+    "mtime": 1783288173.207054,
+    "ast_hash": "11fcd65a147ac56ccfbb281cfd633f2f",
+    "semantic_hash": ""
+  },
+  "package.json": {
+    "mtime": 1783793576.3878713,
+    "ast_hash": "30b6872100426ab625f132731836ccf4",
+    "semantic_hash": ""
+  },
+  "postcss.config.js": {
+    "mtime": 1782522899.941205,
+    "ast_hash": "ef3ba2a81ba19f8ea5ddf625521e96f0",
+    "semantic_hash": "ef3ba2a81ba19f8ea5ddf625521e96f0"
+  },
+  "public/sw.js": {
+    "mtime": 1782685632.9323962,
+    "ast_hash": "544fcc7f6c81847758aca7b5a306e7f0",
+    "semantic_hash": "544fcc7f6c81847758aca7b5a306e7f0"
+  },
+  "src/App.jsx": {
+    "mtime": 1783796221.4230165,
+    "ast_hash": "29e8027adfacf8923e5833b2b72b75b4",
+    "semantic_hash": ""
+  },
+  "src/bookingsStore.js": {
+    "mtime": 1782686874.1529999,
+    "ast_hash": "791acf3577f65be3d3ce98eedf7637e2",
+    "semantic_hash": "791acf3577f65be3d3ce98eedf7637e2"
+  },
+  "src/components/BarberModal.jsx": {
+    "mtime": 1782686874.166458,
+    "ast_hash": "34db8bb888eb593d9687afd50736d5c8",
+    "semantic_hash": "34db8bb888eb593d9687afd50736d5c8"
+  },
+  "src/components/BarberShowcase.jsx": {
+    "mtime": 1782686874.1552734,
+    "ast_hash": "b8baf870791352a85cf36d45660fcde1",
+    "semantic_hash": "b8baf870791352a85cf36d45660fcde1"
+  },
+  "src/components/BookingsInbox.jsx": {
+    "mtime": 1783820216.257721,
+    "ast_hash": "6c7038bf2f437b734cee945ef4b6b898",
+    "semantic_hash": ""
+  },
+  "src/components/ClientModal.jsx": {
+    "mtime": 1782686874.1577995,
+    "ast_hash": "29ad3edc81d0444c32187d7bc47a7e08",
+    "semantic_hash": "29ad3edc81d0444c32187d7bc47a7e08"
+  },
+  "src/components/DashboardResumen.jsx": {
+    "mtime": 1783807388.2809784,
+    "ast_hash": "cfe62d881ee6a6b9d1c9ea42dcc03e1c",
+    "semantic_hash": ""
+  },
+  "src/components/FintocCheckout.jsx": {
+    "mtime": 1782699796.7629848,
+    "ast_hash": "e858b1dc9fc71a85d27872d7a62ba75b",
+    "semantic_hash": "e858b1dc9fc71a85d27872d7a62ba75b"
+  },
+  "src/components/GlareCard.jsx": {
+    "mtime": 1782686874.1700273,
+    "ast_hash": "c8f8978e41fec8ad0bbaa98ee55510ad",
+    "semantic_hash": "c8f8978e41fec8ad0bbaa98ee55510ad"
+  },
+  "src/components/IconsExtra.jsx": {
+    "mtime": 1783644948.2987597,
+    "ast_hash": "0621395df97ab6f2cc6d5d3a8342f71a",
+    "semantic_hash": ""
+  },
+  "src/components/MobileDock.jsx": {
+    "mtime": 1783807187.6205323,
+    "ast_hash": "25484e20f2350bc2dcc51ac79c57dcf8",
+    "semantic_hash": ""
+  },
+  "src/components/ModuleFooter.jsx": {
+    "mtime": 1782686874.1632395,
+    "ast_hash": "b512a0db13e679d1a3371c268f26cc04",
+    "semantic_hash": "b512a0db13e679d1a3371c268f26cc04"
+  },
+  "src/components/SiteNav.jsx": {
+    "mtime": 1782688629.8297539,
+    "ast_hash": "9a68087657452eca124387356f16952f",
+    "semantic_hash": "9a68087657452eca124387356f16952f"
+  },
+  "src/components/brunetti.jsx": {
+    "mtime": 1782686874.1548529,
+    "ast_hash": "30d191961090e830a8a8b4911effabcf",
+    "semantic_hash": "30d191961090e830a8a8b4911effabcf"
+  },
+  "src/components/liquidShowcase.jsx": {
+    "mtime": 1782686874.164521,
+    "ast_hash": "c1fa5ced9e51247af9eb135be69b91ae",
+    "semantic_hash": "c1fa5ced9e51247af9eb135be69b91ae"
+  },
+  "src/components/theme.jsx": {
+    "mtime": 1782688629.8309586,
+    "ast_hash": "ea919cd5fc8f57b54d15f6e2552917c4",
+    "semantic_hash": "ea919cd5fc8f57b54d15f6e2552917c4"
+  },
+  "src/components/ui.jsx": {
+    "mtime": 1783734022.6806252,
+    "ast_hash": "afdf4ef81001a3500822942304d22907",
+    "semantic_hash": ""
+  },
+  "src/components/ui/lamp.jsx": {
+    "mtime": 1782686874.1538064,
+    "ast_hash": "f89b02ca2d0dcd3d8fb34440ae601ca7",
+    "semantic_hash": "f89b02ca2d0dcd3d8fb34440ae601ca7"
+  },
+  "src/data.js": {
+    "mtime": 1783804119.786959,
+    "ast_hash": "33bb81b6f04125f8f798f15f14ae9cb9",
+    "semantic_hash": ""
+  },
+  "src/data/estilo.js": {
+    "mtime": 1783648284.1324105,
+    "ast_hash": "77cbfe88af6010e4101b81e03d9d3d44",
+    "semantic_hash": ""
+  },
+  "src/data/workshop.js": {
+    "mtime": 1782690243.8011453,
+    "ast_hash": "6d6aef9d62afeae7e310de285b685d7f",
+    "semantic_hash": "6d6aef9d62afeae7e310de285b685d7f"
+  },
+  "src/enrollmentsStore.js": {
+    "mtime": 1782686874.1730206,
+    "ast_hash": "e6b502351223d9964ae9bf8e17bc6e92",
+    "semantic_hash": "e6b502351223d9964ae9bf8e17bc6e92"
+  },
+  "src/main.jsx": {
+    "mtime": 1782686874.1733236,
+    "ast_hash": "fa09f92bf84f0f879d5f118545f0e4f5",
+    "semantic_hash": "fa09f92bf84f0f879d5f118545f0e4f5"
+  },
+  "src/pages/Account.jsx": {
+    "mtime": 1783734222.9625564,
+    "ast_hash": "8ab4399a4d95e8af920158be563ea869",
+    "semantic_hash": ""
+  },
+  "src/pages/BarberLogin.jsx": {
+    "mtime": 1782686874.1742415,
+    "ast_hash": "ec9017c0886e63a56a742ab2208a4771",
+    "semantic_hash": "ec9017c0886e63a56a742ab2208a4771"
+  },
+  "src/pages/Booking.jsx": {
+    "mtime": 1783733158.7204208,
+    "ast_hash": "3b8e769e2ffc3cdf5073dd65f5f8be22",
+    "semantic_hash": ""
+  },
+  "src/pages/Cursos.jsx": {
+    "mtime": 1783797380.1702042,
+    "ast_hash": "5dd1f95f21837e9475d28d0fe88b8235",
+    "semantic_hash": ""
+  },
+  "src/pages/Dashboard.jsx": {
+    "mtime": 1783821640.2820551,
+    "ast_hash": "d3a9c4de8f07d2a01dd6108a577016d4",
+    "semantic_hash": ""
+  },
+  "src/pages/EncuentraEstilo.jsx": {
+    "mtime": 1783797432.7702675,
+    "ast_hash": "a7b65ea597ce2eb11ca52b850eb19f2e",
+    "semantic_hash": ""
+  },
+  "src/pages/Home.jsx": {
+    "mtime": 1783797372.5285764,
+    "ast_hash": "054148c3507bb9082759318252fc3cf0",
+    "semantic_hash": ""
+  },
+  "src/pages/Login.jsx": {
+    "mtime": 1782686874.180229,
+    "ast_hash": "61423707271a059b9925830747ca0f12",
+    "semantic_hash": "61423707271a059b9925830747ca0f12"
+  },
+  "src/pages/Workshop.jsx": {
+    "mtime": 1783802953.5849192,
+    "ast_hash": "003529b1ead44f31d592c320137201e2",
+    "semantic_hash": ""
+  },
+  "src/push.js": {
+    "mtime": 1782686874.1861298,
+    "ast_hash": "f448d37ae7f2220344d2f63852f2f5cb",
+    "semantic_hash": "f448d37ae7f2220344d2f63852f2f5cb"
+  },
+  "tailwind.config.js": {
+    "mtime": 1782522899.953721,
+    "ast_hash": "1b7e818f114dad25484ff5613ea20db5",
+    "semantic_hash": "1b7e818f114dad25484ff5613ea20db5"
+  },
+  "vercel.json": {
+    "mtime": 1783642326.9903038,
+    "ast_hash": "53a82c77d35357525e0c37d6b268576f",
+    "semantic_hash": "53a82c77d35357525e0c37d6b268576f"
+  },
+  "vite.config.js": {
+    "mtime": 1782699804.7018158,
+    "ast_hash": "6a68c0ebf79d6482aba7d0de369b4a21",
+    "semantic_hash": "6a68c0ebf79d6482aba7d0de369b4a21"
+  },
+  "CHANGELOG_IMPLEMENTACION.md": {
+    "mtime": 1782522899.931437,
+    "ast_hash": "8821dc65ef6d88a32b3d71aa793563c1",
+    "semantic_hash": "8821dc65ef6d88a32b3d71aa793563c1"
+  },
+  "CLAUDE.md": {
+    "mtime": 1783797679.4448051,
+    "ast_hash": "50b246e4f6a1b046e3258599273556f7",
+    "semantic_hash": ""
+  },
+  "IMPLEMENTATION_PLAN.md": {
+    "mtime": 1782522899.931602,
+    "ast_hash": "c7939d7b6e3bcae608c29ddac479a104",
+    "semantic_hash": "c7939d7b6e3bcae608c29ddac479a104"
+  },
+  "README.md": {
+    "mtime": 1782522899.9317718,
+    "ast_hash": "0683f76e1b8d1fdf512f1d595283c15d",
+    "semantic_hash": "0683f76e1b8d1fdf512f1d595283c15d"
+  },
+  "index.html": {
+    "mtime": 1782671634.2728865,
+    "ast_hash": "c32fd878366b74df8cd04c2dc7a0b6da",
+    "semantic_hash": "c32fd878366b74df8cd04c2dc7a0b6da"
+  },
+  "ios/BrunettiCutz/README.md": {
+    "mtime": 1783043288.8012676,
+    "ast_hash": "86efe85cefb81ae936c5928a1caf3be8",
+    "semantic_hash": "86efe85cefb81ae936c5928a1caf3be8"
+  },
+  "output/pdf/Vincent Flow Fade - correcciones finales.pdf": {
+    "mtime": 1782788367.3299286,
+    "ast_hash": "d72d1f40c9bc71073f4acc35e705f675",
+    "semantic_hash": "d72d1f40c9bc71073f4acc35e705f675"
+  },
+  "output/pdf/Vincent Flow Fade - ultimas slides corregidas.pdf": {
+    "mtime": 1782784525.1390722,
+    "ast_hash": "2999fa75af1e02a94c00c483967e7bfe",
+    "semantic_hash": "2999fa75af1e02a94c00c483967e7bfe"
+  },
+  "tmp/pdfs/absolute-control-comprimido.pdf": {
+    "mtime": 1782786184.693513,
+    "ast_hash": "1806da933814105fae3b6abfbf99b743",
+    "semantic_hash": "1806da933814105fae3b6abfbf99b743"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/AppIcon.appiconset/icon-1024.png": {
+    "mtime": 1783042947.2722893,
+    "ast_hash": "e31906c4fb990838d34cd63de4d33793",
+    "semantic_hash": "e31906c4fb990838d34cd63de4d33793"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/AppIcon.appiconset/icon-120.png": {
+    "mtime": 1783042947.186475,
+    "ast_hash": "232b44bf006185cf3cd8213be67bf35e",
+    "semantic_hash": "232b44bf006185cf3cd8213be67bf35e"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/AppIcon.appiconset/icon-152.png": {
+    "mtime": 1783042947.2037716,
+    "ast_hash": "3d8ce0cd50e7d14ccf40ef6cd2c60a08",
+    "semantic_hash": "3d8ce0cd50e7d14ccf40ef6cd2c60a08"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/AppIcon.appiconset/icon-167.png": {
+    "mtime": 1783042947.2219608,
+    "ast_hash": "d23e38e935153f30d35cf80e799d3b9a",
+    "semantic_hash": "d23e38e935153f30d35cf80e799d3b9a"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/AppIcon.appiconset/icon-180.png": {
+    "mtime": 1783042947.2393992,
+    "ast_hash": "12f86646322efd11cfba91341f6645da",
+    "semantic_hash": "12f86646322efd11cfba91341f6645da"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/AppIcon.appiconset/icon-192.png": {
+    "mtime": 1783041374.6786714,
+    "ast_hash": "1b83e9e3d4bf63f1318c3a47ad207932",
+    "semantic_hash": "1b83e9e3d4bf63f1318c3a47ad207932"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/AppIcon.appiconset/icon-40.png": {
+    "mtime": 1783042947.0652177,
+    "ast_hash": "2e38c457251218bdce87f6db54cbaa30",
+    "semantic_hash": "2e38c457251218bdce87f6db54cbaa30"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/AppIcon.appiconset/icon-512.png": {
+    "mtime": 1783041374.6804705,
+    "ast_hash": "bf874ecd24b7fa37afe6f813051043f7",
+    "semantic_hash": "bf874ecd24b7fa37afe6f813051043f7"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/AppIcon.appiconset/icon-58.png": {
+    "mtime": 1783042947.0829856,
+    "ast_hash": "1b60eb8fc51ddf40eb9325a417c5b536",
+    "semantic_hash": "1b60eb8fc51ddf40eb9325a417c5b536"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/AppIcon.appiconset/icon-60.png": {
+    "mtime": 1783042947.100683,
+    "ast_hash": "65f43c57e47c7a6af33a2b7629460aa5",
+    "semantic_hash": "65f43c57e47c7a6af33a2b7629460aa5"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/AppIcon.appiconset/icon-76.png": {
+    "mtime": 1783042947.1372983,
+    "ast_hash": "57ada7a2a28d5046f08c3cd7aa16c6c3",
+    "semantic_hash": "57ada7a2a28d5046f08c3cd7aa16c6c3"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/AppIcon.appiconset/icon-80.png": {
+    "mtime": 1783042947.154007,
+    "ast_hash": "3d289fa6c5de2f29960483996538bb41",
+    "semantic_hash": "3d289fa6c5de2f29960483996538bb41"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/AppIcon.appiconset/icon-87.png": {
+    "mtime": 1783042947.170293,
+    "ast_hash": "3896a31aa84450b874db22497ec1ef8a",
+    "semantic_hash": "3896a31aa84450b874db22497ec1ef8a"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/BrandHero.imageset/bruno-hero.jpg": {
+    "mtime": 1783287977.2646427,
+    "ast_hash": "6d83488c80e01cabf4ddd734e469148c",
+    "semantic_hash": ""
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/GalleryInterior.imageset/gallery-2.jpg": {
+    "mtime": 1783041374.674666,
+    "ast_hash": "6d83488c80e01cabf4ddd734e469148c",
+    "semantic_hash": "6d83488c80e01cabf4ddd734e469148c"
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/LogoIcon.imageset/brunetti-logo-icon-512.png": {
+    "mtime": 1783287134.5514324,
+    "ast_hash": "47fea1fe71c55f3e7525b7e0c3142ad5",
+    "semantic_hash": ""
+  },
+  "public/assets/PIMP_STUDIO_LOGO.svg": {
+    "mtime": 1782685632.9226959,
+    "ast_hash": "9c247082de8ce6758ba4fc6e9353fc5f",
+    "semantic_hash": "9c247082de8ce6758ba4fc6e9353fc5f"
+  },
+  "public/assets/ascension-logo.webp": {
+    "mtime": 1782685632.9288583,
+    "ast_hash": "d92f129e84b5e9e80434860b71f1df2d",
+    "semantic_hash": "d92f129e84b5e9e80434860b71f1df2d"
+  },
+  "public/assets/brunetti-logo-icon-180.png": {
+    "mtime": 1782685632.923349,
+    "ast_hash": "2ee3eecc6812f1189ad39c7f745dfe32",
+    "semantic_hash": "2ee3eecc6812f1189ad39c7f745dfe32"
+  },
+  "public/assets/brunetti-logo-icon-192.png": {
+    "mtime": 1782685632.9276538,
+    "ast_hash": "1b83e9e3d4bf63f1318c3a47ad207932",
+    "semantic_hash": "1b83e9e3d4bf63f1318c3a47ad207932"
+  },
+  "public/assets/brunetti-logo-icon-512.png": {
+    "mtime": 1782685632.9165955,
+    "ast_hash": "bf874ecd24b7fa37afe6f813051043f7",
+    "semantic_hash": "bf874ecd24b7fa37afe6f813051043f7"
+  },
+  "public/assets/brunetti-logo-icon.svg": {
+    "mtime": 1782685632.9312866,
+    "ast_hash": "5039c4819202c8571b8205b29a13d04d",
+    "semantic_hash": "5039c4819202c8571b8205b29a13d04d"
+  },
+  "public/assets/brunetti-logo-lockup-v2.svg": {
+    "mtime": 1782688629.825093,
+    "ast_hash": "0698272cdcc7ec79fd3790a5d363b310",
+    "semantic_hash": "0698272cdcc7ec79fd3790a5d363b310"
+  },
+  "public/assets/brunetti-logo-lockup.svg": {
+    "mtime": 1782685632.9192278,
+    "ast_hash": "811d52b1bc779da212adac9a9ab9f978",
+    "semantic_hash": "811d52b1bc779da212adac9a9ab9f978"
+  },
+  "public/assets/brunetti-logo-mark.svg": {
+    "mtime": 1782609253.9020114,
+    "ast_hash": "ca4650aa05f1b0823e576a5ce245ac4c",
+    "semantic_hash": "ca4650aa05f1b0823e576a5ce245ac4c"
+  },
+  "public/assets/brunetti-logo-monogram.svg": {
+    "mtime": 1782685632.9185207,
+    "ast_hash": "c7f4d0556f8567f11f93d448494d3561",
+    "semantic_hash": "c7f4d0556f8567f11f93d448494d3561"
+  },
+  "public/assets/brunetti-logo-text.svg": {
+    "mtime": 1782609253.9022171,
+    "ast_hash": "554ed5e7b4b822701e601426186634ef",
+    "semantic_hash": "554ed5e7b4b822701e601426186634ef"
+  },
+  "public/assets/brunetti-wordmark.svg": {
+    "mtime": 1782685632.9210875,
+    "ast_hash": "44f2e6216f355569c2eaabbc4af61c32",
+    "semantic_hash": "44f2e6216f355569c2eaabbc4af61c32"
+  },
+  "public/assets/bruno-feature.jpg": {
+    "mtime": 1782685632.9240139,
+    "ast_hash": "4e6aae7df869c34701bf145339fd9f1b",
+    "semantic_hash": "4e6aae7df869c34701bf145339fd9f1b"
+  },
+  "public/assets/bruno-hero.jpg": {
+    "mtime": 1782685632.9246378,
+    "ast_hash": "fd05f3769ec616cd996a2a0910eb9917",
+    "semantic_hash": "fd05f3769ec616cd996a2a0910eb9917"
+  },
+  "public/assets/bruno-portrait.jpg": {
+    "mtime": 1782685632.9266298,
+    "ast_hash": "62e87b2d75e627a88b3d87f489a7a697",
+    "semantic_hash": "62e87b2d75e627a88b3d87f489a7a697"
+  },
+  "public/assets/estilo-teaser.jpg": {
+    "mtime": 1782685632.9220576,
+    "ast_hash": "4e6aae7df869c34701bf145339fd9f1b",
+    "semantic_hash": "4e6aae7df869c34701bf145339fd9f1b"
+  },
+  "public/assets/gallery-1.jpg": {
+    "mtime": 1782685632.917581,
+    "ast_hash": "96ea0ca89e6c2c231089b12f86fd6f51",
+    "semantic_hash": "96ea0ca89e6c2c231089b12f86fd6f51"
+  },
+  "public/assets/gallery-2.jpg": {
+    "mtime": 1782685632.9199235,
+    "ast_hash": "6d83488c80e01cabf4ddd734e469148c",
+    "semantic_hash": "6d83488c80e01cabf4ddd734e469148c"
+  },
+  "public/assets/gallery-3.jpg": {
+    "mtime": 1782685632.9204993,
+    "ast_hash": "e27b4bd09b7a608b8151623bbfd648f6",
+    "semantic_hash": "e27b4bd09b7a608b8151623bbfd648f6"
+  },
+  "public/assets/pimp-studio-logo.jpg": {
+    "mtime": 1782685632.9306889,
+    "ast_hash": "c685d8656fe24042572176e9de7b4aaf",
+    "semantic_hash": "c685d8656fe24042572176e9de7b4aaf"
+  },
+  "public/assets/pimp-studio-mark.svg": {
+    "mtime": 1782685632.9283543,
+    "ast_hash": "271d134b3865677f3971c6b3a2e50893",
+    "semantic_hash": "271d134b3865677f3971c6b3a2e50893"
+  },
+  "public/assets/workshop-2026.jpg": {
+    "mtime": 1782685632.9296603,
+    "ast_hash": "539b55efc60e4d1c587bcf68aa19fed2",
+    "semantic_hash": "539b55efc60e4d1c587bcf68aa19fed2"
+  },
+  "tmp/pdfs/final-check-04.png": {
+    "mtime": 1782788546.583586,
+    "ast_hash": "cba32a25833c345be7bbd07f99d68f9f",
+    "semantic_hash": "cba32a25833c345be7bbd07f99d68f9f"
+  },
+  "tmp/pdfs/final-check-05.png": {
+    "mtime": 1782788546.7414904,
+    "ast_hash": "d5a2f7e40a6e151d5600616a206b0356",
+    "semantic_hash": "d5a2f7e40a6e151d5600616a206b0356"
+  },
+  "tmp/pdfs/final-check-06.png": {
+    "mtime": 1782788548.5250294,
+    "ast_hash": "e06adb7bcee09f15c887ee36159030d5",
+    "semantic_hash": "e06adb7bcee09f15c887ee36159030d5"
+  },
+  "tmp/pdfs/final-check-07.png": {
+    "mtime": 1782788554.3978174,
+    "ast_hash": "54d495902cc81bb19fb276a7eddbb6fe",
+    "semantic_hash": "54d495902cc81bb19fb276a7eddbb6fe"
+  },
+  "tmp/pdfs/final-check-08.png": {
+    "mtime": 1782788557.1597385,
+    "ast_hash": "07ed2bc93322160483f5b691d52ca2d4",
+    "semantic_hash": "07ed2bc93322160483f5b691d52ca2d4"
+  },
+  "tmp/pdfs/final-check-09.png": {
+    "mtime": 1782788564.5716279,
+    "ast_hash": "f4ec11e298fb6b31f538f574a9e35463",
+    "semantic_hash": "f4ec11e298fb6b31f538f574a9e35463"
+  },
+  "tmp/pdfs/final-check-10.png": {
+    "mtime": 1782788567.582574,
+    "ast_hash": "616be09f077c42d2717a0a46dc4acfd1",
+    "semantic_hash": "616be09f077c42d2717a0a46dc4acfd1"
+  },
+  "tmp/pdfs/final-check-11.png": {
+    "mtime": 1782788568.6441603,
+    "ast_hash": "1a7294393371901ab6ec121811462c95",
+    "semantic_hash": "1a7294393371901ab6ec121811462c95"
+  },
+  "tmp/pdfs/final-check-contact.png": {
+    "mtime": 1782788569.044898,
+    "ast_hash": "b221ef375a483f211ee28b81e00c9cd1",
+    "semantic_hash": "b221ef375a483f211ee28b81e00c9cd1"
+  },
+  "tmp/pdfs/final-last-16.png": {
+    "mtime": 1782788818.665985,
+    "ast_hash": "435fedeb9aad2350efb33f57fa61bb72",
+    "semantic_hash": "435fedeb9aad2350efb33f57fa61bb72"
+  },
+  "tmp/pdfs/final-light-check-02.png": {
+    "mtime": 1782790572.8661678,
+    "ast_hash": "c85c1000cbd5a4ec6fe45a5602c46059",
+    "semantic_hash": "c85c1000cbd5a4ec6fe45a5602c46059"
+  },
+  "tmp/pdfs/final-light-check-03.png": {
+    "mtime": 1782790572.969382,
+    "ast_hash": "a8d713b0101863655e0eaee435d9a70a",
+    "semantic_hash": "a8d713b0101863655e0eaee435d9a70a"
+  },
+  "tmp/pdfs/final-light-check-04.png": {
+    "mtime": 1782790573.9012668,
+    "ast_hash": "f90319ef98f09534abbc4bea41175ca6",
+    "semantic_hash": "f90319ef98f09534abbc4bea41175ca6"
+  },
+  "tmp/pdfs/final-light-check-05.png": {
+    "mtime": 1782790573.9723346,
+    "ast_hash": "a5977f86c16cf09cc26d4a8361700c6f",
+    "semantic_hash": "a5977f86c16cf09cc26d4a8361700c6f"
+  },
+  "tmp/pdfs/final-light-check-06.png": {
+    "mtime": 1782790574.4935849,
+    "ast_hash": "48a0c6ae0d73c37d269570109c143a8c",
+    "semantic_hash": "48a0c6ae0d73c37d269570109c143a8c"
+  },
+  "tmp/pdfs/final-light-check-07.png": {
+    "mtime": 1782790574.8466327,
+    "ast_hash": "256abdd365c244ccb251d3e594192f34",
+    "semantic_hash": "256abdd365c244ccb251d3e594192f34"
+  },
+  "tmp/pdfs/final-light-check-08.png": {
+    "mtime": 1782790575.1770308,
+    "ast_hash": "174819c96f1adac256f639bc8a1612b8",
+    "semantic_hash": "174819c96f1adac256f639bc8a1612b8"
+  },
+  "tmp/pdfs/final-light-check-09.png": {
+    "mtime": 1782790575.518807,
+    "ast_hash": "2cc4a93206e936bf8dab758422f84b15",
+    "semantic_hash": "2cc4a93206e936bf8dab758422f84b15"
+  },
+  "tmp/pdfs/final-light-check-10.png": {
+    "mtime": 1782790576.681881,
+    "ast_hash": "f43d6f34afcc1d484905716ee394c2ca",
+    "semantic_hash": "f43d6f34afcc1d484905716ee394c2ca"
+  },
+  "tmp/pdfs/final-light-check-11.png": {
+    "mtime": 1782790577.1279938,
+    "ast_hash": "af8738aaae5109103d0aebc0154b5918",
+    "semantic_hash": "af8738aaae5109103d0aebc0154b5918"
+  },
+  "tmp/pdfs/final-light-check-12.png": {
+    "mtime": 1782790577.1887944,
+    "ast_hash": "57449d308cb772a7f32b25bac927cb5e",
+    "semantic_hash": "57449d308cb772a7f32b25bac927cb5e"
+  },
+  "tmp/pdfs/final-light-check-13.png": {
+    "mtime": 1782790577.6691556,
+    "ast_hash": "fc7efa09a5dc07ab7899d0acc04f1ee4",
+    "semantic_hash": "fc7efa09a5dc07ab7899d0acc04f1ee4"
+  },
+  "tmp/pdfs/final-light-check-14.png": {
+    "mtime": 1782790578.2381747,
+    "ast_hash": "da4c1a62dd178b770e892e39b05df074",
+    "semantic_hash": "da4c1a62dd178b770e892e39b05df074"
+  },
+  "tmp/pdfs/final-light-check-15.png": {
+    "mtime": 1782790579.0266924,
+    "ast_hash": "d8426b5b98c031fd9b6331512bfb79ad",
+    "semantic_hash": "d8426b5b98c031fd9b6331512bfb79ad"
+  },
+  "tmp/pdfs/final-light-check-16.png": {
+    "mtime": 1782790579.4248624,
+    "ast_hash": "55760d124cd676973184f6a3f75b477f",
+    "semantic_hash": "55760d124cd676973184f6a3f75b477f"
+  },
+  "tmp/pdfs/final-light-contact.png": {
+    "mtime": 1782790579.585071,
+    "ast_hash": "e1439b9d993b232370514ff4ce3c7c32",
+    "semantic_hash": "e1439b9d993b232370514ff4ce3c7c32"
+  },
+  "tmp/pdfs/source-contact.png": {
+    "mtime": 1782786543.4397576,
+    "ast_hash": "1bf6c965c63f144a0804a151f6457457",
+    "semantic_hash": "1bf6c965c63f144a0804a151f6457457"
+  },
+  "tmp/pdfs/source-pdf-01.png": {
+    "mtime": 1782786231.1088188,
+    "ast_hash": "3028c3c70defb0e99620defdd6b178e9",
+    "semantic_hash": "3028c3c70defb0e99620defdd6b178e9"
+  },
+  "tmp/pdfs/source-pdf-02.png": {
+    "mtime": 1782786232.8961601,
+    "ast_hash": "edcbfd305c01ec57c1091efe3a673b1a",
+    "semantic_hash": "edcbfd305c01ec57c1091efe3a673b1a"
+  },
+  "tmp/pdfs/source-pdf-03.png": {
+    "mtime": 1782786234.6796706,
+    "ast_hash": "106891b6e6392eff436fe29794cc99d9",
+    "semantic_hash": "106891b6e6392eff436fe29794cc99d9"
+  },
+  "tmp/pdfs/source-pdf-04.png": {
+    "mtime": 1782786238.672735,
+    "ast_hash": "4e359adcf54f127a84fd26e6fd294b67",
+    "semantic_hash": "4e359adcf54f127a84fd26e6fd294b67"
+  },
+  "tmp/pdfs/source-pdf-05.png": {
+    "mtime": 1782786241.542959,
+    "ast_hash": "7dcccd5a5b81f579315c202fc2c15c8d",
+    "semantic_hash": "7dcccd5a5b81f579315c202fc2c15c8d"
+  },
+  "tmp/pdfs/source-pdf-06.png": {
+    "mtime": 1782786244.4270494,
+    "ast_hash": "9f0cc5ea5d25f5dcac15317007bc2f90",
+    "semantic_hash": "9f0cc5ea5d25f5dcac15317007bc2f90"
+  },
+  "tmp/pdfs/source-pdf-07.png": {
+    "mtime": 1782786246.2586226,
+    "ast_hash": "be4efdb9d23a7e2a91de055bf8b8cf97",
+    "semantic_hash": "be4efdb9d23a7e2a91de055bf8b8cf97"
+  },
+  "tmp/pdfs/source-pdf-08.png": {
+    "mtime": 1782786248.7561646,
+    "ast_hash": "4c9a420062f4b9193cc23f76832d9d0e",
+    "semantic_hash": "4c9a420062f4b9193cc23f76832d9d0e"
+  },
+  "tmp/pdfs/source-pdf-09.png": {
+    "mtime": 1782786250.5500743,
+    "ast_hash": "7ee9a14c8d0ccaa2386f00da2490211d",
+    "semantic_hash": "7ee9a14c8d0ccaa2386f00da2490211d"
+  },
+  "tmp/pdfs/source-pdf-10.png": {
+    "mtime": 1782786252.3823729,
+    "ast_hash": "82d2fcb412a65e4b78db599ef2e27ef7",
+    "semantic_hash": "82d2fcb412a65e4b78db599ef2e27ef7"
+  },
+  "tmp/pdfs/source-pdf-11.png": {
+    "mtime": 1782786254.218169,
+    "ast_hash": "d5c676d6f319c1324c7e6036f47d69ab",
+    "semantic_hash": "d5c676d6f319c1324c7e6036f47d69ab"
+  },
+  "tmp/pdfs/source-pdf-12.png": {
+    "mtime": 1782786255.9470317,
+    "ast_hash": "a556bf9dbf1b9e56b8035718fc01e053",
+    "semantic_hash": "a556bf9dbf1b9e56b8035718fc01e053"
+  },
+  "tmp/pdfs/source-pdf-13.png": {
+    "mtime": 1782786258.4165294,
+    "ast_hash": "dc0e730398d2455a04de4d9b1a4fa99d",
+    "semantic_hash": "dc0e730398d2455a04de4d9b1a4fa99d"
+  },
+  "tmp/pdfs/source-pdf-14.png": {
+    "mtime": 1782786260.2171805,
+    "ast_hash": "3028c3c70defb0e99620defdd6b178e9",
+    "semantic_hash": "3028c3c70defb0e99620defdd6b178e9"
+  },
+  "tmp/pdfs/vincent-final-14.png": {
+    "mtime": 1782784559.7491384,
+    "ast_hash": "3175630c4f828950290efead1f015643",
+    "semantic_hash": "3175630c4f828950290efead1f015643"
+  },
+  "tmp/pdfs/vincent-final-15.png": {
+    "mtime": 1782784572.771728,
+    "ast_hash": "c25946cb42461fef6e9f90da7b217b30",
+    "semantic_hash": "c25946cb42461fef6e9f90da7b217b30"
+  },
+  "tmp/pdfs/vincent-final-16.png": {
+    "mtime": 1782784593.7171195,
+    "ast_hash": "9c088efdb9bf9c7414fde45eac635705",
+    "semantic_hash": "9c088efdb9bf9c7414fde45eac635705"
+  },
+  ".claude/settings.json": {
+    "mtime": 1783198589.666639,
+    "ast_hash": "e51077b6a7f1f67afc748f1a32a1557d",
+    "semantic_hash": ""
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/BrandLockup.imageset/Contents.json": {
+    "mtime": 1783288005.3461647,
+    "ast_hash": "53403fd08ac37e1fec7b6180a62ef5c9",
+    "semantic_hash": ""
+  },
+  "ios/BrunettiCutz/BrunettiCutz/KeychainStore.swift": {
+    "mtime": 1783199914.0408046,
+    "ast_hash": "fde8292d0935b4444759fb1bcf44d1f2",
+    "semantic_hash": ""
+  },
+  "ios/BrunettiCutz/BrunettiCutz/Assets.xcassets/BrandLockup.imageset/brunetti-lockup.png": {
+    "mtime": 1783287977.261657,
+    "ast_hash": "a5feca27f2391e0e59eca1b7bdb202ec",
+    "semantic_hash": ""
+  },
+  "public/assets/estilo/estilo-barba-canosa.jpg": {
+    "mtime": 1783647637.0183764,
+    "ast_hash": "1c11721a017c3e862b5cecbc4476a067",
+    "semantic_hash": ""
+  },
+  "public/assets/estilo/estilo-crop-plata.jpg": {
+    "mtime": 1783647637.066179,
+    "ast_hash": "7af76c21b3de3db56cffaeac8726b7be",
+    "semantic_hash": ""
+  },
+  "public/assets/estilo/estilo-crop-rizado-corto.jpg": {
+    "mtime": 1783647637.1129615,
+    "ast_hash": "ef2f5b349ce79d17f6b3aec24c56a473",
+    "semantic_hash": ""
+  },
+  "public/assets/estilo/estilo-crop-rizado.jpg": {
+    "mtime": 1783647637.1605918,
+    "ast_hash": "a7a59bed885a2f026802258675ecac67",
+    "semantic_hash": ""
+  },
+  "public/assets/estilo/estilo-crop-texturizado-oscuro.jpg": {
+    "mtime": 1783647637.2082293,
+    "ast_hash": "e5ba197ee45a07fbd061fe34b331d79e",
+    "semantic_hash": ""
+  },
+  "public/assets/estilo/estilo-crop-texturizado.jpg": {
+    "mtime": 1783647637.2559123,
+    "ast_hash": "2ea73c5e67f8cf2c38f17a346e587ac4",
+    "semantic_hash": ""
+  },
+  "public/assets/estilo/estilo-fade-clasico.jpg": {
+    "mtime": 1783647637.3018987,
+    "ast_hash": "1b6ed0a6ff4e37b798545f4650b88f3b",
+    "semantic_hash": ""
+  },
+  "public/assets/estilo/estilo-fade-diseno-plata.jpg": {
+    "mtime": 1783647637.348458,
+    "ast_hash": "06a7f01964323c1af54a52a7f33cac3d",
+    "semantic_hash": ""
+  },
+  "public/assets/estilo/estilo-fade-diseno.jpg": {
+    "mtime": 1783647637.3937721,
+    "ast_hash": "428383257b35d6e9df42dc5bba0655c4",
+    "semantic_hash": ""
+  },
+  "public/assets/estilo/estilo-flequillo-largo.jpg": {
+    "mtime": 1783647637.4416218,
+    "ast_hash": "85bf080d836f5d8b3432796ab1fdf7c9",
+    "semantic_hash": ""
+  },
+  "public/assets/estilo/estilo-mullet-rizado.jpg": {
+    "mtime": 1783647637.4847023,
+    "ast_hash": "50e9a8300707a405a153f52c67f9361a",
+    "semantic_hash": ""
+  },
+  "public/assets/estilo/estilo-mullet-shag.jpg": {
+    "mtime": 1783647637.5330944,
+    "ast_hash": "f1bda83766c0f0c040035f07e26c7a3e",
+    "semantic_hash": ""
+  },
+  "public/assets/estilo/estilo-pompadour-clasico.jpg": {
+    "mtime": 1783647637.5806386,
+    "ast_hash": "1e111eeb4a8bb1cde04e027a070b2fd2",
+    "semantic_hash": ""
+  },
+  "public/assets/estilo/estilo-pompadour-color.jpg": {
+    "mtime": 1783647637.6277673,
+    "ast_hash": "aa012000d2f044e0c74ce83ce3b01016",
+    "semantic_hash": ""
+  },
+  "public/assets/estilo/estilo-side-part.jpg": {
+    "mtime": 1783647637.6738074,
+    "ast_hash": "60387b552169ca930a9f5468d7158cbe",
+    "semantic_hash": ""
+  },
+  "public/assets/estilo/estilo-skin-fade.jpg": {
+    "mtime": 1783647637.7153168,
+    "ast_hash": "daf38d4bd76157df51853ce8f8ecb8dc",
+    "semantic_hash": ""
+  },
+  "public/assets/estilo/estilo-textura-barba.jpg": {
+    "mtime": 1783647637.7591782,
+    "ast_hash": "074a3981f0a6bd910377ef0c36c2be8a",
+    "semantic_hash": ""
+  },
+  "public/assets/estilo/estilo-textura-spiky.jpg": {
+    "mtime": 1783647637.805558,
+    "ast_hash": "c037331fe05ecfb8d605811ccd80c223",
+    "semantic_hash": ""
+  },
+  "public/assets/compare-after.jpg": {
+    "mtime": 1783653196.0582533,
+    "ast_hash": "41729a0f5d13f466673a30e3dd5b34e9",
+    "semantic_hash": ""
+  },
+  "public/assets/compare-before.jpg": {
+    "mtime": 1783653196.0184298,
+    "ast_hash": "0aa0c8bab70ba0faf14b4e59206da562",
+    "semantic_hash": ""
+  },
+  "scripts/content-server.mjs": {
+    "mtime": 1783795836.6630642,
+    "ast_hash": "d50eaac185f685bc3331cd34d365e10b",
+    "semantic_hash": ""
+  },
+  "scripts/dev-editor.mjs": {
+    "mtime": 1783737776.943199,
+    "ast_hash": "bae44ad6a944e564fbf4d552e007ce2c",
+    "semantic_hash": ""
+  },
+  "src/components/edit/EditProvider.jsx": {
+    "mtime": 1783797256.9035132,
+    "ast_hash": "723e32d5ffe5614e0647cde5c17571e2",
+    "semantic_hash": ""
+  },
+  "src/components/edit/EditableText.jsx": {
+    "mtime": 1783796037.215058,
+    "ast_hash": "f472d9caadb346eef6f81fcc660a8fd5",
+    "semantic_hash": ""
+  },
+  "src/data/content/cursos.json": {
+    "mtime": 1783793881.1887696,
+    "ast_hash": "d13a8ddfb07d686f4b1b44509d703582",
+    "semantic_hash": ""
+  },
+  "src/data/content/estilo.json": {
+    "mtime": 1783739489.3215759,
+    "ast_hash": "c3ed607f5a6310a7c34c811180f50286",
+    "semantic_hash": ""
+  },
+  "src/data/content/home-contacto.json": {
+    "mtime": 1783739679.291144,
+    "ast_hash": "741221faf4b08b3be6e63c5f7027c452",
+    "semantic_hash": ""
+  },
+  "src/data/content/home-cursos-teaser.json": {
+    "mtime": 1783739785.923761,
+    "ast_hash": "0abdec59feb9916660faf755a40b56dc",
+    "semantic_hash": ""
+  },
+  "src/data/content/home-estilo-teaser.json": {
+    "mtime": 1783739976.4920433,
+    "ast_hash": "eeb4134c173243e1cedaedbc9bfe6504",
+    "semantic_hash": ""
+  },
+  "src/data/content/home-experiencias.json": {
+    "mtime": 1783739798.8026237,
+    "ast_hash": "88bbfef281e6fb516fff7ca859250891",
+    "semantic_hash": ""
+  },
+  "src/data/content/home-hero.json": {
+    "mtime": 1783740382.4698246,
+    "ast_hash": "3ea7220cf57e88ea2744e6bd2952a971",
+    "semantic_hash": ""
+  },
+  "src/data/content/home-servicios.json": {
+    "mtime": 1783738374.605042,
+    "ast_hash": "5ab34df36eb677f20834cb6acdb82d0e",
+    "semantic_hash": ""
+  },
+  "src/data/content/home-sobre.json": {
+    "mtime": 1783739938.7436635,
+    "ast_hash": "3c2f08e0cb1406567ca6ec0787abe38c",
+    "semantic_hash": ""
+  },
+  "src/data/content/home-testimonios.json": {
+    "mtime": 1783739707.0889306,
+    "ast_hash": "b08fd331dd9273650418cd284683010d",
+    "semantic_hash": ""
+  },
+  "src/data/content/home-transformaciones.json": {
+    "mtime": 1783738382.9011068,
+    "ast_hash": "518f33c443054ae6d757fbe00c5e7061",
+    "semantic_hash": ""
+  },
+  "src/data/content/home-visagismo.json": {
+    "mtime": 1783740362.9784086,
+    "ast_hash": "d080630e47fe5725536115bc847af187",
+    "semantic_hash": ""
+  },
+  "src/data/content/workshop.json": {
+    "mtime": 1783820424.8343015,
+    "ast_hash": "367654a7f8114bc046eb4d5bf91964b5",
+    "semantic_hash": ""
+  },
+  "public/assets/bruno-hero-bg.webp": {
+    "mtime": 1783785113.5036204,
+    "ast_hash": "320abdb9088906fc5181f0a7eb8031bf",
+    "semantic_hash": ""
+  },
+  "public/assets/bruno-hero-cutout.webp": {
+    "mtime": 1783785113.5079162,
+    "ast_hash": "53970f03a5e4744f83f582f18f179907",
+    "semantic_hash": ""
+  },
+  "public/assets/cursos-hero-cutout.webp": {
+    "mtime": 1783788710.928758,
+    "ast_hash": "7ffb13d03f1d9a19da8143b8d5f9fc77",
+    "semantic_hash": ""
+  },
+  "scripts/deploy-prod.mjs": {
+    "mtime": 1783793555.1970782,
+    "ast_hash": "0887f704ca4bb26d58a02826edce619b",
+    "semantic_hash": ""
+  },
+  "src/components/edit/Editable.jsx": {
+    "mtime": 1783797201.176902,
+    "ast_hash": "25533b4d8bb442d083bbd2b6450ca7b1",
+    "semantic_hash": ""
+  },
+  "src/components/edit/OverridesProvider.jsx": {
+    "mtime": 1783795947.3347976,
+    "ast_hash": "5acb4548759388e3e3fcc548a170fd86",
+    "semantic_hash": ""
+  },
+  "src/components/edit/context.js": {
+    "mtime": 1783795923.9559486,
+    "ast_hash": "073deaa7f318e5ad76f08d676c0c9a01",
+    "semantic_hash": ""
+  },
+  "src/components/edit/useDragResize.js": {
+    "mtime": 1783795992.0636494,
+    "ast_hash": "420068e3ca61abf94a69ceabbdc1e0a8",
+    "semantic_hash": ""
+  },
+  "src/data/overrides/home-estilo-teaser.json": {
+    "mtime": 1783796847.7152908,
+    "ast_hash": "8a80554c91d9fca8acb82f023de02f11",
+    "semantic_hash": ""
+  },
+  "src/data/overrides/home-hero.json": {
+    "mtime": 1783820238.8448436,
+    "ast_hash": "f8a30f8fe1c45dfa497ccd3d700a34c9",
+    "semantic_hash": ""
+  },
+  "src/data/overrides/home-visagismo.json": {
+    "mtime": 1783820461.5969388,
+    "ast_hash": "ac4eab815b048f93effc33b6921e9201",
+    "semantic_hash": ""
+  },
+  "src/data/overrides/workshop.json": {
+    "mtime": 1783820262.9242954,
+    "ast_hash": "96b11840649e5b6129a6a79074f88d2f",
+    "semantic_hash": ""
+  },
+  "src/components/DashKit.jsx": {
+    "mtime": 1783806900.9036536,
+    "ast_hash": "609f6857a6b46229111aa9666c5d59f2",
+    "semantic_hash": ""
+  },
+  "src/components/ExpensesModule.jsx": {
+    "mtime": 1783820659.9325986,
+    "ast_hash": "e164c9abaa966aa8b7b39fe45353fe07",
+    "semantic_hash": ""
+  },
+  "src/components/GlobalSearch.jsx": {
+    "mtime": 1783820189.4455853,
+    "ast_hash": "33b0a18edf323799959253fe1a8f66c2",
+    "semantic_hash": ""
+  },
+  "src/components/NewBookingModal.jsx": {
+    "mtime": 1783807098.2986655,
+    "ast_hash": "64cd7ab596eb717f6cc2b94e67dd142d",
+    "semantic_hash": ""
+  },
+  "src/components/NewClientModal.jsx": {
+    "mtime": 1783820314.0151343,
+    "ast_hash": "0b32a4ef2e556138256ee06ea4882932",
+    "semantic_hash": ""
+  },
+  "public/assets/uploads/f0d7f8b8-5e3b-496b-baf5-68db5326f6c5-jpg-mrgubb6k.jpg": {
+    "mtime": 1783803108.189723,
+    "ast_hash": "da994d6bc8a940c4fafe42027fd27cbf",
+    "semantic_hash": ""
+  },
+  "public/assets/uploads/img-7119-jpg-mrgudg5i.jpg": {
+    "mtime": 1783803207.9432216,
+    "ast_hash": "73b083f45ff0d4226f810a06561422b7",
+    "semantic_hash": ""
+  }
+}

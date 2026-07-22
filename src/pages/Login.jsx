@@ -2,6 +2,19 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Emblem, Icon, MobileScreen } from '../components/ui.jsx'
 
+// Si el teléfono ya tiene reservas (activas o pasadas), lo mandamos a /cuenta
+// en vez de forzarlo a agendar una nueva. Ante cualquier falla, asumimos que
+// no tiene (mejor UX: lo dejamos seguir al flujo de reserva de siempre).
+async function hasExistingBookings(phone) {
+  try {
+    const res = await fetch("/api/bookings?phone=" + phone)
+    const data = await res.json()
+    return Boolean(data?.bookings?.length)
+  } catch {
+    return false
+  }
+}
+
 function fmtPhone(v) {
   const d = String(v || "").replace(/\D/g, "").slice(0, 9)
   if (d.length <= 1) return d
@@ -34,7 +47,7 @@ export default function Login() {
       const data = await res.json()
       if (data.ok) {
         localStorage.setItem("ps_user", JSON.stringify(data.user))
-        navigate("/reservar")
+        navigate(await hasExistingBookings(d) ? "/cuenta" : "/reservar")
       } else {
         if (res.status === 404 && mode === "login") {
           setMode("register")
@@ -44,9 +57,7 @@ export default function Login() {
         setErr(data.error || "Error de autenticación")
       }
     } catch {
-      // fallback demo: allow login without API
-      localStorage.setItem("ps_user", JSON.stringify({ phone: d, name: name || "Cliente", email }))
-      navigate("/reservar")
+      setErr("No pudimos conectar. Intenta de nuevo.")
     } finally {
       setLoading(false)
     }
@@ -61,10 +72,7 @@ export default function Login() {
 
         <div className="animate-up" style={{ display: "grid", justifyItems: "center", gap: ".8rem", textAlign: "center" }}>
           <Emblem size={78} />
-          <div>
-            <h1 className="font-display" style={{ margin: 0, fontSize: "1.7rem", fontWeight: 700, letterSpacing: ".02em" }}>BRUNETTI</h1>
-              <p style={{ margin: ".2rem 0 0", color: "var(--muted)", fontSize: ".88rem" }}>Ingresa con tu telefono o registra tus datos una sola vez.</p>
-          </div>
+          <p style={{ margin: 0, color: "var(--muted)", fontSize: ".88rem" }}>Ingresa con tu telefono o registra tus datos una sola vez.</p>
         </div>
 
         <div className="card animate-up" style={{ padding: "1.3rem", display: "grid", gap: "1rem", animationDelay: ".08s" }}>
@@ -103,17 +111,6 @@ export default function Login() {
               {loading ? "Entrando…" : (mode === "login" ? "Ingresar" : "Crear cuenta")} {!loading && <Icon name="arrowRight" size={15} />}
             </button>
           </form>
-
-          {mode === "login" && (
-            <div style={{ display: "grid", gap: ".4rem" }}>
-              <span style={{ fontSize: ".68rem", letterSpacing: ".14em", textTransform: "uppercase", color: "var(--muted-2)", textAlign: "center" }}>Demo · toca para probar</span>
-              <div style={{ display: "flex", gap: ".4rem", flexWrap: "wrap", justifyContent: "center" }}>
-                {["9 8765 4321", "9 1234 5678"].map((p) => (
-                  <button key={p} onClick={() => setPhone(p)} className="chip" style={{ cursor: "pointer" }}>{p}</button>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
         <p style={{ textAlign: "center", color: "var(--muted-2)", fontSize: ".74rem", margin: 0, lineHeight: 1.5 }}>
           Al continuar aceptas nuestros términos. Guardamos tu número para identificarte en próximas visitas.
