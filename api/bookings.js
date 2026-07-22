@@ -4,6 +4,7 @@ import { notifyBarber } from "./push.js"
 
 const MIN_CANCEL_NOTICE_HOURS = 10
 const MAX_LEAD_DAYS = 7
+const MAX_BOOKINGS_PER_DAY = 2
 const BUSINESS_TZ = "America/Santiago"
 
 // Vercel ejecuta las funciones en UTC: calcular "hoy" con new Date() ahí
@@ -79,6 +80,17 @@ export default async function handler(req, res) {
       const cleanPhone = String(phone).replace(/\D/g, "")
       const [user] = await sql`SELECT id FROM users WHERE phone = ${cleanPhone}`
       if (!user) return res.status(404).json({ error: "Usuario no encontrado" })
+
+      // Límite anti-spam: máximo MAX_BOOKINGS_PER_DAY reservas activas por
+      // usuario por día (evita que una misma persona sature la agenda).
+      const [{ count: dayCount }] = await sql`
+        SELECT COUNT(*)::int as count FROM bookings
+        WHERE client_id = ${user.id} AND booking_date = ${date}
+        AND status NOT IN ('cancelada')
+      `
+      if (dayCount >= MAX_BOOKINGS_PER_DAY) {
+        return res.status(422).json({ error: `Ya tienes ${MAX_BOOKINGS_PER_DAY} reservas para ese día. No puedes agendar más.` })
+      }
 
       // Check availability
       const [existing] = await sql`
